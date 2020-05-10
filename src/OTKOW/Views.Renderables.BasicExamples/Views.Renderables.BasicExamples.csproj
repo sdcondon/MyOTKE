@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>OTKOW.Views.Renderables.BasicExamples</AssemblyName>
+    <RootNamespace>OTKOW.Views.Renderables.BasicExamples</RootNamespace>
+    
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Open GL Helpers for .NET / view engine: Test renderable implementations.</Description>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>GLHDN.Views.Renderables.Basic.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Colored.Fragment.glsl" />
+    <None Remove="Colored.Vertex.glsl" />
+    <None Remove="GLHDN.Views.Renderables.Basic.xml" />
+    <None Remove="Textured.Fragment.glsl" />
+    <None Remove="Textured.Vertex.glsl" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Colored.Fragment.glsl" />
+    <EmbeddedResource Include="Colored.Vertex.glsl" />
+    <EmbeddedResource Include="Textured.Fragment.glsl" />
+    <EmbeddedResource Include="Textured.Vertex.glsl" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\ReactiveBuffers\ReactiveBuffers.csproj" />
+    <ProjectReference Include="..\Views\Views.csproj" />
+  </ItemGroup>
+
+</Project>

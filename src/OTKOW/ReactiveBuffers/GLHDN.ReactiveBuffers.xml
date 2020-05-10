@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GLHDN.ReactiveBuffers</name>
+    </assembly>
+    <members>
+        <member name="T:GLHDN.ReactiveBuffers.INotifyCollectionChangedExtensions">
+            <summary>
+            Extension methods for <see cref="T:System.Collections.Specialized.INotifyCollectionChanged"/> instances.
+            </summary>
+        </member>
+        <member name="M:GLHDN.ReactiveBuffers.INotifyCollectionChangedExtensions.ToObservable``1(System.Collections.Specialized.INotifyCollectionChanged)">
+            <summary>
+            Creates an observable from an <see cref="T:System.Collections.Specialized.INotifyCollectionChanged"/> of <see cref="T:System.ComponentModel.INotifyPropertyChanged"/> objects.
+            </summary>
+            <typeparam name="T">The type of objects that the collection contains.</typeparam>
+            <param name="collection">The collection to bind to.</param>
+            <returns>An observable of observables. The outer observable pushes whenever an element is added to the collection. Each inner observable pushes whenever the element changes, and completes when it is removed.</returns>
+        </member>
+        <member name="T:GLHDN.ReactiveBuffers.ObservableComposite`1">
+            <summary>
+            Imperatively managed composite of observable sequences of leaf data that can be flattened to an observable of observables.
+            </summary>
+            <typeparam name="T">The leaf data type.</typeparam>
+            <remarks>
+            Sits somewhat awkwardly between the imperative and reactive worlds, in that it is updated imperatively, but
+            exposes a reactive-valued method. Might be slightly cleaner to live entirely in reactive world, especially if
+            we change user input to be entirely reactive. Meh. For later consideration.
+            </remarks>
+        </member>
+        <member name="M:GLHDN.ReactiveBuffers.ObservableComposite`1.#ctor(System.IObservable{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:GLHDN.ReactiveBuffers.ObservableComposite`1"/> class.
+            </summary>
+            <param name="values">The observable sequence of leaf data for this composite.</param>
+        </member>
+        <member name="M:GLHDN.ReactiveBuffers.ObservableComposite`1.#ctor(System.IObservable{`0},System.Action{System.String,System.Object})">
+            <summary>
+            Initializes a new instance of the <see cref="T:GLHDN.ReactiveBuffers.ObservableComposite`1"/> class for unit tests.
+            </summary>
+            <param name="values">The observable sequence of leaf data for this composite.</param>
+            <param name="registerField">Delegate to register subject-valued field for subscriber monitoring.</param>
+        </member>
+        <member name="P:GLHDN.ReactiveBuffers.ObservableComposite`1.Values">
+            <summary>
+            Gets the observable sequence of leaf data for this composite.
+            </summary>
+        </member>
+        <member name="P:GLHDN.ReactiveBuffers.ObservableComposite`1.Children">
+            <summary>
+            Gets the observable sequence of children of this composite.
+            </summary>
+        </member>
+        <member name="M:GLHDN.ReactiveBuffers.ObservableComposite`1.Add(GLHDN.ReactiveBuffers.ObservableComposite{`0})">
+            <summary>
+            Adds a child to this composite.
+            </summary>
+            <param name="child">The child to add.</param>
+        </member>
+        <member name="M:GLHDN.ReactiveBuffers.ObservableComposite`1.Remove(GLHDN.ReactiveBuffers.ObservableComposite{`0})">
+            <summary>
+            Removes a child from this composite.
+            </summary>
+            <param name="child">The child to remove.</param>
+            <returns>True if the child was present to be removed, otherwise false.</returns>
+        </member>
+        <member name="M:GLHDN.ReactiveBuffers.ObservableComposite`1.Remove">
+            <summary>
+            Remove this composite from its parent.
+            </summary>
+        </member>
+        <member name="M:GLHDN.ReactiveBuffers.ObservableComposite`1.Flatten">
+            <summary>
+            Flattens this composite into an observable of observables of leaf data.
+            </summary>
+            <returns>An observable of observables of leaf data, one for each composite that is a descendent of this one.</returns>
+        </member>
+        <member name="T:GLHDN.ReactiveBuffers.ReactiveBufferBuilder`1">
+            <summary>
+            Builder for <see cref="T:GLHDN.ReactiveBuffers.ReactiveBuffer`1"/> instances.
+            </summary>
+            <typeparam name="TVertex">The vertex type of the buffer to be built.</typeparam>
+        </member>
+        <member name="M:GLHDN.ReactiveBuffers.ReactiveBufferBuilder`1.#ctor(OpenGL.PrimitiveType,System.Int32,System.Collections.Generic.IList{System.Int32},System.IObservable{System.IObservable{System.Collections.Generic.IList{`0}}})">
+            <summary>
+            Initializes a new instance of the <see cref="T:GLHDN.ReactiveBuffers.ReactiveBufferBuilder`1"/> class.
+            </summary>
+            <param name="primitiveType">The OpenGL primitive type to be rendered.</param>
+            <param name="atomCapacity">The desired capcity (in atoms) of the created buffer.</param>
+            <param name="atomIndices">The vertex indices to use when rendering each atom.</param>
+            <param name="atomSource">
+            The outer observable should push an inner observable (atom) for each new renderable.
+            The atoms should push a new list of vertices whenever the atom's state changes, and complete when it is removed.
+            </param>
+        </member>
+        <member name="M:GLHDN.ReactiveBuffers.ReactiveBufferBuilder`1.Build">
+            <summary>
+            Builds a <see cref="T:GLHDN.ReactiveBuffers.ReactiveBuffer`1"/> instance based on the state of this builder.
+            </summary>
+            <returns>The new <see cref="T:GLHDN.ReactiveBuffers.ReactiveBuffer`1"/> instance.</returns>
+        </member>
+        <member name="T:GLHDN.ReactiveBuffers.ReactiveBuffer`1">
+            <summary>
+            Logic for creating and managing an Open GL buffer for a (observable) set of (observable) items that change over time,
+            each of which provide a list of vertices to the buffer.
+            </summary>
+            <typeparam name="TVertex">The vertex data type.</typeparam>
+            <remarks>
+            TODO: worth considering turning this into an IObserver.
+            </remarks>
+        </member>
+        <member name="M:GLHDN.ReactiveBuffers.ReactiveBuffer`1.#ctor(GLHDN.Core.IVertexArrayObject,System.IObservable{System.IObservable{System.Collections.Generic.IList{`0}}},System.Collections.Generic.IList{System.Int32})">
+            <summary>
+            Initializes a new instance of the <see cref="T:GLHDN.ReactiveBuffers.ReactiveBuffer`1"/> class.
+            </summary>
+            <param name="vertexArrayObject">The VAO to populate.</param>
+            <param name="atomSource">
+            The outer observable should push an inner observable (atom) for each new renderable.
+            The atoms should push a new list of vertices whenever the atom's state changes, and complete when it is removed.
+            </param>
+            <param name="atomIndices">The vertex indices to use when rendering each atom.</param>
+        </member>
+        <member name="M:GLHDN.ReactiveBuffers.ReactiveBuffer`1.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:GLHDN.ReactiveBuffers.ReactiveBuffer`1.Draw">
+            <summary>
+            Draw with the active program.
+            </summary>
+        </member>
+    </members>
+</doc>

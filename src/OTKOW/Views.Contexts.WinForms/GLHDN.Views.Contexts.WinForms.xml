@@ -1,0 +1,690 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GLHDN.Views.Contexts.WinForms</name>
+    </assembly>
+    <members>
+        <member name="T:GLHDN.Views.Contexts.WinForms.GlControl">
+            <summary>
+            Basic <see cref="T:System.Windows.Forms.UserControl"/> for rendering using OpenGL.Net.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl.components">
+            <summary> 
+            Variabile di progettazione necessaria.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.#ctor">
+            <summary>
+            Construct a GlControl.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControl.ContextVersion">
+            <summary>
+            Get or set the version to be requested to the OpenGL driver.
+            </summary>
+        </member>
+        <member name="T:GLHDN.Views.Contexts.WinForms.GlControl.ProfileType">
+            <summary>
+            Profile permission.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl.ProfileType.Core">
+            <summary>
+            Requires the core profile
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl.ProfileType.Compatibility">
+            <summary>
+            Requires the compatibility profile.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl.ProfileType.Embedded">
+            <summary>
+            Embedded profile (OpenGL ES).
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl.ProfileType.SecurityCritical2">
+            <summary>
+            Security Critical (OpenGL SC 2).
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControl.ContextProfile">
+            <summary>
+            Gets or sets the permission to create a debug context.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._ProfileType">
+            <summary>
+            The permission to create a debug context.
+            </summary>
+        </member>
+        <member name="T:GLHDN.Views.Contexts.WinForms.GlControl.AttributePermission">
+            <summary>
+            Attribute permission.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl.AttributePermission.Required">
+            <summary>
+            Requires the attribute. Throw an error is not supported.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl.AttributePermission.Enabled">
+            <summary>
+            Enable the attribute to be set, if supported.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl.AttributePermission.EnabledInDebugger">
+            <summary>
+            Requires the attrbute to be set, but only when a debugger is attached.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl.AttributePermission.DonCare">
+            <summary>
+            Do not specify the attribute.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControl.DebugContext">
+            <summary>
+            Get or set the permission to create a debug context.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._DebugContextBit">
+            <summary>
+            The permission to create a debug context.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControl.ForwardCompatibleContext">
+            <summary>
+            Get or set the permission to create a forward compatible context.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._ForwardCompatibleContextBit">
+            <summary>
+            The permission to create a debug context.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControl.RobustContext">
+            <summary>
+            Get or set the permission to create a robust context.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._RobustContextBit">
+            <summary>
+            The permission to create a robust context.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControl.ColorBits">
+            <summary>
+            Get or set the OpenGL minimum color buffer bits.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._ColorBits">
+            <summary>
+            The OpenGL color buffer bits.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControl.DepthBits">
+            <summary>
+            Get or set the OpenGL minimum depth buffer bits.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._DepthBits">
+            <summary>
+            The OpenGL depth buffer bits.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControl.StencilBits">
+            <summary>
+            Get or set the OpenGL minimum stencil buffer bits.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._StencilBits">
+            <summary>
+            The OpenGL stencil buffer bits.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControl.MultisampleBits">
+            <summary>
+            Get or set the OpenGL minimum multisample buffer "bits".
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._MultisampleBits">
+            <summary>
+            The OpenGL multisample buffer bits.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControl.DoubleBuffer">
+            <summary>
+            Get or set the OpenGL double buffering flag.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._DoubleBuffer">
+            <summary>
+            The OpenGL double buffering flag.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControl.SwapInterval">
+            <summary>
+            Get or set the OpenGL swap buffers interval.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._SwapInterval">
+            <summary>
+            The OpenGL swap buffers interval.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControl.ControlPixelFormat">
+            <summary>
+            The <see cref="T:OpenGL.DevicePixelFormat"/> describing the minimum pixel format required by this control.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.DesignerValidatePixelFormat">
+            <summary>
+            Performs a design-time check to validate the current pixel format.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._DesignerPixelFormatNotice">
+            <summary>
+            Notice to be displayed at design-time about current pixel format selection.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControl.Animation">
+            <summary>
+            Get or set the flag indicating whether control should update itself continuosly.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._Animation">
+            <summary>
+            Flag indicating whether control should update itself continuosly.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControl.AnimationTime">
+            <summary>
+            Get or set the time interval between animation updates, in milliseconds.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._AnimationTime">
+            <summary>
+            The time interval between animation updates, in milliseconds.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControl.AnimationTimer">
+            <summary>
+            Get or set the flag for enabling animation using timers.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._AnimationTimerFlag">
+            <summary>
+            The flag for enabling animation using timers.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.CreateAnimationTimer">
+            <summary>
+            Create animation timer resources.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.AnimationTimer_Tick(System.Object,System.EventArgs)">
+            <summary>
+            Animation timer callback.
+            </summary>
+            <param name="sender">
+            The <see cref="T:System.Windows.Forms.Timer"/> that has triggered the event.
+            </param>
+            <param name="e">
+            The event arguments.
+            </param>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._AnimationTimer">
+            <summary>
+            Timer used 
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._AnimationInvalidated">
+            <summary>
+            Boolean used for avoiding excessive Invalidate() calls
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.DrawDesign(System.Windows.Forms.PaintEventArgs)">
+            <summary>
+            Draw design mode graphics.
+            </summary>
+            <param name="e">
+            A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that specify the event arguments.
+            </param>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._DesignPen">
+            <summary>
+            Pen used for drawing the UserControl at design time.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._DesignBrush">
+            <summary>
+            Brush used for drawing the UserControl at design time.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._DesignFont">
+            <summary>
+            Font used for drawing  the UserControl in the case of failures.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.DrawFailure(System.Windows.Forms.PaintEventArgs,System.Exception)">
+            <summary>
+            Draw design mode graphics in case of failures.
+            </summary>
+            <param name="e">
+            A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that specify the event arguments.
+            </param>
+            <param name="exception">
+            An <see cref="T:System.Exception"/> that describe the error encountered.
+            </param>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._FailurePen">
+            <summary>
+            Pen used for drawing  the UserControl in the case of failures.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._FailureBrush">
+            <summary>
+            Brush used for drawing the UserControl in the case of failures.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControl.Device">
+            <summary>
+            Get the <see cref="T:OpenGL.DeviceContext"/> created on this GlControl.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.CreateDeviceContext">
+            <summary>
+            Create the device context and set the pixel format.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.CreateDeviceContext(OpenGL.DevicePixelFormat)">
+            <summary>
+            Create the device context and set the pixel format.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.GetDisplay">
+            <summary>
+            Get the display associated with this Control.
+            </summary>
+            <returns>
+            It returns an <see cref="T:System.IntPtr"/> valid for GLX functions as display parameter.
+            </returns>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._DeviceContext">
+            <summary>
+            The <see cref="T:OpenGL.DeviceContext"/> created on this GlControl.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.CreateContext">
+            <summary>
+            Create the GlControl context.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.MakeCurrentContext">
+            <summary>
+            Make the GlControl context current.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.DeleteContext">
+            <summary>
+            Delete the GlControl context.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.CreateDesktopContext">
+            <summary>
+            Create the GlControl context, eventually shared with others.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.ReuseOtherContext">
+            <summary>
+            Reuse the GlControl context of another GlControl, eventually shared with others.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.SharingControl_ContextCreated(System.Object,GLHDN.Views.Contexts.WinForms.GlControlEventArgs)">
+            <summary>
+            Ensure <see cref="F:GLHDN.Views.Contexts.WinForms.GlControl._RenderContext"/> is in sync with other <see cref="T:GLHDN.Views.Contexts.WinForms.GlControl"/> owning the context.
+            </summary>
+            <param name="sender">
+            The <see cref="T:GLHDN.Views.Contexts.WinForms.GlControl"/> raising the event.
+            </param>
+            <param name="e">
+            A <see cref="T:GLHDN.Views.Contexts.WinForms.GlControlEventArgs"/> specifying the event arguments.
+            </param>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.SharingControl_ContextDestroying(System.Object,GLHDN.Views.Contexts.WinForms.GlControlEventArgs)">
+            <summary>
+            Ensure <see cref="F:GLHDN.Views.Contexts.WinForms.GlControl._RenderContext"/> is in sync with other <see cref="T:GLHDN.Views.Contexts.WinForms.GlControl"/> owning the context.
+            </summary>
+            <param name="sender">
+            The <see cref="T:GLHDN.Views.Contexts.WinForms.GlControl"/> raising the event.
+            </param>
+            <param name="e">
+            A <see cref="T:GLHDN.Views.Contexts.WinForms.GlControlEventArgs"/> specifying the event arguments.
+            </param>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._RenderContext">
+            <summary>
+            The OpenGL context created on this GlControl.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._SharingControl">
+            <summary>
+            The <see cref="T:GLHDN.Views.Contexts.WinForms.GlControl"/> that owns <see cref="F:GLHDN.Views.Contexts.WinForms.GlControl._RenderContext"/>.
+            </summary>
+        </member>
+        <member name="T:GLHDN.Views.Contexts.WinForms.GlControl.ContextSharingOption">
+            <summary>
+            Context sharing options.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl.ContextSharingOption.OwnContext">
+            <summary>
+            Create its own context.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl.ContextSharingOption.SingleContext">
+            <summary>
+            Do not create its own context, but reuse the first one created by application.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControl.ContextSharing">
+            <summary>
+            Get or set the context sharing option.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._ContextSharing">
+            <summary>
+            The context sharing option.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControl.ContextSharingGroup">
+            <summary>
+            Get or set a tag for defining sharing groups.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._ContextSharingGroup">
+            <summary>
+            A tag for defining sharing groups.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._SharingGroups">
+            <summary>
+            Map group names with the contextes for sharing resources (glShareLists or other means).
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._SharingControls">
+            <summary>
+            Map group names with the GlControl that has created a context, reused by others.
+            </summary>
+        </member>
+        <member name="E:GLHDN.Views.Contexts.WinForms.GlControl.ContextCreated">
+            <summary>
+            Event raised on control creation time, allow user to allocate resource on control.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.OnContextCreated">
+            <summary>
+            Raise the event <see cref="E:GLHDN.Views.Contexts.WinForms.GlControl.ContextCreated"/>.
+            </summary>
+        </member>
+        <member name="E:GLHDN.Views.Contexts.WinForms.GlControl.ContextDestroying">
+            <summary>
+            Event raised on control disposition time, allow user to dispose resources on control.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.OnContextDestroying">
+            <summary>
+            Raise the event <see cref="E:GLHDN.Views.Contexts.WinForms.GlControl.ContextDestroying"/>.
+            </summary>
+        </member>
+        <member name="E:GLHDN.Views.Contexts.WinForms.GlControl.Render">
+            <summary>
+            Event raised on control render time, allow user to draw on control.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.OnRender">
+            <summary>
+            Raise the event <see cref="E:GLHDN.Views.Contexts.WinForms.GlControl.Render"/>.
+            </summary>
+        </member>
+        <member name="E:GLHDN.Views.Contexts.WinForms.GlControl.ContextUpdate">
+            <summary>
+            Event raised on control render time, allow user to update resources. It is executed AFTER the <see cref="E:GLHDN.Views.Contexts.WinForms.GlControl.Render"/>
+            event.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.OnContextUpdate">
+            <summary>
+            Raise the event <see cref="E:GLHDN.Views.Contexts.WinForms.GlControl.ContextUpdate"/>.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControl.FrameDrawTime">
+            <summary>
+            Get the time spent for drawing the last frame.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._FrameDrawTime">
+            <summary>
+            The time spent for drawing the last frame.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControl.FrameSwapTime">
+            <summary>
+            Get the time spent for swapping the last frame.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControl._FrameSwapTime">
+            <summary>
+            The time spent for drawing the last frame.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControl.CreateParams">
+            <summary>
+            Get the <see cref="P:GLHDN.Views.Contexts.WinForms.GlControl.CreateParams"/> relative this UserControl.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.OnHandleCreated(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:System.Windows.Forms.Control.HandleCreated"/> event.
+            </summary>
+            <param name="e">
+            An <see cref="T:System.EventArgs"/> that contains the event data.
+            </param>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.OnHandleDestroyed(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:System.Windows.Forms.Control.HandleDestroyed"/> event.
+            </summary>
+            <param name="e">
+            An <see cref="T:System.EventArgs"/> that contains the event data.
+            </param>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.OnPaint(System.Windows.Forms.PaintEventArgs)">
+            <summary>
+            Raises the Paint event.
+            </summary>
+            <param name="e">
+            A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that contains the event data.
+            </param>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControl.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">
+            true if managed resources should be disposed; otherwise, false.
+            </param>
+        </member>
+        <member name="T:GLHDN.Views.Contexts.WinForms.GlControlEventArgs">
+            <summary>
+            Arguments for <see cref="T:GLHDN.Views.Contexts.WinForms.GlControl"/> events.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControlEventArgs.#ctor(OpenGL.DeviceContext,System.IntPtr)">
+            <summary>
+            Construct a GlControlEventArgs.
+            </summary>
+            <param name="deviceContext">
+            The <see cref="F:GLHDN.Views.Contexts.WinForms.GlControlEventArgs.DeviceContext"/> used for the underlying <see cref="T:GLHDN.Views.Contexts.WinForms.GlControl"/>.
+            </param>
+            <param name="renderContext">
+            The OpenGL context used for rendering.
+            </param>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControlEventArgs.DeviceContext">
+            <summary>
+            The <see cref="F:GLHDN.Views.Contexts.WinForms.GlControlEventArgs.DeviceContext"/> used for the underlying <see cref="T:GLHDN.Views.Contexts.WinForms.GlControl"/>.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Views.Contexts.WinForms.GlControlEventArgs.RenderContext">
+            <summary>
+            The OpenGL context used for rendering.
+            </summary>
+        </member>
+        <member name="T:GLHDN.Views.Contexts.WinForms.KhronosVersionConverter">
+            <summary>
+            Designer converter for <see cref="T:Khronos.KhronosVersion"/> properties.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.KhronosVersionConverter.CanConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.KhronosVersionConverter.ConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.KhronosVersionConverter.CanConvertTo(System.ComponentModel.ITypeDescriptorContext,System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.KhronosVersionConverter.ConvertTo(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object,System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="T:GLHDN.Views.Contexts.WinForms.GlControlAdapter">
+            <summary>
+            Wrapper for <see cref="T:GLHDN.Views.Contexts.WinForms.GlControl"/> to the <see cref="T:GLHDN.Views.IViewContext"/> interface.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControlAdapter.#ctor(GLHDN.Views.Contexts.WinForms.GlControl)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GLHDN.Views.Contexts.WinForms.GlControlAdapter"/> class.
+            </summary>
+            <param name="glControl">The <see cref="T:GLHDN.Views.Contexts.WinForms.GlControl"/> to wrap.</param>
+        </member>
+        <member name="E:GLHDN.Views.Contexts.WinForms.GlControlAdapter.GlContextCreated">
+            <inheritdoc />
+        </member>
+        <member name="E:GLHDN.Views.Contexts.WinForms.GlControlAdapter.GlRender">
+            <inheritdoc />
+        </member>
+        <member name="E:GLHDN.Views.Contexts.WinForms.GlControlAdapter.GlContextUpdate">
+            <inheritdoc />
+        </member>
+        <member name="E:GLHDN.Views.Contexts.WinForms.GlControlAdapter.GlContextDestroying">
+            <inheritdoc />
+        </member>
+        <member name="E:GLHDN.Views.Contexts.WinForms.GlControlAdapter.KeyDown">
+            <inheritdoc />
+        </member>
+        <member name="E:GLHDN.Views.Contexts.WinForms.GlControlAdapter.KeyUp">
+            <inheritdoc />
+        </member>
+        <member name="E:GLHDN.Views.Contexts.WinForms.GlControlAdapter.MouseWheel">
+            <inheritdoc />
+        </member>
+        <member name="E:GLHDN.Views.Contexts.WinForms.GlControlAdapter.LeftMouseDown">
+            <inheritdoc />
+        </member>
+        <member name="E:GLHDN.Views.Contexts.WinForms.GlControlAdapter.LeftMouseUp">
+            <inheritdoc />
+        </member>
+        <member name="E:GLHDN.Views.Contexts.WinForms.GlControlAdapter.RightMouseDown">
+            <inheritdoc />
+        </member>
+        <member name="E:GLHDN.Views.Contexts.WinForms.GlControlAdapter.RightMouseUp">
+            <inheritdoc />
+        </member>
+        <member name="E:GLHDN.Views.Contexts.WinForms.GlControlAdapter.MiddleMouseDown">
+            <inheritdoc />
+        </member>
+        <member name="E:GLHDN.Views.Contexts.WinForms.GlControlAdapter.MiddleMouseUp">
+            <inheritdoc />
+        </member>
+        <member name="E:GLHDN.Views.Contexts.WinForms.GlControlAdapter.Resize">
+            <inheritdoc />
+        </member>
+        <member name="E:GLHDN.Views.Contexts.WinForms.GlControlAdapter.GotFocus">
+            <inheritdoc />
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControlAdapter.GLHDN#Views#IViewContext#Width">
+            <inheritdoc />
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControlAdapter.GLHDN#Views#IViewContext#Height">
+            <inheritdoc />
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControlAdapter.IsFocused">
+            <inheritdoc />
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControlAdapter.GLHDN#Views#IViewContext#CursorPosition">
+            <inheritdoc />
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlControlAdapter.ShowCursor">
+            <inheritdoc />
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlControlAdapter.Exit">
+            <inheritdoc />
+        </member>
+        <member name="T:GLHDN.Views.Contexts.WinForms.GlForm">
+            <summary>
+            Windows form containing only a single OpenGL render control.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlForm.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GLHDN.Views.Contexts.WinForms.GlForm"/> class.
+            </summary>
+            <param name="name">The name of the form.</param>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlForm.ViewContext">
+            <summary>
+            Gets the <see cref="T:GLHDN.Views.IViewContext" /> of this form for <see cref="T:GLHDN.Views.View"/> instances to use.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlForm.Animation">
+            <summary>
+            Gets or sets a value indicating whether the control should update itself continuously.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlForm.AnimationTime">
+            <summary>
+            Gets or sets the time interval between animation updates, in milliseconds.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlForm.ColorBits">
+            <summary>
+            Gets or sets the OpenGL minimum color buffer bits.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlForm.DepthBits">
+            <summary>
+            Gets or sets the OpenGL minimum depth buffer bits.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlForm.MultisampleBits">
+            <summary>
+            Gets or sets the OpenGL minimum multisample buffer "bits".
+            </summary>
+        </member>
+        <member name="P:GLHDN.Views.Contexts.WinForms.GlForm.StencilBits">
+            <summary>
+            Gets or sets the OpenGL minimum stencil buffer bits.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Views.Contexts.WinForms.GlForm.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+    </members>
+</doc>

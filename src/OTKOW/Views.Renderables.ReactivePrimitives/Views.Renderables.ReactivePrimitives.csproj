@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>OTKOW.Views.Renderables.ReactivePrimitives</AssemblyName>
+    <RootNamespace>OTKOW.Views.Renderables.ReactivePrimitives</RootNamespace>
+    
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Open GL Helpers for .NET / view engine: Renderable for ReactiveX-managed primitives</Description>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>GLHDN.Views.Renderables.Primitives.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Colored.Fragment.glsl" />
+    <None Remove="Colored.Vertex.glsl" />
+    <None Remove="GLHDN.Views.Renderables.Primitives.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Colored.Fragment.glsl" />
+    <EmbeddedResource Include="Colored.Vertex.glsl" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\ReactiveBuffers\ReactiveBuffers.csproj" />
+    <ProjectReference Include="..\Views\Views.csproj" />
+  </ItemGroup>
+
+</Project>

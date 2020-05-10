@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <Authors>Simon Condon</Authors>
+    <Company />
+    <Product>Open GL Helpers for .NET</Product>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/sdcondon/GLHDN</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/sdcondon/GLHDN</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <Version>0.0.0-localbuild+localbuild</Version>
+  </PropertyGroup>
+</Project>

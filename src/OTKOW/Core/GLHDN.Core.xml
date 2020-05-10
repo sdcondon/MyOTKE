@@ -1,0 +1,484 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GLHDN.Core</name>
+    </assembly>
+    <members>
+        <member name="T:GLHDN.Core.GlExt">
+            <summary>
+            Static OpenGL helper methods.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Core.GlExt.ThrowIfNoCurrentContext">
+            <summary>
+            Throws an <see cref="T:System.InvalidOperationException"/> if there is no OpenGL context current on the calling thread.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Core.GlExt.DebugWriteLine(System.String)">
+            <summary>
+            Records a debug message, prefixed by the calling type and method.
+            </summary>
+            <param name="message">The message to be recorded.</param>
+        </member>
+        <member name="T:GLHDN.Core.GlProgram">
+            <summary>
+            Represents a compiled OpenGL program.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Core.GlProgram.#ctor(System.Collections.Generic.IEnumerable{System.ValueTuple{OpenGL.ShaderType,System.String}},System.String[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:GLHDN.Core.GlProgram"/> class.
+            </summary>
+            <param name="shaderSpecs">Specifications for each of the shaders to be included in the program.</param>
+            <param name="uniforms">The names of the unifoms used by the shaders.</param>
+        </member>
+        <member name="M:GLHDN.Core.GlProgram.Finalize">
+            <summary>
+            Finalizes an instance of the <see cref="T:GLHDN.Core.GlProgram"/> class.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Core.GlProgram.UseWithUniformValues(System.Object[])">
+            <summary>
+            Installs the program as part of the current rendering state and sets the current uniform values (using the default uniform block).
+            </summary>
+            <param name="values">The uniform values (in the order in which they were registered).</param>
+        </member>
+        <member name="M:GLHDN.Core.GlProgram.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:GLHDN.Core.GlProgramBuilder">
+            <summary>
+            Builder class for <see cref="T:GLHDN.Core.GlProgram"/> objects that presents a fluent-ish interface.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Core.GlProgramBuilder.WithShaderFromStream(OpenGL.ShaderType,System.IO.Stream)">
+            <summary>
+            Adds a shader to be included in the built program, reading the source from a <see cref="T:System.IO.Stream"/> object.
+            </summary>
+            <param name="shaderType">The type of shader to be added.</param>
+            <param name="sourceStream">The stream containing the source of the shader (in UTF-8).</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:GLHDN.Core.GlProgramBuilder.WithShaderFromFile(OpenGL.ShaderType,System.String)">
+            <summary>
+            Adds a shader to be included in the built program, reading the source from a file.
+            </summary>
+            <param name="shaderType">The type of shader to be added.</param>
+            <param name="filePath">The path of the file containing the source of the shader (in UTF-8).</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:GLHDN.Core.GlProgramBuilder.WithShaderFromEmbeddedResource(OpenGL.ShaderType,System.String)">
+            <summary>
+            Adds a shader to be included in the built program, reading the source from a resource embedded in the calling assembly.
+            </summary>
+            <param name="shaderType">The type of shader to be added.</param>
+            <param name="resourceName">The name of the resource containing the source of the shader (in UTF-8).</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:GLHDN.Core.GlProgramBuilder.WithUniforms(System.String[])">
+            <summary>
+            Registers the set of uniforms required by the program.
+            </summary>
+            <param name="uniformNames">The names of the uniforms, in the order that they will be provided when calling <see cref="M:GLHDN.Core.GlProgram.UseWithUniformValues(System.Object[])"/>.</param>
+            <returns>The updated builder.</returns>
+            <remarks>
+            TODO: Better to use a generic type approach for compile-time safety.
+            </remarks>
+        </member>
+        <member name="M:GLHDN.Core.GlProgramBuilder.Build">
+            <summary>
+            Builds a new <see cref="T:GLHDN.Core.GlProgram"/> instance based on the state of the builder.
+            </summary>
+            <returns>The built program.</returns>
+        </member>
+        <member name="T:GLHDN.Core.GlVertexArrayObject">
+            <summary>
+            Represents an OpenGL vertex array object.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Core.GlVertexArrayObject.#ctor(OpenGL.PrimitiveType,System.Collections.Generic.IList{System.ValueTuple{OpenGL.BufferUsage,System.Type,System.Int32,System.Array}},System.ValueTuple{System.Int32,System.UInt32[]})">
+            <summary>
+            Initializes a new instance of the <see cref="T:GLHDN.Core.GlVertexArrayObject"/> class. SIDE EFFECT: new VAO will be bound.
+            </summary>
+            <param name="primitiveType">OpenGL primitive type.</param>
+            <param name="attributeBufferSpecs">Specs for the buffers in this VAO.</param>
+            <param name="indexSpec">The spec for the index of this VAO.</param>
+        </member>
+        <member name="M:GLHDN.Core.GlVertexArrayObject.Finalize">
+            <summary>
+            Finalizes an instance of the <see cref="T:GLHDN.Core.GlVertexArrayObject"/> class.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Core.GlVertexArrayObject.VertexCount">
+            <summary>
+            Gets the number of vertices to be rendered.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Core.GlVertexArrayObject.IndexBuffer">
+            <inheritdoc />
+        </member>
+        <member name="P:GLHDN.Core.GlVertexArrayObject.AttributeBuffers">
+            <inheritdoc />
+        </member>
+        <member name="M:GLHDN.Core.GlVertexArrayObject.Draw(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:GLHDN.Core.GlVertexArrayObject.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:GLHDN.Core.GlVertexAttributeInfo">
+            <summary>
+            Container for information about an OpenGL vertex attribute.
+            </summary>
+        </member>
+        <member name="F:GLHDN.Core.GlVertexAttributeInfo.KnownTypes">
+            <summary>
+            A mapping of .NET types to equivalent primitive OpenGL attribute info for them.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Core.GlVertexAttributeInfo.#ctor(OpenGL.VertexAttribType,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GLHDN.Core.GlVertexAttributeInfo"/> struct.
+            </summary>
+            <param name="type">The OpenGL type for the vertex attribute.</param>
+            <param name="multiple">The multiple (of the OpenGL type) for the attribute.</param>
+            <param name="offset">The offset from the start of the buffer to the attribute for the first vertex in the buffer.</param>
+            <param name="stride">The offset from the attribute for one vertex in the buffer to the next.</param>
+        </member>
+        <member name="P:GLHDN.Core.GlVertexAttributeInfo.Type">
+            <summary>
+            Gets the OpenGL type for the vertex attribute.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Core.GlVertexAttributeInfo.Multiple">
+            <summary>
+            Gets the multiple (of the OpenGL type) for the attribute.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Core.GlVertexAttributeInfo.Offset">
+            <summary>
+            Gets the offset from the start of the buffer to the attribute for the first vertex in the buffer.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Core.GlVertexAttributeInfo.Stride">
+            <summary>
+            Gets the offset from the attribute for one vertex in the buffer to the next.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Core.GlVertexAttributeInfo.ForType(System.Type)">
+            <summary>
+            Returns attribute info for a given (blittable) type.
+            </summary>
+            <param name="t">The type.</param>
+            <returns>An array of attribute info.</returns>
+        </member>
+        <member name="T:GLHDN.Core.GlVertexBufferObject">
+            <summary>
+            A OpenGL vertex buffer object.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Core.GlVertexBufferObject.#ctor(OpenGL.BufferTarget,OpenGL.BufferUsage,System.Type,System.Int32,System.Array)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GLHDN.Core.GlVertexBufferObject"/> class. SIDE EFFECT: New buffer will be bound to the given target.
+            </summary>
+            <param name="target">OpenGL buffer target specification.</param>
+            <param name="usage">OpenGL buffer usage specification.</param>
+            <param name="elementType">The type of elements to be stored in the buffer. The data type must be a blittable value type (or an exception will be thrown).</param>
+            <param name="elementCapacity">The maximum number of elements to be stored in the buffer.</param>
+            <param name="elementData">The data to populate the buffer with.</param>
+        </member>
+        <member name="M:GLHDN.Core.GlVertexBufferObject.Finalize">
+            <summary>
+            Finalizes an instance of the <see cref="T:GLHDN.Core.GlVertexBufferObject"/> class.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Core.GlVertexBufferObject.Id">
+            <inheritdoc />
+        </member>
+        <member name="P:GLHDN.Core.GlVertexBufferObject.Attributes">
+            <inheritdoc />
+        </member>
+        <member name="P:GLHDN.Core.GlVertexBufferObject.Capacity">
+            <inheritdoc />
+        </member>
+        <member name="P:GLHDN.Core.GlVertexBufferObject.Item(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:GLHDN.Core.GlVertexBufferObject.Copy``1(System.Int32,System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:GLHDN.Core.GlVertexBufferObject.GetAs``1(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:GLHDN.Core.GlVertexBufferObject.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:GLHDN.Core.ObjLoader">
+            <summary>
+            Very, VERY simple OBJ loader (nabbed from an OpenGL tutorial)
+            Here is a short list of features a real function would provide :
+            - Binary files. Reading a model should be just a few memcpy's away, not parsing a file at runtime. In short : OBJ is not very great.
+            - Animations and bones (includes bones weights)
+            - Multiple UVs
+            - All attributes should be optional, not "forced"
+            - More stable. Change a line in the OBJ file and it crashes.
+            - More secure. Change another line and you can inject code.
+            - Loading from memory, stream, etc.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Core.ObjLoader.LoadObj(System.String,System.Collections.Generic.IList{System.Numerics.Vector3},System.Collections.Generic.IList{System.Numerics.Vector2},System.Collections.Generic.IList{System.Numerics.Vector3})">
+            <summary>
+            Loads data from an OBJ file.
+            </summary>
+            <param name="path">The path of the OBJ file.</param>
+            <param name="vertexPositions">The list to be populated with the position of each vertex.</param>
+            <param name="vertexUvs">The list to be populated with the texture co-ordinate of each vertex.</param>
+            <param name="vertexNormals">The list to be populated with the normal of each vertex.</param>
+            <returns>True if the OBJ file was successfully loaded, otherwise false.</returns>
+        </member>
+        <member name="T:GLHDN.Core.TextureLoader">
+            <summary>
+            Simple texture loader nabbed from an OpenGL tutorial.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Core.TextureLoader.LoadDDS(System.String)">
+            <summary>
+            Loads a DDS image from a given file path.
+            </summary>
+            <param name="filePath">The file path to load the image from.</param>
+            <returns>The OpenGL texture ID that the image has been loaded into.</returns>
+        </member>
+        <member name="M:GLHDN.Core.TextureLoader.LoadBMP(System.String)">
+            <summary>
+            Loads a (24bpp) BMP image from a given file path.
+            </summary>
+            <param name="filePath">The file path to load the image from.</param>
+            <returns>The OpenGL texture ID that the image has been loaded into.</returns>
+            <remarks>
+            Also see https://en.wikipedia.org/wiki/BMP_file_format.
+            </remarks>
+        </member>
+        <member name="T:GLHDN.Core.IVertexArrayObject">
+            <summary>
+            Interface for types representing an OpenGL vertex array object.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Core.IVertexArrayObject.IndexBuffer">
+            <summary>
+            Gets the index buffer object for this VAO, if there is one.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Core.IVertexArrayObject.AttributeBuffers">
+            <summary>
+            Gets the set of buffer objects contained within this VAO.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Core.IVertexArrayObject.Draw(System.Int32)">
+            <summary>
+            Draw with the active program.
+            </summary>
+            <param name="count">The number of vertices to draw, or -1 to draw all vertices.</param>
+        </member>
+        <member name="T:GLHDN.Core.IVertexBufferObject">
+            <summary>
+            Interface for types representing an OpenGL vertex buffer object.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Core.IVertexBufferObject.Id">
+            <summary>
+            Gets the ID of the buffer object.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Core.IVertexBufferObject.Attributes">
+            <summary>
+            Gets the vertex attribute info for this buffer.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Core.IVertexBufferObject.Capacity">
+            <summary>
+            Gets the number of vertices that the buffer has the capacity for.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Core.IVertexBufferObject.Item(System.Int32)">
+            <summary>
+            Sets data for the vertex at a particular index.
+            </summary>
+            <param name="index">The index of the object to set.</param>
+        </member>
+        <member name="M:GLHDN.Core.IVertexBufferObject.Copy``1(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Copy data internally within the buffer.
+            </summary>
+            <typeparam name="T">The type of object to treat the buffer content as.</typeparam>
+            <param name="readIndex">The (object) index to read from.</param>
+            <param name="writeIndex">The (object) index to write to.</param>
+            <param name="count">The number of objects to copy.</param>
+        </member>
+        <member name="M:GLHDN.Core.IVertexBufferObject.GetAs``1(System.Int32)">
+            <summary>
+            Retrieves data from the buffer.
+            </summary>
+            <typeparam name="T">The type to interpret the data as.</typeparam>
+            <param name="index">The object index to retrieve.</param>
+            <returns>The buffer content at the requested index.</returns>
+        </member>
+        <member name="T:GLHDN.Core.MemoryVertexArrayObject">
+            <summary>
+            Implementation of <see cref="T:GLHDN.Core.IVertexArrayObject"/> that just stores buffer content in memory, for testing purposes.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Core.MemoryVertexArrayObject.#ctor(System.Collections.Generic.IList{System.ValueTuple{OpenGL.BufferUsage,System.Type,System.Int32,System.Array}},System.ValueTuple{System.Int32,System.UInt32[]})">
+            <summary>
+            Initializes a new instance of the <see cref="T:GLHDN.Core.MemoryVertexArrayObject"/> class.
+            </summary>
+            <param name="attributeBufferSpecs">Specs for the buffers in this VAO.</param>
+            <param name="indexSpec">Spec for the index of this VAO.</param>
+        </member>
+        <member name="P:GLHDN.Core.MemoryVertexArrayObject.GLHDN#Core#IVertexArrayObject#IndexBuffer">
+            <inheritdoc />
+        </member>
+        <member name="P:GLHDN.Core.MemoryVertexArrayObject.IndexBuffer">
+            <summary>
+            Gets the <see cref="T:GLHDN.Core.MemoryVertexBufferObject"/> that serves as the index buffer for this VAO.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Core.MemoryVertexArrayObject.GLHDN#Core#IVertexArrayObject#AttributeBuffers">
+            <inheritdoc />
+        </member>
+        <member name="P:GLHDN.Core.MemoryVertexArrayObject.AttributeBuffers">
+            <summary>
+             Gets the list of <see cref="T:GLHDN.Core.MemoryVertexBufferObject"/> instances that serve as the attribute buffers for this VAO.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Core.MemoryVertexArrayObject.Draw(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="T:GLHDN.Core.MemoryVertexBufferObject">
+            <summary>
+            Implementation of <see cref="T:GLHDN.Core.IVertexBufferObject"/> that just stores buffer content in memory, for testing purposes.
+            </summary>
+        </member>
+        <member name="M:GLHDN.Core.MemoryVertexBufferObject.#ctor(System.Int32,System.Array)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GLHDN.Core.MemoryVertexBufferObject"/> class.
+            </summary>
+            <param name="capacity">The capacity of the buffer.</param>
+            <param name="data">The data to populate the buffer with, or null.</param>
+        </member>
+        <member name="P:GLHDN.Core.MemoryVertexBufferObject.Content">
+            <summary>
+            Gets the content of the buffer.
+            </summary>
+        </member>
+        <member name="P:GLHDN.Core.MemoryVertexBufferObject.Id">
+            <inheritdoc />
+        </member>
+        <member name="P:GLHDN.Core.MemoryVertexBufferObject.Attributes">
+            <inheritdoc />
+        </member>
+        <member name="P:GLHDN.Core.MemoryVertexBufferObject.Capacity">
+            <inheritdoc />
+        </member>
+        <member name="P:GLHDN.Core.MemoryVertexBufferObject.Item(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:GLHDN.Core.MemoryVertexBufferObject.Copy``1(System.Int32,System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:GLHDN.Core.MemoryVertexBufferObject.GetAs``1(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="T:GLHDN.Core.VaoDecorators.SynchronizedVao">
+            <summary>
+            Decorator for <see cref="T:GLHDN.Core.IVertexArrayObject"/> that explicitly synchronizes with OpenGL (making it simple but slow..).
+            <para/>
+            See https://www.khronos.org/opengl/wiki/Synchronization#Implicit_synchronization for some info.
+            </summary>
+            <remarks>
+            TODO: Look into some alternative decorators that do e.g. streaming - https://www.khronos.org/opengl/wiki/Buffer_Object_Streaming.
+            </remarks>
+        </member>
+        <member name="M:GLHDN.Core.VaoDecorators.SynchronizedVao.#ctor(GLHDN.Core.IVertexArrayObject)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GLHDN.Core.VaoDecorators.SynchronizedVao"/> class.
+            </summary>
+            <param name="vertexArrayObject">The VAO to apply synchronization to.</param>
+        </member>
+        <member name="P:GLHDN.Core.VaoDecorators.SynchronizedVao.IndexBuffer">
+            <inheritdoc />
+        </member>
+        <member name="P:GLHDN.Core.VaoDecorators.SynchronizedVao.AttributeBuffers">
+            <inheritdoc />
+        </member>
+        <member name="M:GLHDN.Core.VaoDecorators.SynchronizedVao.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:GLHDN.Core.VaoDecorators.SynchronizedVao.Draw(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:GLHDN.Core.VaoDecorators.SynchronizedVao.SynchronizedVertexBufferObject.FlushChanges">
+            <summary>
+            Flush any changes to the underlying buffer.
+            </summary>
+        </member>
+        <member name="T:GLHDN.Core.VertexArrayObjectBuilder">
+            <summary>
+            Builder class for <see cref="T:GLHDN.Core.GlVertexArrayObject"/> objects that presents a fluent-ish interface.
+            </summary>
+            <remarks>
+            Useful for setting up a VAO before the OpenGL context has initialized.
+            </remarks>
+        </member>
+        <member name="M:GLHDN.Core.VertexArrayObjectBuilder.#ctor(OpenGL.PrimitiveType)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GLHDN.Core.VertexArrayObjectBuilder"/> class.
+            </summary>
+            <param name="primitiveType">The type of primitive data to be stored in the built VAO.</param>
+        </member>
+        <member name="M:GLHDN.Core.VertexArrayObjectBuilder.WithAttributeBuffer(OpenGL.BufferUsage,System.Array)">
+            <summary>
+            Adds a new populated attribute buffer to be included in the built VAO.
+            </summary>
+            <param name="bufferUsage">The usage type for the buffer.</param>
+            <param name="data">The data with which to populate the buffer.</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:GLHDN.Core.VertexArrayObjectBuilder.WithAttributeBuffer``1(OpenGL.BufferUsage,System.Int32)">
+            <summary>
+            Adds a new empty attribute buffer to be included in the built VAO.
+            </summary>
+            <typeparam name="T">The type of data to be stored in the buffer.</typeparam>
+            <param name="bufferUsage">The usage type for the buffer.</param>
+            <param name="size">The size of the buffer, in instances of <see typeparamref="T"/>.</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:GLHDN.Core.VertexArrayObjectBuilder.WithIndex(System.UInt32[])">
+            <summary>
+            Sets the index buffer to be included in the built VAO.
+            </summary>
+            <param name="data">The data with which to populate the buffer.</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:GLHDN.Core.VertexArrayObjectBuilder.WithIndex(System.Int32)">
+            <summary>
+            Sets the index buffer to be included in the built VAO.
+            </summary>
+            <param name="capacity">The size of the index buffer.</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:GLHDN.Core.VertexArrayObjectBuilder.Synchronized">
+            <summary>
+            Specifies that the built VAO should be explicitly synchronized, with any pending changes flushed on each draw call.
+            <para/>
+            Specifically, means that the created VAO will be a <see cref="T:GLHDN.Core.VaoDecorators.SynchronizedVao"/> instance.
+            </summary>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:GLHDN.Core.VertexArrayObjectBuilder.Build">
+            <summary>
+            Builds a new <see cref="T:GLHDN.Core.GlVertexArrayObject"/> instance based on the state of the builder.
+            </summary>
+            <returns>The built VAO.</returns>
+        </member>
+    </members>
+</doc>
