@@ -3,14 +3,12 @@ using OTKOW.Views.Contexts.WinForms;
 using OTKOW.Views.Renderables.BasicExamples;
 using OTKOW.Views.Renderables.Gui;
 using OTKOW.Views.Renderables.ReactivePrimitives;
-using OpenToolkit.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
-using OpenToolkit.Graphics;
 
 namespace OTKOW.Examples.WinForms
 {
@@ -54,15 +52,15 @@ namespace OTKOW.Examples.WinForms
                 view.LockCursor = false;
 
                 var systemInfo = new StringBuilder();
-                //systemInfo.AppendLine($"OpenGl version: {Gl.CurrentVersion}");
-                //systemInfo.AppendLine($"OpenGl Shading Language version: {Gl.CurrentShadingVersion}");
-                //systemInfo.AppendLine($"Vendor: {Gl.CurrentVendor}");
-                //systemInfo.AppendLine($"Renderer: {Gl.CurrentRenderer}");
+                ////systemInfo.AppendLine($"OpenGl version: {Gl.CurrentVersion}");
+                ////systemInfo.AppendLine($"OpenGl Shading Language version: {Gl.CurrentShadingVersion}");
+                ////systemInfo.AppendLine($"Vendor: {Gl.CurrentVendor}");
+                ////systemInfo.AppendLine($"Renderer: {Gl.CurrentRenderer}");
 
-                //if (Egl.IsAvailable)
-                //{
-                //    systemInfo.AppendLine("EGL is available");
-                //}
+                ////if (Egl.IsAvailable)
+                ////{
+                ////    systemInfo.AppendLine("EGL is available");
+                ////}
 
                 AddRenderable(new Gui(view, 1000)
                 {

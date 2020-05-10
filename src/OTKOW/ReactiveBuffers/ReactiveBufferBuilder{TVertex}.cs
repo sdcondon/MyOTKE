@@ -1,5 +1,5 @@
-﻿using OTKOW.Core;
-using OpenToolkit.Graphics.OpenGL;
+﻿using OpenToolkit.Graphics.OpenGL;
+using OTKOW.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +11,7 @@ namespace OTKOW.ReactiveBuffers
     /// </summary>
     /// <typeparam name="TVertex">The vertex type of the buffer to be built.</typeparam>
     public class ReactiveBufferBuilder<TVertex>
+        where TVertex : struct
     {
         private readonly VertexArrayObjectBuilder builder;
         private readonly IObservable<IObservable<IList<TVertex>>> vertexSource;

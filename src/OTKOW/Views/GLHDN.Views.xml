@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>GLHDN.Views</name>
+        <name>OTKOW.Views</name>
     </assembly>
     <members>
-        <member name="T:GLHDN.Views.FirstPersonCamera">
+        <member name="T:OTKOW.Views.FirstPersonCamera">
             <summary>
-            An <see cref="T:GLHDN.Views.ICamera"/> implementation that uses an "FPS"-style control scheme.
+            An <see cref="T:OTKOW.Views.ICamera"/> implementation that uses an "FPS"-style control scheme.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.FirstPersonCamera.#ctor(GLHDN.Views.View,System.Single,System.Single,System.Single,System.Single,System.Single,System.Numerics.Vector3,System.Single,System.Single)">
+        <member name="M:OTKOW.Views.FirstPersonCamera.#ctor(OTKOW.Views.View,System.Single,System.Single,System.Single,System.Single,System.Single,System.Numerics.Vector3,System.Single,System.Single)">
             <summary>
-            Initializes a new instance of the <see cref="T:GLHDN.Views.FirstPersonCamera"/> class.
+            Initializes a new instance of the <see cref="T:OTKOW.Views.FirstPersonCamera"/> class.
             </summary>
             <param name="view">The view from which to retrieve user input.</param>
             <param name="movementSpeed">The movement speed of the camera, in units per second.</param>
@@ -23,68 +23,68 @@
             <param name="initialHorizontalAngleRadians">The initial angle between the camera direction and the Y axis, in radians.</param>
             <param name="initialVerticalAngleRadians">The initial angle between between the camera direction and the X axis, in radians.</param>
         </member>
-        <member name="P:GLHDN.Views.FirstPersonCamera.MovementSpeed">
+        <member name="P:OTKOW.Views.FirstPersonCamera.MovementSpeed">
             <summary>
             Gets or sets the movement speed of the camera, in units per second.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.FirstPersonCamera.RotationSpeed">
+        <member name="P:OTKOW.Views.FirstPersonCamera.RotationSpeed">
             <summary>
             Gets or sets the "rotation speed" of the camera - the multiplicand of the mouse cursor offset to radians.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.FirstPersonCamera.FieldOfViewRadians">
+        <member name="P:OTKOW.Views.FirstPersonCamera.FieldOfViewRadians">
             <summary>
             Gets or sets the field of view of the camera, in radians.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.FirstPersonCamera.Position">
+        <member name="P:OTKOW.Views.FirstPersonCamera.Position">
             <inheritdoc />
             <remarks>Should be private, but used by Ray..</remarks>
         </member>
-        <member name="P:GLHDN.Views.FirstPersonCamera.View">
+        <member name="P:OTKOW.Views.FirstPersonCamera.View">
             <inheritdoc />
         </member>
-        <member name="P:GLHDN.Views.FirstPersonCamera.Projection">
+        <member name="P:OTKOW.Views.FirstPersonCamera.Projection">
             <inheritdoc />
         </member>
-        <member name="P:GLHDN.Views.FirstPersonCamera.NearPlaneDistance">
+        <member name="P:OTKOW.Views.FirstPersonCamera.NearPlaneDistance">
             <summary>
             Gets or sets the distance of the near plane from the camera.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.FirstPersonCamera.FarPlaneDistance">
+        <member name="P:OTKOW.Views.FirstPersonCamera.FarPlaneDistance">
             <summary>
             Gets or sets the distance of the far plane from the camera.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.FirstPersonCamera.Update(System.TimeSpan)">
+        <member name="M:OTKOW.Views.FirstPersonCamera.Update(System.TimeSpan)">
             <inheritdoc />
         </member>
-        <member name="T:GLHDN.Views.ICamera">
+        <member name="T:OTKOW.Views.ICamera">
             <summary>
             Interface for types that provide view and projection matrices, and can change over time (e.g. in reponse to user input).
             </summary>
         </member>
-        <member name="P:GLHDN.Views.ICamera.Position">
+        <member name="P:OTKOW.Views.ICamera.Position">
             <summary>
             Gets the current position of the camera.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.ICamera.Update(System.TimeSpan)">
+        <member name="M:OTKOW.Views.ICamera.Update(System.TimeSpan)">
             <summary>
             Updates the state of the camera.
             </summary>
             <param name="elapsed">The elapsed time since the last update.</param>
         </member>
-        <member name="T:GLHDN.Views.OrbitCamera">
+        <member name="T:OTKOW.Views.OrbitCamera">
             <summary>
-            Implementation of <see cref="T:GLHDN.Views.ICamera"/> that rotates around the origin.
+            Implementation of <see cref="T:OTKOW.Views.ICamera"/> that rotates around the origin.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.OrbitCamera.#ctor(GLHDN.Views.View,System.Single,System.Single,System.Single,System.Single,System.Single)">
+        <member name="M:OTKOW.Views.OrbitCamera.#ctor(OTKOW.Views.View,System.Single,System.Single,System.Single,System.Single,System.Single)">
             <summary>
-            Initializes a new instance of the <see cref="T:GLHDN.Views.OrbitCamera"/> class.
+            Initializes a new instance of the <see cref="T:OTKOW.Views.OrbitCamera"/> class.
             </summary>
             <param name="view">The view from which to retrieve input and aspect ratio.</param>
             <param name="rotationSpeedBase">The base (i.e. at default zoom distance) rotation speed of the camera, in radians per per update.</param>
@@ -93,61 +93,61 @@
             <param name="nearPlaneDistance">The distance of the near plane from the camera.</param>
             <param name="farPlaneDistance">The ditance of the far plane from the camera.</param>
         </member>
-        <member name="P:GLHDN.Views.OrbitCamera.RotationSpeedBase">
+        <member name="P:OTKOW.Views.OrbitCamera.RotationSpeedBase">
             <summary>
             Gets or sets the base (i.e. at default zoom distance) rotation speed of the camera in radians per update.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.OrbitCamera.RollSpeed">
+        <member name="P:OTKOW.Views.OrbitCamera.RollSpeed">
             <summary>
             Gets or sets the roll speed of the camera, in radians per update.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.OrbitCamera.FieldOfViewRadians">
+        <member name="P:OTKOW.Views.OrbitCamera.FieldOfViewRadians">
             <summary>
             Gets or sets the camera's field of view, in radians.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.OrbitCamera.NearPlaneDistance">
+        <member name="P:OTKOW.Views.OrbitCamera.NearPlaneDistance">
             <summary>
             Gets or sets the distance of the near plane from the camera.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.OrbitCamera.FarPlaneDistance">
+        <member name="P:OTKOW.Views.OrbitCamera.FarPlaneDistance">
             <summary>
             Gets or sets the distance of the far plane from the camera.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.OrbitCamera.Distance">
+        <member name="P:OTKOW.Views.OrbitCamera.Distance">
             <summary>
             Gets the current distance between the camera and the origin.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.OrbitCamera.RotationSpeed">
+        <member name="P:OTKOW.Views.OrbitCamera.RotationSpeed">
             <summary>
             Gets the current rotation speed of the camera, in radians per update.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.OrbitCamera.Position">
+        <member name="P:OTKOW.Views.OrbitCamera.Position">
             <inheritdoc />
         </member>
-        <member name="P:GLHDN.Views.OrbitCamera.View">
+        <member name="P:OTKOW.Views.OrbitCamera.View">
             <inheritdoc />
         </member>
-        <member name="P:GLHDN.Views.OrbitCamera.Projection">
+        <member name="P:OTKOW.Views.OrbitCamera.Projection">
             <inheritdoc />
         </member>
-        <member name="M:GLHDN.Views.OrbitCamera.Update(System.TimeSpan)">
+        <member name="M:OTKOW.Views.OrbitCamera.Update(System.TimeSpan)">
             <inheritdoc />
         </member>
-        <member name="T:GLHDN.Views.PanningCamera">
+        <member name="T:OTKOW.Views.PanningCamera">
             <summary>
-            Implementation of <see cref="T:GLHDN.Views.ICamera"/> that moves in the XY plane.
+            Implementation of <see cref="T:OTKOW.Views.ICamera"/> that moves in the XY plane.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.PanningCamera.#ctor(GLHDN.Views.View,System.Single,System.Single,System.Single,System.Numerics.Vector3,System.Single,System.Single)">
+        <member name="M:OTKOW.Views.PanningCamera.#ctor(OTKOW.Views.View,System.Single,System.Single,System.Single,System.Numerics.Vector3,System.Single,System.Single)">
             <summary>
-            Initializes a new instance of the <see cref="T:GLHDN.Views.PanningCamera"/> class.
+            Initializes a new instance of the <see cref="T:OTKOW.Views.PanningCamera"/> class.
             </summary>
             <param name="view">The view from which to retrieve input and aspect ratio.</param>
             <param name="fieldOfViewRadians">The camera's field of view, in radians.</param>
@@ -157,87 +157,87 @@
             <param name="movementSpeed">The movement speed of the camera, in units per second per unit distance from target.</param>
             <param name="verticalAngle">The initial angle, in radians, between the camera's view direction and the Z-axis.</param>
         </member>
-        <member name="P:GLHDN.Views.PanningCamera.FieldOfViewRadians">
+        <member name="P:OTKOW.Views.PanningCamera.FieldOfViewRadians">
             <summary>
             Gets or sets the camera's field of view, in radians.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.PanningCamera.NearPlaneDistance">
+        <member name="P:OTKOW.Views.PanningCamera.NearPlaneDistance">
             <summary>
             Gets or sets the distance of the near plane from the camera.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.PanningCamera.FarPlaneDistance">
+        <member name="P:OTKOW.Views.PanningCamera.FarPlaneDistance">
             <summary>
             Gets or sets the distance of the far plane from the camera.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.PanningCamera.VerticalAngle">
+        <member name="P:OTKOW.Views.PanningCamera.VerticalAngle">
             <summary>
             Gets or sets the current angle, in radians, between the camera's view direction and the Z-axis.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.PanningCamera.VerticalAngleMax">
+        <member name="P:OTKOW.Views.PanningCamera.VerticalAngleMax">
             <summary>
             Gets or sets the maximum angle, in radians, between the camera's view direction and the Z-axis.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.PanningCamera.VerticalRotationSpeed">
+        <member name="P:OTKOW.Views.PanningCamera.VerticalRotationSpeed">
             <summary>
             Gets or sets the vertical rotation speed of the camera, in radians per second.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.PanningCamera.HorizontalAngle">
+        <member name="P:OTKOW.Views.PanningCamera.HorizontalAngle">
             <summary>
             Gets or sets the current angle, in radians, between the camera's view direction and the X-axis.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.PanningCamera.HorizontalRotationSpeed">
+        <member name="P:OTKOW.Views.PanningCamera.HorizontalRotationSpeed">
             <summary>
             Gets or sets the horizontal rotation speed of the camera, in radians per second.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.PanningCamera.Distance">
+        <member name="P:OTKOW.Views.PanningCamera.Distance">
             <summary>
             Gets the current distance between the camera and the target.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.PanningCamera.Position">
+        <member name="P:OTKOW.Views.PanningCamera.Position">
             <inheritdoc />
         </member>
-        <member name="P:GLHDN.Views.PanningCamera.View">
+        <member name="P:OTKOW.Views.PanningCamera.View">
             <inheritdoc />
         </member>
-        <member name="P:GLHDN.Views.PanningCamera.Projection">
+        <member name="P:OTKOW.Views.PanningCamera.Projection">
             <inheritdoc />
         </member>
-        <member name="M:GLHDN.Views.PanningCamera.Update(System.TimeSpan)">
+        <member name="M:OTKOW.Views.PanningCamera.Update(System.TimeSpan)">
             <inheritdoc />
         </member>
-        <member name="T:GLHDN.Views.Ray">
+        <member name="T:OTKOW.Views.Ray">
             <summary>
             Represents a semi-infinite 3D ray, that has a start point and a direction.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.Ray.#ctor(GLHDN.Views.ICamera,GLHDN.Views.View)">
+        <member name="M:OTKOW.Views.Ray.#ctor(OTKOW.Views.ICamera,OTKOW.Views.View)">
             <summary>
-            Initializes a new instance of the <see cref="T:GLHDN.Views.Ray"/> struct that originates from a given camera position,
+            Initializes a new instance of the <see cref="T:OTKOW.Views.Ray"/> struct that originates from a given camera position,
             and points in the direction as indicated by the current mouse cursor position in a view.
             </summary>
             <param name="camera">The camera to project the ray from.</param>
             <param name="view">The view from which to retrieve the mouse position to determine the ray's direction.</param>
         </member>
-        <member name="P:GLHDN.Views.Ray.Origin">
+        <member name="P:OTKOW.Views.Ray.Origin">
             <summary>
             Gets the position of the origin of the ray.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.Ray.Direction">
+        <member name="P:OTKOW.Views.Ray.Direction">
             <summary>
             Gets the direction vector of the ray.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.Ray.GetIntersections(GLHDN.Views.Ray,System.Numerics.Vector3,System.Single)">
+        <member name="M:OTKOW.Views.Ray.GetIntersections(OTKOW.Views.Ray,System.Numerics.Vector3,System.Single)">
             <summary>
             Gets the positions of any intersections of a ray with a sphere.
             </summary>
@@ -246,7 +246,7 @@
             <param name="sphereRadius">The radius of the sphere.</param>
             <returns>The positions of any intersections.</returns>
         </member>
-        <member name="M:GLHDN.Views.Ray.GetIntersection(GLHDN.Views.Ray,System.Numerics.Plane)">
+        <member name="M:OTKOW.Views.Ray.GetIntersection(OTKOW.Views.Ray,System.Numerics.Plane)">
             <summary>
             Gets the position of the intersection of a ray with a plane, or null if no such intersection exists.
             </summary>
@@ -254,179 +254,179 @@
             <param name="plane">The plane.</param>
             <returns>The position of the intersection of the ray with the plane, or null if no such intersection exists.</returns>
         </member>
-        <member name="T:GLHDN.Views.Color">
+        <member name="T:OTKOW.Views.Color">
             <summary>
             Structure that represents a color. Can be implicitly converted to a RGB <see cref="T:System.Numerics.Vector3"/> or RGBA <see cref="T:System.Numerics.Vector4"/>.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.Color.#ctor(System.Single,System.Single,System.Single,System.Single)">
+        <member name="M:OTKOW.Views.Color.#ctor(System.Single,System.Single,System.Single,System.Single)">
             <summary>
-            Initializes a new instance of the <see cref="T:GLHDN.Views.Color"/> struct.
+            Initializes a new instance of the <see cref="T:OTKOW.Views.Color"/> struct.
             </summary>
             <param name="r">The red component of the color.</param>
             <param name="g">The green component of the color.</param>
             <param name="b">The blue component of the color.</param>
             <param name="a">The alpha component of the color.</param>
         </member>
-        <member name="P:GLHDN.Views.Color.R">
+        <member name="P:OTKOW.Views.Color.R">
             <summary>
             Gets the red component of the color.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.Color.G">
+        <member name="P:OTKOW.Views.Color.G">
             <summary>
             Gets the green component of the color.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.Color.B">
+        <member name="P:OTKOW.Views.Color.B">
             <summary>
             Gets the blue component of the color.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.Color.A">
+        <member name="P:OTKOW.Views.Color.A">
             <summary>
             Gets the alpha component of the color.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.Color.op_Implicit(GLHDN.Views.Color)~System.Numerics.Vector3">
+        <member name="M:OTKOW.Views.Color.op_Implicit(OTKOW.Views.Color)~System.Numerics.Vector3">
             <summary>
             Defines the implicit conversion of a color to a <see cref="T:System.Numerics.Vector3"/> value.
             </summary>
             <param name="color">The color instance to convert.</param>
         </member>
-        <member name="M:GLHDN.Views.Color.op_Implicit(GLHDN.Views.Color)~System.Numerics.Vector4">
+        <member name="M:OTKOW.Views.Color.op_Implicit(OTKOW.Views.Color)~System.Numerics.Vector4">
             <summary>
             Defines the implicit conversion of a color to a <see cref="T:System.Numerics.Vector4"/> value.
             </summary>
             <param name="color">The color instance to convert.</param>
         </member>
-        <member name="M:GLHDN.Views.Color.Transparent">
+        <member name="M:OTKOW.Views.Color.Transparent">
             <summary>
             Gets a completely transparent 'color'.
             </summary>
-            <returns>An appropriate <see cref="T:GLHDN.Views.Color"/> instance.</returns>
+            <returns>An appropriate <see cref="T:OTKOW.Views.Color"/> instance.</returns>
         </member>
-        <member name="M:GLHDN.Views.Color.White(System.Single)">
+        <member name="M:OTKOW.Views.Color.White(System.Single)">
             <summary>
             Returns white.
             </summary>
             <param name="alpha">The alpha of the returned color.</param>
-            <returns>An appropriate <see cref="T:GLHDN.Views.Color"/> instance.</returns>
+            <returns>An appropriate <see cref="T:OTKOW.Views.Color"/> instance.</returns>
         </member>
-        <member name="M:GLHDN.Views.Color.Black(System.Single)">
+        <member name="M:OTKOW.Views.Color.Black(System.Single)">
             <summary>
             Returns black.
             </summary>
             <param name="alpha">The alpha of the returned color.</param>
-            <returns>An appropriate <see cref="T:GLHDN.Views.Color"/> instance.</returns>
+            <returns>An appropriate <see cref="T:OTKOW.Views.Color"/> instance.</returns>
         </member>
-        <member name="M:GLHDN.Views.Color.Grey(System.Single,System.Single)">
+        <member name="M:OTKOW.Views.Color.Grey(System.Single,System.Single)">
             <summary>
             Returns a color that is a shade of grey.
             </summary>
             <param name="brightness">The brightness of the returned color.</param>
             <param name="alpha">The alpha of the returned color.</param>
-            <returns>An appropriate <see cref="T:GLHDN.Views.Color"/> instance.</returns>
+            <returns>An appropriate <see cref="T:OTKOW.Views.Color"/> instance.</returns>
         </member>
-        <member name="M:GLHDN.Views.Color.Red(System.Single,System.Single)">
+        <member name="M:OTKOW.Views.Color.Red(System.Single,System.Single)">
             <summary>
             Returns pure red.
             </summary>
             <param name="brightness">The brightness of the returned color.</param>
             <param name="alpha">The alpha of the returned color.</param>
-            <returns>An appropriate <see cref="T:GLHDN.Views.Color"/> instance.</returns>
+            <returns>An appropriate <see cref="T:OTKOW.Views.Color"/> instance.</returns>
         </member>
-        <member name="M:GLHDN.Views.Color.Green(System.Single,System.Single)">
+        <member name="M:OTKOW.Views.Color.Green(System.Single,System.Single)">
             <summary>
             Returns pure green.
             </summary>
             <param name="brightness">The brightness of the returned color.</param>
             <param name="alpha">The alpha of the returned color.</param>
-            <returns>An appropriate <see cref="T:GLHDN.Views.Color"/> instance.</returns>
+            <returns>An appropriate <see cref="T:OTKOW.Views.Color"/> instance.</returns>
         </member>
-        <member name="M:GLHDN.Views.Color.Blue(System.Single,System.Single)">
+        <member name="M:OTKOW.Views.Color.Blue(System.Single,System.Single)">
             <summary>
             Returns pure blue.
             </summary>
             <param name="brightness">The brightness of the returned color.</param>
             <param name="alpha">The alpha of the returned color.</param>
-            <returns>An appropriate <see cref="T:GLHDN.Views.Color"/> instance.</returns>
+            <returns>An appropriate <see cref="T:OTKOW.Views.Color"/> instance.</returns>
         </member>
-        <member name="M:GLHDN.Views.Color.Yellow(System.Single,System.Single)">
+        <member name="M:OTKOW.Views.Color.Yellow(System.Single,System.Single)">
             <summary>
             Returns yellow.
             </summary>
             <param name="brightness">The brightness of the returned color.</param>
             <param name="alpha">The alpha of the returned color.</param>
-            <returns>An appropriate <see cref="T:GLHDN.Views.Color"/> instance.</returns>
+            <returns>An appropriate <see cref="T:OTKOW.Views.Color"/> instance.</returns>
         </member>
-        <member name="M:GLHDN.Views.Color.Cyan(System.Single,System.Single)">
+        <member name="M:OTKOW.Views.Color.Cyan(System.Single,System.Single)">
             <summary>
             Returns cyan.
             </summary>
             <param name="brightness">The brightness of the returned color.</param>
             <param name="alpha">The alpha of the returned color.</param>
-            <returns>An appropriate <see cref="T:GLHDN.Views.Color"/> instance.</returns>
+            <returns>An appropriate <see cref="T:OTKOW.Views.Color"/> instance.</returns>
         </member>
-        <member name="M:GLHDN.Views.Color.Magenta(System.Single,System.Single)">
+        <member name="M:OTKOW.Views.Color.Magenta(System.Single,System.Single)">
             <summary>
             Returns magenta.
             </summary>
             <param name="brightness">The brightness of the returned color.</param>
             <param name="alpha">The alpha of the returned color.</param>
-            <returns>An appropriate <see cref="T:GLHDN.Views.Color"/> instance.</returns>
+            <returns>An appropriate <see cref="T:OTKOW.Views.Color"/> instance.</returns>
         </member>
-        <member name="M:GLHDN.Views.Color.Brown(System.Single,System.Single)">
+        <member name="M:OTKOW.Views.Color.Brown(System.Single,System.Single)">
             <summary>
             Returns brown.
             </summary>
             <param name="brightness">The brightness of the returned color.</param>
             <param name="alpha">The alpha of the returned color.</param>
-            <returns>An appropriate <see cref="T:GLHDN.Views.Color"/> instance.</returns>
+            <returns>An appropriate <see cref="T:OTKOW.Views.Color"/> instance.</returns>
         </member>
-        <member name="M:GLHDN.Views.Color.Orange(System.Single,System.Single)">
+        <member name="M:OTKOW.Views.Color.Orange(System.Single,System.Single)">
             <summary>
             Returns orange.
             </summary>
             <param name="brightness">The brightness of the returned color.</param>
             <param name="alpha">The alpha of the returned color.</param>
-            <returns>An appropriate <see cref="T:GLHDN.Views.Color"/> instance.</returns>
+            <returns>An appropriate <see cref="T:OTKOW.Views.Color"/> instance.</returns>
         </member>
-        <member name="T:GLHDN.Views.CompositeRenderable">
+        <member name="T:OTKOW.Views.CompositeRenderable">
             <summary>
-            Base class for <see cref="T:GLHDN.Views.IRenderable"/> instances that are composed of sub-renderables.
+            Base class for <see cref="T:OTKOW.Views.IRenderable"/> instances that are composed of sub-renderables.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.CompositeRenderable.AddRenderable(GLHDN.Views.IRenderable)">
+        <member name="M:OTKOW.Views.CompositeRenderable.AddRenderable(OTKOW.Views.IRenderable)">
             <summary>
             Adds a sub-renderable.
             </summary>
             <param name="renderable">The sub-renderable to be added.</param>
         </member>
-        <member name="M:GLHDN.Views.CompositeRenderable.Load">
+        <member name="M:OTKOW.Views.CompositeRenderable.Load">
             <inheritdoc />
         </member>
-        <member name="M:GLHDN.Views.CompositeRenderable.Update(System.TimeSpan)">
+        <member name="M:OTKOW.Views.CompositeRenderable.Update(System.TimeSpan)">
             <inheritdoc />
         </member>
-        <member name="M:GLHDN.Views.CompositeRenderable.Render">
+        <member name="M:OTKOW.Views.CompositeRenderable.Render">
             <inheritdoc />
         </member>
-        <member name="M:GLHDN.Views.CompositeRenderable.Dispose">
+        <member name="M:OTKOW.Views.CompositeRenderable.Dispose">
             <inheritdoc />
         </member>
-        <member name="T:GLHDN.Views.IRenderable">
+        <member name="T:OTKOW.Views.IRenderable">
             <summary>
-            A discrete renderable part of a <see cref="T:GLHDN.Views.View"/>. Typically will encapsulate everything
+            A discrete renderable part of a <see cref="T:OTKOW.Views.View"/>. Typically will encapsulate everything
             that results in one or more OpenGl draw calls: the program(s), the relevant buffers, etc.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.IRenderable.Load">
+        <member name="M:OTKOW.Views.IRenderable.Load">
             <summary>
             Loads the instance, compiling any programs and populating any required buffers. Invoked as soon as an OpenGL render context is available.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.IRenderable.Update(System.TimeSpan)">
+        <member name="M:OTKOW.Views.IRenderable.Update(System.TimeSpan)">
             <summary>
             Performs an incremental update. Invoked regularly.
             </summary>
@@ -435,7 +435,7 @@
             Will be called A LOT. Heap allocations are to be avoided in implementations of this method.
             </remarks>
         </member>
-        <member name="M:GLHDN.Views.IRenderable.Render">
+        <member name="M:OTKOW.Views.IRenderable.Render">
             <summary>
             Render logic. Invoked regularly.
             </summary>
@@ -443,220 +443,220 @@
             Will be called A LOT. Heap allocations are to be avoided in implementations of this method.
             </remarks>
         </member>
-        <member name="T:GLHDN.Views.IViewContext">
+        <member name="T:OTKOW.Views.IViewContext">
             <summary>
-            Interface for types that provide the mechanism for <see cref="T:GLHDN.Views.View"/> instances to interact with the user and the Open GL device context.
+            Interface for types that provide the mechanism for <see cref="T:OTKOW.Views.View"/> instances to interact with the user and the Open GL device context.
             </summary>
         </member>
-        <member name="E:GLHDN.Views.IViewContext.GlContextCreated">
+        <member name="E:OTKOW.Views.IViewContext.GlContextCreated">
             <summary>Occurs when an OpenGL context has been created.</summary>
         </member>
-        <member name="E:GLHDN.Views.IViewContext.GlRender">
+        <member name="E:OTKOW.Views.IViewContext.GlRender">
             <summary>Occurs when the context is rendering.</summary>
         </member>
-        <member name="E:GLHDN.Views.IViewContext.GlContextUpdate">
+        <member name="E:OTKOW.Views.IViewContext.GlContextUpdate">
             <summary>Occurs when the context is updating.</summary>
         </member>
-        <member name="E:GLHDN.Views.IViewContext.GlContextDestroying">
+        <member name="E:OTKOW.Views.IViewContext.GlContextDestroying">
             <summary>Occurs when the OpenGL is being destroyed.</summary>
         </member>
-        <member name="E:GLHDN.Views.IViewContext.KeyDown">
+        <member name="E:OTKOW.Views.IViewContext.KeyDown">
             <summary>Occurs when a key is pressed is pressed.</summary>
         </member>
-        <member name="E:GLHDN.Views.IViewContext.KeyUp">
+        <member name="E:OTKOW.Views.IViewContext.KeyUp">
             <summary>Occurs when a key is released.</summary>
         </member>
-        <member name="E:GLHDN.Views.IViewContext.LeftMouseDown">
+        <member name="E:OTKOW.Views.IViewContext.LeftMouseDown">
             <summary>Occurs when the left mouse button is pressed.</summary>
         </member>
-        <member name="E:GLHDN.Views.IViewContext.LeftMouseUp">
+        <member name="E:OTKOW.Views.IViewContext.LeftMouseUp">
             <summary>Occurs when the left mouse button is released.</summary>
         </member>
-        <member name="E:GLHDN.Views.IViewContext.RightMouseDown">
+        <member name="E:OTKOW.Views.IViewContext.RightMouseDown">
             <summary>Occurs when the right mouse button is pressed.</summary>
         </member>
-        <member name="E:GLHDN.Views.IViewContext.RightMouseUp">
+        <member name="E:OTKOW.Views.IViewContext.RightMouseUp">
             <summary>Occurs when the right mouse button is released.</summary>
         </member>
-        <member name="E:GLHDN.Views.IViewContext.MiddleMouseDown">
+        <member name="E:OTKOW.Views.IViewContext.MiddleMouseDown">
             <summary>Occurs when the middle mouse button is pressed.</summary>
         </member>
-        <member name="E:GLHDN.Views.IViewContext.MiddleMouseUp">
+        <member name="E:OTKOW.Views.IViewContext.MiddleMouseUp">
             <summary>Occurs when the middle mouse button is released.</summary>
         </member>
-        <member name="E:GLHDN.Views.IViewContext.MouseWheel">
+        <member name="E:OTKOW.Views.IViewContext.MouseWheel">
             <summary>Occurs when the mouse wheel is used.</summary>
         </member>
-        <member name="E:GLHDN.Views.IViewContext.Resize">
+        <member name="E:OTKOW.Views.IViewContext.Resize">
             <summary>Occurs when the context is resized.</summary>
         </member>
-        <member name="E:GLHDN.Views.IViewContext.GotFocus">
+        <member name="E:OTKOW.Views.IViewContext.GotFocus">
             <summary>Occurs when the context receives input focus.</summary>
         </member>
-        <member name="P:GLHDN.Views.IViewContext.Width">
+        <member name="P:OTKOW.Views.IViewContext.Width">
             <summary>Gets the width of the display.</summary>
         </member>
-        <member name="P:GLHDN.Views.IViewContext.Height">
+        <member name="P:OTKOW.Views.IViewContext.Height">
             <summary>Gets the height of the display.</summary>
         </member>
-        <member name="P:GLHDN.Views.IViewContext.IsFocused">
+        <member name="P:OTKOW.Views.IViewContext.IsFocused">
             <summary>Gets a value indicating whether the context has input focus.</summary>
         </member>
-        <member name="P:GLHDN.Views.IViewContext.CursorPosition">
+        <member name="P:OTKOW.Views.IViewContext.CursorPosition">
             <summary>Gets or sets the position of the mouse cursor within the context.</summary>
         </member>
-        <member name="P:GLHDN.Views.IViewContext.ShowCursor">
+        <member name="P:OTKOW.Views.IViewContext.ShowCursor">
             <summary>Sets a value indicating whether the mouse cursor should be displayed.</summary>
         </member>
-        <member name="M:GLHDN.Views.IViewContext.Exit">
+        <member name="M:OTKOW.Views.IViewContext.Exit">
             <summary>Closes the app.</summary>
         </member>
-        <member name="T:GLHDN.Views.IViewContextExtensions">
+        <member name="T:OTKOW.Views.IViewContextExtensions">
             <summary>
-            Extension methods for <see cref="T:GLHDN.Views.IViewContext"/> instances.
+            Extension methods for <see cref="T:OTKOW.Views.IViewContext"/> instances.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.IViewContextExtensions.GetCenter(GLHDN.Views.IViewContext)">
+        <member name="M:OTKOW.Views.IViewContextExtensions.GetCenter(OTKOW.Views.IViewContext)">
             <summary>
             Gets the position of the center of a context, given its size.
             </summary>
             <param name="context">The context to get the center position of.</param>
             <returns>The position of the center of the context, given its size.</returns>
         </member>
-        <member name="T:GLHDN.Views.IViewProjection">
+        <member name="T:OTKOW.Views.IViewProjection">
             <summary>
-            A source of view and projection matrices. Used by some <see cref="T:GLHDN.Views.IRenderable"/> implementations.
+            A source of view and projection matrices. Used by some <see cref="T:OTKOW.Views.IRenderable"/> implementations.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.IViewProjection.View">
+        <member name="P:OTKOW.Views.IViewProjection.View">
             <summary>
             Gets the view matrix.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.IViewProjection.Projection">
+        <member name="P:OTKOW.Views.IViewProjection.Projection">
             <summary>
             Gets the projection matrix.
             </summary>
         </member>
-        <member name="T:GLHDN.Views.View">
+        <member name="T:OTKOW.Views.View">
             <summary>
             Encapsulates an interactive view rendered with OpenGl.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.View.#ctor(GLHDN.Views.IViewContext,System.Boolean,GLHDN.Views.Color)">
+        <member name="M:OTKOW.Views.View.#ctor(OTKOW.Views.IViewContext,System.Boolean,OTKOW.Views.Color)">
             <summary>
-            Initializes a new instance of the <see cref="T:GLHDN.Views.View"/> class.
+            Initializes a new instance of the <see cref="T:OTKOW.Views.View"/> class.
             </summary>
-            <param name="context">The <see cref="T:GLHDN.Views.IViewContext"/> to use.</param>
+            <param name="context">The <see cref="T:OTKOW.Views.IViewContext"/> to use.</param>
             <param name="lockCursor">A value indicating whether the cursor is placed back at the center of the view during each update.</param>
             <param name="clearColor">The color to clear the view with on each render call.</param>
         </member>
-        <member name="E:GLHDN.Views.View.Resized">
+        <member name="E:OTKOW.Views.View.Resized">
             <summary>
             An event that is fired when the size of the view changes. TODO: should be readonly.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.View.KeysPressed">
+        <member name="P:OTKOW.Views.View.KeysPressed">
             <summary>
             Gets the set of keys pressed since the last update. TODO: should be readonly.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.View.KeysDown">
+        <member name="P:OTKOW.Views.View.KeysDown">
             <summary>
             Gets the set of currently pressed keys. TODO: should be readonly.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.View.KeysReleased">
+        <member name="P:OTKOW.Views.View.KeysReleased">
             <summary>
             Gets the set of keys released since the last update.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.View.CursorPosition">
+        <member name="P:OTKOW.Views.View.CursorPosition">
             <summary>
             Gets the cursor position, with the origin being at the centre of the view, X increasing from left to right and Y increasing from top to bottom.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.View.LockCursor">
+        <member name="P:OTKOW.Views.View.LockCursor">
             <summary>
             Gets or sets a value indicating whether the cursor is placed back at the center of the view during each update.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.View.MouseWheelDelta">
+        <member name="P:OTKOW.Views.View.MouseWheelDelta">
             <summary>
             Gets the mouse wheel delta since the last update.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.View.WasLeftMouseButtonPressed">
+        <member name="P:OTKOW.Views.View.WasLeftMouseButtonPressed">
             <summary>
             Gets a value indicating whether the left mouse button has been pressed since the last update.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.View.IsLeftMouseButtonDown">
+        <member name="P:OTKOW.Views.View.IsLeftMouseButtonDown">
             <summary>
             Gets a value indicating whether the left mouse button is currently down.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.View.WasLeftMouseButtonReleased">
+        <member name="P:OTKOW.Views.View.WasLeftMouseButtonReleased">
             <summary>
             Gets a value indicating whether the left mouse button has been released since the last update.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.View.WasRightMouseButtonPressed">
+        <member name="P:OTKOW.Views.View.WasRightMouseButtonPressed">
             <summary>
             Gets a value indicating whether the right mouse button has been pressed since the last update.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.View.IsRightMouseButtonDown">
+        <member name="P:OTKOW.Views.View.IsRightMouseButtonDown">
             <summary>
             Gets a value indicating whether the right mouse button is currently down.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.View.WasRightMouseButtonReleased">
+        <member name="P:OTKOW.Views.View.WasRightMouseButtonReleased">
             <summary>
             Gets a value indicating whether the right mouse button has been released since the last update.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.View.WasMiddleMouseButtonPressed">
+        <member name="P:OTKOW.Views.View.WasMiddleMouseButtonPressed">
             <summary>
             Gets a value indicating whether the middle mouse button has been pressed since the last update.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.View.IsMiddleMouseButtonDown">
+        <member name="P:OTKOW.Views.View.IsMiddleMouseButtonDown">
             <summary>
             Gets a value indicating whether the middle mouse button is currently down.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.View.WasMiddleMouseButtonReleased">
+        <member name="P:OTKOW.Views.View.WasMiddleMouseButtonReleased">
             <summary>
             Gets a value indicating whether the middle mouse button has been released since the last update.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.View.Width">
+        <member name="P:OTKOW.Views.View.Width">
             <summary>
             Gets the width of the view.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.View.Height">
+        <member name="P:OTKOW.Views.View.Height">
             <summary>
             Gets the height of the view.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.View.AspectRatio">
+        <member name="P:OTKOW.Views.View.AspectRatio">
             <summary>
             Gets the aspect ratio of the view.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.View.Renderable">
+        <member name="P:OTKOW.Views.View.Renderable">
             <summary>
             Gets or sets the root renderable of the view.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.View.Exit">
+        <member name="M:OTKOW.Views.View.Exit">
             <summary>
             Closes the view.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.View.Dispose">
+        <member name="M:OTKOW.Views.View.Dispose">
             <inheritdoc />
         </member>
     </members>

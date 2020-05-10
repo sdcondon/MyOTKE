@@ -62,16 +62,16 @@ namespace OTKOW.Views.Contexts.WinForms
         }
 
         /// <inheritdoc />
-        public event EventHandler<DeviceContext> GlContextCreated;
+        public event EventHandler GlContextCreated;
 
         /// <inheritdoc />
-        public event EventHandler<DeviceContext> GlRender;
+        public event EventHandler GlRender;
 
         /// <inheritdoc />
-        public event EventHandler<DeviceContext> GlContextUpdate;
+        public event EventHandler GlContextUpdate;
 
         /// <inheritdoc />
-        public event EventHandler<DeviceContext> GlContextDestroying;
+        public event EventHandler GlContextDestroying;
 
         /// <inheritdoc />
         public event EventHandler<char> KeyDown;

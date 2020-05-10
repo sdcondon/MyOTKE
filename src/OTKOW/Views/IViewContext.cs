@@ -10,16 +10,16 @@ namespace OTKOW.Views
     public interface IViewContext
     {
         /// <summary>Occurs when an OpenGL context has been created.</summary>
-        event EventHandler<DeviceContext> GlContextCreated;
+        event EventHandler GlContextCreated;
 
         /// <summary>Occurs when the context is rendering.</summary>
-        event EventHandler<DeviceContext> GlRender;
+        event EventHandler GlRender;
 
         /// <summary>Occurs when the context is updating.</summary>
-        event EventHandler<DeviceContext> GlContextUpdate;
+        event EventHandler GlContextUpdate;
 
         /// <summary>Occurs when the OpenGL is being destroyed.</summary>
-        event EventHandler<DeviceContext> GlContextDestroying;
+        event EventHandler GlContextDestroying;
 
         /// <summary>Occurs when a key is pressed is pressed.</summary>
         event EventHandler<char> KeyDown;

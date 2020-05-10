@@ -1,0 +1,164 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#@ include file="_Common.t4" #>
+using OpenToolkit.Graphics;
+using OpenToolkit.Graphics.OpenGL;
+using System;
+using System.Collections.Generic;
+
+namespace OTKOW.Core
+{
+<# for(int i = 1; i <= MaxBufferCount; i++) { #>
+    /// <summary>
+    /// Interface for types representing an OpenGL vertex array object.
+    /// </summary>
+    <#= TypeParamDocs(i, i => $"The type of the { Ordinal(i) } buffer.") #>
+    public sealed class GlVertexArrayObject<<#= TList(i) #>> : IVertexArrayObject<<#= TList(i) #>>, IDisposable
+<# for(int j = 1; j <= i; j++) { #>
+        where T<#= j #> : struct
+<# } #>
+    {
+        private readonly int id;
+        private readonly PrimitiveType primitiveType;
+        private readonly GlVertexBufferObject<uint> indexBuffer;
+<# for(int j = 1; j <= i; j++) { #>
+        private readonly GlVertexBufferObject<T<#= j #>> attributeBuffer<#= j #>;
+<# } #>
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GlVertexArrayObject2"/> class. SIDE EFFECT: new VAO will be bound.
+        /// </summary>
+        /// <param name="primitiveType">OpenGL primitive type.</param>
+        /// <param name="attributeBufferSpecs">Specs for the buffers in this VAO.</param>
+        /// <param name="indexSpec">The spec for the index of this VAO.</param>
+        internal GlVertexArrayObject(
+            PrimitiveType primitiveType,
+<# for(int j = 1; j <= i; j++) { #>
+            (BufferUsageHint usage, int capacity, T<#= j #>[] data) attributeBufferSpec<#= j #>,
+<# } #>
+            (int capacity, uint[] data) indexSpec)
+        {
+            GlExt.ThrowIfNoCurrentContext();
+
+            // Record primitive type for use in draw calls, create and bind the VAO
+            this.primitiveType = primitiveType;
+            this.id = GL.GenVertexArray(); // superbible uses CreateVertexArray?
+            GL.BindVertexArray(id);
+
+            // Set up the attribute buffers
+            int k = 0;
+            GlVertexBufferObject<T> MakeBuffer<T>((BufferUsageHint usage, int capacity, T[] data) attributeBufferSpec) where T : struct
+            {
+                var buffer = new GlVertexBufferObject<T>(
+                    BufferTarget.ArrayBuffer,
+                    attributeBufferSpec.usage,
+                    typeof(T),
+                    attributeBufferSpec.capacity,
+                    attributeBufferSpec.data);
+                for (uint j = 0; j < buffer.Attributes.Length; j++, k++)
+                {
+                    var attribute = buffer.Attributes[j];
+                    GL.EnableVertexAttribArray(k);
+                    GL.VertexAttribPointer(
+                        index: k, // must match the layout in the shader
+                        size: attribute.Multiple,
+                        type: attribute.Type,
+                        normalized: false,
+                        stride: attribute.Stride,
+                        pointer: attribute.Offset);
+                }
+
+                return buffer;
+            }
+
+<# for(int j = 1; j <= i; j++) { #>
+            attributeBuffer<#= j #> = MakeBuffer(attributeBufferSpec<#= j #>);
+<# } #>
+
+            // Establish element count & populate index buffer if there is one
+            if (indexSpec.capacity > 0)
+            {
+                this.indexBuffer = new GlVertexBufferObject<uint>(BufferTarget.ElementArrayBuffer, BufferUsageHint.DynamicDraw, typeof(uint), indexSpec.capacity, indexSpec.data);
+            }
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="GlVertexArrayObject"/> class.
+        /// </summary>
+        ~GlVertexArrayObject() => Dispose(false);
+
+        /// <summary>
+        /// Gets the number of vertices to be rendered.
+        /// </summary>
+        public int VertexCount => indexBuffer?.Capacity ?? attributeBuffer1.Capacity;
+
+        /// <inheritdoc />
+        public IVertexBufferObject<uint> IndexBuffer => this.indexBuffer;
+<# for(int j = 1; j <= i; j++) { #>
+
+        /// <inheritdoc />
+        public IVertexBufferObject<T<#= j #>> AttributeBuffer<#= j #> => attributeBuffer<#= j #>;
+<# } #>
+
+        /// <inheritdoc />
+        public void Draw(int count = -1)
+        {
+            GL.BindVertexArray(this.id);
+
+            if (indexBuffer != null)
+            {
+                // There's an index buffer (which will be bound) - bind it and draw
+                GL.DrawElements(
+                    mode: this.primitiveType,
+                    count: count == -1 ? this.VertexCount : count,
+                    type: DrawElementsType.UnsignedInt,
+                    indices: IntPtr.Zero);
+            }
+            else
+            {
+                // No index - so draw directly from attribute data
+                GL.DrawArrays(
+                    mode: this.primitiveType,
+                    first: 0,
+                    count: count == -1 ? this.VertexCount : count);
+            }
+        }
+
+        /// <inheritdoc />
+        public void Dispose() => Dispose(true);
+
+        /*public void ResizeAttributeBuffer(int bufferIndex, int newSize)
+        {
+            //var newId = Gl.GenBuffer();
+            //Gl.NamedBufferData(newId, (uint)(Marshal.SizeOf(elementType) * value), null, usage);
+            //Gl.CopyNamedBufferSubData(this.Id, newId, 0, 0, (uint)(Marshal.SizeOf(elementType) * count));
+            //count = value;
+        }*/
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+<# for(int j = 1; j <= i; j++) { #>
+                attributeBuffer<#= j #>.Dispose();
+<# } #>
+
+                if (indexBuffer != null)
+                {
+                    indexBuffer.Dispose();
+                }
+
+                GC.SuppressFinalize(this);
+            }
+
+            ////if (GraphicsContext.CurrentContext != null)
+            ////{
+                GL.DeleteVertexArrays(1, new[] { this.id });
+            ////}
+        }
+    }
+
+<# } #>}

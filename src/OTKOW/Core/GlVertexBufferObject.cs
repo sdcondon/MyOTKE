@@ -8,11 +8,11 @@ namespace OTKOW.Core
     /// <summary>
     /// A OpenGL vertex buffer object.
     /// </summary>
-    internal sealed class GlVertexBufferObject<T> : IVertexBufferObject, IDisposable
+    internal sealed class GlVertexBufferObject<T> : IVertexBufferObject<T>, IDisposable
         where T : struct
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GlVertexBufferObject"/> class. SIDE EFFECT: New buffer will be bound to the given target.
+        /// Initializes a new instance of the <see cref="GlVertexBufferObject{T}"/> class. SIDE EFFECT: New buffer will be bound to the given target.
         /// </summary>
         /// <param name="target">OpenGL buffer target specification.</param>
         /// <param name="usage">OpenGL buffer usage specification.</param>
@@ -30,7 +30,7 @@ namespace OTKOW.Core
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="GlVertexBufferObject"/> class.
+        /// Finalizes an instance of the <see cref="GlVertexBufferObject{T}"/> class.
         /// </summary>
         ~GlVertexBufferObject() => Dispose(false);
 
@@ -46,14 +46,18 @@ namespace OTKOW.Core
         /// <inheritdoc />
         public T this[int index]
         {
-            ////get
-            ////{
-            ////    Gl.GetNamedBufferSubData(
-            ////        buffer: Id,
-            ////        offset: new IntPtr(index * Marshal.SizeOf(value)),
-            ////        size: (uint)Marshal.SizeOf(value),
-            ////        data: null);
-            ////}
+            get
+            {
+                var elementSize = Marshal.SizeOf(typeof(T));
+                T data = default;
+                GL.GetNamedBufferSubData(
+                    buffer: Id,
+                    offset: new IntPtr(index * elementSize),
+                    size: elementSize,
+                    data: ref data);
+                return data;
+            }
+
             set
             {
                 GL.NamedBufferSubData(
@@ -65,7 +69,7 @@ namespace OTKOW.Core
         }
 
         /// <inheritdoc />
-        public void Copy<T>(int readIndex, int writeIndex, int count)
+        public void Copy(int readIndex, int writeIndex, int count)
         {
             var elementSize = Marshal.SizeOf(typeof(T));
             GL.CopyNamedBufferSubData(
@@ -74,26 +78,6 @@ namespace OTKOW.Core
                 readOffset: new IntPtr(readIndex * elementSize),
                 writeOffset: new IntPtr(writeIndex * elementSize),
                 size: count * elementSize);
-        }
-
-        /// <inheritdoc />
-        public T GetAs<T>(int index)
-        {
-            var elementSize = Marshal.SizeOf(typeof(T));
-            var ptr = Marshal.AllocHGlobal(elementSize);
-            try
-            {
-                GL.GetNamedBufferSubData(
-                    buffer: this.Id,
-                    offset: new IntPtr(index * elementSize),
-                    size: elementSize,
-                    data: ptr);
-                return Marshal.PtrToStructure<T>(ptr);
-            }
-            finally
-            {
-                Marshal.FreeHGlobal(ptr);
-            }
         }
 
         /// <inheritdoc />
@@ -106,10 +90,10 @@ namespace OTKOW.Core
                 GC.SuppressFinalize(this);
             }
 
-            if (GraphicsContext.CurrentContext != null)
-            {
+            //if (GraphicsContext.CurrentContext != null)
+            //{
                 GL.DeleteBuffers(1, new[] { this.Id });
-            }
+            //}
         }
     }
 }

@@ -33,8 +33,8 @@ namespace OTKOW.Views
             Debug.WriteLine("Registering OpenGL debug handler");
             GL.DebugMessageCallback(OnGlDebugMessage, IntPtr.Zero);
 
-            //KhronosApi.LogEnabled = true;
-            //KhronosApi.Log += KhronosApi_Log;
+            ////KhronosApi.LogEnabled = true;
+            ////KhronosApi.Log += KhronosApi_Log;
 
             this.context = context;
             context.GlContextCreated += OnGlContextCreated;
@@ -211,7 +211,7 @@ namespace OTKOW.Views
             Renderable.Dispose();
         }
 
-        private void OnGlContextCreated(object sender, DeviceContext context)
+        private void OnGlContextCreated(object sender, EventArgs eventArgs)
         {
             GL.ClearColor(clearColor.R, clearColor.G, clearColor.B, clearColor.A);
             GL.Enable(EnableCap.DepthTest); // Enable depth test
@@ -226,13 +226,13 @@ namespace OTKOW.Views
             isContextCreated = true;
         }
 
-        private void OnGlRender(object sender, DeviceContext context)
+        private void OnGlRender(object sender, EventArgs eventArgs)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             renderable.Render();
         }
 
-        private void OnGlContextUpdate(object sender, DeviceContext deviceContext)
+        private void OnGlContextUpdate(object sender, EventArgs eventArgs)
         {
             if (context.IsFocused)
             {
@@ -270,7 +270,7 @@ namespace OTKOW.Views
             }
         }
 
-        private void OnGlContextDestroying(object sender, DeviceContext context)
+        private void OnGlContextDestroying(object sender, EventArgs eventArgs)
         {
             Dispose();
         }
@@ -351,9 +351,9 @@ namespace OTKOW.Views
             Debug.WriteLine($"{id} {source} {type} {severity}", "OPENGL");
         }
 
-        //private void KhronosApi_Log(object sender, KhronosLogEventArgs e)
-        //{
-        //    Debug.WriteLine($"{e.Name}({string.Join(',', e.Args)}) {e.ReturnValue}", "KHRONOS API");
-        //}
+        ////private void KhronosApi_Log(object sender, KhronosLogEventArgs e)
+        ////{
+        ////    Debug.WriteLine($"{e.Name}({string.Join(',', e.Args)}) {e.ReturnValue}", "KHRONOS API");
+        ////}
     }
 }

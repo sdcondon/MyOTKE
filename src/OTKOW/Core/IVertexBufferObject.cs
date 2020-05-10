@@ -34,14 +34,6 @@
         /// <param name="readIndex">The (object) index to read from.</param>
         /// <param name="writeIndex">The (object) index to write to.</param>
         /// <param name="count">The number of objects to copy.</param>
-        void Copy<T>(int readIndex, int writeIndex, int count);
-
-        /// <summary>
-        /// Retrieves data from the buffer.
-        /// </summary>
-        /// <typeparam name="T">The type to interpret the data as.</typeparam>
-        /// <param name="index">The object index to retrieve.</param>
-        /// <returns>The buffer content at the requested index.</returns>
-        T GetAs<T>(int index);
+        void Copy(int readIndex, int writeIndex, int count);
     }
 }

@@ -14,11 +14,12 @@ namespace OTKOW.ReactiveBuffers
     /// TODO: worth considering turning this into an IObserver.
     /// </remarks>
     public class ReactiveBuffer<TVertex> : IDisposable
+        where TVertex : struct
     {
         private readonly IObservable<IObservable<IList<TVertex>>> vertexSource;
         private readonly int verticesPerAtom;
         private readonly IList<int> indices;
-        private readonly IVertexArrayObject vao;
+        private readonly IVertexArrayObject<TVertex> vao;
         private readonly List<ItemObserver> linksByBufferIndex = new List<ItemObserver>();
 
         private readonly int atomCapacity;
@@ -33,7 +34,7 @@ namespace OTKOW.ReactiveBuffers
         /// </param>
         /// <param name="atomIndices">The vertex indices to use when rendering each atom.</param>
         public ReactiveBuffer(
-            IVertexArrayObject vertexArrayObject,
+            IVertexArrayObject<TVertex> vertexArrayObject,
             IObservable<IObservable<IList<TVertex>>> atomSource,
             IList<int> atomIndices)
         {

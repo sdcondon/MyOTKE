@@ -28,4 +28,38 @@
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="GlVertexArrayObject.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GlVertexArrayObject.tt</DependentUpon>
+    </Compile>
+    <Compile Update="IVertexArrayObject.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IVertexArrayObject.tt</DependentUpon>
+    </Compile>
+	<Compile Update="VertexArrayObjectBuilder2.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>VertexArrayObjectBuilder2.tt</DependentUpon>
+    </Compile>
+  
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="GlVertexArrayObject.tt">
+      <LastGenOutput>GlVertexArrayObject.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+    <None Update="IVertexArrayObject.tt">
+      <LastGenOutput>IVertexArrayObject.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+    <None Update="VertexArrayObjectBuilder2.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>VertexArrayObjectBuilder2.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
 </Project>

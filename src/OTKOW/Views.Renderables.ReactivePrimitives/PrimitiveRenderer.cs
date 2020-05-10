@@ -1,7 +1,6 @@
-﻿using OTKOW.Core;
+﻿using OpenToolkit.Graphics.OpenGL;
+using OTKOW.Core;
 using OTKOW.ReactiveBuffers;
-using OTKOW.Views;
-using OpenToolkit.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
