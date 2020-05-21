@@ -9,14 +9,13 @@ using System;
 namespace OTKOW.Core
 {
 <# for(int i = 1; i <= MaxBufferCount; i++) { #>
+<# WriteLineIf(i > 1, ""); #>
     /// <summary>
     /// Interface for types representing an OpenGL vertex array object.
     /// </summary>
-    <#= TypeParamDocs(i, i => $"The type of the { Ordinal(i) } buffer.") #>
+<# WriteTypeParamDocs(i, i => $"The type of the { Ordinal(i) } buffer."); #>
     public interface IVertexArrayObject<<#= TList(i) #>>
-<# for(int j = 1; j <= i; j++) { #>
-        where T<#= j #> : struct
-<# } #>
+<# WriteLines(i, i => $"where T{i} : struct", 2); #>
     {
         /// <summary>
         /// Gets the index buffer object for this VAO, if there is one.
@@ -36,5 +35,4 @@ namespace OTKOW.Core
         /// <param name="count">The number of vertices to draw, or -1 to draw all vertices.</param>
         void Draw(int count);
     }
-
 <# } #>}

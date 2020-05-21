@@ -4,47 +4,55 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
 <#@ include file="_Common.t4" #>
+#pragma warning disable SA1402
 using OpenToolkit.Graphics.OpenGL;
 using OTKOW.Core.VaoDecorators;
-using System;
-using System.Collections.Generic;
 
 namespace OTKOW.Core
 {
-<# for(int i = 1; i <= MaxBufferCount; i++) { #>
+<# for(int i = 0; i <= MaxBufferCount; i++) { #>
+<# WriteLineIf(i > 0, ""); #>
     /// <summary>
-    /// Builder class for <see cref="GlVertexArrayObject"/> objects that presents a fluent-ish interface.
+    /// Builder class for <see cref="GlVertexArrayObject<#= TList(i, "{", "}") #>"/> objects that presents a fluent-ish interface.
     /// </summary>
-    /// <remarks>
-    /// Useful for setting up a VAO before the OpenGL context has initialized.
-    /// </remarks>
-    public sealed class VertexArrayObjectBuilder2<<#= TList(i) #>>
+<# WriteTypeParamDocs(i, i => $"The type of data to be stored in the { Ordinal(i) } buffer."); #>
+    public sealed class VertexArrayObjectBuilder2<#= TList(i, "<", ">") #>
+<# WriteLines(i, i => $"where T{i} : struct", 2); #>
     {
         private readonly PrimitiveType primitiveType;
-        private readonly List<(BufferUsageHint usage, Type elementType, int elementCount, Array data)> bufferSpecs = new List<(BufferUsageHint, Type, int, Array)>();
+<# WriteLines(i, i => $"private readonly (BufferUsageHint usage, int elementCount, T{i}[] data) bufferSpec{i};", 2); #>
         private (int count, uint[] data) indexSpec;
-        private Func<PrimitiveType, List<(BufferUsageHint, Type, int, Array)>, (int count, uint[] data), IVertexArrayObject> build;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="VertexArrayObjectBuilder"/> class.
+        /// Initializes a new instance of the <see cref="VertexArrayObjectBuilder2<#= TList(i, "{", "}") #>"/> class.
         /// </summary>
         /// <param name="primitiveType">The type of primitive data to be stored in the built VAO.</param>
-        public VertexArrayObjectBuilder2(PrimitiveType primitiveType)
+<# WriteLineIf(i > 0, $"/// <param name=\"indexSpec\">Specification for the index buffer.</param>", 2); #>
+<# WriteLines(i, i => $"/// <param name=\"bufferSpec{i}\">Specification for the { Ordinal(i) } buffer.</param>", 2); #>
+        <# Write(i == 0 ? "public" : "internal"); #> VertexArrayObjectBuilder2(
+            PrimitiveType primitiveType<# WriteLine(i > 0 ? "," : ")"); #>
+<# WriteLineIf(i > 0, $"(int count, uint[] data) indexSpec,", 3); #>
+<# WriteLines(i, j => $"(BufferUsageHint usage, int elementCount, T{j}[] data) bufferSpec{j}{(j < i ? "," : ")")}", 3); #>
         {
             this.primitiveType = primitiveType;
-            this.build = (primType, bufferSpecs, indexSpec) => new GlVertexArrayObject(primType, bufferSpecs, indexSpec);
         }
+<# if(i < MaxBufferCount) { #>
 
         /// <summary>
         /// Adds a new populated attribute buffer to be included in the built VAO.
         /// </summary>
+        /// <typeparam name="T">The type of data to be stored in the buffer.</typeparam>
         /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="data">The data with which to populate the buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder WithAttributeBuffer(BufferUsageHint bufferUsage, Array data)
+        public VertexArrayObjectBuilder2<<#= TList(i, "", ", ") #>T> WithAttributeBuffer<T>(BufferUsageHint bufferUsage, T[] data)
+            where T : struct
         {
-            this.bufferSpecs.Add((bufferUsage, data.GetType().GetElementType(), data.Length, data));
-            return this;
+            return new VertexArrayObjectBuilder2<<#= TList(i, "", ", ") #>T>(
+                primitiveType,
+                indexSpec,
+<# WriteLines(i, i => $"bufferSpec{i},", 4); #>
+                (bufferUsage, data.Length, data));
         }
 
         /// <summary>
@@ -54,18 +62,23 @@ namespace OTKOW.Core
         /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="size">The size of the buffer, in instances of <see typeparamref="T"/>.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder WithAttributeBuffer<T>(BufferUsageHint bufferUsage, int size)
+        public VertexArrayObjectBuilder2<<#= TList(i, "", ", ") #>T> WithAttributeBuffer<T>(BufferUsageHint bufferUsage, int size)
+            where T : struct
         {
-            this.bufferSpecs.Add((bufferUsage, typeof(T), size, null));
-            return this;
+            return new VertexArrayObjectBuilder2<<#= TList(i, "", ", ") #>T>(
+                primitiveType,
+                indexSpec,
+<# WriteLines(i, i => $"bufferSpec{i},", 4); #>
+                (bufferUsage, size, null));
         }
+<# } #>
 
         /// <summary>
         /// Sets the index buffer to be included in the built VAO.
         /// </summary>
         /// <param name="data">The data with which to populate the buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder WithIndex(uint[] data)
+        public VertexArrayObjectBuilder2<#= TList(i, "<", ">") #> WithIndex(uint[] data)
         {
             this.indexSpec = (data.Length, data);
             return this;
@@ -76,34 +89,70 @@ namespace OTKOW.Core
         /// </summary>
         /// <param name="capacity">The size of the index buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder WithIndex(int capacity)
+        public VertexArrayObjectBuilder2<#= TList(i, "<", ">") #> WithIndex(int capacity)
         {
             this.indexSpec = (capacity, null);
             return this;
         }
+<# if (i > 0) { #>
 
         /// <summary>
         /// Specifies that the built VAO should be explicitly synchronized, with any pending changes flushed on each draw call.
         /// <para/>
-        /// Specifically, means that the created VAO will be a <see cref="SynchronizedVao"/> instance.
+        /// Specifically, means that the created VAO will be a <see cref="SynchronizedVao{<#= TList(i) #>}"/> instance.
         /// </summary>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder Synchronized()
+        public SynchronizedVertexArrayObjectBuilder<<#= TList(i) #>> Synchronized()
         {
-            var innerBuild = build;
-            build = (primType, bufferSpecs, indexSpec) => new SynchronizedVao(innerBuild(primType, bufferSpecs, indexSpec));
-            return this;
+            return new SynchronizedVertexArrayObjectBuilder<<#= TList(i) #>>(this);
         }
 
         /// <summary>
-        /// Builds a new <see cref="GlVertexArrayObject"/> instance based on the state of the builder.
+        /// Builds a new <see cref="IVertexArrayObject{<#= TList(i) #>}"/> instance based on the state of the builder.
         /// </summary>
         /// <returns>The built VAO.</returns>
-        public IVertexArrayObject Build()
+        public IVertexArrayObject<<#= TList(i) #>> Build()
         {
-            return build(primitiveType, bufferSpecs, indexSpec);
+            return new GlVertexArrayObject<<#= TList(i) #>>(
+                primitiveType,
+<# WriteLines(i, i => $"bufferSpec{i},", 4); #>
+                indexSpec);
+        }
+<# } #>
+    }
+<# } #>
+<# for(int i = 1; i <= MaxBufferCount; i++) { #>
+
+    /// <summary>
+    /// Builder class for <see cref="GlVertexArrayObject<#= TList(i, "{", "}") #>"/> objects that presents a fluent-ish interface.
+    /// </summary>
+<# WriteTypeParamDocs(i, i => $"The type of data to be stored in the { Ordinal(i) } buffer."); #>
+    /// <remarks>
+    /// Useful for setting up a VAO before the OpenGL context has initialized.
+    /// </remarks>
+    public sealed class SynchronizedVertexArrayObjectBuilder<#= TList(i, "<", ">") #>
+<# WriteLines(i, i => $"where T{i} : struct", 2); #>
+    {
+        private readonly VertexArrayObjectBuilder2<#= TList(i, "<", ">") #> innerBuilder;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SynchronizedVertexArrayObjectBuilder<#= TList(i, "{", "}") #>"/> class.
+        /// </summary>
+        /// <param name="innerBuilder">The builder wrapped by this builder.</param>
+        public SynchronizedVertexArrayObjectBuilder(VertexArrayObjectBuilder2<#= TList(i, "<", ">") #> innerBuilder)
+        {
+            this.innerBuilder = innerBuilder;
+        }
+
+        /// <summary>
+        /// Builds a new <see cref="IVertexArrayObject{<#= TList(i) #>}"/> instance based on the state of the builder.
+        /// </summary>
+        /// <returns>The built VAO.</returns>
+        public IVertexArrayObject<<#= TList(i) #>> Build()
+        {
+            return new SynchronizedVao<<#= TList(i) #>>(innerBuilder.Build());
         }
     }
-
 <# } #>
 }
+#pragma warning restore SA1402

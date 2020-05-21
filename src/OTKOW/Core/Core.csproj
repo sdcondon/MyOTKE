@@ -39,6 +39,16 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>IVertexArrayObject.tt</DependentUpon>
     </Compile>
+    <Compile Update="MemoryVertexArrayObject.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MemoryVertexArrayObject.tt</DependentUpon>
+    </Compile>
+    <Compile Update="VaoDecorators\SynchronizedVao.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SynchronizedVao.tt</DependentUpon>
+    </Compile>
 	<Compile Update="VertexArrayObjectBuilder2.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -55,6 +65,14 @@
     <None Update="IVertexArrayObject.tt">
       <LastGenOutput>IVertexArrayObject.cs</LastGenOutput>
       <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+    <None Update="MemoryVertexArrayObject.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MemoryVertexArrayObject.cs</LastGenOutput>
+    </None>
+    <None Update="VaoDecorators\SynchronizedVao.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>SynchronizedVao.cs</LastGenOutput>
     </None>
     <None Update="VertexArrayObjectBuilder2.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

@@ -4,17 +4,33 @@
 
 const int MaxBufferCount = 3;
 
-string TypeParamDocs(int i, Func<int, string> desc)
+void WriteLines(int count, Func<int, string> writeLine, int indent = 0)
 {
-    var lines = Enumerable.Range(1, i).Select(i => $"/// <typeparam name=\"T{i}\">{desc(i)}</typeparam>");
-    return string.Join(Environment.NewLine + "    ", lines);
+    for (int i = 1; i <= count; i++)
+    {
+        Write(new String(' ', 4 * indent));
+        WriteLine(writeLine(i));
+    }
+}
+
+void WriteLineIf(bool predicate, string line, int indent = 0)
+{
+    if (predicate)
+    {
+        Write(new String(' ', 4 * indent));
+        WriteLine(line);
+    }
+}
+
+void WriteTypeParamDocs(int count, Func<int, string> desc)
+{
+    for (int i = 1; i <= count; i++)
+    {
+        WriteLine($"    /// <typeparam name=\"T{i}\">{desc(i)}</typeparam>");
+    }
 }
 
 IEnumerable<string> TypeParamNames(int i) => Enumerable.Range(1, i).Select(i => $"T{i}");
-
-string ArrangeFieldType(int i) => i == 1 ? "Func<T1>" : $"({string.Join(", ", TypeParamNames(i).Select(t => $"Func<{t}>"))})";
-
-string PrereqsFieldType(int i) => i == 1 ? "T1" : $"({string.Join(", ", TypeParamNames(i).Select(t => $"{t}"))})";
 
 string List(
     int count,

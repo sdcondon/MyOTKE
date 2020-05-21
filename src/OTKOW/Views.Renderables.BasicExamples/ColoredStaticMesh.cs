@@ -20,8 +20,8 @@ namespace OTKOW.Views.Renderables.BasicExamples
 
         private readonly IViewProjection viewProjection;
 
-        private VertexArrayObjectBuilder vertexArrayObjectBuilder;
-        private GlVertexArrayObject vertexArrayObject;
+        private VertexArrayObjectBuilder2<Vertex> vertexArrayObjectBuilder;
+        private GlVertexArrayObject<Vertex> vertexArrayObject;
         private bool isDisposed;
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace OTKOW.Views.Renderables.BasicExamples
                 }
             }
 
-            this.vertexArrayObjectBuilder = new VertexArrayObjectBuilder(PrimitiveType.Triangles)
+            this.vertexArrayObjectBuilder = new VertexArrayObjectBuilder2(PrimitiveType.Triangles)
                 .WithAttributeBuffer(BufferUsageHint.StaticDraw, vertices.ToArray())
                 .WithIndex(indices.ToArray());
         }
@@ -98,7 +98,7 @@ namespace OTKOW.Views.Renderables.BasicExamples
                 }
             }
 
-            this.vertexArrayObject = (GlVertexArrayObject)this.vertexArrayObjectBuilder.Build();
+            this.vertexArrayObject = (GlVertexArrayObject<Vertex>)this.vertexArrayObjectBuilder.Build();
             this.vertexArrayObjectBuilder = null;
         }
 

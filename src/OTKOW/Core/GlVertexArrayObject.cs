@@ -1,7 +1,7 @@
-﻿using OpenToolkit.Graphics;
+﻿#pragma warning disable SA1402
+using OpenToolkit.Graphics;
 using OpenToolkit.Graphics.OpenGL;
 using System;
-using System.Collections.Generic;
 
 namespace OTKOW.Core
 {
@@ -18,10 +18,10 @@ namespace OTKOW.Core
         private readonly GlVertexBufferObject<T1> attributeBuffer1;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GlVertexArrayObject2"/> class. SIDE EFFECT: new VAO will be bound.
+        /// Initializes a new instance of the <see cref="GlVertexArrayObject{T1}"/> class. SIDE EFFECT: new VAO will be bound.
         /// </summary>
         /// <param name="primitiveType">OpenGL primitive type.</param>
-        /// <param name="attributeBufferSpecs">Specs for the buffers in this VAO.</param>
+        /// <param name="attributeBufferSpec1">Spec for the 1st buffer in this VAO.</param>
         /// <param name="indexSpec">The spec for the index of this VAO.</param>
         internal GlVertexArrayObject(
             PrimitiveType primitiveType,
@@ -37,7 +37,8 @@ namespace OTKOW.Core
 
             // Set up the attribute buffers
             int k = 0;
-            GlVertexBufferObject<T> MakeBuffer<T>((BufferUsageHint usage, int capacity, T[] data) attributeBufferSpec) where T : struct
+            GlVertexBufferObject<T> MakeBuffer<T>((BufferUsageHint usage, int capacity, T[] data) attributeBufferSpec)
+                where T : struct
             {
                 var buffer = new GlVertexBufferObject<T>(
                     BufferTarget.ArrayBuffer,
@@ -71,7 +72,7 @@ namespace OTKOW.Core
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="GlVertexArrayObject"/> class.
+        /// Finalizes an instance of the <see cref="GlVertexArrayObject{T1}"/> class.
         /// </summary>
         ~GlVertexArrayObject() => Dispose(false);
 
@@ -137,7 +138,7 @@ namespace OTKOW.Core
 
             ////if (GraphicsContext.CurrentContext != null)
             ////{
-                GL.DeleteVertexArrays(1, new[] { this.id });
+            GL.DeleteVertexArrays(1, new[] { this.id });
             ////}
         }
     }
@@ -158,10 +159,11 @@ namespace OTKOW.Core
         private readonly GlVertexBufferObject<T2> attributeBuffer2;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GlVertexArrayObject2"/> class. SIDE EFFECT: new VAO will be bound.
+        /// Initializes a new instance of the <see cref="GlVertexArrayObject{T1, T2}"/> class. SIDE EFFECT: new VAO will be bound.
         /// </summary>
         /// <param name="primitiveType">OpenGL primitive type.</param>
-        /// <param name="attributeBufferSpecs">Specs for the buffers in this VAO.</param>
+        /// <param name="attributeBufferSpec1">Spec for the 1st buffer in this VAO.</param>
+        /// <param name="attributeBufferSpec2">Spec for the 2nd buffer in this VAO.</param>
         /// <param name="indexSpec">The spec for the index of this VAO.</param>
         internal GlVertexArrayObject(
             PrimitiveType primitiveType,
@@ -178,7 +180,8 @@ namespace OTKOW.Core
 
             // Set up the attribute buffers
             int k = 0;
-            GlVertexBufferObject<T> MakeBuffer<T>((BufferUsageHint usage, int capacity, T[] data) attributeBufferSpec) where T : struct
+            GlVertexBufferObject<T> MakeBuffer<T>((BufferUsageHint usage, int capacity, T[] data) attributeBufferSpec)
+                where T : struct
             {
                 var buffer = new GlVertexBufferObject<T>(
                     BufferTarget.ArrayBuffer,
@@ -213,7 +216,7 @@ namespace OTKOW.Core
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="GlVertexArrayObject"/> class.
+        /// Finalizes an instance of the <see cref="GlVertexArrayObject{T1, T2}"/> class.
         /// </summary>
         ~GlVertexArrayObject() => Dispose(false);
 
@@ -283,7 +286,7 @@ namespace OTKOW.Core
 
             ////if (GraphicsContext.CurrentContext != null)
             ////{
-                GL.DeleteVertexArrays(1, new[] { this.id });
+            GL.DeleteVertexArrays(1, new[] { this.id });
             ////}
         }
     }
@@ -307,10 +310,12 @@ namespace OTKOW.Core
         private readonly GlVertexBufferObject<T3> attributeBuffer3;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GlVertexArrayObject2"/> class. SIDE EFFECT: new VAO will be bound.
+        /// Initializes a new instance of the <see cref="GlVertexArrayObject{T1, T2, T3}"/> class. SIDE EFFECT: new VAO will be bound.
         /// </summary>
         /// <param name="primitiveType">OpenGL primitive type.</param>
-        /// <param name="attributeBufferSpecs">Specs for the buffers in this VAO.</param>
+        /// <param name="attributeBufferSpec1">Spec for the 1st buffer in this VAO.</param>
+        /// <param name="attributeBufferSpec2">Spec for the 2nd buffer in this VAO.</param>
+        /// <param name="attributeBufferSpec3">Spec for the 3rd buffer in this VAO.</param>
         /// <param name="indexSpec">The spec for the index of this VAO.</param>
         internal GlVertexArrayObject(
             PrimitiveType primitiveType,
@@ -328,7 +333,8 @@ namespace OTKOW.Core
 
             // Set up the attribute buffers
             int k = 0;
-            GlVertexBufferObject<T> MakeBuffer<T>((BufferUsageHint usage, int capacity, T[] data) attributeBufferSpec) where T : struct
+            GlVertexBufferObject<T> MakeBuffer<T>((BufferUsageHint usage, int capacity, T[] data) attributeBufferSpec)
+                where T : struct
             {
                 var buffer = new GlVertexBufferObject<T>(
                     BufferTarget.ArrayBuffer,
@@ -364,7 +370,7 @@ namespace OTKOW.Core
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="GlVertexArrayObject"/> class.
+        /// Finalizes an instance of the <see cref="GlVertexArrayObject{T1, T2, T3}"/> class.
         /// </summary>
         ~GlVertexArrayObject() => Dispose(false);
 
@@ -438,9 +444,9 @@ namespace OTKOW.Core
 
             ////if (GraphicsContext.CurrentContext != null)
             ////{
-                GL.DeleteVertexArrays(1, new[] { this.id });
+            GL.DeleteVertexArrays(1, new[] { this.id });
             ////}
         }
     }
-
 }
+#pragma warning restore SA1402

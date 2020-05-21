@@ -25,7 +25,7 @@
         /// Sets data for the vertex at a particular index.
         /// </summary>
         /// <param name="index">The index of the object to set.</param>
-        T this[int index] { set; }
+        T this[int index] { get;  set; }
 
         /// <summary>
         /// Copy data internally within the buffer.

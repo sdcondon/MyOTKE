@@ -94,5 +94,4 @@ namespace OTKOW.Core
         /// <param name="count">The number of vertices to draw, or -1 to draw all vertices.</param>
         void Draw(int count);
     }
-
 }

@@ -5,29 +5,30 @@ using System.Threading;
 namespace OTKOW.Core
 {
     /// <summary>
-    /// Implementation of <see cref="IVertexBufferObject"/> that just stores buffer content in memory, for testing purposes.
+    /// Implementation of <see cref="IVertexBufferObject{T}"/> that just stores buffer content in memory, for testing purposes.
     /// </summary>
-    public class MemoryVertexBufferObject : IVertexBufferObject
+    public class MemoryVertexBufferObject<T> : IVertexBufferObject<T>
+        where T : struct
     {
         private static int nextId = 0;
-        private readonly object[] content;
+        private readonly T[] content;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MemoryVertexBufferObject"/> class.
+        /// Initializes a new instance of the <see cref="MemoryVertexBufferObject{T}"/> class.
         /// </summary>
         /// <param name="capacity">The capacity of the buffer.</param>
         /// <param name="data">The data to populate the buffer with, or null.</param>
         public MemoryVertexBufferObject(int capacity, Array data)
         {
             Id = Interlocked.Increment(ref nextId);
-            content = new object[capacity];
+            content = new T[capacity];
             data?.CopyTo(content, 0);
         }
 
         /// <summary>
         /// Gets the content of the buffer.
         /// </summary>
-        public IReadOnlyList<object> Content => content;
+        public IReadOnlyList<T> Content => content;
 
         /// <inheritdoc />
         public int Id { get; }
@@ -39,16 +40,13 @@ namespace OTKOW.Core
         public int Capacity => Content.Count;
 
         /// <inheritdoc />
-        public object this[int index]
+        public T this[int index]
         {
             get => content[index];
             set => content[index] = value;
         }
 
         /// <inheritdoc />
-        public void Copy<T>(int readIndex, int writeIndex, int count) => Array.Copy(content, readIndex, content, writeIndex, count);
-
-        /// <inheritdoc />
-        public T GetAs<T>(int index) => (T)Content[index];
+        public void Copy(int readIndex, int writeIndex, int count) => Array.Copy(content, readIndex, content, writeIndex, count);
     }
 }

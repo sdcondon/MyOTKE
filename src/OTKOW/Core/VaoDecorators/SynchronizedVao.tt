@@ -1,0 +1,78 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#@ include file="../_Common.t4" #>
+#pragma warning disable SA1402
+using OpenToolkit.Graphics.OpenGL;
+using System;
+
+namespace OTKOW.Core.VaoDecorators
+{
+<# for(int i = 1; i <= MaxBufferCount; i++) { #>
+<# WriteLineIf(i > 1, ""); #>
+    /// <summary>
+    /// Decorator for <see cref="IVertexArrayObject{<#= TList(i) #>}"/> that explicitly synchronizes with OpenGL (making it simple but slow..).
+    /// <para/>
+    /// See https://www.khronos.org/opengl/wiki/Synchronization#Implicit_synchronization for some info.
+    /// </summary>
+<# WriteTypeParamDocs(i, i => $"The type of the { Ordinal(i) } buffer."); #>
+    /// <remarks>
+    /// TODO: Look into some alternative decorators that do e.g. streaming - https://www.khronos.org/opengl/wiki/Buffer_Object_Streaming.
+    /// </remarks>
+    public sealed class SynchronizedVao<<#= TList(i) #>> : IVertexArrayObject<<#= TList(i) #>>, IDisposable
+<# WriteLines(i, i => $"where T{i} : struct", 2); #>
+    {
+        private readonly IVertexArrayObject<<#= TList(i) #>> vertexArrayObject;
+        private readonly SynchronizedVertexBufferObject<uint> indexBuffer;
+<# WriteLines(i, i => $"private readonly SynchronizedVertexBufferObject<T{i}> attributeBuffer{i};", 2); #>
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SynchronizedVao{<#= TList(i) #>}"/> class.
+        /// </summary>
+        /// <param name="vertexArrayObject">The VAO to apply synchronization to.</param>
+        public SynchronizedVao(IVertexArrayObject<<#= TList(i) #>> vertexArrayObject)
+        {
+            this.vertexArrayObject = vertexArrayObject;
+            this.indexBuffer = new SynchronizedVertexBufferObject<uint>(vertexArrayObject.IndexBuffer);
+<# WriteLines(i, i => $"this.attributeBuffer{i} = new SynchronizedVertexBufferObject<T{i}>(vertexArrayObject.AttributeBuffer{i});", 3); #>
+        }
+
+        /// <inheritdoc />
+        public IVertexBufferObject<uint> IndexBuffer => indexBuffer;
+<# for(int j = 1; j <= i; j++) { #>
+
+        /// <inheritdoc />
+        IVertexBufferObject<T<#= j #>> IVertexArrayObject<<#= TList(i) #>>.AttributeBuffer<#= j #> => AttributeBuffer<#= j #>;
+
+        /// <summary>
+        /// Gets the <see cref="SynchronizedVertexBufferObject{T<#= j #>}"/> instance that serves as the <#= Ordinal(j) #> attribute buffer for this VAO.
+        /// </summary>
+        public SynchronizedVertexBufferObject<T<#= j #>> AttributeBuffer<#= j #> { get; }
+<# } #>
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            // TODO LIFETIME MGMT: aggregated, not component - thus ideally not our responsibility
+            // to Dispose (and thus no need for this class to be IDisposable)
+            if (vertexArrayObject is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
+        }
+
+        /// <inheritdoc />
+        public void Draw(int count)
+        {
+            GL.Finish();
+
+            indexBuffer.FlushChanges();
+<# WriteLines(i, i => $"this.attributeBuffer{i}.FlushChanges();", 3); #>
+
+            vertexArrayObject.Draw(count);
+        }
+    }
+<# } #>}
+#pragma warning restore SA1402
