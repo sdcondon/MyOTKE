@@ -44,15 +44,15 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>MemoryVertexArrayObject.tt</DependentUpon>
     </Compile>
-    <Compile Update="VaoDecorators\SynchronizedVao.cs">
+    <Compile Update="VaoDecorators\SynchronizedVertexArrayObject.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>SynchronizedVao.tt</DependentUpon>
+      <DependentUpon>SynchronizedVertexArrayObject.tt</DependentUpon>
     </Compile>
-	<Compile Update="VertexArrayObjectBuilder2.cs">
+	<Compile Update="VertexArrayObjectBuilder.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>VertexArrayObjectBuilder2.tt</DependentUpon>
+      <DependentUpon>VertexArrayObjectBuilder.tt</DependentUpon>
     </Compile>
   
   </ItemGroup>
@@ -70,13 +70,13 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>MemoryVertexArrayObject.cs</LastGenOutput>
     </None>
-    <None Update="VaoDecorators\SynchronizedVao.tt">
+    <None Update="VaoDecorators\SynchronizedVertexArrayObject.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>SynchronizedVao.cs</LastGenOutput>
+      <LastGenOutput>SynchronizedVertexArrayObject.cs</LastGenOutput>
     </None>
-    <None Update="VertexArrayObjectBuilder2.tt">
+    <None Update="VertexArrayObjectBuilder.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>VertexArrayObjectBuilder2.cs</LastGenOutput>
+      <LastGenOutput>VertexArrayObjectBuilder.cs</LastGenOutput>
     </None>
   </ItemGroup>
 

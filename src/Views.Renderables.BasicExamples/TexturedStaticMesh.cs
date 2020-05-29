@@ -23,8 +23,8 @@ namespace OTKOW.Views.Renderables.BasicExamples
         private readonly string textureFilePath;
 
         private int[] textures;
-        private VertexArrayObjectBuilder vertexArrayObjectBuilder;
-        private GlVertexArrayObject vertexArrayObject;
+        private VertexArrayObjectBuilder<Vertex> vertexArrayObjectBuilder;
+        private GlVertexArrayObject<Vertex> vertexArrayObject;
         private bool isDisposed;
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace OTKOW.Views.Renderables.BasicExamples
                 }
             }
 
-            this.vertexArrayObject = (GlVertexArrayObject)this.vertexArrayObjectBuilder.Build();
+            this.vertexArrayObject = (GlVertexArrayObject<Vertex>)this.vertexArrayObjectBuilder.Build();
             this.vertexArrayObjectBuilder = null;
         }
 

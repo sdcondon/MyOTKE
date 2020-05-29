@@ -13,7 +13,7 @@ namespace OTKOW.ReactiveBuffers
     public class ReactiveBufferBuilder<TVertex>
         where TVertex : struct
     {
-        private readonly VertexArrayObjectBuilder builder;
+        private readonly SynchronizedVertexArrayObjectBuilder<TVertex> builder;
         private readonly IObservable<IObservable<IList<TVertex>>> vertexSource;
         private readonly IList<int> indices;
 

@@ -13,7 +13,7 @@ namespace OTKOW.Core.VaoDecorators
     /// <remarks>
     /// TODO: Look into some alternative decorators that do e.g. streaming - https://www.khronos.org/opengl/wiki/Buffer_Object_Streaming.
     /// </remarks>
-    public sealed class SynchronizedVao<T1> : IVertexArrayObject<T1>, IDisposable
+    public sealed class SynchronizedVertexArrayObject<T1> : IVertexArrayObject<T1>, IDisposable
         where T1 : struct
     {
         private readonly IVertexArrayObject<T1> vertexArrayObject;
@@ -21,10 +21,10 @@ namespace OTKOW.Core.VaoDecorators
         private readonly SynchronizedVertexBufferObject<T1> attributeBuffer1;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SynchronizedVao{T1}"/> class.
+        /// Initializes a new instance of the <see cref="SynchronizedVertexArrayObject{T1}"/> class.
         /// </summary>
         /// <param name="vertexArrayObject">The VAO to apply synchronization to.</param>
-        public SynchronizedVao(IVertexArrayObject<T1> vertexArrayObject)
+        public SynchronizedVertexArrayObject(IVertexArrayObject<T1> vertexArrayObject)
         {
             this.vertexArrayObject = vertexArrayObject;
             this.indexBuffer = new SynchronizedVertexBufferObject<uint>(vertexArrayObject.IndexBuffer);
@@ -75,7 +75,7 @@ namespace OTKOW.Core.VaoDecorators
     /// <remarks>
     /// TODO: Look into some alternative decorators that do e.g. streaming - https://www.khronos.org/opengl/wiki/Buffer_Object_Streaming.
     /// </remarks>
-    public sealed class SynchronizedVao<T1, T2> : IVertexArrayObject<T1, T2>, IDisposable
+    public sealed class SynchronizedVertexArrayObject<T1, T2> : IVertexArrayObject<T1, T2>, IDisposable
         where T1 : struct
         where T2 : struct
     {
@@ -85,10 +85,10 @@ namespace OTKOW.Core.VaoDecorators
         private readonly SynchronizedVertexBufferObject<T2> attributeBuffer2;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SynchronizedVao{T1, T2}"/> class.
+        /// Initializes a new instance of the <see cref="SynchronizedVertexArrayObject{T1, T2}"/> class.
         /// </summary>
         /// <param name="vertexArrayObject">The VAO to apply synchronization to.</param>
-        public SynchronizedVao(IVertexArrayObject<T1, T2> vertexArrayObject)
+        public SynchronizedVertexArrayObject(IVertexArrayObject<T1, T2> vertexArrayObject)
         {
             this.vertexArrayObject = vertexArrayObject;
             this.indexBuffer = new SynchronizedVertexBufferObject<uint>(vertexArrayObject.IndexBuffer);
@@ -150,7 +150,7 @@ namespace OTKOW.Core.VaoDecorators
     /// <remarks>
     /// TODO: Look into some alternative decorators that do e.g. streaming - https://www.khronos.org/opengl/wiki/Buffer_Object_Streaming.
     /// </remarks>
-    public sealed class SynchronizedVao<T1, T2, T3> : IVertexArrayObject<T1, T2, T3>, IDisposable
+    public sealed class SynchronizedVertexArrayObject<T1, T2, T3> : IVertexArrayObject<T1, T2, T3>, IDisposable
         where T1 : struct
         where T2 : struct
         where T3 : struct
@@ -162,10 +162,10 @@ namespace OTKOW.Core.VaoDecorators
         private readonly SynchronizedVertexBufferObject<T3> attributeBuffer3;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SynchronizedVao{T1, T2, T3}"/> class.
+        /// Initializes a new instance of the <see cref="SynchronizedVertexArrayObject{T1, T2, T3}"/> class.
         /// </summary>
         /// <param name="vertexArrayObject">The VAO to apply synchronization to.</param>
-        public SynchronizedVao(IVertexArrayObject<T1, T2, T3> vertexArrayObject)
+        public SynchronizedVertexArrayObject(IVertexArrayObject<T1, T2, T3> vertexArrayObject)
         {
             this.vertexArrayObject = vertexArrayObject;
             this.indexBuffer = new SynchronizedVertexBufferObject<uint>(vertexArrayObject.IndexBuffer);

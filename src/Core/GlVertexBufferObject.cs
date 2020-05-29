@@ -8,6 +8,7 @@ namespace OTKOW.Core
     /// <summary>
     /// A OpenGL vertex buffer object.
     /// </summary>
+    /// <typeparam name="T">The .NET type of data to be stored in the buffer.</typeparam>
     internal sealed class GlVertexBufferObject<T> : IVertexBufferObject<T>, IDisposable
         where T : struct
     {
@@ -90,10 +91,10 @@ namespace OTKOW.Core
                 GC.SuppressFinalize(this);
             }
 
-            //if (GraphicsContext.CurrentContext != null)
-            //{
-                GL.DeleteBuffers(1, new[] { this.Id });
-            //}
+            ////if (GraphicsContext.CurrentContext != null)
+            ////{
+            GL.DeleteBuffers(1, new[] { this.Id });
+            ////}
         }
     }
 }

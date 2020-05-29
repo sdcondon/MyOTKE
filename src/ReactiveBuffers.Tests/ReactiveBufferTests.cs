@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using OTKOW.Core;
 using OpenToolkit.Graphics.OpenGL;
+using OTKOW.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,8 +75,8 @@ namespace OTKOW.ReactiveBuffers
         {
             // Arrange
             var sourceObservable = new TestSource();
-            var targetVao = new MemoryVertexArrayObject(
-                new (BufferUsageHint, Type, int, Array)[] { (BufferUsageHint.DynamicDraw, typeof((int, int)), 100, null) },
+            var targetVao = new MemoryVertexArrayObject<(int, int)>(
+                (BufferUsageHint.DynamicDraw, 100, null),
                 (100, null));
 
             using (var sut = new ReactiveBuffer<(int, int)>(targetVao, sourceObservable, new[] { 0, 1 }))
@@ -86,7 +86,7 @@ namespace OTKOW.ReactiveBuffers
             }
 
             // Assert
-            targetVao.AttributeBuffers[0].Content.Take(expectedVertices.Count).Should().BeEquivalentTo(expectedVertices, opts => opts.WithStrictOrdering());
+            targetVao.AttributeBuffer1.Content.Take(expectedVertices.Count).Should().BeEquivalentTo(expectedVertices, opts => opts.WithStrictOrdering());
             targetVao.IndexBuffer.Content.Take(expectedIndices.Count).Should().BeEquivalentTo(expectedIndices, opts => opts.WithStrictOrdering());
         }
 

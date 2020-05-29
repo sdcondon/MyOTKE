@@ -3,6 +3,7 @@
     /// <summary>
     /// Interface for types representing an OpenGL vertex buffer object.
     /// </summary>
+    /// <typeparam name="T">The .NET type of data to be stored in the buffer.</typeparam>
     public interface IVertexBufferObject<T>
         where T : struct
     {
@@ -30,7 +31,6 @@
         /// <summary>
         /// Copy data internally within the buffer.
         /// </summary>
-        /// <typeparam name="T">The type of object to treat the buffer content as.</typeparam>
         /// <param name="readIndex">The (object) index to read from.</param>
         /// <param name="writeIndex">The (object) index to write to.</param>
         /// <param name="count">The number of objects to copy.</param>

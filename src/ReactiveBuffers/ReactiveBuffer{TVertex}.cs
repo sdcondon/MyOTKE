@@ -42,7 +42,7 @@ namespace OTKOW.ReactiveBuffers
             this.verticesPerAtom = atomIndices.Max() + 1; // Perhaps should throw if has unused indices..?
             this.indices = atomIndices;
             this.vao = vertexArrayObject;
-            this.atomCapacity = vao.AttributeBuffers[0].Capacity / verticesPerAtom;
+            this.atomCapacity = vao.AttributeBuffer1.Capacity / verticesPerAtom;
 
             this.vertexSource.Subscribe(i => i.Subscribe(new ItemObserver(this)));
         }
@@ -105,7 +105,7 @@ namespace OTKOW.ReactiveBuffers
                     // Set vertex attributes
                     for (int i = 0; i < parent.verticesPerAtom; i++)
                     {
-                        parent.vao.AttributeBuffers[0][bufferIndex * parent.verticesPerAtom + i] = vertices[atomIndex * parent.verticesPerAtom + i];
+                        parent.vao.AttributeBuffer1[bufferIndex * parent.verticesPerAtom + i] = vertices[atomIndex * parent.verticesPerAtom + i];
                     }
 
                     // Update the index
@@ -152,7 +152,7 @@ namespace OTKOW.ReactiveBuffers
                 {
                     this.bufferIndices.Remove(index);
                     lastLink.bufferIndices.Add(index, index);
-                    this.parent.vao.AttributeBuffers[0].Copy<TVertex>(
+                    this.parent.vao.AttributeBuffer1.Copy(
                         finalBufferIndex * parent.verticesPerAtom,
                         index * parent.verticesPerAtom,
                         this.parent.verticesPerAtom);

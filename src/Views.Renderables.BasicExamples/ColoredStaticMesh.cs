@@ -1,5 +1,5 @@
-﻿using OTKOW.Core;
-using OpenToolkit.Graphics.OpenGL;
+﻿using OpenToolkit.Graphics.OpenGL;
+using OTKOW.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +20,7 @@ namespace OTKOW.Views.Renderables.BasicExamples
 
         private readonly IViewProjection viewProjection;
 
-        private VertexArrayObjectBuilder2<Vertex> vertexArrayObjectBuilder;
+        private VertexArrayObjectBuilder<Vertex> vertexArrayObjectBuilder;
         private GlVertexArrayObject<Vertex> vertexArrayObject;
         private bool isDisposed;
 
@@ -51,7 +51,7 @@ namespace OTKOW.Views.Renderables.BasicExamples
                 }
             }
 
-            this.vertexArrayObjectBuilder = new VertexArrayObjectBuilder2(PrimitiveType.Triangles)
+            this.vertexArrayObjectBuilder = new VertexArrayObjectBuilder(PrimitiveType.Triangles)
                 .WithAttributeBuffer(BufferUsageHint.StaticDraw, vertices.ToArray())
                 .WithIndex(indices.ToArray());
         }

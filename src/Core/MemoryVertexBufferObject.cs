@@ -7,6 +7,7 @@ namespace OTKOW.Core
     /// <summary>
     /// Implementation of <see cref="IVertexBufferObject{T}"/> that just stores buffer content in memory, for testing purposes.
     /// </summary>
+    /// <typeparam name="T">The .NET type of data to be stored in the buffer.</typeparam>
     public class MemoryVertexBufferObject<T> : IVertexBufferObject<T>
         where T : struct
     {

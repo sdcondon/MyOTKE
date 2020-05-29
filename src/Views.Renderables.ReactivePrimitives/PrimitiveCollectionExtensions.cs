@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
 
-namespace GLHDN.Views.Renderables.ReactivePrimitives
+namespace OTKOW.Views.Renderables.ReactivePrimitives
 {
     /// <summary>
     /// Extension methods for the <see cref="Primitive"/> class.

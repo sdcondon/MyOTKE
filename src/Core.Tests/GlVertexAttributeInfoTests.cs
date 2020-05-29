@@ -20,19 +20,19 @@ namespace OTKOW.Core
                 {
                     MakeTestCase(
                         type: typeof(Vector4),
-                        expectedAttributeInfo: new GlVertexAttributeInfo(VertexAttribType.Float, 4, 0, 16)),
+                        expectedAttributeInfo: new GlVertexAttributeInfo(VertexAttribPointerType.Float, 4, 0, 16)),
                     MakeTestCase(
                         type: typeof(Vector3),
-                        expectedAttributeInfo: new GlVertexAttributeInfo(VertexAttribType.Float, 3, 0, 12)),
+                        expectedAttributeInfo: new GlVertexAttributeInfo(VertexAttribPointerType.Float, 3, 0, 12)),
                     MakeTestCase(
                         type: typeof(Vector2),
-                        expectedAttributeInfo: new GlVertexAttributeInfo(VertexAttribType.Float, 2, 0, 8)),
+                        expectedAttributeInfo: new GlVertexAttributeInfo(VertexAttribPointerType.Float, 2, 0, 8)),
                     MakeTestCase(
                         type: typeof(float),
-                        expectedAttributeInfo: new GlVertexAttributeInfo(VertexAttribType.Float, 1, 0, 4)),
+                        expectedAttributeInfo: new GlVertexAttributeInfo(VertexAttribPointerType.Float, 1, 0, 4)),
                     MakeTestCase(
                         type: typeof(uint),
-                        expectedAttributeInfo: new GlVertexAttributeInfo(VertexAttribType.UnsignedInt, 1, 0, 4)),
+                        expectedAttributeInfo: new GlVertexAttributeInfo(VertexAttribPointerType.UnsignedInt, 1, 0, 4)),
                 };
             }
         }
