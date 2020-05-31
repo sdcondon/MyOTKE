@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
-using OpenToolkit.Graphics;
-using OpenToolkit.Graphics.OpenGL;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
 using SharpFont;
 
 namespace OTKOW.Views.Renderables.Gui

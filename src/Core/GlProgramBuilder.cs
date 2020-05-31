@@ -1,4 +1,4 @@
-﻿using OpenToolkit.Graphics.OpenGL;
+﻿using OpenTK.Graphics.OpenGL;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -21,8 +21,10 @@ namespace OTKOW.Core
         /// <returns>The updated builder.</returns>
         public GlProgramBuilder WithShaderFromStream(ShaderType shaderType, Stream sourceStream)
         {
-            using var reader = new StreamReader(sourceStream);
-            shaderSpecs.Add((shaderType, reader.ReadToEnd()));
+            using (var reader = new StreamReader(sourceStream))
+            {
+                shaderSpecs.Add((shaderType, reader.ReadToEnd()));
+            }
 
             return this;
         }
@@ -35,8 +37,10 @@ namespace OTKOW.Core
         /// <returns>The updated builder.</returns>
         public GlProgramBuilder WithShaderFromFile(ShaderType shaderType, string filePath)
         {
-            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            return WithShaderFromStream(shaderType, stream);
+            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                return WithShaderFromStream(shaderType, stream);
+            }
         }
 
         /// <summary>
@@ -47,8 +51,10 @@ namespace OTKOW.Core
         /// <returns>The updated builder.</returns>
         public GlProgramBuilder WithShaderFromEmbeddedResource(ShaderType shaderType, string resourceName)
         {
-            using var stream = Assembly.GetCallingAssembly().GetManifestResourceStream(resourceName);
-            return WithShaderFromStream(shaderType, stream);
+            using (var stream = Assembly.GetCallingAssembly().GetManifestResourceStream(resourceName))
+            {
+                return WithShaderFromStream(shaderType, stream);
+            }
         }
 
         /// <summary>

@@ -1,6 +1,6 @@
 ﻿#pragma warning disable SA1402
-using OpenToolkit.Graphics;
-using OpenToolkit.Graphics.OpenGL;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
 using System;
 
 namespace OTKOW.Core

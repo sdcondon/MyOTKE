@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>OTKOW.Views.Contexts.WinForms</AssemblyName>
+    <RootNamespace>OTKOW.Views.Contexts.WinForms</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Open GL Helpers for .NET / view engine: WinForms context implementation</Description>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>GLHDN.Views.Contexts.WinForms.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="GlControl.cs" />
+    <Compile Remove="GlControlAdapter.cs" />
+    <Compile Remove="GlForm.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="GLHDN.Views.Contexts.WinForms.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="GlControl.cs" />
+    <None Include="GlControlAdapter.cs" />
+    <None Include="GlForm.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OpenTK" Version="3.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Views\Views.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="GlForm.cs" />
+  </ItemGroup>
+
+</Project>

@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using OpenTK;
+using OpenTK.Graphics;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -7,8 +9,11 @@ namespace OTKOW.Views.Contexts.WinForms
     /// <summary>
     /// Windows form containing only a single OpenGL render control.
     /// </summary>
+    /// <remarks>
+    /// See https://opentk.net/learn/chapter1/1-creating-a-window.html
+    /// </remarks>
     [DesignerCategory("")]
-    public sealed class GlForm : Form
+    public sealed class GlForm : GameWindow
     {
         private readonly GlControl glControl;
 

@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using OpenToolkit.Graphics.OpenGL;
+using OpenTK.Graphics.OpenGL;
 using OTKOW.Core;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ namespace OTKOW.ReactiveBuffers
         {
             get
             {
-                static object[] MakeTestCase(Action<TestSource> action, ICollection<(int, int)> expectedVertices) =>
+                object[] MakeTestCase(Action<TestSource> action, ICollection<(int, int)> expectedVertices) =>
                     new object[] { action, expectedVertices, Enumerable.Range(0, expectedVertices.Count).ToArray() };
 
 #pragma warning disable SA1107

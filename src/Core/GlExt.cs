@@ -1,5 +1,5 @@
-﻿using OpenToolkit.Graphics;
-using OpenToolkit.Graphics.OpenGL;
+﻿using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
 using System;
 using System.Diagnostics;
 

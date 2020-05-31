@@ -15,7 +15,7 @@ namespace OTKOW.ReactiveBuffers
         {
             get
             {
-                static object[][] MakeTestCases(Action<TestCase> action, ICollection<string> expectedObservations) => new object[][]
+                object[][] MakeTestCases(Action<TestCase> action, ICollection<string> expectedObservations) => new object[][]
                 {
                     new object[] { action, expectedObservations, false },
                     new object[] { action, expectedObservations, true },

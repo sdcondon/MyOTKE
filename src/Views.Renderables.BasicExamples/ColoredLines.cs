@@ -1,4 +1,4 @@
-﻿using OpenToolkit.Graphics.OpenGL;
+﻿using OpenTK.Graphics.OpenGL;
 using OTKOW.Core;
 using OTKOW.ReactiveBuffers;
 using System;

@@ -1,7 +1,7 @@
 ﻿using OTKOW.Core;
 using OTKOW.Core.VaoDecorators;
 using OTKOW.ReactiveBuffers;
-using OpenToolkit.Graphics.OpenGL;
+using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

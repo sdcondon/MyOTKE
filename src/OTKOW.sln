@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveBuffers.Tests", "Re
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Views", "Views\Views.csproj", "{A2286415-CD5D-4DE1-8B2E-73B94434F1CD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Views.Contexts.WinForms", "Views.Contexts.WinForms\Views.Contexts.WinForms.csproj", "{609E6CBF-2D9C-4B2B-9532-2B94F1A51F90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Views.Contexts.GameWindow", "Views.Contexts.WinForms\Views.Contexts.GameWindow.csproj", "{609E6CBF-2D9C-4B2B-9532-2B94F1A51F90}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Views.Renderables.BasicExamples", "Views.Renderables.BasicExamples\Views.Renderables.BasicExamples.csproj", "{C1710E1D-65AC-48E4-A6C9-40832721C736}"
 EndProject

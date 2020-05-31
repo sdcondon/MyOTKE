@@ -1,5 +1,5 @@
 ﻿#pragma warning disable SA1402
-using OpenToolkit.Graphics.OpenGL;
+using OpenTK.Graphics.OpenGL;
 using System;
 
 namespace OTKOW.Core.VaoDecorators

@@ -14,7 +14,7 @@ namespace OTKOW.ReactiveBuffers
         {
             get
             {
-                static object[] MakeTestCase(Action<ObservableCollection<In>> action, ICollection<string> expectedObservations) =>
+                object[] MakeTestCase(Action<ObservableCollection<In>> action, ICollection<string> expectedObservations) =>
                     new object[] { action, expectedObservations };
 
 #pragma warning disable SA1107

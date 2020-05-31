@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using OpenToolkit.Graphics.OpenGL;
+using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -13,7 +13,7 @@ namespace OTKOW.Core
         {
             get
             {
-                static object[] MakeTestCase(Type type, params GlVertexAttributeInfo[] expectedAttributeInfo)
+                object[] MakeTestCase(Type type, params GlVertexAttributeInfo[] expectedAttributeInfo)
                     => new object[] { type, expectedAttributeInfo };
 
                 return new[]

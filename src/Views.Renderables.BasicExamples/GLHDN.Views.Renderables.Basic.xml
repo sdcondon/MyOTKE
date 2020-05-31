@@ -1,221 +1,221 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>GLHDN.Views.Renderables.BasicExamples</name>
+        <name>OTKOW.Views.Renderables.BasicExamples</name>
     </assembly>
     <members>
-        <member name="T:GLHDN.Views.Renderables.BasicExamples.ColoredLines">
+        <member name="T:OTKOW.Views.Renderables.BasicExamples.ColoredLines">
             <summary>
             Renderable class for 3D lines. For debug utilities.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.Renderables.BasicExamples.ColoredLines.#ctor(GLHDN.Views.IViewProjection)">
+        <member name="M:OTKOW.Views.Renderables.BasicExamples.ColoredLines.#ctor(OTKOW.Views.IViewProjection)">
             <summary>
-            Initializes a new instance of the <see cref="T:GLHDN.Views.Renderables.BasicExamples.ColoredLines"/> class.
+            Initializes a new instance of the <see cref="T:OTKOW.Views.Renderables.BasicExamples.ColoredLines"/> class.
             </summary>
             <param name="viewProjection">The view and projection matrices to use when rendering.</param>
         </member>
-        <member name="P:GLHDN.Views.Renderables.BasicExamples.ColoredLines.AmbientLightColor">
+        <member name="P:OTKOW.Views.Renderables.BasicExamples.ColoredLines.AmbientLightColor">
             <summary>
             Gets or sets the lighting applied as a minimum to every fragment.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.Renderables.BasicExamples.ColoredLines.PointLightPosition">
+        <member name="P:OTKOW.Views.Renderables.BasicExamples.ColoredLines.PointLightPosition">
             <summary>
             Gets or sets the point light position. Fragments facing this position are lit with the point light color.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.Renderables.BasicExamples.ColoredLines.PointLightColor">
+        <member name="P:OTKOW.Views.Renderables.BasicExamples.ColoredLines.PointLightColor">
             <summary>
             Gets or sets the point light color, applied to fragments facing the point light position.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.Renderables.BasicExamples.ColoredLines.PointLightPower">
+        <member name="P:OTKOW.Views.Renderables.BasicExamples.ColoredLines.PointLightPower">
             <summary>
             Gets or sets the point light power. Affects the intensity with which fragments are lit by the point light.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.Renderables.BasicExamples.ColoredLines.AddLine(System.Numerics.Vector3,System.Numerics.Vector3)">
+        <member name="M:OTKOW.Views.Renderables.BasicExamples.ColoredLines.AddLine(System.Numerics.Vector3,System.Numerics.Vector3)">
             <summary>
             Adds a line to be rendered.
             </summary>
             <param name="from">The position of the start of the line.</param>
             <param name="to">The position of the end of the line.</param>
         </member>
-        <member name="M:GLHDN.Views.Renderables.BasicExamples.ColoredLines.ClearLines">
+        <member name="M:OTKOW.Views.Renderables.BasicExamples.ColoredLines.ClearLines">
             <summary>
             Clears all of the lines.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.Renderables.BasicExamples.ColoredLines.Load">
+        <member name="M:OTKOW.Views.Renderables.BasicExamples.ColoredLines.Load">
             <inheritdoc />
         </member>
-        <member name="M:GLHDN.Views.Renderables.BasicExamples.ColoredLines.Update(System.TimeSpan)">
+        <member name="M:OTKOW.Views.Renderables.BasicExamples.ColoredLines.Update(System.TimeSpan)">
             <inheritdoc />
         </member>
-        <member name="M:GLHDN.Views.Renderables.BasicExamples.ColoredLines.Render">
+        <member name="M:OTKOW.Views.Renderables.BasicExamples.ColoredLines.Render">
             <inheritdoc />
         </member>
-        <member name="M:GLHDN.Views.Renderables.BasicExamples.ColoredLines.Dispose">
+        <member name="M:OTKOW.Views.Renderables.BasicExamples.ColoredLines.Dispose">
             <inheritdoc />
         </member>
-        <member name="T:GLHDN.Views.Renderables.BasicExamples.ColoredStaticMesh">
+        <member name="T:OTKOW.Views.Renderables.BasicExamples.ColoredStaticMesh">
             <summary>
             Simple renderable class for static 3D geometry.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.Renderables.BasicExamples.ColoredStaticMesh.#ctor(GLHDN.Views.IViewProjection,System.Collections.Generic.IEnumerable{GLHDN.Views.Renderables.BasicExamples.ColoredStaticMesh.Vertex},System.Collections.Generic.IEnumerable{System.UInt32})">
+        <member name="M:OTKOW.Views.Renderables.BasicExamples.ColoredStaticMesh.#ctor(OTKOW.Views.IViewProjection,System.Collections.Generic.IEnumerable{OTKOW.Views.Renderables.BasicExamples.ColoredStaticMesh.Vertex},System.Collections.Generic.IEnumerable{System.UInt32})">
             <summary>
-            Initializes a new instance of the <see cref="T:GLHDN.Views.Renderables.BasicExamples.ColoredStaticMesh"/> class.
+            Initializes a new instance of the <see cref="T:OTKOW.Views.Renderables.BasicExamples.ColoredStaticMesh"/> class.
             </summary>
             <param name="viewProjection">The provider for the view and projection matrices to use when rendering.</param>
             <param name="vertices">The vertices of the mesh.</param>
             <param name="indices">The indices (into the provided vertices) to use for actually rendering the mesh.</param>
         </member>
-        <member name="P:GLHDN.Views.Renderables.BasicExamples.ColoredStaticMesh.Model">
+        <member name="P:OTKOW.Views.Renderables.BasicExamples.ColoredStaticMesh.Model">
             <summary>
             Gets or sets the model transform for this mesh.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.Renderables.BasicExamples.ColoredStaticMesh.AmbientLightColor">
+        <member name="P:OTKOW.Views.Renderables.BasicExamples.ColoredStaticMesh.AmbientLightColor">
             <summary>
             Gets or sets the lighting applied as a minimum to every fragment.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.Renderables.BasicExamples.ColoredStaticMesh.PointLightPosition">
+        <member name="P:OTKOW.Views.Renderables.BasicExamples.ColoredStaticMesh.PointLightPosition">
             <summary>
             Gets or sets the point light position. Fragments facing this position are lit with the point light color.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.Renderables.BasicExamples.ColoredStaticMesh.PointLightColor">
+        <member name="P:OTKOW.Views.Renderables.BasicExamples.ColoredStaticMesh.PointLightColor">
             <summary>
             Gets or sets the point light color, applied to fragments facing the point light position.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.Renderables.BasicExamples.ColoredStaticMesh.PointLightPower">
+        <member name="P:OTKOW.Views.Renderables.BasicExamples.ColoredStaticMesh.PointLightPower">
             <summary>
             Gets or sets the point light power. Affects the intensity with which fragments are lit by the point light.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.Renderables.BasicExamples.ColoredStaticMesh.Load">
+        <member name="M:OTKOW.Views.Renderables.BasicExamples.ColoredStaticMesh.Load">
             <inheritdoc />
         </member>
-        <member name="M:GLHDN.Views.Renderables.BasicExamples.ColoredStaticMesh.Update(System.TimeSpan)">
+        <member name="M:OTKOW.Views.Renderables.BasicExamples.ColoredStaticMesh.Update(System.TimeSpan)">
             <inheritdoc />
         </member>
-        <member name="M:GLHDN.Views.Renderables.BasicExamples.ColoredStaticMesh.Render">
+        <member name="M:OTKOW.Views.Renderables.BasicExamples.ColoredStaticMesh.Render">
             <inheritdoc />
         </member>
-        <member name="M:GLHDN.Views.Renderables.BasicExamples.ColoredStaticMesh.Dispose">
+        <member name="M:OTKOW.Views.Renderables.BasicExamples.ColoredStaticMesh.Dispose">
             <inheritdoc />
         </member>
-        <member name="T:GLHDN.Views.Renderables.BasicExamples.ColoredStaticMesh.Vertex">
+        <member name="T:OTKOW.Views.Renderables.BasicExamples.ColoredStaticMesh.Vertex">
             <summary>
             Container struct for the attributes of a vertex.
             </summary>
         </member>
-        <member name="F:GLHDN.Views.Renderables.BasicExamples.ColoredStaticMesh.Vertex.Position">
+        <member name="F:OTKOW.Views.Renderables.BasicExamples.ColoredStaticMesh.Vertex.Position">
             <summary>
             Gets the position of the vertex.
             </summary>
         </member>
-        <member name="F:GLHDN.Views.Renderables.BasicExamples.ColoredStaticMesh.Vertex.Color">
+        <member name="F:OTKOW.Views.Renderables.BasicExamples.ColoredStaticMesh.Vertex.Color">
             <summary>
             Gets the color of the vertex.
             </summary>
         </member>
-        <member name="F:GLHDN.Views.Renderables.BasicExamples.ColoredStaticMesh.Vertex.Normal">
+        <member name="F:OTKOW.Views.Renderables.BasicExamples.ColoredStaticMesh.Vertex.Normal">
             <summary>
             Gets the normal vector of the vertex.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.Renderables.BasicExamples.ColoredStaticMesh.Vertex.#ctor(System.Numerics.Vector3,System.Numerics.Vector3,System.Numerics.Vector3)">
+        <member name="M:OTKOW.Views.Renderables.BasicExamples.ColoredStaticMesh.Vertex.#ctor(System.Numerics.Vector3,System.Numerics.Vector3,System.Numerics.Vector3)">
             <summary>
-            Initializes a new instance of the <see cref="T:GLHDN.Views.Renderables.BasicExamples.ColoredStaticMesh.Vertex"/> struct.
+            Initializes a new instance of the <see cref="T:OTKOW.Views.Renderables.BasicExamples.ColoredStaticMesh.Vertex"/> struct.
             </summary>
             <param name="position">The position of the vertex.</param>
             <param name="color">The color of the vertex.</param>
             <param name="normal">The normal vector of the vertex.</param>
         </member>
-        <member name="T:GLHDN.Views.Renderables.BasicExamples.TexturedStaticMesh">
+        <member name="T:OTKOW.Views.Renderables.BasicExamples.TexturedStaticMesh">
             <summary>
             Renderable class for static 3D geometry.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.Renderables.BasicExamples.TexturedStaticMesh.#ctor(GLHDN.Views.IViewProjection,System.Collections.Generic.IEnumerable{GLHDN.Views.Renderables.BasicExamples.TexturedStaticMesh.Vertex},System.Collections.Generic.IEnumerable{System.UInt32},System.String)">
+        <member name="M:OTKOW.Views.Renderables.BasicExamples.TexturedStaticMesh.#ctor(OTKOW.Views.IViewProjection,System.Collections.Generic.IEnumerable{OTKOW.Views.Renderables.BasicExamples.TexturedStaticMesh.Vertex},System.Collections.Generic.IEnumerable{System.UInt32},System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:GLHDN.Views.Renderables.BasicExamples.TexturedStaticMesh"/> class.
+            Initializes a new instance of the <see cref="T:OTKOW.Views.Renderables.BasicExamples.TexturedStaticMesh"/> class.
             </summary>
             <param name="viewProjection">Provider for view and projection matrices.</param>
             <param name="vertices">The vertices of the mesh to be rendered.</param>
             <param name="indices">The vertex indices to use when rendering.</param>
             <param name="textureFilePath">The path to the file to use for the mesh's texture.</param>
         </member>
-        <member name="M:GLHDN.Views.Renderables.BasicExamples.TexturedStaticMesh.Finalize">
+        <member name="M:OTKOW.Views.Renderables.BasicExamples.TexturedStaticMesh.Finalize">
             <summary>
-            Finalizes an instance of the <see cref="T:GLHDN.Views.Renderables.BasicExamples.TexturedStaticMesh"/> class.
+            Finalizes an instance of the <see cref="T:OTKOW.Views.Renderables.BasicExamples.TexturedStaticMesh"/> class.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.Renderables.BasicExamples.TexturedStaticMesh.Model">
+        <member name="P:OTKOW.Views.Renderables.BasicExamples.TexturedStaticMesh.Model">
             <summary>
             Gets or sets the model transform for this mesh.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.Renderables.BasicExamples.TexturedStaticMesh.AmbientLightColor">
+        <member name="P:OTKOW.Views.Renderables.BasicExamples.TexturedStaticMesh.AmbientLightColor">
             <summary>
             Gets or sets the lighting applied as a minimum to every fragment.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.Renderables.BasicExamples.TexturedStaticMesh.PointLightPosition">
+        <member name="P:OTKOW.Views.Renderables.BasicExamples.TexturedStaticMesh.PointLightPosition">
             <summary>
             Gets or sets the point light position. Fragments facing this position are lit with the point light color.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.Renderables.BasicExamples.TexturedStaticMesh.PointLightColor">
+        <member name="P:OTKOW.Views.Renderables.BasicExamples.TexturedStaticMesh.PointLightColor">
             <summary>
             Gets or sets the point light color, applied to fragments facing the point light position.
             </summary>
         </member>
-        <member name="P:GLHDN.Views.Renderables.BasicExamples.TexturedStaticMesh.PointLightPower">
+        <member name="P:OTKOW.Views.Renderables.BasicExamples.TexturedStaticMesh.PointLightPower">
             <summary>
             Gets or sets the point light power. Affects the intensity with which fragments are lit by the point light.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.Renderables.BasicExamples.TexturedStaticMesh.Load">
+        <member name="M:OTKOW.Views.Renderables.BasicExamples.TexturedStaticMesh.Load">
             <inheritdoc />
         </member>
-        <member name="M:GLHDN.Views.Renderables.BasicExamples.TexturedStaticMesh.Update(System.TimeSpan)">
+        <member name="M:OTKOW.Views.Renderables.BasicExamples.TexturedStaticMesh.Update(System.TimeSpan)">
             <inheritdoc />
         </member>
-        <member name="M:GLHDN.Views.Renderables.BasicExamples.TexturedStaticMesh.Render">
+        <member name="M:OTKOW.Views.Renderables.BasicExamples.TexturedStaticMesh.Render">
             <inheritdoc />
         </member>
-        <member name="M:GLHDN.Views.Renderables.BasicExamples.TexturedStaticMesh.Dispose">
+        <member name="M:OTKOW.Views.Renderables.BasicExamples.TexturedStaticMesh.Dispose">
             <inheritdoc />
         </member>
-        <member name="T:GLHDN.Views.Renderables.BasicExamples.TexturedStaticMesh.Vertex">
+        <member name="T:OTKOW.Views.Renderables.BasicExamples.TexturedStaticMesh.Vertex">
             <summary>
             Container struct for the attributes of a vertex.
             </summary>
         </member>
-        <member name="F:GLHDN.Views.Renderables.BasicExamples.TexturedStaticMesh.Vertex.Position">
+        <member name="F:OTKOW.Views.Renderables.BasicExamples.TexturedStaticMesh.Vertex.Position">
             <summary>
             Gets the position of the vertex.
             </summary>
         </member>
-        <member name="F:GLHDN.Views.Renderables.BasicExamples.TexturedStaticMesh.Vertex.UV">
+        <member name="F:OTKOW.Views.Renderables.BasicExamples.TexturedStaticMesh.Vertex.UV">
             <summary>
             Gets the texture coordinate of the vertex.
             </summary>
         </member>
-        <member name="F:GLHDN.Views.Renderables.BasicExamples.TexturedStaticMesh.Vertex.Normal">
+        <member name="F:OTKOW.Views.Renderables.BasicExamples.TexturedStaticMesh.Vertex.Normal">
             <summary>
             Gets the normal vector of the vertex.
             </summary>
         </member>
-        <member name="M:GLHDN.Views.Renderables.BasicExamples.TexturedStaticMesh.Vertex.#ctor(System.Numerics.Vector3,System.Numerics.Vector2,System.Numerics.Vector3)">
+        <member name="M:OTKOW.Views.Renderables.BasicExamples.TexturedStaticMesh.Vertex.#ctor(System.Numerics.Vector3,System.Numerics.Vector2,System.Numerics.Vector3)">
             <summary>
-            Initializes a new instance of the <see cref="T:GLHDN.Views.Renderables.BasicExamples.TexturedStaticMesh.Vertex"/> struct.
+            Initializes a new instance of the <see cref="T:OTKOW.Views.Renderables.BasicExamples.TexturedStaticMesh.Vertex"/> struct.
             </summary>
             <param name="position">The position of the vertex.</param>
             <param name="uv">The texture coordinate of the vertex.</param>

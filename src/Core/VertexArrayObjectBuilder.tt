@@ -5,7 +5,7 @@
 <#@ output extension=".cs" #>
 <#@ include file="_Common.t4" #>
 #pragma warning disable SA1402
-using OpenToolkit.Graphics.OpenGL;
+using OpenTK.Graphics.OpenGL;
 using OTKOW.Core.VaoDecorators;
 
 namespace OTKOW.Core

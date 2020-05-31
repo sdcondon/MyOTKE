@@ -33,8 +33,8 @@ using System.Text;
 using System.Windows.Forms;
 //using Khronos;
 using OpenToolkit;
-using OpenToolkit.Graphics;
-using OpenToolkit.Graphics.OpenGL;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
 
 namespace OTKOW.Views.Contexts.WinForms
 {
