@@ -10,13 +10,13 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>GLHDN.Views.Renderables.Primitives.xml</DocumentationFile>
+    <DocumentationFile>MyOTKE.Views.Renderables.Primitives.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Colored.Fragment.glsl" />
     <None Remove="Colored.Vertex.glsl" />
-    <None Remove="GLHDN.Views.Renderables.Primitives.xml" />
+    <None Remove="MyOTKE.Views.Renderables.Primitives.xml" />
   </ItemGroup>
 
   <ItemGroup>

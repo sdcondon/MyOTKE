@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="GLHDN.Core.xml" />
+    <None Remove="MyOTKE.Core.xml" />
   </ItemGroup>
   
   <ItemGroup>
