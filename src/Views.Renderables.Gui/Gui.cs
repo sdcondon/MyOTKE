@@ -16,7 +16,7 @@ namespace OTKOW.Views.Renderables.Gui
     /// </summary>
     public class Gui : IRenderable, IElementParent
     {
-        private const string ShaderResourceNamePrefix = "GLHDN.Views.Renderables.Gui.Shaders";
+        private const string ShaderResourceNamePrefix = "OTKOW.Views.Renderables.Gui.Shaders";
 
         private static readonly object programStateLock = new object();
         private static GlProgramBuilder programBuilder;

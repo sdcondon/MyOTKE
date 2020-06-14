@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTK.Input;
+using System;
 using System.Numerics;
 
 namespace OTKOW.Views
@@ -102,45 +103,45 @@ namespace OTKOW.Views
         /// <inheritdoc />
         public void Update(TimeSpan elapsed)
         {
-            if (view.KeysDown.Contains('W'))
+            if (view.KeysDown.Contains(Key.W))
             {
                 target += movementSpeed * (float)elapsed.TotalSeconds * Distance * Vector3.UnitY;
             }
 
-            if (view.KeysDown.Contains('S'))
+            if (view.KeysDown.Contains(Key.S))
             {
                 target -= movementSpeed * (float)elapsed.TotalSeconds * Distance * Vector3.UnitY;
             }
 
-            if (view.KeysDown.Contains('D'))
+            if (view.KeysDown.Contains(Key.D))
             {
                 target += movementSpeed * (float)elapsed.TotalSeconds * Distance * Vector3.UnitX;
             }
 
-            if (view.KeysDown.Contains('A'))
+            if (view.KeysDown.Contains(Key.A))
             {
                 target -= movementSpeed * (float)elapsed.TotalSeconds * Distance * Vector3.UnitX;
             }
 
-            if (view.KeysDown.Contains('R'))
+            if (view.KeysDown.Contains(Key.R))
             {
                 VerticalAngle -= VerticalRotationSpeed * (float)elapsed.TotalSeconds;
                 VerticalAngle = Math.Max(VerticalAngle, 0);
             }
 
-            if (view.KeysDown.Contains('F'))
+            if (view.KeysDown.Contains(Key.F))
             {
                 VerticalAngle += VerticalRotationSpeed * (float)elapsed.TotalSeconds;
                 VerticalAngle = Math.Min(VerticalAngle, VerticalAngleMax);
             }
 
-            if (view.KeysDown.Contains('Q'))
+            if (view.KeysDown.Contains(Key.Q))
             {
                 HorizontalAngle -= HorizontalRotationSpeed * (float)elapsed.TotalSeconds;
                 HorizontalAngle = Math.Max(HorizontalAngle, 0);
             }
 
-            if (view.KeysDown.Contains('E'))
+            if (view.KeysDown.Contains(Key.E))
             {
                 HorizontalAngle += HorizontalRotationSpeed * (float)elapsed.TotalSeconds;
                 HorizontalAngle = Math.Min(HorizontalAngle, (float)Math.PI * 2);

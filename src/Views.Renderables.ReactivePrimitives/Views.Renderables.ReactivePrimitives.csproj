@@ -20,8 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Colored.Fragment.glsl" />
-    <EmbeddedResource Include="Colored.Vertex.glsl" />
+	<EmbeddedResource Include="Colored.Fragment.glsl">
+      <LogicalName>Colored.Fragment.glsl</LogicalName>
+	</EmbeddedResource>
+    <EmbeddedResource Include="Colored.Vertex.glsl">
+	  <LogicalName>Colored.Vertex.glsl</LogicalName>
+	</EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

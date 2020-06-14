@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTK.Input;
+using System;
 using System.Numerics;
 
 namespace OTKOW.Views
@@ -93,36 +94,36 @@ namespace OTKOW.Views
         public void Update(TimeSpan elapsed)
         {
             //// Pan up - rotate forward and up around their cross product
-            if (view.KeysDown.Contains('W'))
+            if (view.KeysDown.Contains(Key.W))
             {
                 var t = Matrix4x4.CreateFromAxisAngle(Vector3.Cross(forward, up), -RotationSpeed);
                 forward = Vector3.Transform(forward, t);
                 up = Vector3.Transform(up, t);
             }
             //// Pan down - rotate forward and up around their cross product
-            if (view.KeysDown.Contains('S'))
+            if (view.KeysDown.Contains(Key.S))
             {
                 var t = Matrix4x4.CreateFromAxisAngle(Vector3.Cross(forward, up), RotationSpeed);
                 forward = Vector3.Normalize(Vector3.Transform(forward, t));
                 up = Vector3.Normalize(Vector3.Transform(up, t));
             }
             //// Pan right - rotate forward around up
-            if (view.KeysDown.Contains('D'))
+            if (view.KeysDown.Contains(Key.D))
             {
                 forward = Vector3.Normalize(Vector3.Transform(forward, Matrix4x4.CreateFromAxisAngle(up, RotationSpeed)));
             }
             //// Pan left - rotate forward around up
-            if (view.KeysDown.Contains('A'))
+            if (view.KeysDown.Contains(Key.A))
             {
                 forward = Vector3.Normalize(Vector3.Transform(forward, Matrix4x4.CreateFromAxisAngle(up, -RotationSpeed)));
             }
             //// Roll right - rotate up around forward
-            if (view.KeysDown.Contains('Q'))
+            if (view.KeysDown.Contains(Key.Q))
             {
                 up = Vector3.Normalize(Vector3.Transform(up, Matrix4x4.CreateFromAxisAngle(forward, -RollSpeed)));
             }
             //// Roll left - rotate up around forward
-            if (view.KeysDown.Contains('E'))
+            if (view.KeysDown.Contains(Key.E))
             {
                 up = Vector3.Normalize(Vector3.Transform(up, Matrix4x4.CreateFromAxisAngle(forward, RollSpeed)));
             }

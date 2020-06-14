@@ -15,8 +15,6 @@ namespace OTKOW.Views.Renderables.BasicExamples
     /// </summary>
     public class ColoredLines : IRenderable
     {
-        private const string ShaderResourceNamePrefix = "GLHDN.Views.Renderables.BasicExamples";
-
         private static readonly object ProgramStateLock = new object();
         private static GlProgramBuilder programBuilder;
         private static GlProgram program;
@@ -44,8 +42,8 @@ namespace OTKOW.Views.Renderables.BasicExamples
                     if (program == null && programBuilder == null)
                     {
                         programBuilder = new GlProgramBuilder()
-                            .WithShaderFromEmbeddedResource(ShaderType.VertexShader, $"{ShaderResourceNamePrefix}.Colored.Vertex.glsl")
-                            .WithShaderFromEmbeddedResource(ShaderType.FragmentShader, $"{ShaderResourceNamePrefix}.Colored.Fragment.glsl")
+                            .WithShaderFromEmbeddedResource(ShaderType.VertexShader, "Colored.Vertex.glsl")
+                            .WithShaderFromEmbeddedResource(ShaderType.FragmentShader, "Colored.Fragment.glsl")
                             .WithUniforms("MVP", "V", "M", "LightPosition_worldspace", "LightColor", "LightPower", "AmbientLightColor");
                     }
                 }

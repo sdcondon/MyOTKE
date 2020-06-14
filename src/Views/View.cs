@@ -1,4 +1,5 @@
 ﻿using OpenTK.Graphics.OpenGL;
+using OpenTK.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,9 +15,9 @@ namespace OTKOW.Views
         private readonly IViewContext context;
         private readonly Color clearColor;
         private readonly Stopwatch modelUpdateIntervalStopwatch = new Stopwatch();
-        private readonly HashSet<char> keysPressed = new HashSet<char>();
-        private readonly HashSet<char> keysDown = new HashSet<char>();
-        private readonly HashSet<char> keysReleased = new HashSet<char>();
+        private readonly HashSet<Key> keysPressed = new HashSet<Key>();
+        private readonly HashSet<Key> keysDown = new HashSet<Key>();
+        private readonly HashSet<Key> keysReleased = new HashSet<Key>();
 
         private IRenderable renderable;
         private bool lockCursor;
@@ -65,17 +66,17 @@ namespace OTKOW.Views
         /// <summary>
         /// Gets the set of keys pressed since the last update. TODO: should be readonly.
         /// </summary>
-        public HashSet<char> KeysPressed => keysPressed;
+        public HashSet<Key> KeysPressed => keysPressed;
 
         /// <summary>
         /// Gets the set of currently pressed keys. TODO: should be readonly.
         /// </summary>
-        public HashSet<char> KeysDown => keysDown;
+        public HashSet<Key> KeysDown => keysDown;
 
         /// <summary>
         /// Gets the set of keys released since the last update.
         /// </summary>
-        public HashSet<char> KeysReleased => keysReleased;
+        public HashSet<Key> KeysReleased => keysReleased;
 
         /// <summary>
         /// Gets the cursor position, with the origin being at the centre of the view, X increasing from left to right and Y increasing from top to bottom.
@@ -275,13 +276,13 @@ namespace OTKOW.Views
             Dispose();
         }
 
-        private void OnKeyDown(object sender, char a)
+        private void OnKeyDown(object sender, Key a)
         {
             keysPressed.Add(a);
             keysDown.Add(a);
         }
 
-        private void OnKeyUp(object sender, char a)
+        private void OnKeyUp(object sender, Key a)
         {
             keysReleased.Add(a);
             keysDown.Remove(a);

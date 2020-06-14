@@ -461,7 +461,7 @@
             <summary>Occurs when the OpenGL is being destroyed.</summary>
         </member>
         <member name="E:OTKOW.Views.IViewContext.KeyDown">
-            <summary>Occurs when a key is pressed is pressed.</summary>
+            <summary>Occurs when a key is pressed.</summary>
         </member>
         <member name="E:OTKOW.Views.IViewContext.KeyUp">
             <summary>Occurs when a key is released.</summary>

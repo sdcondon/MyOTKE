@@ -1,4 +1,4 @@
-﻿using OpenTK.Graphics.OpenGL;
+﻿using OpenTK.Input;
 using System;
 using System.Numerics;
 
@@ -21,11 +21,11 @@ namespace OTKOW.Views
         /// <summary>Occurs when the OpenGL is being destroyed.</summary>
         event EventHandler GlContextDestroying;
 
-        /// <summary>Occurs when a key is pressed is pressed.</summary>
-        event EventHandler<char> KeyDown;
+        /// <summary>Occurs when a key is pressed.</summary>
+        event EventHandler<Key> KeyDown;
 
         /// <summary>Occurs when a key is released.</summary>
-        event EventHandler<char> KeyUp;
+        event EventHandler<Key> KeyUp;
 
         /// <summary>Occurs when the left mouse button is pressed.</summary>
         event EventHandler LeftMouseDown;

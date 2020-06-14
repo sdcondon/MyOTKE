@@ -13,8 +13,6 @@ namespace OTKOW.Views.Renderables.BasicExamples
     /// </summary>
     public sealed class TexturedStaticMesh : IRenderable
     {
-        private const string ShaderResourceNamePrefix = "GLHDN.Views.Renderables.BasicExamples";
-
         private static readonly object ProgramStateLock = new object();
         private static GlProgramBuilder programBuilder;
         private static GlProgram program;
@@ -49,8 +47,8 @@ namespace OTKOW.Views.Renderables.BasicExamples
                     if (program == null && programBuilder == null)
                     {
                         programBuilder = new GlProgramBuilder()
-                            .WithShaderFromEmbeddedResource(ShaderType.VertexShader, $"{ShaderResourceNamePrefix}.Textured.Vertex.glsl")
-                            .WithShaderFromEmbeddedResource(ShaderType.FragmentShader, $"{ShaderResourceNamePrefix}.Textured.Fragment.glsl")
+                            .WithShaderFromEmbeddedResource(ShaderType.VertexShader, "Textured.Vertex.glsl")
+                            .WithShaderFromEmbeddedResource(ShaderType.FragmentShader, "Textured.Fragment.glsl")
                             .WithUniforms("MVP", "V", "M", "myTextureSampler", "LightPosition_worldspace", "LightColor", "LightPower", "AmbientLightColor");
                     }
                 }

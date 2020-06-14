@@ -49,7 +49,7 @@ namespace OTKOW.Core.VaoDecorators
         /// <summary>
         /// Gets the <see cref="SynchronizedVertexBufferObject{T<#= j #>}"/> instance that serves as the <#= Ordinal(j) #> attribute buffer for this VAO.
         /// </summary>
-        public SynchronizedVertexBufferObject<T<#= j #>> AttributeBuffer<#= j #> { get; }
+        public SynchronizedVertexBufferObject<T<#= j #>> AttributeBuffer<#= j #> => attributeBuffer<#= j #>;
 <# } #>
 
         /// <inheritdoc />

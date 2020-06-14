@@ -125,12 +125,25 @@ namespace OTKOW.ReactiveBuffers
 
             private static bool SubjectHasNoObservers(object subject)
             {
-                return subject switch
+                //return subject switch
+                //{
+                //    BehaviorSubject<int> bsi => !bsi.HasObservers,
+                //    Subject<ObservableComposite<int>> sc => !sc.HasObservers,
+                //    _ => throw new Exception($"Unexpected type of monitored object"),
+                //};
+
+                if (subject is BehaviorSubject<int> bsi)
                 {
-                    BehaviorSubject<int> bsi => !bsi.HasObservers,
-                    Subject<ObservableComposite<int>> sc => !sc.HasObservers,
-                    _ => throw new Exception($"Unexpected type of monitored object"),
-                };
+                    return !bsi.HasObservers;
+                }
+                else if (subject is Subject<ObservableComposite<int>> sc)
+                {
+                    return !sc.HasObservers;
+                }
+                else
+                {
+                    throw new Exception($"Unexpected type of monitored object");
+                }
             }
         }
     }

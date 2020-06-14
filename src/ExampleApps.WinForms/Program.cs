@@ -1,4 +1,5 @@
-﻿using OTKOW.Views;
+﻿using OpenTK.Input;
+using OTKOW.Views;
 using OTKOW.Views.Contexts.WinForms;
 using OTKOW.Views.Renderables.BasicExamples;
 using OTKOW.Views.Renderables.Gui;
@@ -23,10 +24,11 @@ namespace OTKOW.Examples.WinForms
         [STAThread]
         public static void Main()
         {
-            var form = new GlForm("GLHDN Example App")
+            var form = new GameWindowViewHost()
             {
-                // WindowState = FormWindowState.Normal,
-                // FormBorderStyle = FormBorderStyle.Sizable
+                Title = "MyOTK Example"
+                //WindowState = OpenTK.WindowState.Fullscreen
+                //FormBorderStyle = FormBorderStyle.Sizable
             };
 
             // Obviously not ideal to have to set font globally - need to sort this out, probably via some nice
@@ -42,7 +44,7 @@ namespace OTKOW.Examples.WinForms
             // no overrides) is only a class of its own to make disposal on button press easy.
             view.Renderable = new MenuRenderable(view);
 
-            System.Windows.Forms.Application.Run(form);
+            form.Run();
         }
 
         private class MenuRenderable : CompositeRenderable
@@ -143,7 +145,7 @@ namespace OTKOW.Examples.WinForms
                     new uint[] { 0, 1, 2 },
                     @"Assets\Textures\foo.bmp")
                 {
-                    AmbientLightColor = Color.Grey(),
+                    AmbientLightColor = Color.White(),
                 });
 
                 var coloredTriangleVertices = new[]
@@ -178,7 +180,7 @@ namespace OTKOW.Examples.WinForms
 
                 AddRenderable(lines = new ColoredLines(camera)
                 {
-                    AmbientLightColor = Color.Grey(),
+                    AmbientLightColor = Color.White(),
                 });
 
                 camTextElement = new Text(
@@ -236,12 +238,12 @@ namespace OTKOW.Examples.WinForms
                     logElement.PushMessage($"RAY FROM {ray.Origin:F2}");
                 }
 
-                if (view.KeysReleased.Contains(' '))
+                if (view.KeysReleased.Contains(Key.Space))
                 {
                     view.LockCursor = !view.LockCursor;
                 }
 
-                if (view.KeysReleased.Contains('Q'))
+                if (view.KeysReleased.Contains(Key.Q))
                 {
                     view.Renderable = new MenuRenderable(view);
                     this.Dispose();

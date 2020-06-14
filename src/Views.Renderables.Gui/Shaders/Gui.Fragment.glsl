@@ -16,7 +16,7 @@ void main() {
 		vec3 texCoord = vec3(vTexXY.x, vTexXY.y, int(iTexZ));
 		vec4 texel = texture(text, texCoord);
 
-		color = vColor * vec4(1.0, 1.0, 1.0, texel.a);
+		color = vColor * vec4(1.0, 1.0, 1.0, texel.r);
 		//color.a = max(color.a, 0.3);
 	}
 	else {

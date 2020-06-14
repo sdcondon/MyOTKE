@@ -133,7 +133,7 @@ namespace OTKOW.Views.Renderables.Gui
                     width: face.Glyph.Bitmap.Width,
                     height: face.Glyph.Bitmap.Rows,
                     depth: 1,
-                    format: PixelFormat.Alpha,
+                    format: PixelFormat.Red,
                     type: PixelType.UnsignedByte,
                     pixels: face.Glyph.Bitmap.BufferData);
             }

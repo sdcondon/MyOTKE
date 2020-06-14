@@ -40,7 +40,7 @@ namespace OTKOW.Core.VaoDecorators
         /// <summary>
         /// Gets the <see cref="SynchronizedVertexBufferObject{T1}"/> instance that serves as the 1st attribute buffer for this VAO.
         /// </summary>
-        public SynchronizedVertexBufferObject<T1> AttributeBuffer1 { get; }
+        public SynchronizedVertexBufferObject<T1> AttributeBuffer1 => attributeBuffer1;
 
         /// <inheritdoc />
         public void Dispose()
@@ -105,7 +105,7 @@ namespace OTKOW.Core.VaoDecorators
         /// <summary>
         /// Gets the <see cref="SynchronizedVertexBufferObject{T1}"/> instance that serves as the 1st attribute buffer for this VAO.
         /// </summary>
-        public SynchronizedVertexBufferObject<T1> AttributeBuffer1 { get; }
+        public SynchronizedVertexBufferObject<T1> AttributeBuffer1 => attributeBuffer1;
 
         /// <inheritdoc />
         IVertexBufferObject<T2> IVertexArrayObject<T1, T2>.AttributeBuffer2 => AttributeBuffer2;
@@ -113,7 +113,7 @@ namespace OTKOW.Core.VaoDecorators
         /// <summary>
         /// Gets the <see cref="SynchronizedVertexBufferObject{T2}"/> instance that serves as the 2nd attribute buffer for this VAO.
         /// </summary>
-        public SynchronizedVertexBufferObject<T2> AttributeBuffer2 { get; }
+        public SynchronizedVertexBufferObject<T2> AttributeBuffer2 => attributeBuffer2;
 
         /// <inheritdoc />
         public void Dispose()
@@ -183,7 +183,7 @@ namespace OTKOW.Core.VaoDecorators
         /// <summary>
         /// Gets the <see cref="SynchronizedVertexBufferObject{T1}"/> instance that serves as the 1st attribute buffer for this VAO.
         /// </summary>
-        public SynchronizedVertexBufferObject<T1> AttributeBuffer1 { get; }
+        public SynchronizedVertexBufferObject<T1> AttributeBuffer1 => attributeBuffer1;
 
         /// <inheritdoc />
         IVertexBufferObject<T2> IVertexArrayObject<T1, T2, T3>.AttributeBuffer2 => AttributeBuffer2;
@@ -191,7 +191,7 @@ namespace OTKOW.Core.VaoDecorators
         /// <summary>
         /// Gets the <see cref="SynchronizedVertexBufferObject{T2}"/> instance that serves as the 2nd attribute buffer for this VAO.
         /// </summary>
-        public SynchronizedVertexBufferObject<T2> AttributeBuffer2 { get; }
+        public SynchronizedVertexBufferObject<T2> AttributeBuffer2 => attributeBuffer2;
 
         /// <inheritdoc />
         IVertexBufferObject<T3> IVertexArrayObject<T1, T2, T3>.AttributeBuffer3 => AttributeBuffer3;
@@ -199,7 +199,7 @@ namespace OTKOW.Core.VaoDecorators
         /// <summary>
         /// Gets the <see cref="SynchronizedVertexBufferObject{T3}"/> instance that serves as the 3rd attribute buffer for this VAO.
         /// </summary>
-        public SynchronizedVertexBufferObject<T3> AttributeBuffer3 { get; }
+        public SynchronizedVertexBufferObject<T3> AttributeBuffer3 => attributeBuffer3;
 
         /// <inheritdoc />
         public void Dispose()

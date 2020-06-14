@@ -14,8 +14,6 @@ namespace OTKOW.Views.Renderables.ReactivePrimitives
     /// </summary>
     public class PrimitiveRenderer : IRenderable
     {
-        private const string ShaderResourceNamePrefix = "GLHDN.Views.Renderables.ReactivePrimitives";
-
         private static readonly object ProgramStateLock = new object();
         private static GlProgramBuilder programBuilder;
         private static GlProgram program;
@@ -50,8 +48,8 @@ namespace OTKOW.Views.Renderables.ReactivePrimitives
                     if (program == null && programBuilder == null)
                     {
                         programBuilder = new GlProgramBuilder()
-                            .WithShaderFromEmbeddedResource(ShaderType.VertexShader, $"{ShaderResourceNamePrefix}.Colored.Vertex.glsl")
-                            .WithShaderFromEmbeddedResource(ShaderType.FragmentShader, $"{ShaderResourceNamePrefix}.Colored.Fragment.glsl")
+                            .WithShaderFromEmbeddedResource(ShaderType.VertexShader, "Colored.Vertex.glsl")
+                            .WithShaderFromEmbeddedResource(ShaderType.FragmentShader, "Colored.Fragment.glsl")
                             .WithUniforms("MVP", "V", "M", "AmbientLightColor", "DirectedLightDirection", "DirectedLightColor", "LightPosition_worldspace", "LightColor", "LightPower");
                     }
                 }

@@ -1,4 +1,5 @@
 ﻿using OpenTK.Graphics.OpenGL;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -37,6 +38,7 @@ namespace OTKOW.Core
         /// <returns>The updated builder.</returns>
         public GlProgramBuilder WithShaderFromFile(ShaderType shaderType, string filePath)
         {
+            GlExt.DebugWriteLine($"Loading {shaderType} shader from file path '{filePath}'");
             using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
                 return WithShaderFromStream(shaderType, stream);
@@ -51,8 +53,15 @@ namespace OTKOW.Core
         /// <returns>The updated builder.</returns>
         public GlProgramBuilder WithShaderFromEmbeddedResource(ShaderType shaderType, string resourceName)
         {
-            using (var stream = Assembly.GetCallingAssembly().GetManifestResourceStream(resourceName))
+            var assembly = Assembly.GetCallingAssembly();
+            GlExt.DebugWriteLine($"Loading {shaderType} shader from resource '{resourceName}' embedded in assembly '{assembly.GetName().Name}'");
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
             {
+                if (stream == null)
+                {
+                    throw new ArgumentException($"Resource '{resourceName}' not found");
+                }
+
                 return WithShaderFromStream(shaderType, stream);
             }
         }
