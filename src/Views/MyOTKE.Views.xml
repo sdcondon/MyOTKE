@@ -1,0 +1,663 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MyOTKE.Views</name>
+    </assembly>
+    <members>
+        <member name="T:MyOTKE.Views.FirstPersonCamera">
+            <summary>
+            An <see cref="T:MyOTKE.Views.ICamera"/> implementation that uses an "FPS"-style control scheme.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Views.FirstPersonCamera.#ctor(MyOTKE.Views.View,System.Single,System.Single,System.Single,System.Single,System.Single,System.Numerics.Vector3,System.Single,System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Views.FirstPersonCamera"/> class.
+            </summary>
+            <param name="view">The view from which to retrieve user input.</param>
+            <param name="movementSpeed">The movement speed of the camera, in units per second.</param>
+            <param name="rotationSpeed">The "rotation speed" of the camera - the multiplicand of the mouse cursor offset to radians.</param>
+            <param name="fieldOfViewRadians">The field of view of the camera, in radians.</param>
+            <param name="nearPlaneDistance">The distance of the near plane from the camera.</param>
+            <param name="farPlaneDistance">The distance of the far plane from the camera.</param>
+            <param name="initialPosition">The initial position of the camera.</param>
+            <param name="initialHorizontalAngleRadians">The initial angle between the camera direction and the Y axis, in radians.</param>
+            <param name="initialVerticalAngleRadians">The initial angle between between the camera direction and the X axis, in radians.</param>
+        </member>
+        <member name="P:MyOTKE.Views.FirstPersonCamera.MovementSpeed">
+            <summary>
+            Gets or sets the movement speed of the camera, in units per second.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.FirstPersonCamera.RotationSpeed">
+            <summary>
+            Gets or sets the "rotation speed" of the camera - the multiplicand of the mouse cursor offset to radians.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.FirstPersonCamera.FieldOfViewRadians">
+            <summary>
+            Gets or sets the field of view of the camera, in radians.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.FirstPersonCamera.Position">
+            <inheritdoc />
+            <remarks>Should be private, but used by Ray..</remarks>
+        </member>
+        <member name="P:MyOTKE.Views.FirstPersonCamera.View">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Views.FirstPersonCamera.Projection">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Views.FirstPersonCamera.NearPlaneDistance">
+            <summary>
+            Gets or sets the distance of the near plane from the camera.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.FirstPersonCamera.FarPlaneDistance">
+            <summary>
+            Gets or sets the distance of the far plane from the camera.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Views.FirstPersonCamera.Update(System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyOTKE.Views.ICamera">
+            <summary>
+            Interface for types that provide view and projection matrices, and can change over time (e.g. in reponse to user input).
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.ICamera.Position">
+            <summary>
+            Gets the current position of the camera.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Views.ICamera.Update(System.TimeSpan)">
+            <summary>
+            Updates the state of the camera.
+            </summary>
+            <param name="elapsed">The elapsed time since the last update.</param>
+        </member>
+        <member name="T:MyOTKE.Views.OrbitCamera">
+            <summary>
+            Implementation of <see cref="T:MyOTKE.Views.ICamera"/> that rotates around the origin.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Views.OrbitCamera.#ctor(MyOTKE.Views.View,System.Single,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Views.OrbitCamera"/> class.
+            </summary>
+            <param name="view">The view from which to retrieve input and aspect ratio.</param>
+            <param name="rotationSpeedBase">The base (i.e. at default zoom distance) rotation speed of the camera, in radians per per update.</param>
+            <param name="rollSpeed">The roll speed of the camera, in radians per update.</param>
+            <param name="fieldOfViewRadians">The camera's field of view, in radians.</param>
+            <param name="nearPlaneDistance">The distance of the near plane from the camera.</param>
+            <param name="farPlaneDistance">The ditance of the far plane from the camera.</param>
+        </member>
+        <member name="P:MyOTKE.Views.OrbitCamera.RotationSpeedBase">
+            <summary>
+            Gets or sets the base (i.e. at default zoom distance) rotation speed of the camera in radians per update.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.OrbitCamera.RollSpeed">
+            <summary>
+            Gets or sets the roll speed of the camera, in radians per update.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.OrbitCamera.FieldOfViewRadians">
+            <summary>
+            Gets or sets the camera's field of view, in radians.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.OrbitCamera.NearPlaneDistance">
+            <summary>
+            Gets or sets the distance of the near plane from the camera.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.OrbitCamera.FarPlaneDistance">
+            <summary>
+            Gets or sets the distance of the far plane from the camera.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.OrbitCamera.Distance">
+            <summary>
+            Gets the current distance between the camera and the origin.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.OrbitCamera.RotationSpeed">
+            <summary>
+            Gets the current rotation speed of the camera, in radians per update.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.OrbitCamera.Position">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Views.OrbitCamera.View">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Views.OrbitCamera.Projection">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Views.OrbitCamera.Update(System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyOTKE.Views.PanningCamera">
+            <summary>
+            Implementation of <see cref="T:MyOTKE.Views.ICamera"/> that moves in the XY plane.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Views.PanningCamera.#ctor(MyOTKE.Views.View,System.Single,System.Single,System.Single,System.Numerics.Vector3,System.Single,System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Views.PanningCamera"/> class.
+            </summary>
+            <param name="view">The view from which to retrieve input and aspect ratio.</param>
+            <param name="fieldOfViewRadians">The camera's field of view, in radians.</param>
+            <param name="nearPlaneDistance">The distance of the near plane from the camera.</param>
+            <param name="farPlaneDistance">The ditance of the far plane from the camera.</param>
+            <param name="initialTarget">The initial position at which the camera should point.</param>
+            <param name="movementSpeed">The movement speed of the camera, in units per second per unit distance from target.</param>
+            <param name="verticalAngle">The initial angle, in radians, between the camera's view direction and the Z-axis.</param>
+        </member>
+        <member name="P:MyOTKE.Views.PanningCamera.FieldOfViewRadians">
+            <summary>
+            Gets or sets the camera's field of view, in radians.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.PanningCamera.NearPlaneDistance">
+            <summary>
+            Gets or sets the distance of the near plane from the camera.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.PanningCamera.FarPlaneDistance">
+            <summary>
+            Gets or sets the distance of the far plane from the camera.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.PanningCamera.VerticalAngle">
+            <summary>
+            Gets or sets the current angle, in radians, between the camera's view direction and the Z-axis.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.PanningCamera.VerticalAngleMax">
+            <summary>
+            Gets or sets the maximum angle, in radians, between the camera's view direction and the Z-axis.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.PanningCamera.VerticalRotationSpeed">
+            <summary>
+            Gets or sets the vertical rotation speed of the camera, in radians per second.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.PanningCamera.HorizontalAngle">
+            <summary>
+            Gets or sets the current angle, in radians, between the camera's view direction and the X-axis.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.PanningCamera.HorizontalRotationSpeed">
+            <summary>
+            Gets or sets the horizontal rotation speed of the camera, in radians per second.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.PanningCamera.Distance">
+            <summary>
+            Gets the current distance between the camera and the target.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.PanningCamera.Position">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Views.PanningCamera.View">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Views.PanningCamera.Projection">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Views.PanningCamera.Update(System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyOTKE.Views.Ray">
+            <summary>
+            Represents a semi-infinite 3D ray, that has a start point and a direction.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Views.Ray.#ctor(MyOTKE.Views.ICamera,MyOTKE.Views.View)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Views.Ray"/> struct that originates from a given camera position,
+            and points in the direction as indicated by the current mouse cursor position in a view.
+            </summary>
+            <param name="camera">The camera to project the ray from.</param>
+            <param name="view">The view from which to retrieve the mouse position to determine the ray's direction.</param>
+        </member>
+        <member name="P:MyOTKE.Views.Ray.Origin">
+            <summary>
+            Gets the position of the origin of the ray.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Ray.Direction">
+            <summary>
+            Gets the direction vector of the ray.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Views.Ray.GetIntersections(MyOTKE.Views.Ray,System.Numerics.Vector3,System.Single)">
+            <summary>
+            Gets the positions of any intersections of a ray with a sphere.
+            </summary>
+            <param name="ray">The ray.</param>
+            <param name="sphereCentre">The position of the center of the sphere.</param>
+            <param name="sphereRadius">The radius of the sphere.</param>
+            <returns>The positions of any intersections.</returns>
+        </member>
+        <member name="M:MyOTKE.Views.Ray.GetIntersection(MyOTKE.Views.Ray,System.Numerics.Plane)">
+            <summary>
+            Gets the position of the intersection of a ray with a plane, or null if no such intersection exists.
+            </summary>
+            <param name="ray">The ray.</param>
+            <param name="plane">The plane.</param>
+            <returns>The position of the intersection of the ray with the plane, or null if no such intersection exists.</returns>
+        </member>
+        <member name="T:MyOTKE.Views.Color">
+            <summary>
+            Structure that represents a color. Can be implicitly converted to a RGB <see cref="T:System.Numerics.Vector3"/> or RGBA <see cref="T:System.Numerics.Vector4"/>.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Views.Color.#ctor(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Views.Color"/> struct.
+            </summary>
+            <param name="r">The red component of the color.</param>
+            <param name="g">The green component of the color.</param>
+            <param name="b">The blue component of the color.</param>
+            <param name="a">The alpha component of the color.</param>
+        </member>
+        <member name="P:MyOTKE.Views.Color.R">
+            <summary>
+            Gets the red component of the color.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Color.G">
+            <summary>
+            Gets the green component of the color.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Color.B">
+            <summary>
+            Gets the blue component of the color.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Color.A">
+            <summary>
+            Gets the alpha component of the color.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Views.Color.op_Implicit(MyOTKE.Views.Color)~System.Numerics.Vector3">
+            <summary>
+            Defines the implicit conversion of a color to a <see cref="T:System.Numerics.Vector3"/> value.
+            </summary>
+            <param name="color">The color instance to convert.</param>
+        </member>
+        <member name="M:MyOTKE.Views.Color.op_Implicit(MyOTKE.Views.Color)~System.Numerics.Vector4">
+            <summary>
+            Defines the implicit conversion of a color to a <see cref="T:System.Numerics.Vector4"/> value.
+            </summary>
+            <param name="color">The color instance to convert.</param>
+        </member>
+        <member name="M:MyOTKE.Views.Color.Transparent">
+            <summary>
+            Gets a completely transparent 'color'.
+            </summary>
+            <returns>An appropriate <see cref="T:MyOTKE.Views.Color"/> instance.</returns>
+        </member>
+        <member name="M:MyOTKE.Views.Color.White(System.Single)">
+            <summary>
+            Returns white.
+            </summary>
+            <param name="alpha">The alpha of the returned color.</param>
+            <returns>An appropriate <see cref="T:MyOTKE.Views.Color"/> instance.</returns>
+        </member>
+        <member name="M:MyOTKE.Views.Color.Black(System.Single)">
+            <summary>
+            Returns black.
+            </summary>
+            <param name="alpha">The alpha of the returned color.</param>
+            <returns>An appropriate <see cref="T:MyOTKE.Views.Color"/> instance.</returns>
+        </member>
+        <member name="M:MyOTKE.Views.Color.Grey(System.Single,System.Single)">
+            <summary>
+            Returns a color that is a shade of grey.
+            </summary>
+            <param name="brightness">The brightness of the returned color.</param>
+            <param name="alpha">The alpha of the returned color.</param>
+            <returns>An appropriate <see cref="T:MyOTKE.Views.Color"/> instance.</returns>
+        </member>
+        <member name="M:MyOTKE.Views.Color.Red(System.Single,System.Single)">
+            <summary>
+            Returns pure red.
+            </summary>
+            <param name="brightness">The brightness of the returned color.</param>
+            <param name="alpha">The alpha of the returned color.</param>
+            <returns>An appropriate <see cref="T:MyOTKE.Views.Color"/> instance.</returns>
+        </member>
+        <member name="M:MyOTKE.Views.Color.Green(System.Single,System.Single)">
+            <summary>
+            Returns pure green.
+            </summary>
+            <param name="brightness">The brightness of the returned color.</param>
+            <param name="alpha">The alpha of the returned color.</param>
+            <returns>An appropriate <see cref="T:MyOTKE.Views.Color"/> instance.</returns>
+        </member>
+        <member name="M:MyOTKE.Views.Color.Blue(System.Single,System.Single)">
+            <summary>
+            Returns pure blue.
+            </summary>
+            <param name="brightness">The brightness of the returned color.</param>
+            <param name="alpha">The alpha of the returned color.</param>
+            <returns>An appropriate <see cref="T:MyOTKE.Views.Color"/> instance.</returns>
+        </member>
+        <member name="M:MyOTKE.Views.Color.Yellow(System.Single,System.Single)">
+            <summary>
+            Returns yellow.
+            </summary>
+            <param name="brightness">The brightness of the returned color.</param>
+            <param name="alpha">The alpha of the returned color.</param>
+            <returns>An appropriate <see cref="T:MyOTKE.Views.Color"/> instance.</returns>
+        </member>
+        <member name="M:MyOTKE.Views.Color.Cyan(System.Single,System.Single)">
+            <summary>
+            Returns cyan.
+            </summary>
+            <param name="brightness">The brightness of the returned color.</param>
+            <param name="alpha">The alpha of the returned color.</param>
+            <returns>An appropriate <see cref="T:MyOTKE.Views.Color"/> instance.</returns>
+        </member>
+        <member name="M:MyOTKE.Views.Color.Magenta(System.Single,System.Single)">
+            <summary>
+            Returns magenta.
+            </summary>
+            <param name="brightness">The brightness of the returned color.</param>
+            <param name="alpha">The alpha of the returned color.</param>
+            <returns>An appropriate <see cref="T:MyOTKE.Views.Color"/> instance.</returns>
+        </member>
+        <member name="M:MyOTKE.Views.Color.Brown(System.Single,System.Single)">
+            <summary>
+            Returns brown.
+            </summary>
+            <param name="brightness">The brightness of the returned color.</param>
+            <param name="alpha">The alpha of the returned color.</param>
+            <returns>An appropriate <see cref="T:MyOTKE.Views.Color"/> instance.</returns>
+        </member>
+        <member name="M:MyOTKE.Views.Color.Orange(System.Single,System.Single)">
+            <summary>
+            Returns orange.
+            </summary>
+            <param name="brightness">The brightness of the returned color.</param>
+            <param name="alpha">The alpha of the returned color.</param>
+            <returns>An appropriate <see cref="T:MyOTKE.Views.Color"/> instance.</returns>
+        </member>
+        <member name="T:MyOTKE.Views.CompositeRenderable">
+            <summary>
+            Base class for <see cref="T:MyOTKE.Views.IRenderable"/> instances that are composed of sub-renderables.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Views.CompositeRenderable.AddRenderable(MyOTKE.Views.IRenderable)">
+            <summary>
+            Adds a sub-renderable.
+            </summary>
+            <param name="renderable">The sub-renderable to be added.</param>
+        </member>
+        <member name="M:MyOTKE.Views.CompositeRenderable.Load">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Views.CompositeRenderable.Update(System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Views.CompositeRenderable.Render">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Views.CompositeRenderable.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:MyOTKE.Views.IRenderable">
+            <summary>
+            A discrete renderable part of a <see cref="T:MyOTKE.Views.View"/>. Typically will encapsulate everything
+            that results in one or more OpenGl draw calls: the program(s), the relevant buffers, etc.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Views.IRenderable.Load">
+            <summary>
+            Loads the instance, compiling any programs and populating any required buffers. Invoked as soon as an OpenGL render context is available.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Views.IRenderable.Update(System.TimeSpan)">
+            <summary>
+            Performs an incremental update. Invoked regularly.
+            </summary>
+            <param name="elapsed">The elapsed time since the last update.</param>
+            <remarks>
+            Will be called A LOT. Heap allocations are to be avoided in implementations of this method.
+            </remarks>
+        </member>
+        <member name="M:MyOTKE.Views.IRenderable.Render">
+            <summary>
+            Render logic. Invoked regularly.
+            </summary>
+            <remarks>
+            Will be called A LOT. Heap allocations are to be avoided in implementations of this method.
+            </remarks>
+        </member>
+        <member name="T:MyOTKE.Views.IViewContext">
+            <summary>
+            Interface for types that provide the mechanism for <see cref="T:MyOTKE.Views.View"/> instances to interact with the user and the Open GL device context.
+            </summary>
+        </member>
+        <member name="E:MyOTKE.Views.IViewContext.GlContextCreated">
+            <summary>Occurs when an OpenGL context has been created.</summary>
+        </member>
+        <member name="E:MyOTKE.Views.IViewContext.GlRender">
+            <summary>Occurs when the context is rendering.</summary>
+        </member>
+        <member name="E:MyOTKE.Views.IViewContext.GlContextUpdate">
+            <summary>Occurs when the context is updating.</summary>
+        </member>
+        <member name="E:MyOTKE.Views.IViewContext.GlContextDestroying">
+            <summary>Occurs when the OpenGL is being destroyed.</summary>
+        </member>
+        <member name="E:MyOTKE.Views.IViewContext.KeyDown">
+            <summary>Occurs when a key is pressed.</summary>
+        </member>
+        <member name="E:MyOTKE.Views.IViewContext.KeyUp">
+            <summary>Occurs when a key is released.</summary>
+        </member>
+        <member name="E:MyOTKE.Views.IViewContext.LeftMouseDown">
+            <summary>Occurs when the left mouse button is pressed.</summary>
+        </member>
+        <member name="E:MyOTKE.Views.IViewContext.LeftMouseUp">
+            <summary>Occurs when the left mouse button is released.</summary>
+        </member>
+        <member name="E:MyOTKE.Views.IViewContext.RightMouseDown">
+            <summary>Occurs when the right mouse button is pressed.</summary>
+        </member>
+        <member name="E:MyOTKE.Views.IViewContext.RightMouseUp">
+            <summary>Occurs when the right mouse button is released.</summary>
+        </member>
+        <member name="E:MyOTKE.Views.IViewContext.MiddleMouseDown">
+            <summary>Occurs when the middle mouse button is pressed.</summary>
+        </member>
+        <member name="E:MyOTKE.Views.IViewContext.MiddleMouseUp">
+            <summary>Occurs when the middle mouse button is released.</summary>
+        </member>
+        <member name="E:MyOTKE.Views.IViewContext.MouseWheel">
+            <summary>Occurs when the mouse wheel is used.</summary>
+        </member>
+        <member name="E:MyOTKE.Views.IViewContext.Resize">
+            <summary>Occurs when the context is resized.</summary>
+        </member>
+        <member name="E:MyOTKE.Views.IViewContext.GotFocus">
+            <summary>Occurs when the context receives input focus.</summary>
+        </member>
+        <member name="P:MyOTKE.Views.IViewContext.Width">
+            <summary>Gets the width of the display.</summary>
+        </member>
+        <member name="P:MyOTKE.Views.IViewContext.Height">
+            <summary>Gets the height of the display.</summary>
+        </member>
+        <member name="P:MyOTKE.Views.IViewContext.IsFocused">
+            <summary>Gets a value indicating whether the context has input focus.</summary>
+        </member>
+        <member name="P:MyOTKE.Views.IViewContext.CursorPosition">
+            <summary>Gets or sets the position of the mouse cursor within the context.</summary>
+        </member>
+        <member name="P:MyOTKE.Views.IViewContext.ShowCursor">
+            <summary>Sets a value indicating whether the mouse cursor should be displayed.</summary>
+        </member>
+        <member name="M:MyOTKE.Views.IViewContext.Exit">
+            <summary>Closes the app.</summary>
+        </member>
+        <member name="T:MyOTKE.Views.IViewContextExtensions">
+            <summary>
+            Extension methods for <see cref="T:MyOTKE.Views.IViewContext"/> instances.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Views.IViewContextExtensions.GetCenter(MyOTKE.Views.IViewContext)">
+            <summary>
+            Gets the position of the center of a context, given its size.
+            </summary>
+            <param name="context">The context to get the center position of.</param>
+            <returns>The position of the center of the context, given its size.</returns>
+        </member>
+        <member name="T:MyOTKE.Views.IViewProjection">
+            <summary>
+            A source of view and projection matrices. Used by some <see cref="T:MyOTKE.Views.IRenderable"/> implementations.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.IViewProjection.View">
+            <summary>
+            Gets the view matrix.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.IViewProjection.Projection">
+            <summary>
+            Gets the projection matrix.
+            </summary>
+        </member>
+        <member name="T:MyOTKE.Views.View">
+            <summary>
+            Encapsulates an interactive view rendered with OpenGl.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Views.View.#ctor(MyOTKE.Views.IViewContext,System.Boolean,MyOTKE.Views.Color)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Views.View"/> class.
+            </summary>
+            <param name="context">The <see cref="T:MyOTKE.Views.IViewContext"/> to use.</param>
+            <param name="lockCursor">A value indicating whether the cursor is placed back at the center of the view during each update.</param>
+            <param name="clearColor">The color to clear the view with on each render call.</param>
+        </member>
+        <member name="E:MyOTKE.Views.View.Resized">
+            <summary>
+            An event that is fired when the size of the view changes. TODO: should be readonly.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.View.KeysPressed">
+            <summary>
+            Gets the set of keys pressed since the last update. TODO: should be readonly.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.View.KeysDown">
+            <summary>
+            Gets the set of currently pressed keys. TODO: should be readonly.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.View.KeysReleased">
+            <summary>
+            Gets the set of keys released since the last update.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.View.CursorPosition">
+            <summary>
+            Gets the cursor position, with the origin being at the centre of the view, X increasing from left to right and Y increasing from top to bottom.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.View.LockCursor">
+            <summary>
+            Gets or sets a value indicating whether the cursor is placed back at the center of the view during each update.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.View.MouseWheelDelta">
+            <summary>
+            Gets the mouse wheel delta since the last update.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.View.WasLeftMouseButtonPressed">
+            <summary>
+            Gets a value indicating whether the left mouse button has been pressed since the last update.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.View.IsLeftMouseButtonDown">
+            <summary>
+            Gets a value indicating whether the left mouse button is currently down.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.View.WasLeftMouseButtonReleased">
+            <summary>
+            Gets a value indicating whether the left mouse button has been released since the last update.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.View.WasRightMouseButtonPressed">
+            <summary>
+            Gets a value indicating whether the right mouse button has been pressed since the last update.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.View.IsRightMouseButtonDown">
+            <summary>
+            Gets a value indicating whether the right mouse button is currently down.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.View.WasRightMouseButtonReleased">
+            <summary>
+            Gets a value indicating whether the right mouse button has been released since the last update.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.View.WasMiddleMouseButtonPressed">
+            <summary>
+            Gets a value indicating whether the middle mouse button has been pressed since the last update.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.View.IsMiddleMouseButtonDown">
+            <summary>
+            Gets a value indicating whether the middle mouse button is currently down.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.View.WasMiddleMouseButtonReleased">
+            <summary>
+            Gets a value indicating whether the middle mouse button has been released since the last update.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.View.Width">
+            <summary>
+            Gets the width of the view.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.View.Height">
+            <summary>
+            Gets the height of the view.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.View.AspectRatio">
+            <summary>
+            Gets the aspect ratio of the view.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.View.Renderable">
+            <summary>
+            Gets or sets the root renderable of the view.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Views.View.Exit">
+            <summary>
+            Closes the view.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Views.View.Dispose">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

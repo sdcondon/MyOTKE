@@ -2,7 +2,7 @@
 using System;
 using System.Numerics;
 
-namespace OTKOW.Views
+namespace MyOTKE.Views
 {
     /// <summary>
     /// Implementation of <see cref="ICamera"/> that moves in the XY plane.

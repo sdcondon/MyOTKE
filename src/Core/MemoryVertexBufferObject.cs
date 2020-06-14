@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace OTKOW.Core
+namespace MyOTKE.Core
 {
     /// <summary>
     /// Implementation of <see cref="IVertexBufferObject{T}"/> that just stores buffer content in memory, for testing purposes.

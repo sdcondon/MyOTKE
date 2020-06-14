@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 
-namespace OTKOW.Core.VaoDecorators
+namespace MyOTKE.Core.VaoDecorators
 {
     /// <summary>
     /// Decorator for <see cref="IVertexBufferObject{T}"/> that explicitly synchronizes with OpenGL (making it simple but slow..).

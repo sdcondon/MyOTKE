@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MyOTKE.Views.Contexts.WinForms</name>
+    </assembly>
+    <members>
+        <member name="T:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost">
+            <summary>
+            Windows form containing only a single OpenGL render control.
+            </summary>
+            <remarks>
+            See https://opentk.net/learn/chapter1/1-creating-a-window.html for tutorial.
+            </remarks>
+        </member>
+        <member name="M:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost"/> class.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.ViewContext">
+            <summary>
+            Gets the <see cref="T:MyOTKE.Views.IViewContext" /> of this form for <see cref="T:MyOTKE.Views.View"/> instances to use.
+            </summary>
+        </member>
+        <member name="E:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.GameWindowViewContext.GlContextCreated">
+            <inheritdoc />
+        </member>
+        <member name="E:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.GameWindowViewContext.GlRender">
+            <inheritdoc />
+        </member>
+        <member name="E:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.GameWindowViewContext.GlContextUpdate">
+            <inheritdoc />
+        </member>
+        <member name="E:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.GameWindowViewContext.GlContextDestroying">
+            <inheritdoc />
+        </member>
+        <member name="E:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.GameWindowViewContext.KeyDown">
+            <inheritdoc />
+        </member>
+        <member name="E:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.GameWindowViewContext.KeyUp">
+            <inheritdoc />
+        </member>
+        <member name="E:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.GameWindowViewContext.MouseWheel">
+            <inheritdoc />
+        </member>
+        <member name="E:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.GameWindowViewContext.LeftMouseDown">
+            <inheritdoc />
+        </member>
+        <member name="E:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.GameWindowViewContext.LeftMouseUp">
+            <inheritdoc />
+        </member>
+        <member name="E:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.GameWindowViewContext.RightMouseDown">
+            <inheritdoc />
+        </member>
+        <member name="E:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.GameWindowViewContext.RightMouseUp">
+            <inheritdoc />
+        </member>
+        <member name="E:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.GameWindowViewContext.MiddleMouseDown">
+            <inheritdoc />
+        </member>
+        <member name="E:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.GameWindowViewContext.MiddleMouseUp">
+            <inheritdoc />
+        </member>
+        <member name="E:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.GameWindowViewContext.Resize">
+            <inheritdoc />
+        </member>
+        <member name="E:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.GameWindowViewContext.GotFocus">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.GameWindowViewContext.MyOTKE#Views#IViewContext#Width">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.GameWindowViewContext.MyOTKE#Views#IViewContext#Height">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.GameWindowViewContext.IsFocused">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.GameWindowViewContext.MyOTKE#Views#IViewContext#CursorPosition">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.GameWindowViewContext.ShowCursor">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Views.Contexts.WinForms.GameWindowViewHost.GameWindowViewContext.Exit">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

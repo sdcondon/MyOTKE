@@ -2,7 +2,7 @@
 using OpenTK.Graphics.OpenGL;
 using System;
 
-namespace OTKOW.Core
+namespace MyOTKE.Core
 {
     /// <summary>
     /// Implementation of <see cref="IVertexArrayObject{T1}"/> that just stores buffer content in memory, for testing purposes.

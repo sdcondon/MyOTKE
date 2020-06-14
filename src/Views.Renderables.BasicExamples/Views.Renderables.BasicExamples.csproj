@@ -2,21 +2,21 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-    <AssemblyName>OTKOW.Views.Renderables.BasicExamples</AssemblyName>
-    <RootNamespace>OTKOW.Views.Renderables.BasicExamples</RootNamespace>
+    <AssemblyName>MyOTKE.Views.Renderables.BasicExamples</AssemblyName>
+    <RootNamespace>MyOTKE.Views.Renderables.BasicExamples</RootNamespace>
     
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>Open GL Helpers for .NET / view engine: Test renderable implementations.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>GLHDN.Views.Renderables.Basic.xml</DocumentationFile>
+    <DocumentationFile>MyOTKE.Views.Renderables.Basic.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Colored.Fragment.glsl" />
     <None Remove="Colored.Vertex.glsl" />
-    <None Remove="GLHDN.Views.Renderables.Basic.xml" />
+    <None Remove="MyOTKE.Views.Renderables.Basic.xml" />
     <None Remove="Textured.Fragment.glsl" />
     <None Remove="Textured.Vertex.glsl" />
   </ItemGroup>

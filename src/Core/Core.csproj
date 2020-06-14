@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-    <AssemblyName>OTKOW.Core</AssemblyName>
-    <RootNamespace>OTKOW.Core</RootNamespace>
+    <AssemblyName>MyOTKE.Core</AssemblyName>
+    <RootNamespace>MyOTKE.Core</RootNamespace>
   </PropertyGroup>
   
   <PropertyGroup>
@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>GLHDN.Core.xml</DocumentationFile>
+    <DocumentationFile>MyOTKE.Core.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

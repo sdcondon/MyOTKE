@@ -1,13 +1,13 @@
 ﻿using OpenTK.Graphics.OpenGL;
-using OTKOW.Core;
-using OTKOW.ReactiveBuffers;
+using MyOTKE.Core;
+using MyOTKE.ReactiveBuffers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Reactive.Linq;
 
-namespace OTKOW.Views.Renderables.ReactivePrimitives
+namespace MyOTKE.Views.Renderables.ReactivePrimitives
 {
     /// <summary>
     /// Implementation of <see cref="IRenderable" /> that renders a set of primitive shapes from an observable sequence of source data.

@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 
-namespace OTKOW.Core
+namespace MyOTKE.Core
 {
     /// <summary>
     /// Very, VERY simple OBJ loader (nabbed from an OpenGL tutorial)

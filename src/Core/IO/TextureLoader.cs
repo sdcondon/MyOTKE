@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace OTKOW.Core
+namespace MyOTKE.Core
 {
     /// <summary>
     /// Simple texture loader nabbed from an OpenGL tutorial.

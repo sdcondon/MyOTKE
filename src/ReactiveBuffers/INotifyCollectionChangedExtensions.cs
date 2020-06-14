@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
-namespace OTKOW.ReactiveBuffers
+namespace MyOTKE.ReactiveBuffers
 {
     /// <summary>
     /// Extension methods for <see cref="INotifyCollectionChanged"/> instances.

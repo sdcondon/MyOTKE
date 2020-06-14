@@ -1,9 +1,9 @@
-﻿using OTKOW.Core;
+﻿using MyOTKE.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OTKOW.ReactiveBuffers
+namespace MyOTKE.ReactiveBuffers
 {
     /// <summary>
     /// Logic for creating and managing an Open GL buffer for a (observable) set of (observable) items that change over time,

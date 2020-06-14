@@ -3,7 +3,7 @@ using OpenTK.Graphics.OpenGL;
 using System;
 using System.Diagnostics;
 
-namespace OTKOW.Core
+namespace MyOTKE.Core
 {
     /// <summary>
     /// Static OpenGL helper methods.

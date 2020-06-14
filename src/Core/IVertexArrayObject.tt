@@ -6,7 +6,7 @@
 <#@ include file="_Common.t4" #>
 using System;
 
-namespace OTKOW.Core
+namespace MyOTKE.Core
 {
 <# for(int i = 1; i <= MaxBufferCount; i++) { #>
 <# WriteLineIf(i > 1, ""); #>

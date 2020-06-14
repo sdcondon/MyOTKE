@@ -5,7 +5,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace OTKOW.Views.Contexts.WinForms
+namespace MyOTKE.Views.Contexts.WinForms
 {
     /// <summary>
     /// Windows form containing only a single OpenGL render control.

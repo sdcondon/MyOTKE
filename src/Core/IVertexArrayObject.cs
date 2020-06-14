@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OTKOW.Core
+namespace MyOTKE.Core
 {
     /// <summary>
     /// Interface for types representing an OpenGL vertex array object.

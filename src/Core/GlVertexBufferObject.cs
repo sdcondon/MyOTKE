@@ -3,7 +3,7 @@ using OpenTK.Graphics.OpenGL;
 using System;
 using System.Runtime.InteropServices;
 
-namespace OTKOW.Core
+namespace MyOTKE.Core
 {
     /// <summary>
     /// A OpenGL vertex buffer object.

@@ -6,7 +6,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using SharpFont;
 
-namespace OTKOW.Views.Renderables.Gui
+namespace MyOTKE.Views.Renderables.Gui
 {
     /// <summary>
     /// https://www.freetype.org/freetype2/docs/tutorial/step1.html and

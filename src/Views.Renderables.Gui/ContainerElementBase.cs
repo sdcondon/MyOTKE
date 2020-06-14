@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Numerics;
 
-namespace OTKOW.Views.Renderables.Gui
+namespace MyOTKE.Views.Renderables.Gui
 {
     /// <summary>
     /// Base class for GUI elements that can contain other elements.

@@ -1,0 +1,1066 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MyOTKE.Core</name>
+    </assembly>
+    <members>
+        <member name="T:MyOTKE.Core.GlExt">
+            <summary>
+            Static OpenGL helper methods.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Core.GlExt.ThrowIfNoCurrentContext">
+            <summary>
+            Throws an <see cref="T:System.InvalidOperationException"/> if there is no OpenGL context current on the calling thread.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Core.GlExt.DebugWriteLine(System.String)">
+            <summary>
+            Records a debug message, prefixed by the calling type and method.
+            </summary>
+            <param name="message">The message to be recorded.</param>
+        </member>
+        <member name="T:MyOTKE.Core.GlProgram">
+            <summary>
+            Represents a compiled OpenGL program.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Core.GlProgram.#ctor(System.Collections.Generic.IEnumerable{System.ValueTuple{OpenTK.Graphics.OpenGL.ShaderType,System.String}},System.String[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Core.GlProgram"/> class.
+            </summary>
+            <param name="shaderSpecs">Specifications for each of the shaders to be included in the program.</param>
+            <param name="uniforms">The names of the unifoms used by the shaders.</param>
+        </member>
+        <member name="M:MyOTKE.Core.GlProgram.Finalize">
+            <summary>
+            Finalizes an instance of the <see cref="T:MyOTKE.Core.GlProgram"/> class.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Core.GlProgram.UseWithUniformValues(System.Object[])">
+            <summary>
+            Installs the program as part of the current rendering state and sets the current uniform values (using the default uniform block).
+            </summary>
+            <param name="values">The uniform values (in the order in which they were registered).</param>
+        </member>
+        <member name="M:MyOTKE.Core.GlProgram.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:MyOTKE.Core.GlProgramBuilder">
+            <summary>
+            Builder class for <see cref="T:MyOTKE.Core.GlProgram"/> objects that presents a fluent-ish interface.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Core.GlProgramBuilder.WithShaderFromStream(OpenTK.Graphics.OpenGL.ShaderType,System.IO.Stream)">
+            <summary>
+            Adds a shader to be included in the built program, reading the source from a <see cref="T:System.IO.Stream"/> object.
+            </summary>
+            <param name="shaderType">The type of shader to be added.</param>
+            <param name="sourceStream">The stream containing the source of the shader (in UTF-8).</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:MyOTKE.Core.GlProgramBuilder.WithShaderFromFile(OpenTK.Graphics.OpenGL.ShaderType,System.String)">
+            <summary>
+            Adds a shader to be included in the built program, reading the source from a file.
+            </summary>
+            <param name="shaderType">The type of shader to be added.</param>
+            <param name="filePath">The path of the file containing the source of the shader (in UTF-8).</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:MyOTKE.Core.GlProgramBuilder.WithShaderFromEmbeddedResource(OpenTK.Graphics.OpenGL.ShaderType,System.String)">
+            <summary>
+            Adds a shader to be included in the built program, reading the source from a resource embedded in the calling assembly.
+            </summary>
+            <param name="shaderType">The type of shader to be added.</param>
+            <param name="resourceName">The name of the resource containing the source of the shader (in UTF-8).</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:MyOTKE.Core.GlProgramBuilder.WithUniforms(System.String[])">
+            <summary>
+            Registers the set of uniforms required by the program.
+            </summary>
+            <param name="uniformNames">The names of the uniforms, in the order that they will be provided when calling <see cref="M:MyOTKE.Core.GlProgram.UseWithUniformValues(System.Object[])"/>.</param>
+            <returns>The updated builder.</returns>
+            <remarks>
+            TODO: Better to use a generic type approach for compile-time safety.
+            </remarks>
+        </member>
+        <member name="M:MyOTKE.Core.GlProgramBuilder.Build">
+            <summary>
+            Builds a new <see cref="T:MyOTKE.Core.GlProgram"/> instance based on the state of the builder.
+            </summary>
+            <returns>The built program.</returns>
+        </member>
+        <member name="T:MyOTKE.Core.GlVertexArrayObject`1">
+            <summary>
+            Interface for types representing an OpenGL vertex array object.
+            </summary>
+            <typeparam name="T1">The type of the 1st buffer.</typeparam>
+        </member>
+        <member name="M:MyOTKE.Core.GlVertexArrayObject`1.#ctor(OpenTK.Graphics.OpenGL.PrimitiveType,System.ValueTuple{OpenTK.Graphics.OpenGL.BufferUsageHint,System.Int32,`0[]},System.ValueTuple{System.Int32,System.UInt32[]})">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Core.GlVertexArrayObject`1"/> class. SIDE EFFECT: new VAO will be bound.
+            </summary>
+            <param name="primitiveType">OpenGL primitive type.</param>
+            <param name="attributeBufferSpec1">Spec for the 1st buffer in this VAO.</param>
+            <param name="indexSpec">The spec for the index of this VAO.</param>
+        </member>
+        <member name="M:MyOTKE.Core.GlVertexArrayObject`1.Finalize">
+            <summary>
+            Finalizes an instance of the <see cref="T:MyOTKE.Core.GlVertexArrayObject`1"/> class.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.GlVertexArrayObject`1.VertexCount">
+            <summary>
+            Gets the number of vertices to be rendered.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.GlVertexArrayObject`1.IndexBuffer">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.GlVertexArrayObject`1.AttributeBuffer1">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Core.GlVertexArrayObject`1.Draw(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Core.GlVertexArrayObject`1.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:MyOTKE.Core.GlVertexArrayObject`2">
+            <summary>
+            Interface for types representing an OpenGL vertex array object.
+            </summary>
+            <typeparam name="T1">The type of the 1st buffer.</typeparam>
+            <typeparam name="T2">The type of the 2nd buffer.</typeparam>
+        </member>
+        <member name="M:MyOTKE.Core.GlVertexArrayObject`2.#ctor(OpenTK.Graphics.OpenGL.PrimitiveType,System.ValueTuple{OpenTK.Graphics.OpenGL.BufferUsageHint,System.Int32,`0[]},System.ValueTuple{OpenTK.Graphics.OpenGL.BufferUsageHint,System.Int32,`1[]},System.ValueTuple{System.Int32,System.UInt32[]})">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Core.GlVertexArrayObject`2"/> class. SIDE EFFECT: new VAO will be bound.
+            </summary>
+            <param name="primitiveType">OpenGL primitive type.</param>
+            <param name="attributeBufferSpec1">Spec for the 1st buffer in this VAO.</param>
+            <param name="attributeBufferSpec2">Spec for the 2nd buffer in this VAO.</param>
+            <param name="indexSpec">The spec for the index of this VAO.</param>
+        </member>
+        <member name="M:MyOTKE.Core.GlVertexArrayObject`2.Finalize">
+            <summary>
+            Finalizes an instance of the <see cref="T:MyOTKE.Core.GlVertexArrayObject`2"/> class.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.GlVertexArrayObject`2.VertexCount">
+            <summary>
+            Gets the number of vertices to be rendered.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.GlVertexArrayObject`2.IndexBuffer">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.GlVertexArrayObject`2.AttributeBuffer1">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.GlVertexArrayObject`2.AttributeBuffer2">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Core.GlVertexArrayObject`2.Draw(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Core.GlVertexArrayObject`2.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:MyOTKE.Core.GlVertexArrayObject`3">
+            <summary>
+            Interface for types representing an OpenGL vertex array object.
+            </summary>
+            <typeparam name="T1">The type of the 1st buffer.</typeparam>
+            <typeparam name="T2">The type of the 2nd buffer.</typeparam>
+            <typeparam name="T3">The type of the 3rd buffer.</typeparam>
+        </member>
+        <member name="M:MyOTKE.Core.GlVertexArrayObject`3.#ctor(OpenTK.Graphics.OpenGL.PrimitiveType,System.ValueTuple{OpenTK.Graphics.OpenGL.BufferUsageHint,System.Int32,`0[]},System.ValueTuple{OpenTK.Graphics.OpenGL.BufferUsageHint,System.Int32,`1[]},System.ValueTuple{OpenTK.Graphics.OpenGL.BufferUsageHint,System.Int32,`2[]},System.ValueTuple{System.Int32,System.UInt32[]})">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Core.GlVertexArrayObject`3"/> class. SIDE EFFECT: new VAO will be bound.
+            </summary>
+            <param name="primitiveType">OpenGL primitive type.</param>
+            <param name="attributeBufferSpec1">Spec for the 1st buffer in this VAO.</param>
+            <param name="attributeBufferSpec2">Spec for the 2nd buffer in this VAO.</param>
+            <param name="attributeBufferSpec3">Spec for the 3rd buffer in this VAO.</param>
+            <param name="indexSpec">The spec for the index of this VAO.</param>
+        </member>
+        <member name="M:MyOTKE.Core.GlVertexArrayObject`3.Finalize">
+            <summary>
+            Finalizes an instance of the <see cref="T:MyOTKE.Core.GlVertexArrayObject`3"/> class.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.GlVertexArrayObject`3.VertexCount">
+            <summary>
+            Gets the number of vertices to be rendered.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.GlVertexArrayObject`3.IndexBuffer">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.GlVertexArrayObject`3.AttributeBuffer1">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.GlVertexArrayObject`3.AttributeBuffer2">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.GlVertexArrayObject`3.AttributeBuffer3">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Core.GlVertexArrayObject`3.Draw(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Core.GlVertexArrayObject`3.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:MyOTKE.Core.GlVertexAttributeInfo">
+            <summary>
+            Container for information about an OpenGL vertex attribute.
+            </summary>
+        </member>
+        <member name="F:MyOTKE.Core.GlVertexAttributeInfo.KnownTypes">
+            <summary>
+            A mapping of .NET types to equivalent primitive OpenGL attribute info for them.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Core.GlVertexAttributeInfo.#ctor(OpenTK.Graphics.OpenGL.VertexAttribPointerType,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Core.GlVertexAttributeInfo"/> struct.
+            </summary>
+            <param name="type">The OpenGL type for the vertex attribute.</param>
+            <param name="multiple">The multiple (of the OpenGL type) for the attribute.</param>
+            <param name="offset">The offset from the start of the buffer to the attribute for the first vertex in the buffer.</param>
+            <param name="stride">The offset from the attribute for one vertex in the buffer to the next.</param>
+        </member>
+        <member name="P:MyOTKE.Core.GlVertexAttributeInfo.Type">
+            <summary>
+            Gets the OpenGL type for the vertex attribute.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.GlVertexAttributeInfo.Multiple">
+            <summary>
+            Gets the multiple (of the OpenGL type) for the attribute.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.GlVertexAttributeInfo.Offset">
+            <summary>
+            Gets the offset from the start of the buffer to the attribute for the first vertex in the buffer.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.GlVertexAttributeInfo.Stride">
+            <summary>
+            Gets the offset from the attribute for one vertex in the buffer to the next.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Core.GlVertexAttributeInfo.ForType(System.Type)">
+            <summary>
+            Returns attribute info for a given (blittable) type.
+            </summary>
+            <param name="t">The type.</param>
+            <returns>An array of attribute info.</returns>
+        </member>
+        <member name="T:MyOTKE.Core.GlVertexBufferObject`1">
+            <summary>
+            A OpenGL vertex buffer object.
+            </summary>
+            <typeparam name="T">The .NET type of data to be stored in the buffer.</typeparam>
+        </member>
+        <member name="M:MyOTKE.Core.GlVertexBufferObject`1.#ctor(OpenTK.Graphics.OpenGL.BufferTarget,OpenTK.Graphics.OpenGL.BufferUsageHint,System.Type,System.Int32,`0[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Core.GlVertexBufferObject`1"/> class. SIDE EFFECT: New buffer will be bound to the given target.
+            </summary>
+            <param name="target">OpenGL buffer target specification.</param>
+            <param name="usage">OpenGL buffer usage specification.</param>
+            <param name="elementType">The type of elements to be stored in the buffer. The data type must be a blittable value type (or an exception will be thrown).</param>
+            <param name="elementCapacity">The maximum number of elements to be stored in the buffer.</param>
+            <param name="elementData">The data to populate the buffer with.</param>
+        </member>
+        <member name="M:MyOTKE.Core.GlVertexBufferObject`1.Finalize">
+            <summary>
+            Finalizes an instance of the <see cref="T:MyOTKE.Core.GlVertexBufferObject`1"/> class.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.GlVertexBufferObject`1.Id">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.GlVertexBufferObject`1.Attributes">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.GlVertexBufferObject`1.Capacity">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.GlVertexBufferObject`1.Item(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Core.GlVertexBufferObject`1.Copy(System.Int32,System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Core.GlVertexBufferObject`1.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:MyOTKE.Core.ObjLoader">
+            <summary>
+            Very, VERY simple OBJ loader (nabbed from an OpenGL tutorial)
+            Here is a short list of features a real function would provide :
+            - Binary files. Reading a model should be just a few memcpy's away, not parsing a file at runtime. In short : OBJ is not very great.
+            - Animations and bones (includes bones weights)
+            - Multiple UVs
+            - All attributes should be optional, not "forced"
+            - More stable. Change a line in the OBJ file and it crashes.
+            - More secure. Change another line and you can inject code.
+            - Loading from memory, stream, etc.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Core.ObjLoader.LoadObj(System.String,System.Collections.Generic.IList{System.Numerics.Vector3},System.Collections.Generic.IList{System.Numerics.Vector2},System.Collections.Generic.IList{System.Numerics.Vector3})">
+            <summary>
+            Loads data from an OBJ file.
+            </summary>
+            <param name="path">The path of the OBJ file.</param>
+            <param name="vertexPositions">The list to be populated with the position of each vertex.</param>
+            <param name="vertexUvs">The list to be populated with the texture co-ordinate of each vertex.</param>
+            <param name="vertexNormals">The list to be populated with the normal of each vertex.</param>
+            <returns>True if the OBJ file was successfully loaded, otherwise false.</returns>
+        </member>
+        <member name="T:MyOTKE.Core.TextureLoader">
+            <summary>
+            Simple texture loader nabbed from an OpenGL tutorial.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Core.TextureLoader.LoadDDS(System.String)">
+            <summary>
+            Loads a DDS image from a given file path.
+            </summary>
+            <param name="filePath">The file path to load the image from.</param>
+            <returns>The OpenGL texture ID that the image has been loaded into.</returns>
+        </member>
+        <member name="M:MyOTKE.Core.TextureLoader.LoadBMP(System.String)">
+            <summary>
+            Loads a (24bpp) BMP image from a given file path.
+            </summary>
+            <param name="filePath">The file path to load the image from.</param>
+            <returns>The OpenGL texture ID that the image has been loaded into.</returns>
+            <remarks>
+            Also see https://en.wikipedia.org/wiki/BMP_file_format.
+            </remarks>
+        </member>
+        <member name="T:MyOTKE.Core.IVertexArrayObject`1">
+            <summary>
+            Interface for types representing an OpenGL vertex array object.
+            </summary>
+            <typeparam name="T1">The type of the 1st buffer.</typeparam>
+        </member>
+        <member name="P:MyOTKE.Core.IVertexArrayObject`1.IndexBuffer">
+            <summary>
+            Gets the index buffer object for this VAO, if there is one.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.IVertexArrayObject`1.AttributeBuffer1">
+            <summary>
+            Gets the set of buffer objects contained within this VAO.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Core.IVertexArrayObject`1.Draw(System.Int32)">
+            <summary>
+            Draw with the active program.
+            </summary>
+            <param name="count">The number of vertices to draw, or -1 to draw all vertices.</param>
+        </member>
+        <member name="T:MyOTKE.Core.IVertexArrayObject`2">
+            <summary>
+            Interface for types representing an OpenGL vertex array object.
+            </summary>
+            <typeparam name="T1">The type of the 1st buffer.</typeparam>
+            <typeparam name="T2">The type of the 2nd buffer.</typeparam>
+        </member>
+        <member name="P:MyOTKE.Core.IVertexArrayObject`2.IndexBuffer">
+            <summary>
+            Gets the index buffer object for this VAO, if there is one.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.IVertexArrayObject`2.AttributeBuffer1">
+            <summary>
+            Gets the set of buffer objects contained within this VAO.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.IVertexArrayObject`2.AttributeBuffer2">
+            <summary>
+            Gets the set of buffer objects contained within this VAO.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Core.IVertexArrayObject`2.Draw(System.Int32)">
+            <summary>
+            Draw with the active program.
+            </summary>
+            <param name="count">The number of vertices to draw, or -1 to draw all vertices.</param>
+        </member>
+        <member name="T:MyOTKE.Core.IVertexArrayObject`3">
+            <summary>
+            Interface for types representing an OpenGL vertex array object.
+            </summary>
+            <typeparam name="T1">The type of the 1st buffer.</typeparam>
+            <typeparam name="T2">The type of the 2nd buffer.</typeparam>
+            <typeparam name="T3">The type of the 3rd buffer.</typeparam>
+        </member>
+        <member name="P:MyOTKE.Core.IVertexArrayObject`3.IndexBuffer">
+            <summary>
+            Gets the index buffer object for this VAO, if there is one.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.IVertexArrayObject`3.AttributeBuffer1">
+            <summary>
+            Gets the set of buffer objects contained within this VAO.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.IVertexArrayObject`3.AttributeBuffer2">
+            <summary>
+            Gets the set of buffer objects contained within this VAO.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.IVertexArrayObject`3.AttributeBuffer3">
+            <summary>
+            Gets the set of buffer objects contained within this VAO.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Core.IVertexArrayObject`3.Draw(System.Int32)">
+            <summary>
+            Draw with the active program.
+            </summary>
+            <param name="count">The number of vertices to draw, or -1 to draw all vertices.</param>
+        </member>
+        <member name="T:MyOTKE.Core.IVertexBufferObject`1">
+            <summary>
+            Interface for types representing an OpenGL vertex buffer object.
+            </summary>
+            <typeparam name="T">The .NET type of data to be stored in the buffer.</typeparam>
+        </member>
+        <member name="P:MyOTKE.Core.IVertexBufferObject`1.Id">
+            <summary>
+            Gets the ID of the buffer object.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.IVertexBufferObject`1.Attributes">
+            <summary>
+            Gets the vertex attribute info for this buffer.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.IVertexBufferObject`1.Capacity">
+            <summary>
+            Gets the number of vertices that the buffer has the capacity for.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.IVertexBufferObject`1.Item(System.Int32)">
+            <summary>
+            Sets data for the vertex at a particular index.
+            </summary>
+            <param name="index">The index of the object to set.</param>
+        </member>
+        <member name="M:MyOTKE.Core.IVertexBufferObject`1.Copy(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Copy data internally within the buffer.
+            </summary>
+            <param name="readIndex">The (object) index to read from.</param>
+            <param name="writeIndex">The (object) index to write to.</param>
+            <param name="count">The number of objects to copy.</param>
+        </member>
+        <member name="T:MyOTKE.Core.MemoryVertexArrayObject`1">
+            <summary>
+            Implementation of <see cref="T:MyOTKE.Core.IVertexArrayObject`1"/> that just stores buffer content in memory, for testing purposes.
+            </summary>
+            <typeparam name="T1">The type of the 1st buffer.</typeparam>
+        </member>
+        <member name="M:MyOTKE.Core.MemoryVertexArrayObject`1.#ctor(System.ValueTuple{OpenTK.Graphics.OpenGL.BufferUsageHint,System.Int32,`0[]},System.ValueTuple{System.Int32,System.UInt32[]})">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Core.MemoryVertexArrayObject`1"/> class.
+            </summary>
+            <param name="attributeBufferSpec1">Spec for the 1st buffer in this VAO.</param>
+            <param name="indexSpec">Spec for the index of this VAO.</param>
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexArrayObject`1.MyOTKE#Core#IVertexArrayObject{T1}#IndexBuffer">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexArrayObject`1.IndexBuffer">
+            <summary>
+            Gets the index buffer of this VAO.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexArrayObject`1.MyOTKE#Core#IVertexArrayObject{T1}#AttributeBuffer1">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexArrayObject`1.AttributeBuffer1">
+            <summary>
+            Gets the 1st attribute buffer of this VAO.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Core.MemoryVertexArrayObject`1.Draw(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyOTKE.Core.MemoryVertexArrayObject`2">
+            <summary>
+            Implementation of <see cref="T:MyOTKE.Core.IVertexArrayObject`2"/> that just stores buffer content in memory, for testing purposes.
+            </summary>
+            <typeparam name="T1">The type of the 1st buffer.</typeparam>
+            <typeparam name="T2">The type of the 2nd buffer.</typeparam>
+        </member>
+        <member name="M:MyOTKE.Core.MemoryVertexArrayObject`2.#ctor(System.ValueTuple{OpenTK.Graphics.OpenGL.BufferUsageHint,System.Int32,`0[]},System.ValueTuple{OpenTK.Graphics.OpenGL.BufferUsageHint,System.Int32,`1[]},System.ValueTuple{System.Int32,System.UInt32[]})">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Core.MemoryVertexArrayObject`2"/> class.
+            </summary>
+            <param name="attributeBufferSpec1">Spec for the 1st buffer in this VAO.</param>
+            <param name="attributeBufferSpec2">Spec for the 2nd buffer in this VAO.</param>
+            <param name="indexSpec">Spec for the index of this VAO.</param>
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexArrayObject`2.MyOTKE#Core#IVertexArrayObject{T1,T2}#IndexBuffer">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexArrayObject`2.IndexBuffer">
+            <summary>
+            Gets the index buffer of this VAO.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexArrayObject`2.MyOTKE#Core#IVertexArrayObject{T1,T2}#AttributeBuffer1">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexArrayObject`2.AttributeBuffer1">
+            <summary>
+            Gets the 1st attribute buffer of this VAO.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexArrayObject`2.MyOTKE#Core#IVertexArrayObject{T1,T2}#AttributeBuffer2">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexArrayObject`2.AttributeBuffer2">
+            <summary>
+            Gets the 2nd attribute buffer of this VAO.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Core.MemoryVertexArrayObject`2.Draw(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyOTKE.Core.MemoryVertexArrayObject`3">
+            <summary>
+            Implementation of <see cref="T:MyOTKE.Core.IVertexArrayObject`3"/> that just stores buffer content in memory, for testing purposes.
+            </summary>
+            <typeparam name="T1">The type of the 1st buffer.</typeparam>
+            <typeparam name="T2">The type of the 2nd buffer.</typeparam>
+            <typeparam name="T3">The type of the 3rd buffer.</typeparam>
+        </member>
+        <member name="M:MyOTKE.Core.MemoryVertexArrayObject`3.#ctor(System.ValueTuple{OpenTK.Graphics.OpenGL.BufferUsageHint,System.Int32,`0[]},System.ValueTuple{OpenTK.Graphics.OpenGL.BufferUsageHint,System.Int32,`1[]},System.ValueTuple{OpenTK.Graphics.OpenGL.BufferUsageHint,System.Int32,`2[]},System.ValueTuple{System.Int32,System.UInt32[]})">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Core.MemoryVertexArrayObject`3"/> class.
+            </summary>
+            <param name="attributeBufferSpec1">Spec for the 1st buffer in this VAO.</param>
+            <param name="attributeBufferSpec2">Spec for the 2nd buffer in this VAO.</param>
+            <param name="attributeBufferSpec3">Spec for the 3rd buffer in this VAO.</param>
+            <param name="indexSpec">Spec for the index of this VAO.</param>
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexArrayObject`3.MyOTKE#Core#IVertexArrayObject{T1,T2,T3}#IndexBuffer">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexArrayObject`3.IndexBuffer">
+            <summary>
+            Gets the index buffer of this VAO.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexArrayObject`3.MyOTKE#Core#IVertexArrayObject{T1,T2,T3}#AttributeBuffer1">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexArrayObject`3.AttributeBuffer1">
+            <summary>
+            Gets the 1st attribute buffer of this VAO.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexArrayObject`3.MyOTKE#Core#IVertexArrayObject{T1,T2,T3}#AttributeBuffer2">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexArrayObject`3.AttributeBuffer2">
+            <summary>
+            Gets the 2nd attribute buffer of this VAO.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexArrayObject`3.MyOTKE#Core#IVertexArrayObject{T1,T2,T3}#AttributeBuffer3">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexArrayObject`3.AttributeBuffer3">
+            <summary>
+            Gets the 3rd attribute buffer of this VAO.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Core.MemoryVertexArrayObject`3.Draw(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyOTKE.Core.MemoryVertexBufferObject`1">
+            <summary>
+            Implementation of <see cref="T:MyOTKE.Core.IVertexBufferObject`1"/> that just stores buffer content in memory, for testing purposes.
+            </summary>
+            <typeparam name="T">The .NET type of data to be stored in the buffer.</typeparam>
+        </member>
+        <member name="M:MyOTKE.Core.MemoryVertexBufferObject`1.#ctor(System.Int32,System.Array)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Core.MemoryVertexBufferObject`1"/> class.
+            </summary>
+            <param name="capacity">The capacity of the buffer.</param>
+            <param name="data">The data to populate the buffer with, or null.</param>
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexBufferObject`1.Content">
+            <summary>
+            Gets the content of the buffer.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexBufferObject`1.Id">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexBufferObject`1.Attributes">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexBufferObject`1.Capacity">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.MemoryVertexBufferObject`1.Item(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Core.MemoryVertexBufferObject`1.Copy(System.Int32,System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`1">
+            <summary>
+            Decorator for <see cref="T:MyOTKE.Core.IVertexArrayObject`1"/> that explicitly synchronizes with OpenGL (making it simple but slow..).
+            <para/>
+            See https://www.khronos.org/opengl/wiki/Synchronization#Implicit_synchronization for some info.
+            </summary>
+            <typeparam name="T1">The type of the 1st buffer.</typeparam>
+            <remarks>
+            TODO: Look into some alternative decorators that do e.g. streaming - https://www.khronos.org/opengl/wiki/Buffer_Object_Streaming.
+            </remarks>
+        </member>
+        <member name="M:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`1.#ctor(MyOTKE.Core.IVertexArrayObject{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`1"/> class.
+            </summary>
+            <param name="vertexArrayObject">The VAO to apply synchronization to.</param>
+        </member>
+        <member name="P:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`1.IndexBuffer">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`1.MyOTKE#Core#IVertexArrayObject{T1}#AttributeBuffer1">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`1.AttributeBuffer1">
+            <summary>
+            Gets the <see cref="T:MyOTKE.Core.VaoDecorators.SynchronizedVertexBufferObject`1"/> instance that serves as the 1st attribute buffer for this VAO.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`1.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`1.Draw(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`2">
+            <summary>
+            Decorator for <see cref="T:MyOTKE.Core.IVertexArrayObject`2"/> that explicitly synchronizes with OpenGL (making it simple but slow..).
+            <para/>
+            See https://www.khronos.org/opengl/wiki/Synchronization#Implicit_synchronization for some info.
+            </summary>
+            <typeparam name="T1">The type of the 1st buffer.</typeparam>
+            <typeparam name="T2">The type of the 2nd buffer.</typeparam>
+            <remarks>
+            TODO: Look into some alternative decorators that do e.g. streaming - https://www.khronos.org/opengl/wiki/Buffer_Object_Streaming.
+            </remarks>
+        </member>
+        <member name="M:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`2.#ctor(MyOTKE.Core.IVertexArrayObject{`0,`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`2"/> class.
+            </summary>
+            <param name="vertexArrayObject">The VAO to apply synchronization to.</param>
+        </member>
+        <member name="P:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`2.IndexBuffer">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`2.MyOTKE#Core#IVertexArrayObject{T1,T2}#AttributeBuffer1">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`2.AttributeBuffer1">
+            <summary>
+            Gets the <see cref="T:MyOTKE.Core.VaoDecorators.SynchronizedVertexBufferObject`1"/> instance that serves as the 1st attribute buffer for this VAO.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`2.MyOTKE#Core#IVertexArrayObject{T1,T2}#AttributeBuffer2">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`2.AttributeBuffer2">
+            <summary>
+            Gets the <see cref="T:MyOTKE.Core.VaoDecorators.SynchronizedVertexBufferObject`1"/> instance that serves as the 2nd attribute buffer for this VAO.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`2.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`2.Draw(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`3">
+            <summary>
+            Decorator for <see cref="T:MyOTKE.Core.IVertexArrayObject`3"/> that explicitly synchronizes with OpenGL (making it simple but slow..).
+            <para/>
+            See https://www.khronos.org/opengl/wiki/Synchronization#Implicit_synchronization for some info.
+            </summary>
+            <typeparam name="T1">The type of the 1st buffer.</typeparam>
+            <typeparam name="T2">The type of the 2nd buffer.</typeparam>
+            <typeparam name="T3">The type of the 3rd buffer.</typeparam>
+            <remarks>
+            TODO: Look into some alternative decorators that do e.g. streaming - https://www.khronos.org/opengl/wiki/Buffer_Object_Streaming.
+            </remarks>
+        </member>
+        <member name="M:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`3.#ctor(MyOTKE.Core.IVertexArrayObject{`0,`1,`2})">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`3"/> class.
+            </summary>
+            <param name="vertexArrayObject">The VAO to apply synchronization to.</param>
+        </member>
+        <member name="P:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`3.IndexBuffer">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`3.MyOTKE#Core#IVertexArrayObject{T1,T2,T3}#AttributeBuffer1">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`3.AttributeBuffer1">
+            <summary>
+            Gets the <see cref="T:MyOTKE.Core.VaoDecorators.SynchronizedVertexBufferObject`1"/> instance that serves as the 1st attribute buffer for this VAO.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`3.MyOTKE#Core#IVertexArrayObject{T1,T2,T3}#AttributeBuffer2">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`3.AttributeBuffer2">
+            <summary>
+            Gets the <see cref="T:MyOTKE.Core.VaoDecorators.SynchronizedVertexBufferObject`1"/> instance that serves as the 2nd attribute buffer for this VAO.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`3.MyOTKE#Core#IVertexArrayObject{T1,T2,T3}#AttributeBuffer3">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`3.AttributeBuffer3">
+            <summary>
+            Gets the <see cref="T:MyOTKE.Core.VaoDecorators.SynchronizedVertexBufferObject`1"/> instance that serves as the 3rd attribute buffer for this VAO.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`3.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`3.Draw(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyOTKE.Core.VaoDecorators.SynchronizedVertexBufferObject`1">
+            <summary>
+            Decorator for <see cref="T:MyOTKE.Core.IVertexBufferObject`1"/> that explicitly synchronizes with OpenGL (making it simple but slow..).
+            <para/>
+            See https://www.khronos.org/opengl/wiki/Synchronization#Implicit_synchronization for some info.
+            </summary>
+            <typeparam name="T">The .NET type of data to be stored in the buffer.</typeparam>
+        </member>
+        <member name="M:MyOTKE.Core.VaoDecorators.SynchronizedVertexBufferObject`1.#ctor(MyOTKE.Core.IVertexBufferObject{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Core.VaoDecorators.SynchronizedVertexBufferObject`1" /> class.
+            </summary>
+            <param name="vertexBufferObject">The <see cref="T:MyOTKE.Core.IVertexBufferObject`1"/> to wrap.</param>
+        </member>
+        <member name="P:MyOTKE.Core.VaoDecorators.SynchronizedVertexBufferObject`1.Id">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.VaoDecorators.SynchronizedVertexBufferObject`1.Attributes">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.VaoDecorators.SynchronizedVertexBufferObject`1.Capacity">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Core.VaoDecorators.SynchronizedVertexBufferObject`1.Item(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Core.VaoDecorators.SynchronizedVertexBufferObject`1.Copy(System.Int32,System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Core.VaoDecorators.SynchronizedVertexBufferObject`1.FlushChanges">
+            <summary>
+            Flush any changes to the underlying buffer.
+            </summary>
+        </member>
+        <member name="T:MyOTKE.Core.VertexArrayObjectBuilder">
+            <summary>
+            Builder class for <see cref="!:GlVertexArrayObject"/> objects that presents a fluent-ish interface.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder.#ctor(OpenTK.Graphics.OpenGL.PrimitiveType)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Core.VertexArrayObjectBuilder"/> class.
+            </summary>
+            <param name="primitiveType">The type of primitive data to be stored in the built VAO.</param>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder.WithAttributeBuffer``1(OpenTK.Graphics.OpenGL.BufferUsageHint,``0[])">
+            <summary>
+            Adds a new populated attribute buffer to be included in the built VAO.
+            </summary>
+            <typeparam name="T">The type of data to be stored in the buffer.</typeparam>
+            <param name="bufferUsage">The usage type for the buffer.</param>
+            <param name="data">The data with which to populate the buffer.</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder.WithAttributeBuffer``1(OpenTK.Graphics.OpenGL.BufferUsageHint,System.Int32)">
+            <summary>
+            Adds a new empty attribute buffer to be included in the built VAO.
+            </summary>
+            <typeparam name="T">The type of data to be stored in the buffer.</typeparam>
+            <param name="bufferUsage">The usage type for the buffer.</param>
+            <param name="size">The size of the buffer, in instances of <see typeparamref="T"/>.</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder.WithIndex(System.UInt32[])">
+            <summary>
+            Sets the index buffer to be included in the built VAO.
+            </summary>
+            <param name="data">The data with which to populate the buffer.</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder.WithIndex(System.Int32)">
+            <summary>
+            Sets the index buffer to be included in the built VAO.
+            </summary>
+            <param name="capacity">The size of the index buffer.</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="T:MyOTKE.Core.VertexArrayObjectBuilder`1">
+            <summary>
+            Builder class for <see cref="T:MyOTKE.Core.GlVertexArrayObject`1"/> objects that presents a fluent-ish interface.
+            </summary>
+            <typeparam name="T1">The type of data to be stored in the 1st buffer.</typeparam>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder`1.#ctor(OpenTK.Graphics.OpenGL.PrimitiveType,System.ValueTuple{System.Int32,System.UInt32[]},System.ValueTuple{OpenTK.Graphics.OpenGL.BufferUsageHint,System.Int32,`0[]})">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Core.VertexArrayObjectBuilder`1"/> class.
+            </summary>
+            <param name="primitiveType">The type of primitive data to be stored in the built VAO.</param>
+            <param name="indexSpec">Specification for the index buffer.</param>
+            <param name="bufferSpec1">Specification for the 1st buffer.</param>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder`1.WithAttributeBuffer``1(OpenTK.Graphics.OpenGL.BufferUsageHint,``0[])">
+            <summary>
+            Adds a new populated attribute buffer to be included in the built VAO.
+            </summary>
+            <typeparam name="T">The type of data to be stored in the buffer.</typeparam>
+            <param name="bufferUsage">The usage type for the buffer.</param>
+            <param name="data">The data with which to populate the buffer.</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder`1.WithAttributeBuffer``1(OpenTK.Graphics.OpenGL.BufferUsageHint,System.Int32)">
+            <summary>
+            Adds a new empty attribute buffer to be included in the built VAO.
+            </summary>
+            <typeparam name="T">The type of data to be stored in the buffer.</typeparam>
+            <param name="bufferUsage">The usage type for the buffer.</param>
+            <param name="size">The size of the buffer, in instances of <see typeparamref="T"/>.</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder`1.WithIndex(System.UInt32[])">
+            <summary>
+            Sets the index buffer to be included in the built VAO.
+            </summary>
+            <param name="data">The data with which to populate the buffer.</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder`1.WithIndex(System.Int32)">
+            <summary>
+            Sets the index buffer to be included in the built VAO.
+            </summary>
+            <param name="capacity">The size of the index buffer.</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder`1.Synchronized">
+            <summary>
+            Specifies that the built VAO should be explicitly synchronized, with any pending changes flushed on each draw call.
+            <para/>
+            Specifically, means that the created VAO will be a <see cref="T:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`1"/> instance.
+            </summary>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder`1.Build">
+            <summary>
+            Builds a new <see cref="T:MyOTKE.Core.IVertexArrayObject`1"/> instance based on the state of the builder.
+            </summary>
+            <returns>The built VAO.</returns>
+        </member>
+        <member name="T:MyOTKE.Core.VertexArrayObjectBuilder`2">
+            <summary>
+            Builder class for <see cref="T:MyOTKE.Core.GlVertexArrayObject`2"/> objects that presents a fluent-ish interface.
+            </summary>
+            <typeparam name="T1">The type of data to be stored in the 1st buffer.</typeparam>
+            <typeparam name="T2">The type of data to be stored in the 2nd buffer.</typeparam>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder`2.#ctor(OpenTK.Graphics.OpenGL.PrimitiveType,System.ValueTuple{System.Int32,System.UInt32[]},System.ValueTuple{OpenTK.Graphics.OpenGL.BufferUsageHint,System.Int32,`0[]},System.ValueTuple{OpenTK.Graphics.OpenGL.BufferUsageHint,System.Int32,`1[]})">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Core.VertexArrayObjectBuilder`2"/> class.
+            </summary>
+            <param name="primitiveType">The type of primitive data to be stored in the built VAO.</param>
+            <param name="indexSpec">Specification for the index buffer.</param>
+            <param name="bufferSpec1">Specification for the 1st buffer.</param>
+            <param name="bufferSpec2">Specification for the 2nd buffer.</param>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder`2.WithAttributeBuffer``1(OpenTK.Graphics.OpenGL.BufferUsageHint,``0[])">
+            <summary>
+            Adds a new populated attribute buffer to be included in the built VAO.
+            </summary>
+            <typeparam name="T">The type of data to be stored in the buffer.</typeparam>
+            <param name="bufferUsage">The usage type for the buffer.</param>
+            <param name="data">The data with which to populate the buffer.</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder`2.WithAttributeBuffer``1(OpenTK.Graphics.OpenGL.BufferUsageHint,System.Int32)">
+            <summary>
+            Adds a new empty attribute buffer to be included in the built VAO.
+            </summary>
+            <typeparam name="T">The type of data to be stored in the buffer.</typeparam>
+            <param name="bufferUsage">The usage type for the buffer.</param>
+            <param name="size">The size of the buffer, in instances of <see typeparamref="T"/>.</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder`2.WithIndex(System.UInt32[])">
+            <summary>
+            Sets the index buffer to be included in the built VAO.
+            </summary>
+            <param name="data">The data with which to populate the buffer.</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder`2.WithIndex(System.Int32)">
+            <summary>
+            Sets the index buffer to be included in the built VAO.
+            </summary>
+            <param name="capacity">The size of the index buffer.</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder`2.Synchronized">
+            <summary>
+            Specifies that the built VAO should be explicitly synchronized, with any pending changes flushed on each draw call.
+            <para/>
+            Specifically, means that the created VAO will be a <see cref="T:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`2"/> instance.
+            </summary>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder`2.Build">
+            <summary>
+            Builds a new <see cref="T:MyOTKE.Core.IVertexArrayObject`2"/> instance based on the state of the builder.
+            </summary>
+            <returns>The built VAO.</returns>
+        </member>
+        <member name="T:MyOTKE.Core.VertexArrayObjectBuilder`3">
+            <summary>
+            Builder class for <see cref="T:MyOTKE.Core.GlVertexArrayObject`3"/> objects that presents a fluent-ish interface.
+            </summary>
+            <typeparam name="T1">The type of data to be stored in the 1st buffer.</typeparam>
+            <typeparam name="T2">The type of data to be stored in the 2nd buffer.</typeparam>
+            <typeparam name="T3">The type of data to be stored in the 3rd buffer.</typeparam>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder`3.#ctor(OpenTK.Graphics.OpenGL.PrimitiveType,System.ValueTuple{System.Int32,System.UInt32[]},System.ValueTuple{OpenTK.Graphics.OpenGL.BufferUsageHint,System.Int32,`0[]},System.ValueTuple{OpenTK.Graphics.OpenGL.BufferUsageHint,System.Int32,`1[]},System.ValueTuple{OpenTK.Graphics.OpenGL.BufferUsageHint,System.Int32,`2[]})">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Core.VertexArrayObjectBuilder`3"/> class.
+            </summary>
+            <param name="primitiveType">The type of primitive data to be stored in the built VAO.</param>
+            <param name="indexSpec">Specification for the index buffer.</param>
+            <param name="bufferSpec1">Specification for the 1st buffer.</param>
+            <param name="bufferSpec2">Specification for the 2nd buffer.</param>
+            <param name="bufferSpec3">Specification for the 3rd buffer.</param>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder`3.WithIndex(System.UInt32[])">
+            <summary>
+            Sets the index buffer to be included in the built VAO.
+            </summary>
+            <param name="data">The data with which to populate the buffer.</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder`3.WithIndex(System.Int32)">
+            <summary>
+            Sets the index buffer to be included in the built VAO.
+            </summary>
+            <param name="capacity">The size of the index buffer.</param>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder`3.Synchronized">
+            <summary>
+            Specifies that the built VAO should be explicitly synchronized, with any pending changes flushed on each draw call.
+            <para/>
+            Specifically, means that the created VAO will be a <see cref="T:MyOTKE.Core.VaoDecorators.SynchronizedVertexArrayObject`3"/> instance.
+            </summary>
+            <returns>The updated builder.</returns>
+        </member>
+        <member name="M:MyOTKE.Core.VertexArrayObjectBuilder`3.Build">
+            <summary>
+            Builds a new <see cref="T:MyOTKE.Core.IVertexArrayObject`3"/> instance based on the state of the builder.
+            </summary>
+            <returns>The built VAO.</returns>
+        </member>
+        <member name="T:MyOTKE.Core.SynchronizedVertexArrayObjectBuilder`1">
+            <summary>
+            Builder class for <see cref="T:MyOTKE.Core.GlVertexArrayObject`1"/> objects that presents a fluent-ish interface.
+            </summary>
+            <typeparam name="T1">The type of data to be stored in the 1st buffer.</typeparam>
+            <remarks>
+            Useful for setting up a VAO before the OpenGL context has initialized.
+            </remarks>
+        </member>
+        <member name="M:MyOTKE.Core.SynchronizedVertexArrayObjectBuilder`1.#ctor(MyOTKE.Core.VertexArrayObjectBuilder{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Core.SynchronizedVertexArrayObjectBuilder`1"/> class.
+            </summary>
+            <param name="innerBuilder">The builder wrapped by this builder.</param>
+        </member>
+        <member name="M:MyOTKE.Core.SynchronizedVertexArrayObjectBuilder`1.Build">
+            <summary>
+            Builds a new <see cref="T:MyOTKE.Core.IVertexArrayObject`1"/> instance based on the state of the builder.
+            </summary>
+            <returns>The built VAO.</returns>
+        </member>
+        <member name="T:MyOTKE.Core.SynchronizedVertexArrayObjectBuilder`2">
+            <summary>
+            Builder class for <see cref="T:MyOTKE.Core.GlVertexArrayObject`2"/> objects that presents a fluent-ish interface.
+            </summary>
+            <typeparam name="T1">The type of data to be stored in the 1st buffer.</typeparam>
+            <typeparam name="T2">The type of data to be stored in the 2nd buffer.</typeparam>
+            <remarks>
+            Useful for setting up a VAO before the OpenGL context has initialized.
+            </remarks>
+        </member>
+        <member name="M:MyOTKE.Core.SynchronizedVertexArrayObjectBuilder`2.#ctor(MyOTKE.Core.VertexArrayObjectBuilder{`0,`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Core.SynchronizedVertexArrayObjectBuilder`2"/> class.
+            </summary>
+            <param name="innerBuilder">The builder wrapped by this builder.</param>
+        </member>
+        <member name="M:MyOTKE.Core.SynchronizedVertexArrayObjectBuilder`2.Build">
+            <summary>
+            Builds a new <see cref="T:MyOTKE.Core.IVertexArrayObject`2"/> instance based on the state of the builder.
+            </summary>
+            <returns>The built VAO.</returns>
+        </member>
+        <member name="T:MyOTKE.Core.SynchronizedVertexArrayObjectBuilder`3">
+            <summary>
+            Builder class for <see cref="T:MyOTKE.Core.GlVertexArrayObject`3"/> objects that presents a fluent-ish interface.
+            </summary>
+            <typeparam name="T1">The type of data to be stored in the 1st buffer.</typeparam>
+            <typeparam name="T2">The type of data to be stored in the 2nd buffer.</typeparam>
+            <typeparam name="T3">The type of data to be stored in the 3rd buffer.</typeparam>
+            <remarks>
+            Useful for setting up a VAO before the OpenGL context has initialized.
+            </remarks>
+        </member>
+        <member name="M:MyOTKE.Core.SynchronizedVertexArrayObjectBuilder`3.#ctor(MyOTKE.Core.VertexArrayObjectBuilder{`0,`1,`2})">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Core.SynchronizedVertexArrayObjectBuilder`3"/> class.
+            </summary>
+            <param name="innerBuilder">The builder wrapped by this builder.</param>
+        </member>
+        <member name="M:MyOTKE.Core.SynchronizedVertexArrayObjectBuilder`3.Build">
+            <summary>
+            Builds a new <see cref="T:MyOTKE.Core.IVertexArrayObject`3"/> instance based on the state of the builder.
+            </summary>
+            <returns>The built VAO.</returns>
+        </member>
+    </members>
+</doc>

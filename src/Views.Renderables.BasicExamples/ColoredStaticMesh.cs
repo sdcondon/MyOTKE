@@ -1,11 +1,11 @@
 ﻿using OpenTK.Graphics.OpenGL;
-using OTKOW.Core;
+using MyOTKE.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
-namespace OTKOW.Views.Renderables.BasicExamples
+namespace MyOTKE.Views.Renderables.BasicExamples
 {
     /// <summary>
     /// Simple renderable class for static 3D geometry.

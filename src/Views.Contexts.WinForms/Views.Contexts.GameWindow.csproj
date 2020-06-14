@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <AssemblyName>OTKOW.Views.Contexts.WinForms</AssemblyName>
-    <RootNamespace>OTKOW.Views.Contexts.WinForms</RootNamespace>
+    <AssemblyName>MyOTKE.Views.Contexts.WinForms</AssemblyName>
+    <RootNamespace>MyOTKE.Views.Contexts.WinForms</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -13,11 +13,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>GLHDN.Views.Contexts.WinForms.xml</DocumentationFile>
+    <DocumentationFile>MyOTKE.Views.Contexts.WinForms.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="GLHDN.Views.Contexts.WinForms.xml" />
+    <None Remove="MyOTKE.Views.Contexts.WinForms.xml" />
   </ItemGroup>
 
   <ItemGroup>

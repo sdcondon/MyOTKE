@@ -2,7 +2,7 @@
 using System;
 using System.Numerics;
 
-namespace OTKOW.Views
+namespace MyOTKE.Views
 {
     /// <summary>
     /// An <see cref="ICamera"/> implementation that uses an "FPS"-style control scheme.

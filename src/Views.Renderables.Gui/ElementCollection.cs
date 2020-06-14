@@ -1,4 +1,4 @@
-﻿using OTKOW.ReactiveBuffers;
+﻿using MyOTKE.ReactiveBuffers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
-namespace OTKOW.Views.Renderables.Gui
+namespace MyOTKE.Views.Renderables.Gui
 {
     public class ElementCollection : ICollection<ElementBase>
     {

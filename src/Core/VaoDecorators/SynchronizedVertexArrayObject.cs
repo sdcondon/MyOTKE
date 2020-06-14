@@ -2,7 +2,7 @@
 using OpenTK.Graphics.OpenGL;
 using System;
 
-namespace OTKOW.Core.VaoDecorators
+namespace MyOTKE.Core.VaoDecorators
 {
     /// <summary>
     /// Decorator for <see cref="IVertexArrayObject{T1}"/> that explicitly synchronizes with OpenGL (making it simple but slow..).

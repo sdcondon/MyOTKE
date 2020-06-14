@@ -1,6 +1,6 @@
 ﻿using OpenTK.Graphics.OpenGL;
-using OTKOW.Core;
-using OTKOW.ReactiveBuffers;
+using MyOTKE.Core;
+using MyOTKE.ReactiveBuffers;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -8,7 +8,7 @@ using System.ComponentModel;
 using System.Numerics;
 using System.Reactive.Linq;
 
-namespace OTKOW.Views.Renderables.BasicExamples
+namespace MyOTKE.Views.Renderables.BasicExamples
 {
     /// <summary>
     /// Renderable class for 3D lines. For debug utilities.

@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Numerics;
 
-namespace OTKOW.Views.Renderables.Gui
+namespace MyOTKE.Views.Renderables.Gui
 {
     /// <summary>
     /// Interface for types that contain GUI elements. This includes parent elements and the root GUI object.

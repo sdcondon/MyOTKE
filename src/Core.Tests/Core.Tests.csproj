@@ -3,9 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <IsPackable>false</IsPackable>
-    <AssemblyName>OTKOW.Core.Tests</AssemblyName>
-    <RootNamespace>OTKOW.Core</RootNamespace>
-    <PackageId>GLHDN.Core.UnitTests</PackageId>
+    <AssemblyName>MyOTKE.Core.Tests</AssemblyName>
+    <RootNamespace>MyOTKE.Core</RootNamespace>
+    <PackageId>MyOTKE.Core.UnitTests</PackageId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 
-namespace OTKOW.Core
+namespace MyOTKE.Core
 {
     /// <summary>
     /// Represents a compiled OpenGL program.

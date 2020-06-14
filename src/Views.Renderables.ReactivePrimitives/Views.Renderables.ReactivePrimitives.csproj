@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-    <AssemblyName>OTKOW.Views.Renderables.ReactivePrimitives</AssemblyName>
-    <RootNamespace>OTKOW.Views.Renderables.ReactivePrimitives</RootNamespace>
+    <AssemblyName>MyOTKE.Views.Renderables.ReactivePrimitives</AssemblyName>
+    <RootNamespace>MyOTKE.Views.Renderables.ReactivePrimitives</RootNamespace>
     
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>Open GL Helpers for .NET / view engine: Renderable for ReactiveX-managed primitives</Description>

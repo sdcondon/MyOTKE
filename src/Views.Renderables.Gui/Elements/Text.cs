@@ -4,7 +4,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 
-namespace OTKOW.Views.Renderables.Gui
+namespace MyOTKE.Views.Renderables.Gui
 {
     public class Text : ElementBase
     {

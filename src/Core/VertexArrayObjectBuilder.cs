@@ -1,11 +1,11 @@
 ﻿#pragma warning disable SA1402
 using OpenTK.Graphics.OpenGL;
-using OTKOW.Core.VaoDecorators;
+using MyOTKE.Core.VaoDecorators;
 
-namespace OTKOW.Core
+namespace MyOTKE.Core
 {
     /// <summary>
-    /// Builder class for GlVertexArrayObject objects that presents a fluent-ish interface.
+    /// Builder class for <see cref="GlVertexArrayObject"/> objects that presents a fluent-ish interface.
     /// </summary>
     public sealed class VertexArrayObjectBuilder
     {

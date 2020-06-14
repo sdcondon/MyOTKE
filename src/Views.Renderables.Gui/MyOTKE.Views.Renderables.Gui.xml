@@ -1,0 +1,253 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MyOTKE.Views.Renderables.Gui</name>
+    </assembly>
+    <members>
+        <member name="T:MyOTKE.Views.Renderables.Gui.ContainerElementBase">
+            <summary>
+            Base class for GUI elements that can contain other elements.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.ContainerElementBase.SubElements">
+            <inheritdoc /> from IElementParent
+        </member>
+        <member name="E:MyOTKE.Views.Renderables.Gui.ContainerElementBase.Clicked">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Views.Renderables.Gui.ContainerElementBase.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Views.Renderables.Gui.ContainerElementBase.OnClicked(System.Numerics.Vector2)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyOTKE.Views.Renderables.Gui.ElementBase">
+            <summary>
+            Base class for GUI elements. Provides for a nested element hierarchy, with elements being placed relative to their parents.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Views.Renderables.Gui.ElementBase.#ctor(MyOTKE.Views.Renderables.Gui.Layout)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Views.Renderables.Gui.ElementBase"/> class.
+            </summary>
+            <param name="layout"></param>
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.ElementBase.Parent">
+            <summary>
+            Gets the parent of this element.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.ElementBase.Layout">
+            <summary>
+            Gets or sets the object that controls the positioning and size of this element.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.ElementBase.Center">
+            <summary>
+            Gets the position of the center of the element, in screen space.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.ElementBase.Size">
+            <summary>
+            Gets the size of the element, in screen space.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.ElementBase.PosBL">
+            <summary>
+            Gets the position of the bottom-left corner of the element, in screen space.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.ElementBase.PosBR">
+            <summary>
+            Gets the position of the bottom-right corner of the element, in screen space.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.ElementBase.PosTL">
+            <summary>
+            Gets the position of the top-left corner of the element, in screen space.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.ElementBase.PosTR">
+            <summary>
+            Gets the position of the top-right corner of the element, in screen space.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.ElementBase.Vertices">
+            <summary>
+            Gets the list of vertices to be rendered for this GUI element (not including any children).
+            </summary>
+        </member>
+        <member name="E:MyOTKE.Views.Renderables.Gui.ElementBase.PropertyChanged">
+            <inheritdoc /> from INotifyPropertyChanged
+        </member>
+        <member name="M:MyOTKE.Views.Renderables.Gui.ElementBase.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.ElementCollection.Count">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.ElementCollection.IsReadOnly">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Views.Renderables.Gui.ElementCollection.Add(MyOTKE.Views.Renderables.Gui.ElementBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Views.Renderables.Gui.ElementCollection.Remove(MyOTKE.Views.Renderables.Gui.ElementBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Views.Renderables.Gui.ElementCollection.Clear">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Views.Renderables.Gui.ElementCollection.Contains(MyOTKE.Views.Renderables.Gui.ElementBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Views.Renderables.Gui.ElementCollection.CopyTo(MyOTKE.Views.Renderables.Gui.ElementBase[],System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Views.Renderables.Gui.ElementCollection.GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Views.Renderables.Gui.ElementCollection.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc />)
+        </member>
+        <member name="T:MyOTKE.Views.Renderables.Gui.Panel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.Panel.Color">
+            <summary>
+            Gets or sets the background color of the element.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.Panel.Vertices">
+            <inheritdoc />
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.Text.Color">
+            <summary>
+            Gets or sets the text color.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.Text.Content">
+            <summary>
+            Gets or sets the text.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.Text.HorizontalAlignment">
+            <summary>
+            Gets or sets the horizontal aligment of the text within the element.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.Text.VerticalAlignment">
+            <summary>
+            Gets or sets the vertical aligment of the text within the element.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.Text.Vertices">
+            <inheritdoc />
+        </member>
+        <member name="T:MyOTKE.Views.Renderables.Gui.Font">
+            <summary>
+            https://www.freetype.org/freetype2/docs/tutorial/step1.html and
+            https://learnopengl.com/In-Practice/Text-Rendering
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Views.Renderables.Gui.Font.#ctor(System.String,System.UInt32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Views.Renderables.Gui.Font"/> class.
+            </summary>
+            <param name="filePath"></param>
+            <param name="pixelSize"></param>
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.Font.TextureId">
+            <summary>
+            Gets the Id of the (2D array) texture that holds the glyphs for this font.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Views.Renderables.Gui.Font.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:MyOTKE.Views.Renderables.Gui.Gui">
+            <summary>
+            Renderable container for a set of graphical user interface elements.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Views.Renderables.Gui.Gui.#ctor(MyOTKE.Views.View,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Views.Renderables.Gui.Gui"/> class, 
+            </summary>
+            <param name="view">The view from which to derive size and input.</param>
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.Gui.SubElements">
+            <inheritdoc /> from IElementParent
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.Gui.Center">
+            <inheritdoc /> from IElementParent
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.Gui.Size">
+            <inheritdoc /> from IElementParent
+        </member>
+        <member name="E:MyOTKE.Views.Renderables.Gui.Gui.PropertyChanged">
+            <inheritdoc />
+        </member>
+        <member name="E:MyOTKE.Views.Renderables.Gui.Gui.Clicked">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Views.Renderables.Gui.Gui.Load">
+            <inheritdoc /> from IRenderable
+        </member>
+        <member name="M:MyOTKE.Views.Renderables.Gui.Gui.Update(System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyOTKE.Views.Renderables.Gui.Gui.Render">
+            <inheritdoc /> from IRenderable
+        </member>
+        <member name="T:MyOTKE.Views.Renderables.Gui.IElementParent">
+            <summary>
+            Interface for types that contain GUI elements. This includes parent elements and the root GUI object.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.IElementParent.SubElements">
+            <summary>
+            Gets the elements that this object contains.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.IElementParent.Center">
+            <summary>
+            Gets the position of the center of this object, in screen space.
+            </summary>
+        </member>
+        <member name="P:MyOTKE.Views.Renderables.Gui.IElementParent.Size">
+            <summary>
+            Gets the size of this object, in screen space (i.e. pixels).
+            </summary>
+        </member>
+        <member name="T:MyOTKE.Views.Renderables.Gui.Layout">
+            <summary>
+            Container for positioning data for an elemennt.
+            </summary>
+        </member>
+        <member name="M:MyOTKE.Views.Renderables.Gui.Layout.#ctor(MyOTKE.Views.Renderables.Gui.Layout.Dimensions,MyOTKE.Views.Renderables.Gui.Layout.Dimensions,MyOTKE.Views.Renderables.Gui.Layout.Dimensions,System.Numerics.Vector2)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Views.Renderables.Gui.Layout"/> class.
+            </summary>
+            <param name="parentOrigin">the position in parent-space of the local origin.</param>
+            <param name="localOrigin">the position relative to the center of the element that will be placed at the parent origin.</param>
+            <param name="relativeSize">the size of the element in relation to its parent.</param>
+            <param name="offset"></param>
+        </member>
+        <member name="M:MyOTKE.Views.Renderables.Gui.Layout.#ctor(MyOTKE.Views.Renderables.Gui.Layout.Dimensions,MyOTKE.Views.Renderables.Gui.Layout.Dimensions,MyOTKE.Views.Renderables.Gui.Layout.Dimensions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyOTKE.Views.Renderables.Gui.Layout"/> class.
+            </summary>
+            <param name="parentOrigin">the position in parent-space of the local origin.</param>
+            <param name="localOrigin">the position relative to the center of the element that will be placed at the parent origin.</param>
+            <param name="relativeSize">the size of the element in relation to its parent.</param>
+        </member>
+        <member name="T:MyOTKE.Views.Renderables.Gui.Vertex">
+            <summary>
+            Container for information about a GUI element vertex
+            </summary>
+        </member>
+    </members>
+</doc>

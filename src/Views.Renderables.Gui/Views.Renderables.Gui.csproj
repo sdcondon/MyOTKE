@@ -2,20 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-    <AssemblyName>OTKOW.Views.Renderables.Gui</AssemblyName>
-    <RootNamespace>OTKOW.Views.Renderables.Gui</RootNamespace>
+    <AssemblyName>MyOTKE.Views.Renderables.Gui</AssemblyName>
+    <RootNamespace>MyOTKE.Views.Renderables.Gui</RootNamespace>
     
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>Open GL Helpers for .NET / view engine: GUI renderable implementation.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>GLHDN.Views.Renderables.Gui.xml</DocumentationFile>
+    <DocumentationFile>MyOTKE.Views.Renderables.Gui.xml</DocumentationFile>
     <WarningLevel>0</WarningLevel>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="GLHDN.Views.Renderables.Gui.xml" />
+    <None Remove="MyOTKE.Views.Renderables.Gui.xml" />
     <None Remove="Gui.Fragment.glsl" />
     <None Remove="Gui.Vertex.glsl" />
   </ItemGroup>

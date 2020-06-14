@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace OTKOW.Views
+namespace MyOTKE.Views
 {
     /// <summary>
     /// Extension methods for <see cref="IViewContext"/> instances.

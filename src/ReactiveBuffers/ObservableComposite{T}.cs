@@ -5,7 +5,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
-namespace OTKOW.ReactiveBuffers
+namespace MyOTKE.ReactiveBuffers
 {
     /// <summary>
     /// Imperatively managed composite of observable sequences of leaf data that can be flattened to an observable of observables.

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
-namespace OTKOW.Core
+namespace MyOTKE.Core
 {
     /// <summary>
     /// Builder class for <see cref="GlProgram"/> objects that presents a fluent-ish interface.

@@ -8,7 +8,7 @@
 using OpenTK.Graphics.OpenGL;
 using System;
 
-namespace OTKOW.Core.VaoDecorators
+namespace MyOTKE.Core.VaoDecorators
 {
 <# for(int i = 1; i <= MaxBufferCount; i++) { #>
 <# WriteLineIf(i > 1, ""); #>

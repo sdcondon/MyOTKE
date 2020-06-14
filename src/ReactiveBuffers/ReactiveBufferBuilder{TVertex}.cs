@@ -1,10 +1,10 @@
 ﻿using OpenTK.Graphics.OpenGL;
-using OTKOW.Core;
+using MyOTKE.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OTKOW.ReactiveBuffers
+namespace MyOTKE.ReactiveBuffers
 {
     /// <summary>
     /// Builder for <see cref="ReactiveBuffer{TVertex}"/> instances.

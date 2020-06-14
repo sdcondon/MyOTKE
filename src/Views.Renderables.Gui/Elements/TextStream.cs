@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace OTKOW.Views.Renderables.Gui
+namespace MyOTKE.Views.Renderables.Gui
 {
     public sealed class TextStream : ContainerElementBase
     {

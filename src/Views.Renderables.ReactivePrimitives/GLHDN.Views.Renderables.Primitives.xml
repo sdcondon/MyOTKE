@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>OTKOW.Views.Renderables.ReactivePrimitives</name>
+        <name>MyOTKE.Views.Renderables.ReactivePrimitives</name>
     </assembly>
     <members>
-        <member name="T:OTKOW.Views.Renderables.ReactivePrimitives.Primitive">
+        <member name="T:MyOTKE.Views.Renderables.ReactivePrimitives.Primitive">
             <summary>
             Container for primitive vertex data.
             </summary>
@@ -12,23 +12,23 @@
             TODO: Perhaps should be an immutable struct instead to discourage heap allocations..
             </remarks>
         </member>
-        <member name="P:OTKOW.Views.Renderables.ReactivePrimitives.Primitive.Vertices">
+        <member name="P:MyOTKE.Views.Renderables.ReactivePrimitives.Primitive.Vertices">
             <summary>
             Gets the list of vertices that comprise the primitive.
             </summary>
         </member>
-        <member name="P:OTKOW.Views.Renderables.ReactivePrimitives.Primitive.IsTrianglePrimitive">
+        <member name="P:MyOTKE.Views.Renderables.ReactivePrimitives.Primitive.IsTrianglePrimitive">
             <summary>
             Gets a value indicating whether the primitive is comprised of triangles (as opposed to lines).
             </summary>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.Primitive.Empty">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.Primitive.Empty">
             <summary>
             Creates an empty primitive.
             </summary>
             <returns>The created primitive.</returns>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.Primitive.Cuboid(System.Numerics.Vector3,System.Numerics.Matrix4x4,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.Primitive.Cuboid(System.Numerics.Vector3,System.Numerics.Matrix4x4,MyOTKE.Views.Color)">
             <summary>
             Creates a cuboid primitive.
             </summary>
@@ -37,7 +37,7 @@
             <param name="color">The color of the cuboid.</param>
             <returns>The created primitive.</returns>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.Primitive.Quad(System.Numerics.Vector2,System.Numerics.Matrix4x4,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.Primitive.Quad(System.Numerics.Vector2,System.Numerics.Matrix4x4,MyOTKE.Views.Color)">
             <summary>
             Creates a quad primitive.
             </summary>
@@ -46,7 +46,7 @@
             <param name="color">The color of the quad.</param>
             <returns>The created primitive.</returns>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.Primitive.Line(System.Numerics.Vector3,System.Numerics.Vector3,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.Primitive.Line(System.Numerics.Vector3,System.Numerics.Vector3,MyOTKE.Views.Color)">
             <summary>
             Creates a line primitive of constant color.
             </summary>
@@ -55,7 +55,7 @@
             <param name="color">The color of the line.</param>
             <returns>The created primitive.</returns>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.Primitive.Line(System.Numerics.Vector3,System.Numerics.Vector3,OTKOW.Views.Color,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.Primitive.Line(System.Numerics.Vector3,System.Numerics.Vector3,MyOTKE.Views.Color,MyOTKE.Views.Color)">
             <summary>
             Creates a line primitive of graduated color.
             </summary>
@@ -65,7 +65,7 @@
             <param name="colorTo">The color of the other end of the line.</param>
             <returns>The created primitive.</returns>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.Primitive.LineCircle(System.Single,System.Numerics.Matrix4x4,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.Primitive.LineCircle(System.Single,System.Numerics.Matrix4x4,MyOTKE.Views.Color)">
             <summary>
             Creates a line circle primitive.
             </summary>
@@ -74,7 +74,7 @@
             <param name="color">The color of the circle.</param>
             <returns>The created primitive.</returns>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.Primitive.LineEllipse(System.Single,System.Single,System.Numerics.Matrix4x4,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.Primitive.LineEllipse(System.Single,System.Single,System.Numerics.Matrix4x4,MyOTKE.Views.Color)">
             <summary>
             Creates a line ellipse primitive.
             </summary>
@@ -84,7 +84,7 @@
             <param name="color">The color of the ellipse.</param>
             <returns>The created primitive.</returns>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.Primitive.LineSquare(System.Single,System.Numerics.Matrix4x4,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.Primitive.LineSquare(System.Single,System.Numerics.Matrix4x4,MyOTKE.Views.Color)">
             <summary>
             Creates a line square primitive.
             </summary>
@@ -93,7 +93,7 @@
             <param name="color">The color of the square.</param>
             <returns>The created primitive.</returns>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.Primitive.LinePolygon(System.Numerics.Vector2[],System.Numerics.Matrix4x4,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.Primitive.LinePolygon(System.Numerics.Vector2[],System.Numerics.Matrix4x4,MyOTKE.Views.Color)">
             <summary>
             Creates a line polygon primitive.
             </summary>
@@ -102,7 +102,7 @@
             <param name="color">The color of the polygon.</param>
             <returns>The created primitive.</returns>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.Primitive.SetCuboid(System.Numerics.Vector3,System.Numerics.Matrix4x4,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.Primitive.SetCuboid(System.Numerics.Vector3,System.Numerics.Matrix4x4,MyOTKE.Views.Color)">
             <summary>
             Sets primitive as a cuboid.
             </summary>
@@ -110,7 +110,7 @@
             <param name="worldTransform">The world transform of the cuboid.</param>
             <param name="color">The color of the cuboid.</param>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.Primitive.SetQuad(System.Numerics.Vector2,System.Numerics.Matrix4x4,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.Primitive.SetQuad(System.Numerics.Vector2,System.Numerics.Matrix4x4,MyOTKE.Views.Color)">
             <summary>
             Sets primitive as a quad.
             </summary>
@@ -118,7 +118,7 @@
             <param name="worldTransform">The world transform of the quad.</param>
             <param name="color">The color of the quad.</param>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.Primitive.SetLine(System.Numerics.Vector3,System.Numerics.Vector3,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.Primitive.SetLine(System.Numerics.Vector3,System.Numerics.Vector3,MyOTKE.Views.Color)">
             <summary>
             Sets primitive as a line of constant color.
             </summary>
@@ -126,7 +126,7 @@
             <param name="to">The position of the other end of the line.</param>
             <param name="color">The color of the line.</param>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.Primitive.SetLine(System.Numerics.Vector3,System.Numerics.Vector3,OTKOW.Views.Color,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.Primitive.SetLine(System.Numerics.Vector3,System.Numerics.Vector3,MyOTKE.Views.Color,MyOTKE.Views.Color)">
             <summary>
             Sets primitive as a line of graduated color.
             </summary>
@@ -135,7 +135,7 @@
             <param name="colorFrom">The color of one end of the line.</param>
             <param name="colorTo">The color of the other end of the line.</param>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.Primitive.SetLineCircle(System.Single,System.Numerics.Matrix4x4,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.Primitive.SetLineCircle(System.Single,System.Numerics.Matrix4x4,MyOTKE.Views.Color)">
             <summary>
             Sets primitive as a line circle.
             </summary>
@@ -143,7 +143,7 @@
             <param name="worldTransform">The world transform of the circle.</param>
             <param name="color">The color of the circle.</param>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.Primitive.SetLineEllipse(System.Single,System.Single,System.Numerics.Matrix4x4,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.Primitive.SetLineEllipse(System.Single,System.Single,System.Numerics.Matrix4x4,MyOTKE.Views.Color)">
             <summary>
             Sets primitive as a line ellipse.
             </summary>
@@ -152,7 +152,7 @@
             <param name="worldTransform">The world transform of the ellipse.</param>
             <param name="color">The color of the ellipse.</param>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.Primitive.SetLineSquare(System.Single,System.Numerics.Matrix4x4,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.Primitive.SetLineSquare(System.Single,System.Numerics.Matrix4x4,MyOTKE.Views.Color)">
             <summary>
             Sets primitive as line square.
             </summary>
@@ -160,7 +160,7 @@
             <param name="worldTransform">The world transform of the square.</param>
             <param name="color">The color of the square.</param>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.Primitive.SetLinePolygon(System.Numerics.Vector2[],System.Numerics.Matrix4x4,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.Primitive.SetLinePolygon(System.Numerics.Vector2[],System.Numerics.Matrix4x4,MyOTKE.Views.Color)">
             <summary>
             Sets primitive as a line polygon.
             </summary>
@@ -168,12 +168,12 @@
             <param name="worldTransform">The world transform of the polygon.</param>
             <param name="color">The color of the polygon.</param>
         </member>
-        <member name="T:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveCollectionExtensions">
+        <member name="T:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveCollectionExtensions">
             <summary>
-            Extension methods for the <see cref="T:OTKOW.Views.Renderables.ReactivePrimitives.Primitive"/> class.
+            Extension methods for the <see cref="T:MyOTKE.Views.Renderables.ReactivePrimitives.Primitive"/> class.
             </summary>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveCollectionExtensions.AddCuboid(System.Collections.Generic.ICollection{OTKOW.Views.Renderables.ReactivePrimitives.Primitive},System.Numerics.Vector3,System.Numerics.Matrix4x4,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveCollectionExtensions.AddCuboid(System.Collections.Generic.ICollection{MyOTKE.Views.Renderables.ReactivePrimitives.Primitive},System.Numerics.Vector3,System.Numerics.Matrix4x4,MyOTKE.Views.Color)">
             <summary>
             Adds a cuboid to a collection of primitives.
             </summary>
@@ -182,7 +182,7 @@
             <param name="worldTransform">The world transform of the cuboid.</param>
             <param name="color">The color of the cuboid.</param>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveCollectionExtensions.AddQuad(System.Collections.Generic.ICollection{OTKOW.Views.Renderables.ReactivePrimitives.Primitive},System.Numerics.Vector2,System.Numerics.Matrix4x4,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveCollectionExtensions.AddQuad(System.Collections.Generic.ICollection{MyOTKE.Views.Renderables.ReactivePrimitives.Primitive},System.Numerics.Vector2,System.Numerics.Matrix4x4,MyOTKE.Views.Color)">
             <summary>
             Adds a quad to a collection of primitives.
             </summary>
@@ -191,7 +191,7 @@
             <param name="worldTransform">The world transform of the quad.</param>
             <param name="color">The color of the quad.</param>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveCollectionExtensions.AddLine(System.Collections.Generic.ICollection{OTKOW.Views.Renderables.ReactivePrimitives.Primitive},System.Numerics.Vector3,System.Numerics.Vector3,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveCollectionExtensions.AddLine(System.Collections.Generic.ICollection{MyOTKE.Views.Renderables.ReactivePrimitives.Primitive},System.Numerics.Vector3,System.Numerics.Vector3,MyOTKE.Views.Color)">
             <summary>
             Adds a line segment to a collection of primitives.
             </summary>
@@ -200,7 +200,7 @@
             <param name="to">The position of the other end of the line.</param>
             <param name="color">The color of the line.</param>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveCollectionExtensions.AddLine(System.Collections.Generic.ICollection{OTKOW.Views.Renderables.ReactivePrimitives.Primitive},System.Numerics.Vector3,System.Numerics.Vector3,OTKOW.Views.Color,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveCollectionExtensions.AddLine(System.Collections.Generic.ICollection{MyOTKE.Views.Renderables.ReactivePrimitives.Primitive},System.Numerics.Vector3,System.Numerics.Vector3,MyOTKE.Views.Color,MyOTKE.Views.Color)">
             <summary>
             Adds a line segment to a collection of primitives.
             </summary>
@@ -210,7 +210,7 @@
             <param name="colorFrom">The color of one end of the line.</param>
             <param name="colorTo">The color of the other end of the line.</param>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveCollectionExtensions.AddLineCircle(System.Collections.Generic.ICollection{OTKOW.Views.Renderables.ReactivePrimitives.Primitive},System.Single,System.Numerics.Matrix4x4,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveCollectionExtensions.AddLineCircle(System.Collections.Generic.ICollection{MyOTKE.Views.Renderables.ReactivePrimitives.Primitive},System.Single,System.Numerics.Matrix4x4,MyOTKE.Views.Color)">
             <summary>
             Adds a line circle to a collection of primitives.
             </summary>
@@ -219,7 +219,7 @@
             <param name="worldTransform">The world transform of the circle.</param>
             <param name="color">The color of the circle.</param>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveCollectionExtensions.AddLineEllipse(System.Collections.Generic.ICollection{OTKOW.Views.Renderables.ReactivePrimitives.Primitive},System.Single,System.Single,System.Numerics.Matrix4x4,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveCollectionExtensions.AddLineEllipse(System.Collections.Generic.ICollection{MyOTKE.Views.Renderables.ReactivePrimitives.Primitive},System.Single,System.Single,System.Numerics.Matrix4x4,MyOTKE.Views.Color)">
             <summary>
             Adds a line ellipse to a collection of primitives.
             </summary>
@@ -229,7 +229,7 @@
             <param name="worldTransform">The world transform of the ellipse.</param>
             <param name="color">The color of the ellipse.</param>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveCollectionExtensions.AddLineSquare(System.Collections.Generic.ICollection{OTKOW.Views.Renderables.ReactivePrimitives.Primitive},System.Single,System.Numerics.Matrix4x4,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveCollectionExtensions.AddLineSquare(System.Collections.Generic.ICollection{MyOTKE.Views.Renderables.ReactivePrimitives.Primitive},System.Single,System.Numerics.Matrix4x4,MyOTKE.Views.Color)">
             <summary>
             Adds a line square to a collection of primitives.
             </summary>
@@ -238,7 +238,7 @@
             <param name="worldTransform">The world transform of the square.</param>
             <param name="color">The color of the square.</param>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveCollectionExtensions.AddLinePolygon(System.Collections.Generic.ICollection{OTKOW.Views.Renderables.ReactivePrimitives.Primitive},System.Numerics.Vector2[],System.Numerics.Matrix4x4,OTKOW.Views.Color)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveCollectionExtensions.AddLinePolygon(System.Collections.Generic.ICollection{MyOTKE.Views.Renderables.ReactivePrimitives.Primitive},System.Numerics.Vector2[],System.Numerics.Matrix4x4,MyOTKE.Views.Color)">
             <summary>
             Adds a line polygon to a collection of primitives.
             </summary>
@@ -247,84 +247,84 @@
             <param name="worldTransform">The world transform of the polygon.</param>
             <param name="color">The color of the polygon.</param>
         </member>
-        <member name="T:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveRenderer">
+        <member name="T:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveRenderer">
             <summary>
-            Implementation of <see cref="T:OTKOW.Views.IRenderable" /> that renders a set of primitive shapes from an observable sequence of source data.
+            Implementation of <see cref="T:MyOTKE.Views.IRenderable" /> that renders a set of primitive shapes from an observable sequence of source data.
             </summary>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveRenderer.#ctor(OTKOW.Views.IViewProjection,System.IObservable{System.IObservable{System.Collections.Generic.IList{OTKOW.Views.Renderables.ReactivePrimitives.Primitive}}},System.Int32)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveRenderer.#ctor(MyOTKE.Views.IViewProjection,System.IObservable{System.IObservable{System.Collections.Generic.IList{MyOTKE.Views.Renderables.ReactivePrimitives.Primitive}}},System.Int32)">
             <summary>
-            Initializes a new instance of the <see cref="T:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveRenderer"/> class.
+            Initializes a new instance of the <see cref="T:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveRenderer"/> class.
             </summary>
             <param name="camera">Provider for view and projection matrices.</param>
             <param name="source">Source data. Outer sequence pushes different renderable entities, each of which pushes each time its state changes.</param>
             <param name="capacity">The maximum number of triangles and lines that can be rendered at once.</param>
         </member>
-        <member name="P:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveRenderer.AmbientLightColor">
+        <member name="P:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveRenderer.AmbientLightColor">
             <summary>
             Gets or sets the lighting applied as a minimum to every fragment.
             </summary>
         </member>
-        <member name="P:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveRenderer.DirectedLightDirection">
+        <member name="P:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveRenderer.DirectedLightDirection">
             <summary>
             Gets or sets the directed light direction. Fragments facing this direction are lit with the directed light color.
             </summary>
         </member>
-        <member name="P:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveRenderer.DirectedLightColor">
+        <member name="P:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveRenderer.DirectedLightColor">
             <summary>
             Gets or sets the directed light color, applied to fragments facing the directed light direction.
             </summary>
         </member>
-        <member name="P:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveRenderer.PointLightPosition">
+        <member name="P:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveRenderer.PointLightPosition">
             <summary>
             Gets or sets the point light position. Fragments facing this position are lit with the point light color.
             </summary>
         </member>
-        <member name="P:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveRenderer.PointLightColor">
+        <member name="P:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveRenderer.PointLightColor">
             <summary>
             Gets or sets the point light color, applied to fragments facing the point light position.
             </summary>
         </member>
-        <member name="P:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveRenderer.PointLightPower">
+        <member name="P:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveRenderer.PointLightPower">
             <summary>
             Gets or sets the point light power. Affects the intensity with which fragments are lit by the point light.
             </summary>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveRenderer.Load">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveRenderer.Load">
             <inheritdoc />
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveRenderer.Update(System.TimeSpan)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveRenderer.Update(System.TimeSpan)">
             <inheritdoc />
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveRenderer.Render">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveRenderer.Render">
             <inheritdoc />
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveRenderer.Dispose">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveRenderer.Dispose">
             <inheritdoc />
         </member>
-        <member name="T:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveVertex">
+        <member name="T:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveVertex">
             <summary>
             Container struct for the attributes of a vertex of a primitive.
             </summary>
         </member>
-        <member name="F:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveVertex.Position">
+        <member name="F:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveVertex.Position">
             <summary>
             Gets the position of the vertex.
             </summary>
         </member>
-        <member name="F:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveVertex.Color">
+        <member name="F:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveVertex.Color">
             <summary>
             Gets the color of the vertex.
             </summary>
         </member>
-        <member name="F:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveVertex.Normal">
+        <member name="F:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveVertex.Normal">
             <summary>
             Gets the normal vector of the vertex.
             </summary>
         </member>
-        <member name="M:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveVertex.#ctor(System.Numerics.Vector3,System.Numerics.Vector4,System.Numerics.Vector3)">
+        <member name="M:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveVertex.#ctor(System.Numerics.Vector3,System.Numerics.Vector4,System.Numerics.Vector3)">
             <summary>
-            Initializes a new instance of the <see cref="T:OTKOW.Views.Renderables.ReactivePrimitives.PrimitiveVertex"/> struct.
+            Initializes a new instance of the <see cref="T:MyOTKE.Views.Renderables.ReactivePrimitives.PrimitiveVertex"/> struct.
             </summary>
             <param name="position">The position of the vertex.</param>
             <param name="color">The color of the vertex.</param>

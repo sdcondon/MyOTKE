@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace OTKOW.Views
+namespace MyOTKE.Views
 {
     /// <summary>
     /// Base class for <see cref="IRenderable"/> instances that are composed of sub-renderables.

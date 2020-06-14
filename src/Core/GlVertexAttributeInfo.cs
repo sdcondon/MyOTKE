@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.InteropServices;
 
-namespace OTKOW.Core
+namespace MyOTKE.Core
 {
     /// <summary>
     /// Container for information about an OpenGL vertex attribute.

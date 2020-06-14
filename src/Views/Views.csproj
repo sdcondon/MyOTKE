@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-    <AssemblyName>OTKOW.Views</AssemblyName>
-    <RootNamespace>OTKOW.Views</RootNamespace>
+    <AssemblyName>MyOTKE.Views</AssemblyName>
+    <RootNamespace>MyOTKE.Views</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -12,11 +12,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>GLHDN.Views.xml</DocumentationFile>
+    <DocumentationFile>MyOTKE.Views.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="GLHDN.Views.xml" />
+    <None Remove="MyOTKE.Views.xml" />
   </ItemGroup>
 
   <ItemGroup>

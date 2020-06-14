@@ -1,6 +1,6 @@
-﻿using OTKOW.Core;
-using OTKOW.Core.VaoDecorators;
-using OTKOW.ReactiveBuffers;
+﻿using MyOTKE.Core;
+using MyOTKE.Core.VaoDecorators;
+using MyOTKE.ReactiveBuffers;
 using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
@@ -9,14 +9,14 @@ using System.Numerics;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
-namespace OTKOW.Views.Renderables.Gui
+namespace MyOTKE.Views.Renderables.Gui
 {
     /// <summary>
     /// Renderable container for a set of graphical user interface elements.
     /// </summary>
     public class Gui : IRenderable, IElementParent
     {
-        private const string ShaderResourceNamePrefix = "OTKOW.Views.Renderables.Gui.Shaders";
+        private const string ShaderResourceNamePrefix = "MyOTKE.Views.Renderables.Gui.Shaders";
 
         private static readonly object programStateLock = new object();
         private static GlProgramBuilder programBuilder;

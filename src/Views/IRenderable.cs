@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OTKOW.Views
+namespace MyOTKE.Views
 {
     /// <summary>
     /// A discrete renderable part of a <see cref="View"/>. Typically will encapsulate everything

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
 
-namespace OTKOW.Views.Renderables.Gui
+namespace MyOTKE.Views.Renderables.Gui
 {
     /// <summary>
     /// 

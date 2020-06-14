@@ -1,9 +1,9 @@
 ﻿using OpenTK.Input;
-using OTKOW.Views;
-using OTKOW.Views.Contexts.WinForms;
-using OTKOW.Views.Renderables.BasicExamples;
-using OTKOW.Views.Renderables.Gui;
-using OTKOW.Views.Renderables.ReactivePrimitives;
+using MyOTKE.Views;
+using MyOTKE.Views.Contexts.WinForms;
+using MyOTKE.Views.Renderables.BasicExamples;
+using MyOTKE.Views.Renderables.Gui;
+using MyOTKE.Views.Renderables.ReactivePrimitives;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -11,7 +11,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
 
-namespace OTKOW.Examples.WinForms
+namespace MyOTKE.Examples.WinForms
 {
     /// <summary>
     /// The main entry point for the application.
@@ -26,7 +26,7 @@ namespace OTKOW.Examples.WinForms
         {
             var form = new GameWindowViewHost()
             {
-                Title = "MyOTK Example"
+                Title = "MyOTKE Example"
                 //WindowState = OpenTK.WindowState.Fullscreen
                 //FormBorderStyle = FormBorderStyle.Sizable
             };

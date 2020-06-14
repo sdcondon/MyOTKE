@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
 
-namespace OTKOW.Views
+namespace MyOTKE.Views
 {
     /// <summary>
     /// Encapsulates an interactive view rendered with OpenGl.

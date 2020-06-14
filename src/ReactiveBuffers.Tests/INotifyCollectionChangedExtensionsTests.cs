@@ -6,7 +6,7 @@ using System.Reactive.Linq;
 using System.Text;
 using Xunit;
 
-namespace OTKOW.ReactiveBuffers
+namespace MyOTKE.ReactiveBuffers
 {
     public class INotifyCollectionChangedExtensionsTests
     {
