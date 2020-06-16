@@ -1,4 +1,4 @@
-#version 330 core
+#version 330
 
 // Interpolated values from the vertex shaders
 in vec2 UV;
@@ -8,7 +8,7 @@ in vec3 EyeDirection_cameraspace;
 in vec3 LightDirection_cameraspace;
 
 // Ouput data
-out vec3 color;
+out vec4 color;
 
 // Values that stay constant for the whole mesh.
 uniform sampler2D myTextureSampler;
@@ -21,12 +21,11 @@ uniform vec3 AmbientLightColor;
 void main(){
 
 	// Material properties
-	vec3 MaterialDiffuseColor = texture( myTextureSampler, UV ).rgb;
-	vec3 MaterialAmbientColor = AmbientLightColor * MaterialDiffuseColor;
-	vec3 MaterialSpecularColor = vec3(0.3,0.3,0.3);
+	vec4 MaterialDiffuseColor = texture(myTextureSampler, UV);
+	vec4 MaterialSpecularColor = vec4(0.3, 0.3, 0.3, 1);
 
 	// Distance to the light
-	float distance = length( LightPosition_worldspace - Position_worldspace );
+	float distance = length(LightPosition_worldspace - Position_worldspace);
 
 	// Normal of the computed fragment, in camera space
 	vec3 n = normalize( Normal_cameraspace );
@@ -37,7 +36,7 @@ void main(){
 	//  - light is at the vertical of the triangle -> 1
 	//  - light is perpendicular to the triangle -> 0
 	//  - light is behind the triangle -> 0
-	float cosTheta = clamp( dot( n,l ), 0,1 );
+	float cosTheta = clamp( dot( n,l ), 0, 1 );
 	
 	// Eye vector (towards the camera)
 	vec3 E = normalize(EyeDirection_cameraspace);
@@ -47,14 +46,14 @@ void main(){
 	// clamped to 0
 	//  - Looking into the reflection -> 1
 	//  - Looking elsewhere -> < 1
-	float cosAlpha = clamp( dot( E,R ), 0,1 );
+	float cosAlpha = clamp( dot( E,R ), 0, 1 );
 	
 	color = 
 		// Ambient : simulates indirect lighting
-		MaterialAmbientColor +
+		MaterialDiffuseColor * vec4(AmbientLightColor, 1) +
 		// Diffuse : "color" of the object
-		MaterialDiffuseColor * LightColor * LightPower * cosTheta / (distance*distance) +
+		MaterialDiffuseColor * vec4(LightColor, 1) * LightPower * cosTheta / (distance*distance) +
 		// Specular : reflective highlight, like a mirror
-		MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha,5) / (distance*distance);
+		MaterialSpecularColor * vec4(LightColor, 1) * LightPower * pow(cosAlpha,5) / (distance*distance);
 
 }
