@@ -9,12 +9,12 @@ using SharpFont;
 namespace MyOTKE.Views.Renderables.Gui
 {
     /// <summary>
-    /// https://www.freetype.org/freetype2/docs/tutorial/step1.html and
-    /// https://learnopengl.com/In-Practice/Text-Rendering
+    /// See https://www.freetype.org/freetype2/docs/tutorial/step1.html and
+    /// https://learnopengl.com/In-Practice/Text-Rendering.
     /// </summary>
     public sealed class Font : IDisposable
     {
-        private static readonly Library sharpFont = new Library();
+        private static readonly Library SharpFont = new Library();
 
         private readonly Face face;
         private readonly Dictionary<char, uint> glyphIndicesByChar = new Dictionary<char, uint>();
@@ -28,10 +28,10 @@ namespace MyOTKE.Views.Renderables.Gui
         /// <param name="pixelSize"></param>
         public Font(string filePath, uint pixelSize = 16)
         {
-            this.face = new Face(sharpFont, filePath);
+            this.face = new Face(SharpFont, filePath);
             this.face.SetPixelSizes(0, pixelSize);
             this.face.SelectCharmap(Encoding.Unicode);
-            // this.face.SetCharSize(0, 16 * 64, 300, 300);
+            ////this.face.SetCharSize(0, 16 * 64, 300, 300);
 
             // Establish maximum glyph dimensions;
             for (uint i = 0; i < face.GlyphCount; i++)
@@ -86,10 +86,10 @@ namespace MyOTKE.Views.Renderables.Gui
 
         private void LoadGlyphs()
         {
-            //if (GraphicsContext.CurrentContext == null)
-            //{
-            //    throw new InvalidOperationException("No current OpenGL context!");
-            //}
+            ////if (GraphicsContext.CurrentContext == null)
+            ////{
+            ////    throw new InvalidOperationException("No current OpenGL context!");
+            ////}
 
             this.glyphs = new GlyphInfo[face.GlyphCount];
 

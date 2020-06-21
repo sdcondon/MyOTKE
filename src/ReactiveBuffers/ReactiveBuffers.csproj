@@ -4,18 +4,15 @@
     <TargetFramework>net48</TargetFramework>
     <AssemblyName>MyOTKE.ReactiveBuffers</AssemblyName>
     <RootNamespace>MyOTKE.ReactiveBuffers</RootNamespace>
+	<DocumentationFile>MyOTKE.ReactiveBuffers.xml</DocumentationFile>
     
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>Open GL Helpers for .NET / reactive buffers: logic for managing Open GL buffers using Observables of vertex data</Description>
+    <Description>My Open Toolkit Engine, reactive buffers: logic for managing Open GL buffers using Observables of vertex data</Description>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>MyOTKE.ReactiveBuffers.xml</DocumentationFile>
-  </PropertyGroup>
-
   <ItemGroup>
-    <None Remove="MyOTKE.ReactiveBuffers.xml" />
+    <None Remove="$(DocumentationFile)" />
   </ItemGroup>
 
   <ItemGroup>

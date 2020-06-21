@@ -125,12 +125,13 @@ namespace MyOTKE.ReactiveBuffers
 
             private static bool SubjectHasNoObservers(object subject)
             {
-                //return subject switch
-                //{
-                //    BehaviorSubject<int> bsi => !bsi.HasObservers,
-                //    Subject<ObservableComposite<int>> sc => !sc.HasObservers,
-                //    _ => throw new Exception($"Unexpected type of monitored object"),
-                //};
+                // When c# version upgraded..
+                ////return subject switch
+                ////{
+                ////    BehaviorSubject<int> bsi => !bsi.HasObservers,
+                ////    Subject<ObservableComposite<int>> sc => !sc.HasObservers,
+                ////    _ => throw new Exception($"Unexpected type of monitored object"),
+                ////};
 
                 if (subject is BehaviorSubject<int> bsi)
                 {

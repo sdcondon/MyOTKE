@@ -96,17 +96,17 @@ namespace MyOTKE.Views.Renderables.Gui
 
                     if (line.Count > 0)
                     {
-                        var lineSize = line[line.Count - 1].position - line[0].position;
+                        var lineSize = line[line.Count - 1].Position - line[0].Position;
                         lineBottomLeft.X = this.PosTL.X + ((this.Size.X - lineSize.X) * horizontalAlignment);
                         lineBottomLeft.X = (float)Math.Round(lineBottomLeft.X); // align to pixels looks better?
 
                         foreach (var v in line)
                         {
                             vertices.Add(new Vertex(
-                                lineBottomLeft + v.position,
-                                v.color,
-                                (int)v.texZ,
-                                v.texXY));
+                                lineBottomLeft + v.Position,
+                                v.Color,
+                                (int)v.TexZ,
+                                v.TexXY));
                         }
                     }
                 }
@@ -120,13 +120,13 @@ namespace MyOTKE.Views.Renderables.Gui
             List<Vertex> currentLine;
             float lineLength;
 
-            void startNewLine()
+            void StartNewLine()
             {
                 currentLine = new List<Vertex>();
                 lineLength = 0f;
             }
 
-            startNewLine();
+            StartNewLine();
 
             foreach (var c in Content)
             {
@@ -135,7 +135,7 @@ namespace MyOTKE.Views.Renderables.Gui
                 if (c == '\n' || (lineLength + glyph.Bearing.X * scale + glyph.Size.X > this.Size.X && currentLine.Count > 0))
                 {
                     yield return currentLine;
-                    startNewLine();
+                    StartNewLine();
                 }
 
                 if (c != '\n')
@@ -165,7 +165,7 @@ namespace MyOTKE.Views.Renderables.Gui
                 new Vertex(charPosTL, Color, (int)glyphInfo.ZOffset, Vector2.Zero),
                 new Vertex(charPosTR, Color, (int)glyphInfo.ZOffset, relativeCharSize.X * Vector2.UnitX),
                 new Vertex(charPosBL, Color, (int)glyphInfo.ZOffset, relativeCharSize.Y * Vector2.UnitY),
-                new Vertex(charPosBR, Color, (int)glyphInfo.ZOffset, relativeCharSize)
+                new Vertex(charPosBR, Color, (int)glyphInfo.ZOffset, relativeCharSize),
             });
         }
     }

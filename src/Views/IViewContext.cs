@@ -1,4 +1,5 @@
-﻿using OpenTK.Input;
+﻿using OpenTK;
+using OpenTK.Input;
 using System;
 using System.Numerics;
 
@@ -10,16 +11,16 @@ namespace MyOTKE.Views
     public interface IViewContext
     {
         /// <summary>Occurs when an OpenGL context has been created.</summary>
-        event EventHandler GlContextCreated;
+        event EventHandler Loading;
 
         /// <summary>Occurs when the context is rendering.</summary>
-        event EventHandler GlRender;
+        event EventHandler<FrameEventArgs> RenderingFrame;
 
         /// <summary>Occurs when the context is updating.</summary>
-        event EventHandler GlContextUpdate;
+        event EventHandler Updating;
 
         /// <summary>Occurs when the OpenGL is being destroyed.</summary>
-        event EventHandler GlContextDestroying;
+        event EventHandler Unloading;
 
         /// <summary>Occurs when a key is pressed.</summary>
         event EventHandler<Key> KeyDown;
@@ -49,7 +50,7 @@ namespace MyOTKE.Views
         event EventHandler<int> MouseWheel;
 
         /// <summary>Occurs when the context is resized.</summary>
-        event EventHandler<Vector2> Resize;
+        event EventHandler<System.Numerics.Vector2> Resize;
 
         /// <summary>Occurs when the context receives input focus.</summary>
         event EventHandler GotFocus;
@@ -64,7 +65,7 @@ namespace MyOTKE.Views
         bool IsFocused { get; }
 
         /// <summary>Gets or sets the position of the mouse cursor within the context.</summary>
-        Vector2 CursorPosition { get; set; }
+        System.Numerics.Vector2 CursorPosition { get; set; }
 
         /// <summary>Sets a value indicating whether the mouse cursor should be displayed.</summary>
         bool ShowCursor { set; }

@@ -2,11 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-
     <IsPackable>false</IsPackable>
-
     <AssemblyName>MyOTKE.ReactiveBuffers.Tests</AssemblyName>
-
     <RootNamespace>MyOTKE.ReactiveBuffers</RootNamespace>
   </PropertyGroup>
 

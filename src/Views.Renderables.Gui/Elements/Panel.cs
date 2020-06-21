@@ -4,7 +4,7 @@ using System.Numerics;
 namespace MyOTKE.Views.Renderables.Gui
 {
     /// <summary>
-    /// 
+    /// GUI element that is a colored panel - and can contain other elements.
     /// </summary>
     public class Panel : ContainerElementBase
     {
@@ -35,7 +35,7 @@ namespace MyOTKE.Views.Renderables.Gui
             new Vertex(PosTL, Color),
             new Vertex(PosTR, Color),
             new Vertex(PosBL, Color),
-            new Vertex(PosBR, Color)
+            new Vertex(PosBR, Color),
         };
     }
 }

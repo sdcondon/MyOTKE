@@ -20,9 +20,9 @@ namespace MyOTKE.Views.Renderables.Gui
                     new Text(Layout.Fill, textColor, text)
                     {
                         HorizontalAlignment = 0.5f,
-                        VerticalAlignment = 0.5f
-                    }
-                }
+                        VerticalAlignment = 0.5f,
+                    },
+                },
             });
 
             this.clickHandler = clickHandler;

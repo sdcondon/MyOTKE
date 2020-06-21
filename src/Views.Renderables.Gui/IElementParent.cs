@@ -9,6 +9,9 @@ namespace MyOTKE.Views.Renderables.Gui
     /// </summary>
     public interface IElementParent : INotifyPropertyChanged
     {
+        /// <summary>
+        /// Callback that is invoked when the element is clicked.
+        /// </summary>
         event EventHandler<Vector2> Clicked;
 
         /// <summary>

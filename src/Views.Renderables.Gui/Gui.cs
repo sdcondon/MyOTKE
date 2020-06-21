@@ -18,7 +18,7 @@ namespace MyOTKE.Views.Renderables.Gui
     {
         private const string ShaderResourceNamePrefix = "MyOTKE.Views.Renderables.Gui.Shaders";
 
-        private static readonly object programStateLock = new object();
+        private static readonly object ProgramStateLock = new object();
         private static GlProgramBuilder programBuilder;
         private static GlProgram program;
 
@@ -29,7 +29,7 @@ namespace MyOTKE.Views.Renderables.Gui
         private bool isDisposed;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Gui"/> class, 
+        /// Initializes a new instance of the <see cref="Gui"/> class.
         /// </summary>
         /// <param name="view">The view from which to derive size and input.</param>
         public Gui(View view, int initialCapacity)
@@ -41,7 +41,7 @@ namespace MyOTKE.Views.Renderables.Gui
 
             if (program == null && programBuilder == null)
             {
-                lock (programStateLock)
+                lock (ProgramStateLock)
                 {
                     if (program == null && programBuilder == null)
                     {
@@ -60,6 +60,12 @@ namespace MyOTKE.Views.Renderables.Gui
                 this.SubElements.Flatten());
         }
 
+        /// <inheritdoc />
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<Vector2> Clicked;
+
         /// <inheritdoc /> from IElementParent
         public ElementCollection SubElements { get; }
 
@@ -69,12 +75,6 @@ namespace MyOTKE.Views.Renderables.Gui
         /// <inheritdoc /> from IElementParent
         public Vector2 Size => new Vector2(view.Width, view.Height);
 
-        /// <inheritdoc />
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<Vector2> Clicked;
-
         /// <inheritdoc /> from IRenderable
         public void Load()
         {
@@ -82,7 +82,7 @@ namespace MyOTKE.Views.Renderables.Gui
 
             if (program == null)
             {
-                lock (programStateLock)
+                lock (ProgramStateLock)
                 {
                     if (program == null)
                     {
@@ -121,6 +121,7 @@ namespace MyOTKE.Views.Renderables.Gui
             this.vertexBuffer.Draw();
         }
 
+        /// <inheritdoc />
         public void Dispose()
         {
             this.view.Resized -= View_Resized;

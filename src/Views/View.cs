@@ -38,10 +38,10 @@ namespace MyOTKE.Views
             ////KhronosApi.Log += KhronosApi_Log;
 
             this.context = context;
-            context.GlContextCreated += OnGlContextCreated;
-            context.GlRender += OnGlRender;
-            context.GlContextUpdate += OnGlContextUpdate;
-            context.GlContextDestroying += OnGlContextDestroying;
+            context.Loading += OnGlContextCreated;
+            context.RenderingFrame += OnGlRender;
+            context.Updating += OnGlContextUpdate;
+            context.Unloading += OnGlContextDestroying;
             context.KeyDown += OnKeyDown;
             context.KeyUp += OnKeyUp;
             context.MouseWheel += OnMouseWheel;
@@ -189,10 +189,10 @@ namespace MyOTKE.Views
         /// <inheritdoc />
         public void Dispose()
         {
-            context.GlContextCreated -= OnGlContextCreated;
-            context.GlRender -= OnGlRender;
-            context.GlContextUpdate -= OnGlContextUpdate;
-            context.GlContextDestroying -= OnGlContextDestroying;
+            context.Loading -= OnGlContextCreated;
+            context.RenderingFrame -= OnGlRender;
+            context.Updating -= OnGlContextUpdate;
+            context.Unloading -= OnGlContextDestroying;
             context.KeyDown -= OnKeyDown;
             context.KeyUp -= OnKeyUp;
             context.MouseWheel -= OnMouseWheel;

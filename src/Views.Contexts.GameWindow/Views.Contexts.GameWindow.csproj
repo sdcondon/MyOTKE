@@ -3,21 +3,18 @@
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <AssemblyName>MyOTKE.Views.Contexts.WinForms</AssemblyName>
-    <RootNamespace>MyOTKE.Views.Contexts.WinForms</RootNamespace>
+    <AssemblyName>MyOTKE.Views.Contexts.GameWindow</AssemblyName>
+    <RootNamespace>MyOTKE.Views.Contexts.GameWindow</RootNamespace>
+	<DocumentationFile>MyOTKE.Views.Contexts.GameWindow.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>Open GL Helpers for .NET / view engine: WinForms context implementation</Description>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>MyOTKE.Views.Contexts.WinForms.xml</DocumentationFile>
+    <Description>My Open Toolkit Engine, view engine: GameWindow context implementation</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="MyOTKE.Views.Contexts.WinForms.xml" />
+    <None Remove="$(DocumentationFile)" />
   </ItemGroup>
 
   <ItemGroup>

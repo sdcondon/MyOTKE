@@ -4,19 +4,16 @@
     <TargetFramework>net48</TargetFramework>
     <AssemblyName>MyOTKE.Views</AssemblyName>
     <RootNamespace>MyOTKE.Views</RootNamespace>
+	<DocumentationFile>MyOTKE.Views.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>Open GL Helpers for .NET / view engine: core types and abstractions.</Description>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>MyOTKE.Views.xml</DocumentationFile>
+    <Description>My Open Toolkit Engine, view engine: core types and abstractions.</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="MyOTKE.Views.xml" />
+    <None Remove="$(DocumentationFile)" />
   </ItemGroup>
 
   <ItemGroup>

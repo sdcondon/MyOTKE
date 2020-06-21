@@ -3,9 +3,8 @@ using OpenTK.Graphics;
 using OpenTK.Input;
 using System;
 using System.Drawing;
-using System.Windows.Forms;
 
-namespace MyOTKE.Views.Contexts.WinForms
+namespace MyOTKE.Views.Contexts.GameWindow
 {
     /// <summary>
     /// Windows form containing only a single OpenGL render control.
@@ -13,7 +12,7 @@ namespace MyOTKE.Views.Contexts.WinForms
     /// <remarks>
     /// See https://opentk.net/learn/chapter1/1-creating-a-window.html for tutorial.
     /// </remarks>
-    public sealed class GameWindowViewHost : GameWindow
+    public sealed class GameWindowViewHost : OpenTK.GameWindow
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="GameWindowViewHost"/> class.
@@ -36,10 +35,6 @@ namespace MyOTKE.Views.Contexts.WinForms
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            //GL.Clear(ClearBufferMask.ColorBufferBit);
-
-            //Code goes here.
-
             base.OnRenderFrame(e);
             Context.SwapBuffers();
         }
@@ -51,10 +46,10 @@ namespace MyOTKE.Views.Contexts.WinForms
             public GameWindowViewContext(GameWindowViewHost parent)
             {
                 this.parent = parent;
-                parent.Load += (s, a) => GlContextCreated?.Invoke(this, a);
-                parent.RenderFrame += (s, a) => GlRender?.Invoke(this, a);
-                parent.UpdateFrame += (s, a) => GlContextUpdate?.Invoke(this, a);
-                parent.Unload += (s, a) => GlContextDestroying?.Invoke(this, a);
+                parent.Load += (s, a) => Loading?.Invoke(this, a);
+                parent.RenderFrame += (s, a) => RenderingFrame?.Invoke(this, a);
+                parent.UpdateFrame += (s, a) => Updating?.Invoke(this, a);
+                parent.Unload += (s, a) => Unloading?.Invoke(this, a);
                 parent.KeyDown += (s, a) => KeyDown?.Invoke(this, a.Key);
                 parent.KeyUp += (s, a) => KeyUp?.Invoke(this, a.Key);
                 parent.MouseWheel += (s, a) => MouseWheel?.Invoke(this, a.Delta);
@@ -95,16 +90,16 @@ namespace MyOTKE.Views.Contexts.WinForms
             }
 
             /// <inheritdoc />
-            public event EventHandler GlContextCreated;
+            public event EventHandler Loading;
 
             /// <inheritdoc />
-            public event EventHandler GlRender;
+            public event EventHandler<FrameEventArgs> RenderingFrame;
 
             /// <inheritdoc />
-            public event EventHandler GlContextUpdate;
+            public event EventHandler Updating;
 
             /// <inheritdoc />
-            public event EventHandler GlContextDestroying;
+            public event EventHandler Unloading;
 
             /// <inheritdoc />
             public event EventHandler<Key> KeyDown;

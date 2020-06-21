@@ -16,11 +16,11 @@ namespace MyOTKE.Views.Renderables.Gui
             this.SubElements = new ElementCollection(this);
         }
 
-        /// <inheritdoc /> from IElementParent
-        public ElementCollection SubElements { get; }
-
         /// <inheritdoc />
         public event EventHandler<Vector2> Clicked;
+
+        /// <inheritdoc /> from IElementParent
+        public ElementCollection SubElements { get; }
 
         /// <inheritdoc />
         public override void Dispose()

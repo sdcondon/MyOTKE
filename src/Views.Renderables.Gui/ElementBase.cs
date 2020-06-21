@@ -8,7 +8,7 @@ namespace MyOTKE.Views.Renderables.Gui
     /// <summary>
     /// Base class for GUI elements. Provides for a nested element hierarchy, with elements being placed relative to their parents.
     /// </summary>
-    public abstract class ElementBase : INotifyPropertyChanged, IDisposable 
+    public abstract class ElementBase : INotifyPropertyChanged, IDisposable
     {
         private IElementParent parent;
         private Layout layout;
@@ -21,6 +21,9 @@ namespace MyOTKE.Views.Renderables.Gui
         {
             this.layout = layout;
         }
+
+        /// <inheritdoc /> from INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Gets the parent of this element.
@@ -91,9 +94,6 @@ namespace MyOTKE.Views.Renderables.Gui
         /// Gets the list of vertices to be rendered for this GUI element (not including any children).
         /// </summary>
         public virtual IList<Vertex> Vertices { get; } = new Vertex[0];
-
-        /// <inheritdoc /> from INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <inheritdoc />
         public virtual void Dispose()

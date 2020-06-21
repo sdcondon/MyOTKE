@@ -1,6 +1,6 @@
 ﻿#pragma warning disable SA1402
-using OpenTK.Graphics.OpenGL;
 using MyOTKE.Core.VaoDecorators;
+using OpenTK.Graphics.OpenGL;
 
 namespace MyOTKE.Core
 {

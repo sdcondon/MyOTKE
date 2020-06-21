@@ -7,10 +7,10 @@ namespace MyOTKE.Views.Renderables.Gui
     /// </summary>
     public class Layout
     {
-        public readonly Dimensions parentOrigin;
-        public readonly Dimensions localOrigin;
-        public readonly Dimensions relativeSize;
-        public readonly Vector2 offset;
+        private readonly Dimensions parentOrigin;
+        private readonly Dimensions localOrigin;
+        private readonly Dimensions relativeSize;
+        private readonly Vector2 offset;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Layout"/> class.
@@ -57,7 +57,7 @@ namespace MyOTKE.Views.Renderables.Gui
                 relativeSize.IsXRelative ? element.Parent.Size.X * relativeSize.X : relativeSize.X,
                 relativeSize.IsYRelative ? element.Parent.Size.Y * relativeSize.Y : relativeSize.Y);
         }
-        
+
         public struct Dimensions
         {
             private Vector2 value;
@@ -99,8 +99,11 @@ namespace MyOTKE.Views.Renderables.Gui
             public bool IsYRelative { get; }
 
             public static implicit operator Dimensions((int absoluteX, int absoluteY) tuple) => new Dimensions(tuple.absoluteX, tuple.absoluteY);
+
             public static implicit operator Dimensions((int absoluteX, float relativeY) tuple) => new Dimensions(tuple.absoluteX, tuple.relativeY);
+
             public static implicit operator Dimensions((float relativeX, int absoluteY) tuple) => new Dimensions(tuple.relativeX, tuple.absoluteY);
+
             public static implicit operator Dimensions((float relativeX, float relativeY) tuple) => new Dimensions(tuple.relativeX, tuple.relativeY);
         }
     }

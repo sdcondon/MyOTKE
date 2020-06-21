@@ -4,18 +4,14 @@
     <TargetFramework>net48</TargetFramework>
     <AssemblyName>MyOTKE.Views.Renderables.Gui</AssemblyName>
     <RootNamespace>MyOTKE.Views.Renderables.Gui</RootNamespace>
+	<DocumentationFile>MyOTKE.Views.Renderables.Gui.xml</DocumentationFile>
     
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>Open GL Helpers for .NET / view engine: GUI renderable implementation.</Description>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>MyOTKE.Views.Renderables.Gui.xml</DocumentationFile>
-    <WarningLevel>0</WarningLevel>
+    <Description>My Open Toolkit Engine, view engine: GUI renderable implementation.</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="MyOTKE.Views.Renderables.Gui.xml" />
+	<None Remove="$(DocumentationFile)" />
     <None Remove="Gui.Fragment.glsl" />
     <None Remove="Gui.Vertex.glsl" />
   </ItemGroup>

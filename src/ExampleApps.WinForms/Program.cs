@@ -1,9 +1,9 @@
-﻿using OpenTK.Input;
-using MyOTKE.Views;
-using MyOTKE.Views.Contexts.WinForms;
+﻿using MyOTKE.Views;
+using MyOTKE.Views.Contexts.GameWindow;
 using MyOTKE.Views.Renderables.BasicExamples;
 using MyOTKE.Views.Renderables.Gui;
 using MyOTKE.Views.Renderables.ReactivePrimitives;
+using OpenTK.Input;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -26,9 +26,9 @@ namespace MyOTKE.Examples.WinForms
         {
             var form = new GameWindowViewHost()
             {
-                Title = "MyOTKE Example"
-                //WindowState = OpenTK.WindowState.Fullscreen
-                //FormBorderStyle = FormBorderStyle.Sizable
+                Title = "MyOTKE Example",
+                ////WindowState = OpenTK.WindowState.Fullscreen
+                ////FormBorderStyle = FormBorderStyle.Sizable
             };
 
             // Obviously not ideal to have to set font globally - need to sort this out, probably via some nice
@@ -145,7 +145,7 @@ namespace MyOTKE.Examples.WinForms
                     new uint[] { 0, 1, 2 },
                     @"Assets\Textures\foo.bmp")
                 {
-                    AmbientLightColor = Color.White(),
+                    AmbientLightColor = Color.Grey(),
                 });
 
                 var coloredTriangleVertices = new[]
@@ -180,7 +180,7 @@ namespace MyOTKE.Examples.WinForms
 
                 AddRenderable(lines = new ColoredLines(camera)
                 {
-                    AmbientLightColor = Color.White(),
+                    AmbientLightColor = Color.Grey(),
                 });
 
                 camTextElement = new Text(

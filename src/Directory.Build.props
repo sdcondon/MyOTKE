@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Authors>Simon Condon</Authors>
     <Company />
-    <Product>Open GL Helpers for .NET</Product>
+    <Product>My Open Toolkit Engine</Product>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/sdcondon/GLHDN</RepositoryUrl>
     <PackageProjectUrl>https://github.com/sdcondon/GLHDN</PackageProjectUrl>

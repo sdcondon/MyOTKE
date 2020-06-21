@@ -4,19 +4,16 @@
     <TargetFramework>net48</TargetFramework>
     <AssemblyName>MyOTKE.Core</AssemblyName>
     <RootNamespace>MyOTKE.Core</RootNamespace>
+	<DocumentationFile>MyOTKE.Core.xml</DocumentationFile>
   </PropertyGroup>
   
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>Open GL Helpers for .NET / core: Low-level OO wrappers around Open GL concepts.</Description>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>MyOTKE.Core.xml</DocumentationFile>
+    <Description>My Open Toolkit Engine, Core: Low-level OO wrappers around Open GL concepts.</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="MyOTKE.Core.xml" />
+    <None Remove="$(DocumentationFile)" />
   </ItemGroup>
   
   <ItemGroup>

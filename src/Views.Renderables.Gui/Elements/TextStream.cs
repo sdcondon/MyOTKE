@@ -41,6 +41,7 @@ namespace MyOTKE.Views.Renderables.Gui
                     builder.AppendLine(line);
                 }
             }
+
             textElement.Content = builder.ToString();
         }
     }
