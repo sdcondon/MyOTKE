@@ -1,7 +1,6 @@
 ﻿using OpenTK;
 using OpenTK.Input;
 using System;
-using System.Numerics;
 
 namespace MyOTKE.Views
 {

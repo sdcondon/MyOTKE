@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Text;
 
 namespace MyOTKE.Views.Renderables.Gui
 {
+    /// <summary>
+    /// A GUI element consisting of some text.
+    /// </summary>
     public class Text : ElementBase
     {
         private Vector4 color;
@@ -13,6 +15,12 @@ namespace MyOTKE.Views.Renderables.Gui
         private float horizontalAlignment;
         private float verticalAlignment;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Text"/> class.
+        /// </summary>
+        /// <param name="layout">The layout of the text in relation to its parent.</param>
+        /// <param name="color">The color of the text.</param>
+        /// <param name="content">The content of the text.</param>
         public Text(Layout layout, Vector4 color, string content = "")
             : base(layout)
         {
@@ -25,6 +33,12 @@ namespace MyOTKE.Views.Renderables.Gui
             this.content = content;
         }
 
+        /// <summary>
+        /// Gets or sets the font of all text elements.
+        /// </summary>
+        /// <remarks>
+        /// Yeah, not great. Should be specific to text elements.
+        /// </remarks>
         public static Font Font { get; set; }
 
         /// <summary>

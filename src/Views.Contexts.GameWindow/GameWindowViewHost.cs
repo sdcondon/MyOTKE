@@ -22,6 +22,12 @@ namespace MyOTKE.Views.Contexts.GameWindow
             ViewContext = new GameWindowViewContext(this);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GameWindowViewHost"/> class.
+        /// </summary>
+        /// <param name="width">The width of the window in pixels.</param>
+        /// <param name="height">The height of the window in pixels.</param>
+        /// <param name="title">The title of the window.</param>
         public GameWindowViewHost(int width, int height, string title)
             : base(width, height, GraphicsMode.Default, title)
         {
@@ -33,6 +39,7 @@ namespace MyOTKE.Views.Contexts.GameWindow
         /// </summary>
         public IViewContext ViewContext { get; }
 
+        /// <inheritdoc />
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);

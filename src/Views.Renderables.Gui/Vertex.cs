@@ -7,9 +7,24 @@ namespace MyOTKE.Views.Renderables.Gui
     /// </summary>
     public struct Vertex
     {
+        /// <summary>
+        /// The position of the vertex.
+        /// </summary>
         public readonly Vector2 Position;
+
+        /// <summary>
+        /// The color of the vertex.
+        /// </summary>
         public readonly Vector4 Color;
+
+        /// <summary>
+        /// The z-ordinate of the texture of the vertex.
+        /// </summary>
         public readonly float TexZ;
+
+        /// <summary>
+        /// The x- and y-ordinates of the texture of the vertex.
+        /// </summary>
         public readonly Vector2 TexXY;
 
         /// <summary>
@@ -30,8 +45,8 @@ namespace MyOTKE.Views.Renderables.Gui
         /// </summary>
         /// <param name="position">The position of the vertex.</param>
         /// <param name="color">The color of the vertex.</param>
-        /// <param name="texZ">The z-ordinate of the vertex.</param>
-        /// <param name="texXY">The x- and y-ordinates of the vertex.</param>
+        /// <param name="texZ">The z-ordinate of the texture of the vertex.</param>
+        /// <param name="texXY">The x- and y-ordinates of the texture of the vertex.</param>
         public Vertex(Vector2 position, Vector4 color, int texZ, Vector2 texXY)
         {
             this.Position = position;

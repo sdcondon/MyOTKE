@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Numerics;
 
 namespace MyOTKE.Views.Renderables.Gui
@@ -10,6 +8,10 @@ namespace MyOTKE.Views.Renderables.Gui
     /// </summary>
     public abstract class ContainerElementBase : ElementBase, IElementParent
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContainerElementBase"/> class.
+        /// </summary>
+        /// <param name="layout">The layout of the element in relation to its parent.</param>
         public ContainerElementBase(Layout layout)
             : base(layout)
         {

@@ -4,7 +4,7 @@
     <TargetFramework>net48</TargetFramework>
     <AssemblyName>MyOTKE.Views.Renderables.BasicExamples</AssemblyName>
     <RootNamespace>MyOTKE.Views.Renderables.BasicExamples</RootNamespace>
-	<DocumentationFile>MyOTKE.Views.Renderables.Basic.xml</DocumentationFile>
+	<DocumentationFile>MyOTKE.Views.Renderables.BasicExamples.xml</DocumentationFile>
     
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>My Open Toolkit Engine, view engine: Test renderable implementations.</Description>

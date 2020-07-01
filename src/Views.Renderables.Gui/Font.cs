@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Numerics;
-using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL;
+﻿using OpenTK.Graphics.OpenGL;
 using SharpFont;
+using System;
+using System.Collections.Generic;
+using System.Numerics;
 
 namespace MyOTKE.Views.Renderables.Gui
 {
@@ -24,7 +22,7 @@ namespace MyOTKE.Views.Renderables.Gui
         /// <summary>
         /// Initializes a new instance of the <see cref="Font"/> class.
         /// </summary>
-        /// <param name="filePath"></param>
+        /// <param name="filePath">The path to the font file.</param>
         /// <param name="pixelSize"></param>
         public Font(string filePath, uint pixelSize = 16)
         {
@@ -145,6 +143,9 @@ namespace MyOTKE.Views.Renderables.Gui
                 (uint)(double)face.Glyph.Advance.X);
         }
 
+        /// <summary>
+        /// Container for information about a particular glyph.
+        /// </summary>
         public struct GlyphInfo
         {
             public GlyphInfo(uint zOffset, Vector2 size, Vector2 bearing, uint advance)
@@ -156,8 +157,11 @@ namespace MyOTKE.Views.Renderables.Gui
             }
 
             public uint ZOffset { get; }
+
             public Vector2 Size { get; }
+
             public Vector2 Bearing { get; }
+
             public uint Advance { get; }
         }
     }

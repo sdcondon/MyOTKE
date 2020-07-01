@@ -3,7 +3,7 @@
 namespace MyOTKE.Views.Renderables.Gui
 {
     /// <summary>
-    /// Container for positioning data for an elemennt.
+    /// Container for positioning data for an element (relative to its parent).
     /// </summary>
     public class Layout
     {
@@ -18,7 +18,7 @@ namespace MyOTKE.Views.Renderables.Gui
         /// <param name="parentOrigin">the position in parent-space of the local origin.</param>
         /// <param name="localOrigin">the position relative to the center of the element that will be placed at the parent origin.</param>
         /// <param name="relativeSize">the size of the element in relation to its parent.</param>
-        /// <param name="offset"></param>
+        /// <param name="offset">The offset to apply when placing the local origin at the parent origin.</param>
         public Layout(Dimensions parentOrigin, Dimensions localOrigin, Dimensions relativeSize, Vector2 offset)
         {
             this.parentOrigin = parentOrigin;
@@ -38,8 +38,16 @@ namespace MyOTKE.Views.Renderables.Gui
         {
         }
 
+        /// <summary>
+        /// Gets a layout wherein an element fills its parent.
+        /// </summary>
         public static Layout Fill { get; } = new Layout((0f, 0f), (0f, 0f), (1f, 1f));
 
+        /// <summary>
+        /// Gets the screen-space position of the center of an element using this layout.
+        /// </summary>
+        /// <param name="element">The element to get the screen-space position of the center of.</param>
+        /// <returns>The screen-space position of the center of the element.</returns>
         public Vector2 GetCenter(ElementBase element)
         {
             var parentOriginScreenSpace = new Vector2(
@@ -51,6 +59,11 @@ namespace MyOTKE.Views.Renderables.Gui
                 parentOriginScreenSpace.Y - (localOrigin.IsYRelative ? localOrigin.Y * element.Size.Y / 2 : localOrigin.Y));
         }
 
+        /// <summary>
+        /// Gets the screen-space size of an element using this layout.
+        /// </summary>
+        /// <param name="element">The element to get the screen-space size of.</param>
+        /// <returns>The screen-space size of the element.</returns>
         public Vector2 GetSize(ElementBase element)
         {
             return new Vector2(
@@ -58,6 +71,9 @@ namespace MyOTKE.Views.Renderables.Gui
                 relativeSize.IsYRelative ? element.Parent.Size.Y * relativeSize.Y : relativeSize.Y);
         }
 
+        /// <summary>
+        /// Container for information about some dimensions.
+        /// </summary>
         public struct Dimensions
         {
             private Vector2 value;

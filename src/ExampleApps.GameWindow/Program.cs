@@ -11,7 +11,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
 
-namespace MyOTKE.Examples.WinForms
+namespace MyOTKE.ExampleApps.GameWindow
 {
     /// <summary>
     /// The main entry point for the application.

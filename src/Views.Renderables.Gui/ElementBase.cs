@@ -16,7 +16,7 @@ namespace MyOTKE.Views.Renderables.Gui
         /// <summary>
         /// Initializes a new instance of the <see cref="ElementBase"/> class.
         /// </summary>
-        /// <param name="layout"></param>
+        /// <param name="layout">The layout that the element should use.</param>
         public ElementBase(Layout layout)
         {
             this.layout = layout;
@@ -107,11 +107,19 @@ namespace MyOTKE.Views.Renderables.Gui
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Invokes the <see cref="PropertyChanged"/> event.
+        /// </summary>
+        /// <param name="propertyName">The property name to include in the event args.</param>
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        /// <summary>
+        /// Invokes the <see cref="OnClicked"/> event.
+        /// </summary>
+        /// <param name="position">The position to include in the event args.</param>
         protected virtual void OnClicked(Vector2 position)
         {
         }

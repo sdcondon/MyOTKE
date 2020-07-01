@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Tests", "Core.Tests\Core.Tests.csproj", "{84FE1865-9CB8-49C1-9626-CFAE68EA7BCF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleApps.WinForms", "ExampleApps.WinForms\ExampleApps.WinForms.csproj", "{8D0D323E-9803-4D85-B4BC-01317B74DB1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleApps.GameWindow", "ExampleApps.GameWindow\ExampleApps.GameWindow.csproj", "{8D0D323E-9803-4D85-B4BC-01317B74DB1A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveBuffers", "ReactiveBuffers\ReactiveBuffers.csproj", "{158CC0BA-1BDA-4650-BD6F-279BBA540C94}"
 EndProject

@@ -1,13 +1,9 @@
 ﻿using MyOTKE.Core;
-using MyOTKE.Core.VaoDecorators;
 using MyOTKE.ReactiveBuffers;
 using OpenTK.Graphics.OpenGL;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Numerics;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 
 namespace MyOTKE.Views.Renderables.Gui
 {
@@ -32,6 +28,7 @@ namespace MyOTKE.Views.Renderables.Gui
         /// Initializes a new instance of the <see cref="Gui"/> class.
         /// </summary>
         /// <param name="view">The view from which to derive size and input.</param>
+        /// <param name="initialCapacity">Initial capacity of the GUI, in vertices.</param>
         public Gui(View view, int initialCapacity)
         {
             this.view = view;
