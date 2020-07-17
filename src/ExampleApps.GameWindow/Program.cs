@@ -69,17 +69,27 @@ namespace MyOTKE.ExampleApps.GameWindow
                     SubElements =
                     {
                         new Button(
-                            layout: new Layout((0f, 0f), (0f, 0f), (200, 40), new Vector2(0, 50)),
+                            layout: new Layout((0f, 0f), (0f, 0f), (200, 40), new Vector2(0, 70)),
                             color: Color.Blue(.5f),
                             textColor: Color.White(),
-                            text: "DEMO",
+                            text: "FIRST PERSON DEMO",
                             v =>
                             {
-                                view.Renderable = new DemoRenderable(view);
+                                view.Renderable = new FirstPersonRenderable(view);
                                 this.Dispose();
                             }),
                         new Button(
-                            layout: new Layout((0f, 0f), (0f, 0f), (200, 40), new Vector2(0, -10)),
+                            layout: new Layout((0f, 0f), (0f, 0f), (200, 40), new Vector2(0, 10)),
+                            color: Color.Blue(.5f),
+                            textColor: Color.White(),
+                            text: "ORBIT DEMO",
+                            v =>
+                            {
+                                view.Renderable = new OrbitRenderable(view);
+                                this.Dispose();
+                            }),
+                        new Button(
+                            layout: new Layout((0f, 0f), (0f, 0f), (200, 40), new Vector2(0, -50)),
                             color: Color.Blue(.5f),
                             textColor: Color.White(),
                             text: "QUIT",
@@ -96,7 +106,7 @@ namespace MyOTKE.ExampleApps.GameWindow
             }
         }
 
-        private class DemoRenderable : CompositeRenderable
+        private class FirstPersonRenderable : CompositeRenderable
         {
             private readonly View view;
             private readonly ICamera camera;
@@ -110,7 +120,7 @@ namespace MyOTKE.ExampleApps.GameWindow
             private Matrix4x4 cubeWorldMatrix = Matrix4x4.Identity;
             private Vector3 lastCamPosition = Vector3.Zero;
 
-            public DemoRenderable(View view)
+            public FirstPersonRenderable(View view)
             {
                 this.view = view;
                 camera = new FirstPersonCamera(
@@ -242,6 +252,96 @@ namespace MyOTKE.ExampleApps.GameWindow
                 {
                     view.LockCursor = !view.LockCursor;
                 }
+
+                if (view.KeysReleased.Contains(Key.Q))
+                {
+                    view.Renderable = new MenuRenderable(view);
+                    this.Dispose();
+                }
+            }
+        }
+
+        private class OrbitRenderable : CompositeRenderable
+        {
+            private readonly View view;
+            private readonly ICamera camera;
+
+            private readonly ColoredLines lines;
+            private readonly Text camTextElement;
+            private readonly TextStream logElement;
+
+            private readonly Subject<IList<Primitive>> cubeSubject = new Subject<IList<Primitive>>();
+            private readonly Primitive[] cubePrimitives = new Primitive[1] { Primitive.Empty() };
+            private Matrix4x4 cubeWorldMatrix = Matrix4x4.Identity;
+            private Vector3 lastCamPosition = Vector3.Zero;
+
+            public OrbitRenderable(View view)
+            {
+                this.view = view;
+                camera = new OrbitCameraAligned(
+                    view,
+                    rotationSpeedBase: 0.5f,
+                    fieldOfViewRadians: (float)Math.PI / 4.0f,
+                    nearPlaneDistance: 0.1f,
+                    farPlaneDistance: 100f)
+                {
+
+                };
+
+                AddRenderable(new PrimitiveRenderer(camera, Observable.Return(cubeSubject), 12)
+                {
+                    AmbientLightColor = Color.Grey(0.1f),
+                    DirectedLightDirection = new Vector3(0, 1f, 0f),
+                    DirectedLightColor = Color.Grey(),
+                });
+
+                camTextElement = new Text(
+                    new Layout((-1f, 1f), (-1f, 1f), (1f, 0f)),
+                    color: Color.White());
+
+                logElement = new TextStream(
+                    new Layout((-1f, 1f), (-1f, 1f), (1f, 0f), new Vector2(0, -100)),
+                    textColor: Color.White(),
+                    10);
+
+                AddRenderable(new Gui(view, 1000)
+                {
+                    SubElements =
+                    {
+                        new Panel(
+                            layout: new Layout((-1f, 0f), (-1f, 0f), (250, 1f)),
+                            color: Color.White(0.05f))
+                        {
+                            SubElements =
+                            {
+                                camTextElement,
+                                logElement,
+                            },
+                        },
+                    },
+                });
+            }
+
+            public override void Update(TimeSpan elapsed)
+            {
+                base.Update(elapsed);
+
+                camera.Update(elapsed);
+
+                // Avoid GC pressure for string unless needed - would be better to do this reactively though
+                // (e.g. reactive linq to take at intervals or debounce)
+                if (camera.Position != lastCamPosition)
+                {
+                    camTextElement.Content = $"Cam@{camera.Position:F2}\n\nUse WASD to move the camera\nClick LMB to add a ray\nPress SPACE to toggle cam mode\nPress q to quit";
+                    lastCamPosition = camera.Position;
+                }
+
+                // NB: No new heap allocations each time to avoid GC pressure - same array, same primitive.
+                // Could do with more helpers to make this easier. Perhaps Primitive should be a struct after all..
+                //cubeWorldMatrix *= Matrix4x4.CreateRotationZ(0);
+                //cubeWorldMatrix *= Matrix4x4.CreateRotationY(0);
+                cubePrimitives[0].SetCuboid(new Vector3(.5f, 1f, 0.75f), cubeWorldMatrix, Color.Red());
+                cubeSubject.OnNext(cubePrimitives);
 
                 if (view.KeysReleased.Contains(Key.Q))
                 {
