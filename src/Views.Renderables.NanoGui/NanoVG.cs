@@ -16,6 +16,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 //
 using System;
+using System.Diagnostics;
 
 namespace NanoVG
 {
@@ -29,40 +30,41 @@ namespace NanoVG
 
     public class Context
     {
-        // should all be private
-        public Params @params;
-	    public float* commands;
-        public int ccommands;
-        public int ncommands;
-        public float commandx, commandy;
-        public NVGstate[] states;//[NVG_MAX_STATES];
-        public int nstates;
-        public NVGpathCache* cache;
-        public float tessTol;
-        public float distTol;
-        public float fringeWidth;
-        public float devicePxRatio;
-        public struct FONScontext* fs;
-	    public int[] fontImages;//[NVG_MAX_FONTIMAGES];
-        public int fontImageIdx;
-        public int drawCallCount;
-        public int fillTriCount;
-        public int strokeTriCount;
-        public int textTriCount;
+        // should all be private..
+        internal NanoVG.Params @params;
+        internal float[] commands;
+        internal int ccommands;
+        internal int ncommands;
+        internal float commandx;
+        internal float commandy;
+        internal NVGstate[] states;//[NVG_MAX_STATES];
+        internal int nstates;
+        internal NanoVG.NVGpathCache cache;
+        internal float tessTol;
+        internal float distTol;
+        internal float fringeWidth;
+        internal float devicePxRatio;
+        internal struct FONScontext* fs;
+        internal int[] fontImages;//[NVG_MAX_FONTIMAGES];
+        internal int fontImageIdx;
+        internal int drawCallCount;
+        internal int fillTriCount;
+        internal int strokeTriCount;
+        internal int textTriCount;
     }
 
     public struct Paint
     {
         public float[] xform;//[6];
-        float[] extent;//[2];
-        float radius;
-        float feather;
-        Color innerColor;
-        Color outerColor;
-        int image;
+        public float[] extent;//[2];
+        public float radius;
+        public float feather;
+        public Color innerColor;
+        public Color outerColor;
+        public int image;
     }
 
-    enum Winding
+    public enum Winding
     {
         NVG_CCW = 1, // Winding for solid shapes
         NVG_CW = 2, // Winding for holes
@@ -129,20 +131,20 @@ namespace NanoVG
 
     struct CompositeOperationState
     {
-        int srcRGB;
-        int dstRGB;
-        int srcAlpha;
-        int dstAlpha;
+        public BlendFactor srcRGB;
+        public BlendFactor dstRGB;
+        public BlendFactor srcAlpha;
+        public BlendFactor dstAlpha;
     }
 
-    struct GlyphPosition
+    public struct GlyphPosition
     {
         const char* str;    // Position of the glyph in the input string.
         float x;            // The x-coordinate of the logical glyph position.
         float minx, maxx;   // The bounds of the glyph shape.
     }
 
-    struct TextRow
+    public struct TextRow
     {
         const char* start;  // Pointer to the input text where the row starts.
         const char* end;    // Pointer to the input text where the row ends (one past the last character).
@@ -163,6 +165,10 @@ namespace NanoVG
 
     public class NanoVG
     {
+        private const float NVG_KAPPA90 = 0.5522847493f; // Length proportional to radius of a cubic bezier handle for 90deg arcs.
+
+        #region Frames
+
         // Begin drawing a new frame
         // Calls to nanovg drawing API should be wrapped in nvgBeginFrame() & nvgEndFrame()
         // nvgBeginFrame() defines the size of the window to render to in relation currently
@@ -173,11 +179,13 @@ namespace NanoVG
         // devicePixelRatio to: frameBufferWidth / windowWidth.
         public static void BeginFrame(Context ctx, float windowWidth, float windowHeight, float devicePixelRatio)
         {
-            throw new NotImplementedException();
-            /*
-            printf("Tris: draws:%d  fill:%d  stroke:%d  text:%d  TOT:%d\n",
-		        ctx->drawCallCount, ctx->fillTriCount, ctx->strokeTriCount, ctx->textTriCount,
-		        ctx->fillTriCount+ctx->strokeTriCount+ctx->textTriCount);
+            Debug.WriteLine(
+                "Tris: draws: %d, fill: %d, stroke: %d, text: %d, TOT: %d",
+                ctx.drawCallCount,
+                ctx.fillTriCount,
+                ctx.strokeTriCount,
+                ctx.textTriCount,
+                ctx.fillTriCount + ctx.strokeTriCount + ctx.textTriCount);
 
             ctx.nstates = 0;
             Save(ctx);
@@ -185,60 +193,60 @@ namespace NanoVG
 
             nvg__setDevicePixelRatio(ctx, devicePixelRatio);
 
-            ctx->params.renderViewport(ctx->params.userPtr, windowWidth, windowHeight, devicePixelRatio);
+            ctx.@params.renderViewport(ctx.@params.userPtr, windowWidth, windowHeight, devicePixelRatio);
 
             ctx.drawCallCount = 0;
             ctx.fillTriCount = 0;
             ctx.strokeTriCount = 0;
             ctx.textTriCount = 0;
-            */
         }
 
         // Cancels drawing the current frame.
         public static void CancelFrame(Context ctx)
         {
-            throw new NotImplementedException();
-            /*
-            ctx->params.renderCancel(ctx->params.userPtr);
-            */
+            ctx.@params.renderCancel(ctx.@params.userPtr);
         }
 
         // Ends drawing flushing remaining render state.
         public static void EndFrame(Context ctx)
         {
-            throw new NotImplementedException();
-            /*
-            ctx->params.renderFlush(ctx->params.userPtr);
-            if (ctx->fontImageIdx != 0)
+            //throw new NotImplementedException();
+
+            ctx.@params.renderFlush(ctx.@params.userPtr);
+            if (ctx.fontImageIdx != 0)
             {
-                int fontImage = ctx->fontImages[ctx->fontImageIdx];
+                int fontImage = ctx.fontImages[ctx.fontImageIdx];
                 int i, j, iw, ih;
+
                 // delete images that smaller than current one
                 if (fontImage == 0)
                     return;
-                nvgImageSize(ctx, fontImage, &iw, &ih);
-                for (i = j = 0; i < ctx->fontImageIdx; i++)
+                ImageSize(ctx, fontImage, out iw, out ih);
+                for (i = j = 0; i < ctx.fontImageIdx; i++)
                 {
-                    if (ctx->fontImages[i] != 0)
+                    if (ctx.fontImages[i] != 0)
                     {
                         int nw, nh;
-                        nvgImageSize(ctx, ctx->fontImages[i], &nw, &nh);
+                        ImageSize(ctx, ctx.fontImages[i], out nw, out nh);
                         if (nw < iw || nh < ih)
-                            nvgDeleteImage(ctx, ctx->fontImages[i]);
+                            DeleteImage(ctx, ctx.fontImages[i]);
                         else
-                            ctx->fontImages[j++] = ctx->fontImages[i];
+                            ctx.fontImages[j++] = ctx.fontImages[i];
                     }
                 }
+
                 // make current font image to first
-                ctx->fontImages[j++] = ctx->fontImages[0];
-                ctx->fontImages[0] = fontImage;
-                ctx->fontImageIdx = 0;
+                ctx.fontImages[j++] = ctx.fontImages[0];
+                ctx.fontImages[0] = fontImage;
+                ctx.fontImageIdx = 0;
+
                 // clear all images after j
                 for (i = j; i < NVG_MAX_FONTIMAGES; i++)
-                    ctx->fontImages[i] = 0;
+                    ctx.fontImages[i] = 0;
             }
-            */
         }
+
+        #endregion
 
         #region Composite operations
 
@@ -249,36 +257,27 @@ namespace NanoVG
         // Sets the composite operation. The op parameter should be one of NVGcompositeOperation.
         public static void GlobalCompositeOperation(Context ctx, CompositeOperation op)
         {
-            throw new NotImplementedException();
-            /*
-            NVGstate* state = nvg__getState(ctx);
-            state->compositeOperation = nvg__compositeOperationState(op);
-            */
+            var state = nvg__getState(ctx);
+            state.compositeOperation = nvg__compositeOperationState(op);
         }
 
         // Sets the composite operation with custom pixel arithmetic.
         public static void GlobalCompositeBlendFunc(Context ctx, BlendFactor sfactor, BlendFactor dfactor)
         {
-            throw new NotImplementedException();
-            /*
-            nvgGlobalCompositeBlendFuncSeparate(ctx, sfactor, dfactor, sfactor, dfactor);
-            */
+            GlobalCompositeBlendFuncSeparate(ctx, sfactor, dfactor, sfactor, dfactor);
         }
 
         // Sets the composite operation with custom pixel arithmetic for RGB and alpha components separately.
         public static void GlobalCompositeBlendFuncSeparate(Context ctx, BlendFactor srcRGB, BlendFactor dstRGB, BlendFactor srcAlpha, BlendFactor dstAlpha)
         {
-            throw new NotImplementedException();
-            /*
-            NVGcompositeOperationState op;
+            CompositeOperationState op;
             op.srcRGB = srcRGB;
             op.dstRGB = dstRGB;
             op.srcAlpha = srcAlpha;
             op.dstAlpha = dstAlpha;
 
-            NVGstate* state = nvg__getState(ctx);
-            state->compositeOperation = op;
-            */
+            NVGstate state = nvg__getState(ctx);
+            state.compositeOperation = op;
         }
 
         #endregion
@@ -465,89 +464,77 @@ namespace NanoVG
         // Sets whether to draw antialias for nvgStroke() and nvgFill(). It's enabled by default.
         public static void ShapeAntiAlias(Context ctx, int enabled)
         {
-            throw new NotImplementedException();
-            /*
-            NVGstate* state = nvg__getState(ctx);
-	        state->shapeAntiAlias = enabled;
-            */
+            var state = nvg__getState(ctx);
+            state.shapeAntiAlias = enabled;
         }
 
         // Sets current stroke style to a solid color.
         public static void StrokeColor(Context ctx, Color color)
         {
-            throw new NotImplementedException();
+            var state = nvg__getState(ctx);
+            nvg__setPaintColor(ref state.stroke, color);
         }
 
         // Sets current stroke style to a paint, which can be a one of the gradients or a pattern.
         public static void StrokePaint(Context ctx, Paint paint)
         {
-            throw new NotImplementedException();
+            var state = nvg__getState(ctx);
+            state.stroke = paint;
+            TransformMultiply(state.stroke.xform, state.xform);
         }
 
         // Sets current fill style to a solid color.
         public static void FillColor(Context ctx, Color color)
         {
-            throw new NotImplementedException();
+            var state = nvg__getState(ctx);
+            nvg__setPaintColor(ref state.fill, color);
         }
 
         // Sets current fill style to a paint, which can be a one of the gradients or a pattern.
         public static void FillPaint(Context ctx, Paint paint)
         {
-            throw new NotImplementedException();
+            var state = nvg__getState(ctx);
+            state.fill = paint;
+            TransformMultiply(state.fill.xform, state.xform);
         }
 
         // Sets the miter limit of the stroke style.
         // Miter limit controls when a sharp corner is beveled.
         public static void MiterLimit(Context ctx, float limit)
         {
-            throw new NotImplementedException();
-            /*
-            NVGstate* state = nvg__getState(ctx);
-            state->miterLimit = limit;
-            */
+            var state = nvg__getState(ctx);
+            state.miterLimit = limit;
         }
 
         // Sets the stroke width of the stroke style.
         public static void StrokeWidth(Context ctx, float size)
         {
-            throw new NotImplementedException();
-            /*
-            NVGstate* state = nvg__getState(ctx);
-	        state->strokeWidth = width;
-             */
+            var state = nvg__getState(ctx);
+            state.strokeWidth = size;
         }
 
         // Sets how the end of the line (cap) is drawn,
         // Can be one of: NVG_BUTT (default), NVG_ROUND, NVG_SQUARE.
         public static void LineCap(Context ctx, int cap)
         {
-            throw new NotImplementedException();
-            /*
-            NVGstate* state = nvg__getState(ctx);
-	        state->lineCap = cap;
-             */
+            var state = nvg__getState(ctx);
+            state.lineCap = cap;
         }
 
         // Sets how sharp path corners are drawn.
         // Can be one of NVG_MITER (default), NVG_ROUND, NVG_BEVEL.
         public static void LineJoin(Context ctx, int join)
         {
-            throw new NotImplementedException();
-            /*
-            NVGstate* state = nvg__getState(ctx);
-	        state->lineJoin = join;
-            */
+            var state = nvg__getState(ctx);
+            state.lineJoin = join;
         }
 
         // Sets the transparency applied to all rendered shapes.
         // Already transparent paths will get proportionally more transparent as well.
         public static void GlobalAlpha(Context ctx, float alpha)
         {
-            throw new NotImplementedException();
-            /*
-            NVGstate* state = nvg__getState(ctx);
-            state->alpha = alpha;
-            */
+            var state = nvg__getState(ctx);
+            state.alpha = alpha;
         }
 
         #endregion
@@ -571,11 +558,8 @@ namespace NanoVG
         // Resets current transform to a identity matrix.
         public static void ResetTransform(Context ctx)
         {
-            throw new NotImplementedException();
-            /*
-       	    NVGstate* state = nvg__getState(ctx);
-	        nvgTransformIdentity(state->xform);     
-            */
+            var state = nvg__getState(ctx);
+            TransformIdentity(state.xform);
         }
 
         // Premultiplies current coordinate system by specified matrix.
@@ -585,72 +569,54 @@ namespace NanoVG
         //   [0 0 1]
         public static void Transform(Context ctx, float a, float b, float c, float d, float e, float f)
         {
-            throw new NotImplementedException();
-            /*
-	        NVGstate* state = nvg__getState(ctx);
-	        float t[6] = { a, b, c, d, e, f };
-	        nvgTransformPremultiply(state->xform, t);
-            */
+            var state = nvg__getState(ctx);
+            float[] t = { a, b, c, d, e, f };
+            TransformPremultiply(state.xform, t);
         }
 
         // Translates current coordinate system.
         public static void Translate(Context ctx, float x, float y)
         {
-            throw new NotImplementedException();
-            /*
-            NVGstate* state = nvg__getState(ctx);
-	        float t[6];
-	        nvgTransformTranslate(t, x,y);
-	        nvgTransformPremultiply(state->xform, t);
-            */
+            var state = nvg__getState(ctx);
+            var t = new float[6];
+            TransformTranslate(t, x, y);
+            TransformPremultiply(state.xform, t);
         }
 
         // Rotates current coordinate system. Angle is specified in radians.
         public static void Rotate(Context ctx, float angle)
         {
-            throw new NotImplementedException();
-            /*
-            NVGstate* state = nvg__getState(ctx);
-	        float t[6];
-	        nvgTransformRotate(t, angle);
-	        nvgTransformPremultiply(state->xform, t);
-            */
+            var state = nvg__getState(ctx);
+            var t = new float[6];
+            TransformRotate(t, angle);
+            TransformPremultiply(state.xform, t);
         }
 
         // Skews the current coordinate system along X axis. Angle is specified in radians.
         public static void SkewX(Context ctx, float angle)
         {
-            throw new NotImplementedException();
-            /*
-            NVGstate* state = nvg__getState(ctx);
-	        float t[6];
-	        nvgTransformSkewX(t, angle);
-	        nvgTransformPremultiply(state->xform, t);
-            */
+            var state = nvg__getState(ctx);
+            var t = new float[6];
+            TransformSkewX(t, angle);
+            TransformPremultiply(state.xform, t);
         }
 
         // Skews the current coordinate system along Y axis. Angle is specified in radians.
         public static void SkewY(Context ctx, float angle)
         {
-            throw new NotImplementedException();
-            /*
-            NVGstate* state = nvg__getState(ctx);
-	        float t[6];
-	        nvgTransformSkewY(t, angle);
-	        nvgTransformPremultiply(state->xform, t);
-            */
+            var state = nvg__getState(ctx);
+            var t = new float[6];
+            TransformSkewY(t, angle);
+            TransformPremultiply(state.xform, t);
         }
 
         // Scales the current coordinate system.
         public static void Scale(Context ctx, float x, float y)
         {
-            throw new NotImplementedException();
-            /*
-            NVGstate* state = nvg__getState(ctx);
-	        float t[6];
-	        nvgTransformScale(t, x,y);
-	        nvgTransformPremultiply(state->xform, t);
-            */
+            var state = nvg__getState(ctx);
+            var t = new float[6];
+            TransformScale(t, x, y);
+            TransformPremultiply(state.xform, t);
         }
 
         // Stores the top part (a-f) of the current transformation matrix in to the specified buffer.
@@ -660,14 +626,11 @@ namespace NanoVG
         // There should be space for 6 floats in the return buffer for the values a-f.
         public static void CurrentTransform(Context ctx, float[] xform)
         {
-            throw new NotImplementedException();
-            /*
-            NVGstate* state = nvg__getState(ctx);
-	        if (xform == NULL) return;
-	        memcpy(xform, state->xform, sizeof(float)*6);
-            */
+            var state = nvg__getState(ctx);
+            if (xform == null)
+                return;
+            Array.Copy(state.xform, xform, 6);
         }
-
 
         // The following functions can be used to make calculations on 2x3 transformation matrices.
         // A 2x3 matrix is represented as float[6].
@@ -837,23 +800,21 @@ namespace NanoVG
         // Updates image data specified by image handle.
         public static void UpdateImage(Context ctx, int image, byte[] data)
         {
-            /*
             int w, h;
-            ctx->params.renderGetTextureSize(ctx->params.userPtr, image, &w, &h);
-            ctx->params.renderUpdateTexture(ctx->params.userPtr, image, 0,0, w, h, data);
-            */
+            ctx.@params.renderGetTextureSize(ctx.@params.userPtr, image, out w, out h);
+            ctx.@params.renderUpdateTexture(ctx.@params.userPtr, image, 0, 0, w, h, data);
         }
 
         // Returns the dimensions of a created image.
         public static void ImageSize(Context ctx, int image, out int w, out int h)
         {
-            // ctx->params.renderGetTextureSize(ctx->params.userPtr, image, w, h);
+            ctx.@params.renderGetTextureSize(ctx.@params.userPtr, image, out w, out h);
         }
 
         // Deletes created image.
         public static void DeleteImage(Context ctx, int image)
         {
-            // ctx->params.renderGetTextureSize(ctx->params.userPtr, image, w, h);
+            ctx.@params.renderDeleteTexture(ctx.@params.userPtr, image);
         }
 
         #endregion
@@ -868,42 +829,38 @@ namespace NanoVG
         // The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
         public static Paint LinearGradient(Context ctx, float sx, float sy, float ex, float ey, Color icol, Color ocol)
         {
-            throw new NotImplementedException();
-            /*
-            NVGpaint p;
-	        float dx, dy, d;
-	        const float large = 1e5;
-	        NVG_NOTUSED(ctx);
-	        memset(&p, 0, sizeof(p));
+            Paint p = new Paint();
+            float dx, dy, d;
+            const float large = 100000;
+            //NVG_NOTUSED(ctx);
 
-	        // Calculate transform aligned to the line
-	        dx = ex - sx;
-	        dy = ey - sy;
-	        d = sqrtf(dx*dx + dy*dy);
-	        if (d > 0.0001f) {
-		        dx /= d;
-		        dy /= d;
-	        } else {
-		        dx = 0;
-		        dy = 1;
-	        }
+            // Calculate transform aligned to the line
+            dx = ex - sx;
+            dy = ey - sy;
+            d = (float)Math.Sqrt(dx * dx + dy * dy);
+            if (d > 0.0001f) {
+                dx /= d;
+                dy /= d;
+            } else {
+                dx = 0;
+                dy = 1;
+            }
 
-	        p.xform[0] = dy; p.xform[1] = -dx;
-	        p.xform[2] = dx; p.xform[3] = dy;
-	        p.xform[4] = sx - dx*large; p.xform[5] = sy - dy*large;
+            p.xform[0] = dy; p.xform[1] = -dx;
+            p.xform[2] = dx; p.xform[3] = dy;
+            p.xform[4] = sx - dx*large; p.xform[5] = sy - dy*large;
 
-	        p.extent[0] = large;
-	        p.extent[1] = large + d*0.5f;
+            p.extent[0] = large;
+            p.extent[1] = large + d*0.5f;
 
-	        p.radius = 0.0f;
+            p.radius = 0.0f;
 
-	        p.feather = nvg__maxf(1.0f, d);
+            p.feather = Math.Max(1.0f, d);
 
-	        p.innerColor = icol;
-	        p.outerColor = ocol;
+            p.innerColor = icol;
+            p.outerColor = ocol;
 
-	        return p;
-            */
+            return p;
         }
 
         // Creates and returns a box gradient. Box gradient is a feathered rounded rectangle, it is useful for rendering
@@ -913,13 +870,10 @@ namespace NanoVG
         // The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
         public static Paint BoxGradient(Context ctx, float x, float y, float w, float h, float r, float f, Color icol, Color ocol)
         {
-            throw new NotImplementedException();
-            /*
-            NVGpaint p;
-            NVG_NOTUSED(ctx);
-            memset(&p, 0, sizeof(p));
+            Paint p = new Paint();
+            //NVG_NOTUSED(ctx);
 
-            nvgTransformIdentity(p.xform);
+            TransformIdentity(p.xform);
             p.xform[4] = x + w * 0.5f;
             p.xform[5] = y + h * 0.5f;
 
@@ -928,13 +882,12 @@ namespace NanoVG
 
             p.radius = r;
 
-            p.feather = nvg__maxf(1.0f, f);
+            p.feather = Math.Max(1.0f, f);
 
             p.innerColor = icol;
             p.outerColor = ocol;
 
             return p;
-            */
         }
 
         // Creates and returns a radial gradient. Parameters (cx,cy) specify the center, inr and outr specify
@@ -942,44 +895,37 @@ namespace NanoVG
         // The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
         public static Paint RadialGradient(Context ctx, float cx, float cy, float inr, float outr, Color icol, Color ocol)
         {
-            throw new NotImplementedException();
-            /*
-            NVGpaint p;
-	        float r = (inr+outr)*0.5f;
-	        float f = (outr-inr);
-	        NVG_NOTUSED(ctx);
-	        memset(&p, 0, sizeof(p));
+            Paint p = new Paint();
+            float r = (inr + outr) * 0.5f;
+            float f = outr - inr;
+            //NVG_NOTUSED(ctx);
 
-	        nvgTransformIdentity(p.xform);
-	        p.xform[4] = cx;
-	        p.xform[5] = cy;
+            TransformIdentity(p.xform);
+            p.xform[4] = cx;
+            p.xform[5] = cy;
 
-	        p.extent[0] = r;
-	        p.extent[1] = r;
+            p.extent[0] = r;
+            p.extent[1] = r;
 
-	        p.radius = r;
+            p.radius = r;
 
-	        p.feather = nvg__maxf(1.0f, f);
+            p.feather = Math.Max(1.0f, f);
 
-	        p.innerColor = icol;
-	        p.outerColor = ocol;
-
-	        return p;
-            */
+            p.innerColor = icol;
+            p.outerColor = ocol;
+ 
+            return p;
         }
 
-        // Creates and returns an image patter. Parameters (ox,oy) specify the left-top location of the image pattern,
-        // (ex,ey) the size of one image, angle rotation around the top-left corner, image is handle to the image to render.
+        // Creates and returns an image patter. Parameters (cx,cy) specify the left-top location of the image pattern,
+        // (w,h) the size of one image, angle rotation around the top-left corner, image is handle to the image to render.
         // The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
-        public static Paint ImagePattern(Context ctx, float ox, float oy, float ex, float ey, float angle, int image, float alpha)
+        public static Paint ImagePattern(Context ctx, float cx, float cy, float w, float h, float angle, int image, float alpha)
         {
-            throw new NotImplementedException();
-            /*
-            NVGpaint p;
-            NVG_NOTUSED(ctx);
-            memset(&p, 0, sizeof(p));
+            Paint p = new Paint();
+            //NVG_NOTUSED(ctx);
 
-            nvgTransformRotate(p.xform, angle);
+            TransformRotate(p.xform, angle);
             p.xform[4] = cx;
             p.xform[5] = cy;
 
@@ -988,10 +934,9 @@ namespace NanoVG
 
             p.image = image;
 
-            p.innerColor = p.outerColor = nvgRGBAf(1, 1, 1, alpha);
+            p.innerColor = p.outerColor = RGBAf(1, 1, 1, alpha);
 
             return p;
-            */
         }
 
         #endregion
@@ -1005,21 +950,18 @@ namespace NanoVG
         // The scissor rectangle is transformed by the current transform.
         public static void Scissor(Context ctx, float x, float y, float w, float h)
         {
-            throw new NotImplementedException();
-            /*
-            NVGstate* state = nvg__getState(ctx);
+            var state = nvg__getState(ctx);
 
-            w = nvg__maxf(0.0f, w);
-            h = nvg__maxf(0.0f, h);
+            w = Math.Max(0.0f, w);
+            h = Math.Max(0.0f, h);
 
-            nvgTransformIdentity(state->scissor.xform);
-            state->scissor.xform[4] = x + w * 0.5f;
-            state->scissor.xform[5] = y + h * 0.5f;
-            nvgTransformMultiply(state->scissor.xform, state->xform);
+            TransformIdentity(state.scissor.xform);
+            state.scissor.xform[4] = x + w * 0.5f;
+            state.scissor.xform[5] = y + h * 0.5f;
+            TransformMultiply(state.scissor.xform, state.xform);
 
-            state->scissor.extent[0] = w * 0.5f;
-            state->scissor.extent[1] = h * 0.5f;
-            */
+            state.scissor.extent[0] = w * 0.5f;
+            state.scissor.extent[1] = h * 0.5f;
         }
 
         // Intersects current scissor rectangle with the specified rectangle.
@@ -1030,47 +972,41 @@ namespace NanoVG
         // transform space. The resulting shape is always rectangle.
         public static void IntersectScissor(Context ctx, float x, float y, float w, float h)
         {
-            throw new NotImplementedException();
-            /*
-            NVGstate* state = nvg__getState(ctx);
-            float pxform[6], invxorm[6];
-            float rect[4];
+            var state = nvg__getState(ctx);
+            float[] pxform = new float[6];
+            float[] invxorm = new float[6];
+            float[] rect = new float[4];
             float ex, ey, tex, tey;
 
             // If no previous scissor has been set, set the scissor as current scissor.
-            if (state->scissor.extent[0] < 0)
+            if (state.scissor.extent[0] < 0)
             {
-                nvgScissor(ctx, x, y, w, h);
+                Scissor(ctx, x, y, w, h);
                 return;
             }
 
             // Transform the current scissor rect into current transform space.
             // If there is difference in rotation, this will be approximation.
-            memcpy(pxform, state->scissor.xform, sizeof(float) * 6);
-            ex = state->scissor.extent[0];
-            ey = state->scissor.extent[1];
-            nvgTransformInverse(invxorm, state->xform);
-            nvgTransformMultiply(pxform, invxorm);
-            tex = ex * nvg__absf(pxform[0]) + ey * nvg__absf(pxform[2]);
-            tey = ex * nvg__absf(pxform[1]) + ey * nvg__absf(pxform[3]);
+            Array.Copy(state.scissor.xform, pxform, 6);
+            ex = state.scissor.extent[0];
+            ey = state.scissor.extent[1];
+            TransformInverse(invxorm, state.xform);
+            TransformMultiply(pxform, invxorm);
+            tex = ex * Math.Abs(pxform[0]) + ey * Math.Abs(pxform[2]);
+            tey = ex * Math.Abs(pxform[1]) + ey * Math.Abs(pxform[3]);
 
             // Intersect rects.
             nvg__isectRects(rect, pxform[4] - tex, pxform[5] - tey, tex * 2, tey * 2, x, y, w, h);
-
-            nvgScissor(ctx, rect[0], rect[1], rect[2], rect[3]);
-            */
+            Scissor(ctx, rect[0], rect[1], rect[2], rect[3]);
         }
 
         // Reset and disables scissoring.
         public static void ResetScissor(Context ctx)
         {
-            throw new NotImplementedException();
-            /*
-            NVGstate* state = nvg__getState(ctx);
-	        memset(state->scissor.xform, 0, sizeof(state->scissor.xform));
-	        state->scissor.extent[0] = -1.0f;
-	        state->scissor.extent[1] = -1.0f;
-            */
+            var state = nvg__getState(ctx);
+            Array.Clear(state.scissor.xform, 0, state.scissor.xform.Length);
+            state.scissor.extent[0] = -1.0f;
+            state.scissor.extent[1] = -1.0f;
         }
 
         #endregion
@@ -1091,371 +1027,384 @@ namespace NanoVG
         //
         // The curve segments and sub-paths are transformed by the current transform.
 
-        // Clears the current path and sub-paths.
+        /// <summary>
+        /// Clears the current path and sub-paths.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
         public static void BeginPath(Context ctx)
         {
-            throw new NotImplementedException();
-            /*
-            ctx->ncommands = 0;
+            ctx.ncommands = 0;
             nvg__clearPathCache(ctx);
-            */
         }
 
         // Starts new sub-path with specified point as first point.
         public static void MoveTo(Context ctx, float x, float y)
         {
-            throw new NotImplementedException();
-            /*
-	float vals[] = { NVG_MOVETO, x, y };
-	nvg__appendCommands(ctx, vals, NVG_COUNTOF(vals));
-*/
+            float[] vals = { (float)NVGcommands.NVG_MOVETO, x, y };
+            nvg__appendCommands(ctx, vals, vals.Length);
         }
 
         // Adds line segment from the last point in the path to the specified point.
         public static void LineTo(Context ctx, float x, float y)
         {
-            throw new NotImplementedException();
-            /*
-	float vals[] = { NVG_LINETO, x, y };
-	nvg__appendCommands(ctx, vals, NVG_COUNTOF(vals));
-*/
+            float[] vals = { (float)NVGcommands.NVG_LINETO, x, y };
+            nvg__appendCommands(ctx, vals, vals.Length);
         }
 
         // Adds cubic bezier segment from last point in the path via two control points to the specified point.
         public static void BezierTo(Context ctx, float c1x, float c1y, float c2x, float c2y, float x, float y)
         {
-            throw new NotImplementedException();
-            /*
-	float vals[] = { NVG_BEZIERTO, c1x, c1y, c2x, c2y, x, y };
-	nvg__appendCommands(ctx, vals, NVG_COUNTOF(vals));
-*/
+            float[] vals = { (float)NVGcommands.NVG_BEZIERTO, c1x, c1y, c2x, c2y, x, y };
+            nvg__appendCommands(ctx, vals, vals.Length);
         }
 
         // Adds quadratic bezier segment from last point in the path via a control point to the specified point.
         public static void QuadTo(Context ctx, float cx, float cy, float x, float y)
         {
-            throw new NotImplementedException();
-            /*
-    float x0 = ctx->commandx;
-    float y0 = ctx->commandy;
-    float vals[] = { NVG_BEZIERTO,
-        x0 + 2.0f/3.0f*(cx - x0), y0 + 2.0f/3.0f*(cy - y0),
-        x + 2.0f/3.0f*(cx - x), y + 2.0f/3.0f*(cy - y),
-        x, y };
-    nvg__appendCommands(ctx, vals, NVG_COUNTOF(vals));
-*/
+            float x0 = ctx.commandx;
+            float y0 = ctx.commandy;
+            float[] vals =
+            {
+                (float)NVGcommands.NVG_BEZIERTO,
+                x0 + 2.0f/3.0f * (cx - x0), y0 + 2.0f/3.0f * (cy - y0),
+                x + 2.0f/3.0f * (cx - x), y + 2.0f/3.0f * (cy - y),
+                x, y,
+            };
+            nvg__appendCommands(ctx, vals, vals.Length);
         }
 
         // Adds an arc segment at the corner defined by the last path point, and two specified points.
         public static void ArcTo(Context ctx, float x1, float y1, float x2, float y2, float radius)
         {
-            throw new NotImplementedException();
-            /*
-	float x0 = ctx->commandx;
-	float y0 = ctx->commandy;
-	float dx0,dy0, dx1,dy1, a, d, cx,cy, a0,a1;
-	int dir;
+            float x0 = ctx.commandx;
+            float y0 = ctx.commandy;
+            float dx0, dy0, dx1, dy1, a, d, cx, cy, a0, a1;
+            Winding dir;
 
-	if (ctx->ncommands == 0) {
-		return;
-	}
+            if (ctx.ncommands == 0)
+            {
+                return;
+            }
 
-	// Handle degenerate cases.
-	if (nvg__ptEquals(x0,y0, x1,y1, ctx->distTol) ||
-		nvg__ptEquals(x1,y1, x2,y2, ctx->distTol) ||
-		nvg__distPtSeg(x1,y1, x0,y0, x2,y2) < ctx->distTol*ctx->distTol ||
-		radius < ctx->distTol) {
-		nvgLineTo(ctx, x1,y1);
-		return;
-	}
+            // Handle degenerate cases.
+            if (nvg__ptEquals(x0, y0, x1, y1, ctx.distTol)
+                || nvg__ptEquals(x1, y1, x2, y2, ctx.distTol)
+                || nvg__distPtSeg(x1,y1, x0,y0, x2,y2) < ctx.distTol * ctx.distTol
+                || radius < ctx.distTol)
+            {
+                LineTo(ctx, x1, y1);
+                return;
+            }
 
-	// Calculate tangential circle to lines (x0,y0)-(x1,y1) and (x1,y1)-(x2,y2).
-	dx0 = x0-x1;
-	dy0 = y0-y1;
-	dx1 = x2-x1;
-	dy1 = y2-y1;
-	nvg__normalize(&dx0,&dy0);
-	nvg__normalize(&dx1,&dy1);
-	a = nvg__acosf(dx0*dx1 + dy0*dy1);
-	d = radius / nvg__tanf(a/2.0f);
+            // Calculate tangential circle to lines (x0,y0)-(x1,y1) and (x1,y1)-(x2,y2).
+            dx0 = x0-x1;
+            dy0 = y0-y1;
+            dx1 = x2-x1;
+            dy1 = y2-y1;
+            nvg__normalize(ref dx0, ref dy0);
+            nvg__normalize(ref dx1, ref dy1);
+            a = (float)Math.Acos(dx0 * dx1 + dy0 * dy1);
+            d = radius / (float)Math.Tan(a / 2.0f);
 
-//	printf("a=%f° d=%f\n", a/NVG_PI*180.0f, d);
+            //	printf("a=%f° d=%f\n", a/NVG_PI*180.0f, d);
 
-	if (d > 10000.0f) {
-		nvgLineTo(ctx, x1,y1);
-		return;
-	}
+            if (d > 10000.0f)
+            {
+                LineTo(ctx, x1,y1);
+                return;
+            }
 
-	if (nvg__cross(dx0,dy0, dx1,dy1) > 0.0f) {
-		cx = x1 + dx0*d + dy0*radius;
-		cy = y1 + dy0*d + -dx0*radius;
-		a0 = nvg__atan2f(dx0, -dy0);
-		a1 = nvg__atan2f(-dx1, dy1);
-		dir = NVG_CW;
-//		printf("CW c=(%f, %f) a0=%f° a1=%f°\n", cx, cy, a0/NVG_PI*180.0f, a1/NVG_PI*180.0f);
-	} else {
-		cx = x1 + dx0*d + -dy0*radius;
-		cy = y1 + dy0*d + dx0*radius;
-		a0 = nvg__atan2f(-dx0, dy0);
-		a1 = nvg__atan2f(dx1, -dy1);
-		dir = NVG_CCW;
-//		printf("CCW c=(%f, %f) a0=%f° a1=%f°\n", cx, cy, a0/NVG_PI*180.0f, a1/NVG_PI*180.0f);
-	}
+            if (nvg__cross(dx0,dy0, dx1,dy1) > 0.0f)
+            {
+                cx = x1 + dx0*d + dy0*radius;
+                cy = y1 + dy0*d + -dx0*radius;
+                a0 = (float)Math.Atan2(dx0, -dy0);
+                a1 = (float)Math.Atan2(-dx1, dy1);
+                dir = Winding.NVG_CW;
+                // printf("CW c=(%f, %f) a0=%f° a1=%f°\n", cx, cy, a0/NVG_PI*180.0f, a1/NVG_PI*180.0f);
+            }
+            else
+            {
+                cx = x1 + dx0*d + -dy0*radius;
+                cy = y1 + dy0*d + dx0*radius;
+                a0 = (float)Math.Atan2(-dx0, dy0);
+                a1 = (float)Math.Atan2(dx1, -dy1);
+                dir = Winding.NVG_CCW;
+                //printf("CCW c=(%f, %f) a0=%f° a1=%f°\n", cx, cy, a0/NVG_PI*180.0f, a1/NVG_PI*180.0f);
+            }
 
-	nvgArc(ctx, cx, cy, radius, a0, a1, dir);
-*/
+            Arc(ctx, cx, cy, radius, a0, a1, dir);
         }
 
-        // Closes current sub-path with a line segment.
+        /// <summary>
+        /// Closes current sub-path with a line segment.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
         public static void ClosePath(Context ctx)
         {
-            throw new NotImplementedException();
-            /*
-	float vals[] = { NVG_CLOSE };
-	nvg__appendCommands(ctx, vals, NVG_COUNTOF(vals));
-*/
+            float[] vals = { (float)NVGcommands.NVG_CLOSE };
+            nvg__appendCommands(ctx, vals, vals.Length);
         }
 
-        // Sets the current sub-path winding, see NVGwinding and NVGsolidity. 
-        public static void PathWinding(Context ctx, int dir)
+        // Sets the current sub-path winding, see NVGwinding and NVGsolidity.
+        public static void PathWinding(Context ctx, Winding dir)
         {
-            throw new NotImplementedException();
-            /*
-	float vals[] = { NVG_WINDING, (float)dir };
-	nvg__appendCommands(ctx, vals, NVG_COUNTOF(vals));
-*/
+            float[] vals = { (float)NVGcommands.NVG_WINDING, (float)dir };
+            nvg__appendCommands(ctx, vals, vals.Length);
         }
 
         // Creates new circle arc shaped sub-path. The arc center is at cx,cy, the arc radius is r,
         // and the arc is drawn from angle a0 to a1, and swept in direction dir (NVG_CCW, or NVG_CW).
         // Angles are specified in radians.
-        public static void Arc(Context ctx, float cx, float cy, float r, float a0, float a1, int dir)
+        public static void Arc(Context ctx, float cx, float cy, float r, float a0, float a1, Winding dir)
         {
-            throw new NotImplementedException();
-            /*
-	float a = 0, da = 0, hda = 0, kappa = 0;
-	float dx = 0, dy = 0, x = 0, y = 0, tanx = 0, tany = 0;
-	float px = 0, py = 0, ptanx = 0, ptany = 0;
-	float vals[3 + 5*7 + 100];
-	int i, ndivs, nvals;
-	int move = ctx->ncommands > 0 ? NVG_LINETO : NVG_MOVETO;
+            float a = 0, da = 0, hda = 0, kappa = 0;
+            float dx = 0, dy = 0, x = 0, y = 0, tanx = 0, tany = 0;
+            float px = 0, py = 0, ptanx = 0, ptany = 0;
+            float[] vals = new float[3 + 5 * 7 + 100]; // todo: stackalloc?
+            int i, ndivs, nvals;
+            NVGcommands move = ctx.ncommands > 0 ? NVGcommands.NVG_LINETO : NVGcommands.NVG_MOVETO;
 
-	// Clamp angles
-	da = a1 - a0;
-	if (dir == NVG_CW) {
-		if (nvg__absf(da) >= NVG_PI*2) {
-			da = NVG_PI*2;
-		} else {
-			while (da < 0.0f) da += NVG_PI*2;
-		}
-	} else {
-		if (nvg__absf(da) >= NVG_PI*2) {
-			da = -NVG_PI*2;
-		} else {
-			while (da > 0.0f) da -= NVG_PI*2;
-		}
-	}
+            // Clamp angles
+            da = a1 - a0;
+            if (dir == Winding.NVG_CW)
+            {
+                if (Math.Abs(da) >= Math.PI * 2)
+                {
+                    da = (float)Math.PI * 2;
+                }
+                else
+                {
+                    while (da < 0.0f)
+                    {
+                        da += (float)Math.PI * 2;
+                    }
+                }
+            }
+            else
+            {
+                if (Math.Abs(da) >= Math.PI * 2)
+                {
+                    da = -(float)Math.PI * 2;
+                }
+                else
+                {
+                    while (da > 0.0f)
+                    {
+                        da -= (float)Math.PI * 2;
+                    }
+                }
+            }
 
-	// Split arc into max 90 degree segments.
-	ndivs = nvg__maxi(1, nvg__mini((int)(nvg__absf(da) / (NVG_PI*0.5f) + 0.5f), 5));
-	hda = (da / (float)ndivs) / 2.0f;
-	kappa = nvg__absf(4.0f / 3.0f * (1.0f - nvg__cosf(hda)) / nvg__sinf(hda));
+            // Split arc into max 90 degree segments.
+            ndivs = Math.Max(1, Math.Min((int)(Math.Abs(da) / (Math.PI * 0.5f) + 0.5f), 5));
+            hda = (da / (float)ndivs) / 2.0f;
+            kappa = (float)Math.Abs(4.0f / 3.0f * (1.0f - Math.Cos(hda)) / Math.Sin(hda));
 
-	if (dir == NVG_CCW)
-		kappa = -kappa;
+            if (dir == Winding.NVG_CCW)
+            {
+                kappa = -kappa;
+            }
 
-	nvals = 0;
-	for (i = 0; i <= ndivs; i++) {
-		a = a0 + da * (i/(float)ndivs);
-		dx = nvg__cosf(a);
-		dy = nvg__sinf(a);
-		x = cx + dx*r;
-		y = cy + dy*r;
-		tanx = -dy*r*kappa;
-		tany = dx*r*kappa;
+            nvals = 0;
+            for (i = 0; i <= ndivs; i++)
+            {
+                a = a0 + da * (i / (float)ndivs);
+                dx = (float)Math.Cos(a);
+                dy = (float)Math.Sin(a);
+                x = cx + dx*r;
+                y = cy + dy*r;
+                tanx = -dy*r*kappa;
+                tany = dx*r*kappa;
 
-		if (i == 0) {
-			vals[nvals++] = (float)move;
-			vals[nvals++] = x;
-			vals[nvals++] = y;
-		} else {
-			vals[nvals++] = NVG_BEZIERTO;
-			vals[nvals++] = px+ptanx;
-			vals[nvals++] = py+ptany;
-			vals[nvals++] = x-tanx;
-			vals[nvals++] = y-tany;
-			vals[nvals++] = x;
-			vals[nvals++] = y;
-		}
-		px = x;
-		py = y;
-		ptanx = tanx;
-		ptany = tany;
-	}
+                if (i == 0) {
+                    vals[nvals++] = (float)move;
+                    vals[nvals++] = x;
+                    vals[nvals++] = y;
+                } else {
+                    vals[nvals++] = (float)NVGcommands.NVG_BEZIERTO;
+                    vals[nvals++] = px+ptanx;
+                    vals[nvals++] = py+ptany;
+                    vals[nvals++] = x-tanx;
+                    vals[nvals++] = y-tany;
+                    vals[nvals++] = x;
+                    vals[nvals++] = y;
+                }
+                px = x;
+                py = y;
+                ptanx = tanx;
+                ptany = tany;
+            }
 
-	nvg__appendCommands(ctx, vals, nvals);
-*/
+            nvg__appendCommands(ctx, vals, nvals);
         }
 
         // Creates new rectangle shaped sub-path.
         public static void Rect(Context ctx, float x, float y, float w, float h)
         {
-            throw new NotImplementedException();
-            /*
-	float vals[] = {
-		NVG_MOVETO, x,y,
-		NVG_LINETO, x,y+h,
-		NVG_LINETO, x+w,y+h,
-		NVG_LINETO, x+w,y,
-		NVG_CLOSE
-	};
-	nvg__appendCommands(ctx, vals, NVG_COUNTOF(vals));
-*/
+            float[] vals =
+            {
+                (float)NVGcommands.NVG_MOVETO, x, y,
+                (float)NVGcommands.NVG_LINETO, x, y + h,
+                (float)NVGcommands.NVG_LINETO, x + w, y + h,
+                (float)NVGcommands.NVG_LINETO, x + w, y,
+                (float)NVGcommands.NVG_CLOSE,
+            };
+
+            nvg__appendCommands(ctx, vals, vals.Length);
         }
 
         // Creates new rounded rectangle shaped sub-path.
         public static void RoundedRect(Context ctx, float x, float y, float w, float h, float r)
         {
-            throw new NotImplementedException();
-            /*
-	nvgRoundedRectVarying(ctx, x, y, w, h, r, r, r, r);
-*/
+            RoundedRectVarying(ctx, x, y, w, h, r, r, r, r);
         }
 
         // Creates new rounded rectangle shaped sub-path with varying radii for each corner.
         public static void RoundedRectVarying(Context ctx, float x, float y, float w, float h, float radTopLeft, float radTopRight, float radBottomRight, float radBottomLeft)
         {
-            throw new NotImplementedException();
-            /*
-	if(radTopLeft < 0.1f && radTopRight < 0.1f && radBottomRight < 0.1f && radBottomLeft < 0.1f) {
-		nvgRect(ctx, x, y, w, h);
-		return;
-	} else {
-		float halfw = nvg__absf(w)*0.5f;
-		float halfh = nvg__absf(h)*0.5f;
-		float rxBL = nvg__minf(radBottomLeft, halfw) * nvg__signf(w), ryBL = nvg__minf(radBottomLeft, halfh) * nvg__signf(h);
-		float rxBR = nvg__minf(radBottomRight, halfw) * nvg__signf(w), ryBR = nvg__minf(radBottomRight, halfh) * nvg__signf(h);
-		float rxTR = nvg__minf(radTopRight, halfw) * nvg__signf(w), ryTR = nvg__minf(radTopRight, halfh) * nvg__signf(h);
-		float rxTL = nvg__minf(radTopLeft, halfw) * nvg__signf(w), ryTL = nvg__minf(radTopLeft, halfh) * nvg__signf(h);
-		float vals[] = {
-			NVG_MOVETO, x, y + ryTL,
-			NVG_LINETO, x, y + h - ryBL,
-			NVG_BEZIERTO, x, y + h - ryBL*(1 - NVG_KAPPA90), x + rxBL*(1 - NVG_KAPPA90), y + h, x + rxBL, y + h,
-			NVG_LINETO, x + w - rxBR, y + h,
-			NVG_BEZIERTO, x + w - rxBR*(1 - NVG_KAPPA90), y + h, x + w, y + h - ryBR*(1 - NVG_KAPPA90), x + w, y + h - ryBR,
-			NVG_LINETO, x + w, y + ryTR,
-			NVG_BEZIERTO, x + w, y + ryTR*(1 - NVG_KAPPA90), x + w - rxTR*(1 - NVG_KAPPA90), y, x + w - rxTR, y,
-			NVG_LINETO, x + rxTL, y,
-			NVG_BEZIERTO, x + rxTL*(1 - NVG_KAPPA90), y, x, y + ryTL*(1 - NVG_KAPPA90), x, y + ryTL,
-			NVG_CLOSE
-		};
-		nvg__appendCommands(ctx, vals, NVG_COUNTOF(vals));
-	}
-*/
+            if (radTopLeft < 0.1f && radTopRight < 0.1f && radBottomRight < 0.1f && radBottomLeft < 0.1f)
+            {
+                Rect(ctx, x, y, w, h);
+                return;
+            }
+            else
+            {
+                float halfw = Math.Abs(w) * 0.5f;
+                float halfh = Math.Abs(h) * 0.5f;
+                float rxBL = Math.Min(radBottomLeft, halfw) * Math.Sign(w);
+                float ryBL = Math.Min(radBottomLeft, halfh) * Math.Sign(h);
+                float rxBR = Math.Min(radBottomRight, halfw) * Math.Sign(w);
+                float ryBR = Math.Min(radBottomRight, halfh) * Math.Sign(h);
+                float rxTR = Math.Min(radTopRight, halfw) * Math.Sign(w);
+                float ryTR = Math.Min(radTopRight, halfh) * Math.Sign(h);
+                float rxTL = Math.Min(radTopLeft, halfw) * Math.Sign(w);
+                float ryTL = Math.Min(radTopLeft, halfh) * Math.Sign(h);
+                float[] vals =
+                {
+                    (float)NVGcommands.NVG_MOVETO, x, y + ryTL,
+                    (float)NVGcommands.NVG_LINETO, x, y + h - ryBL,
+                    (float)NVGcommands.NVG_BEZIERTO, x, y + h - ryBL * (1 - NVG_KAPPA90), x + rxBL * (1 - NVG_KAPPA90), y + h, x + rxBL, y + h,
+                    (float)NVGcommands.NVG_LINETO, x + w - rxBR, y + h,
+                    (float)NVGcommands.NVG_BEZIERTO, x + w - rxBR * (1 - NVG_KAPPA90), y + h, x + w, y + h - ryBR * (1 - NVG_KAPPA90), x + w, y + h - ryBR,
+                    (float)NVGcommands.NVG_LINETO, x + w, y + ryTR,
+                    (float)NVGcommands.NVG_BEZIERTO, x + w, y + ryTR * (1 - NVG_KAPPA90), x + w - rxTR * (1 - NVG_KAPPA90), y, x + w - rxTR, y,
+                    (float)NVGcommands.NVG_LINETO, x + rxTL, y,
+                    (float)NVGcommands.NVG_BEZIERTO, x + rxTL * (1 - NVG_KAPPA90), y, x, y + ryTL * (1 - NVG_KAPPA90), x, y + ryTL,
+                    (float)NVGcommands.NVG_CLOSE,
+                };
+                nvg__appendCommands(ctx, vals, vals.Length);
+            }
         }
 
         // Creates new ellipse shaped sub-path.
         public static void Ellipse(Context ctx, float cx, float cy, float rx, float ry)
         {
-            throw new NotImplementedException();
-            /*
-	float vals[] = {
-		NVG_MOVETO, cx-rx, cy,
-		NVG_BEZIERTO, cx-rx, cy+ry*NVG_KAPPA90, cx-rx*NVG_KAPPA90, cy+ry, cx, cy+ry,
-		NVG_BEZIERTO, cx+rx*NVG_KAPPA90, cy+ry, cx+rx, cy+ry*NVG_KAPPA90, cx+rx, cy,
-		NVG_BEZIERTO, cx+rx, cy-ry*NVG_KAPPA90, cx+rx*NVG_KAPPA90, cy-ry, cx, cy-ry,
-		NVG_BEZIERTO, cx-rx*NVG_KAPPA90, cy-ry, cx-rx, cy-ry*NVG_KAPPA90, cx-rx, cy,
-		NVG_CLOSE
-	};
-	nvg__appendCommands(ctx, vals, NVG_COUNTOF(vals));
-*/
+            float[] vals =
+            {
+                (float)NVGcommands.NVG_MOVETO, cx - rx, cy,
+                (float)NVGcommands.NVG_BEZIERTO, cx - rx, cy + ry * NVG_KAPPA90, cx - rx * NVG_KAPPA90, cy + ry, cx, cy + ry,
+                (float)NVGcommands.NVG_BEZIERTO, cx + rx * NVG_KAPPA90, cy + ry, cx + rx, cy + ry * NVG_KAPPA90, cx + rx, cy,
+                (float)NVGcommands.NVG_BEZIERTO, cx + rx, cy - ry * NVG_KAPPA90, cx + rx * NVG_KAPPA90, cy - ry, cx, cy - ry,
+                (float)NVGcommands.NVG_BEZIERTO, cx - rx * NVG_KAPPA90, cy - ry, cx - rx, cy - ry * NVG_KAPPA90, cx - rx, cy,
+                (float)NVGcommands.NVG_CLOSE,
+            };
+
+            nvg__appendCommands(ctx, vals, vals.Length);
         }
 
-        // Creates new circle shaped sub-path. 
+        // Creates new circle shaped sub-path.
         public static void Circle(Context ctx, float cx, float cy, float r)
         {
-            throw new NotImplementedException();
-            /*
-	nvgEllipse(ctx, cx,cy, r,r);
-*/
+            Ellipse(ctx, cx,cy, r,r);
         }
 
-        // Fills the current path with current fill style.
+        /// <summary>
+        /// Fills the current path with current fill style.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
         public static void Fill(Context ctx)
         {
-            throw new NotImplementedException();
-            /*
-	NVGstate* state = nvg__getState(ctx);
-	const NVGpath* path;
-	NVGpaint fillPaint = state->fill;
-	int i;
+            var state = nvg__getState(ctx);
+            Path path;
+            Paint fillPaint = state.fill;
+            int i;
 
-	nvg__flattenPaths(ctx);
-	if (ctx->params.edgeAntiAlias && state->shapeAntiAlias)
-		nvg__expandFill(ctx, ctx->fringeWidth, NVG_MITER, 2.4f);
-	else
-		nvg__expandFill(ctx, 0.0f, NVG_MITER, 2.4f);
+            nvg__flattenPaths(ctx);
+            if (ctx.@params.edgeAntiAlias != 0 && state.shapeAntiAlias != 0)
+                nvg__expandFill(ctx, ctx.fringeWidth, NVG_MITER, 2.4f);
+            else
+                nvg__expandFill(ctx, 0.0f, NVG_MITER, 2.4f);
 
-	// Apply global alpha
-	fillPaint.innerColor.a *= state->alpha;
-	fillPaint.outerColor.a *= state->alpha;
+            // Apply global alpha
+            fillPaint.innerColor.a *= state.alpha;
+            fillPaint.outerColor.a *= state.alpha;
 
-	ctx->params.renderFill(ctx->params.userPtr, &fillPaint, state->compositeOperation, &state->scissor, ctx->fringeWidth,
-						   ctx->cache->bounds, ctx->cache->paths, ctx->cache->npaths);
+            ctx.@params.renderFill(
+                ctx.@params.userPtr,
+                &fillPaint,
+                state.compositeOperation,
+                &state.scissor,
+                ctx.fringeWidth,
+                ctx.cache.bounds,
+                ctx.cache.paths,
+                ctx.cache.npaths);
 
-	// Count triangles
-	for (i = 0; i < ctx->cache->npaths; i++) {
-		path = &ctx->cache->paths[i];
-		ctx->fillTriCount += path->nfill-2;
-		ctx->fillTriCount += path->nstroke-2;
-		ctx->drawCallCount += 2;
-	}
-*/
+            // Count triangles
+            for (i = 0; i < ctx.cache.npaths; i++) {
+                path = ctx.cache.paths[i];
+                ctx.fillTriCount += path.nfill-2;
+                ctx.fillTriCount += path.nstroke-2;
+                ctx.drawCallCount += 2;
+            }
         }
 
-        // Fills the current path with current stroke style.
+        /// <summary>
+        /// Fills the current path with current stroke style.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
         public static void nvgStroke(Context ctx)
         {
             throw new NotImplementedException();
             /*
-	NVGstate* state = nvg__getState(ctx);
-	float scale = nvg__getAverageScale(state->xform);
-	float strokeWidth = nvg__clampf(state->strokeWidth * scale, 0.0f, 200.0f);
-	NVGpaint strokePaint = state->stroke;
-	const NVGpath* path;
-	int i;
+            NVGstate* state = nvg__getState(ctx);
+            float scale = nvg__getAverageScale(state->xform);
+            float strokeWidth = nvg__clampf(state->strokeWidth * scale, 0.0f, 200.0f);
+            NVGpaint strokePaint = state->stroke;
+            const NVGpath* path;
+            int i;
 
 
-	if (strokeWidth < ctx->fringeWidth) {
-		// If the stroke width is less than pixel size, use alpha to emulate coverage.
-		// Since coverage is area, scale by alpha*alpha.
-		float alpha = nvg__clampf(strokeWidth / ctx->fringeWidth, 0.0f, 1.0f);
-		strokePaint.innerColor.a *= alpha*alpha;
-		strokePaint.outerColor.a *= alpha*alpha;
-		strokeWidth = ctx->fringeWidth;
-	}
+            if (strokeWidth < ctx->fringeWidth) {
+                // If the stroke width is less than pixel size, use alpha to emulate coverage.
+                // Since coverage is area, scale by alpha*alpha.
+                float alpha = nvg__clampf(strokeWidth / ctx->fringeWidth, 0.0f, 1.0f);
+                strokePaint.innerColor.a *= alpha*alpha;
+                strokePaint.outerColor.a *= alpha*alpha;
+                strokeWidth = ctx->fringeWidth;
+            }
 
-	// Apply global alpha
-	strokePaint.innerColor.a *= state->alpha;
-	strokePaint.outerColor.a *= state->alpha;
+            // Apply global alpha
+            strokePaint.innerColor.a *= state->alpha;
+            strokePaint.outerColor.a *= state->alpha;
 
-	nvg__flattenPaths(ctx);
+            nvg__flattenPaths(ctx);
 
-	if (ctx->params.edgeAntiAlias && state->shapeAntiAlias)
-		nvg__expandStroke(ctx, strokeWidth*0.5f, ctx->fringeWidth, state->lineCap, state->lineJoin, state->miterLimit);
-	else
-		nvg__expandStroke(ctx, strokeWidth*0.5f, 0.0f, state->lineCap, state->lineJoin, state->miterLimit);
+            if (ctx->params.edgeAntiAlias && state->shapeAntiAlias)
+                nvg__expandStroke(ctx, strokeWidth*0.5f, ctx->fringeWidth, state->lineCap, state->lineJoin, state->miterLimit);
+            else
+                nvg__expandStroke(ctx, strokeWidth*0.5f, 0.0f, state->lineCap, state->lineJoin, state->miterLimit);
 
-	ctx->params.renderStroke(ctx->params.userPtr, &strokePaint, state->compositeOperation, &state->scissor, ctx->fringeWidth,
-							 strokeWidth, ctx->cache->paths, ctx->cache->npaths);
+            ctx->params.renderStroke(ctx->params.userPtr, &strokePaint, state->compositeOperation, &state->scissor, ctx->fringeWidth,
+                                     strokeWidth, ctx->cache->paths, ctx->cache->npaths);
 
-	// Count triangles
-	for (i = 0; i < ctx->cache->npaths; i++) {
-		path = &ctx->cache->paths[i];
-		ctx->strokeTriCount += path->nstroke-2;
-		ctx->drawCallCount++;
-	}
-*/
+            // Count triangles
+            for (i = 0; i < ctx->cache->npaths; i++) {
+                path = &ctx->cache->paths[i];
+                ctx->strokeTriCount += path->nstroke-2;
+                ctx->drawCallCount++;
+            }
+            */
         }
 
         #endregion
@@ -1498,7 +1447,7 @@ namespace NanoVG
         {
             throw new NotImplementedException();
             /*
-	return fonsAddFont(ctx->fs, name, path);
+            return fonsAddFont(ctx->fs, name, path);
             */
         }
 
@@ -1508,7 +1457,7 @@ namespace NanoVG
         {
             throw new NotImplementedException();
             /*
-	return fonsAddFontMem(ctx->fs, name, data, ndata, freeData);
+            return fonsAddFontMem(ctx->fs, name, data, ndata, freeData);
             */
         }
 
@@ -1517,8 +1466,8 @@ namespace NanoVG
         {
             throw new NotImplementedException();
             /*
-	if (name == NULL) return -1;
-	return fonsGetFontByName(ctx->fs, name);
+            if (name == NULL) return -1;
+            return fonsGetFontByName(ctx->fs, name);
             */
         }
 
@@ -1527,8 +1476,8 @@ namespace NanoVG
         {
             throw new NotImplementedException();
             /*
-	if(baseFont == -1 || fallbackFont == -1) return 0;
-	return fonsAddFallbackFont(ctx->fs, baseFont, fallbackFont);
+            if(baseFont == -1 || fallbackFont == -1) return 0;
+            return fonsAddFallbackFont(ctx->fs, baseFont, fallbackFont);
             */
         }
 
@@ -1537,7 +1486,7 @@ namespace NanoVG
         {
             throw new NotImplementedException();
             /*
-	return nvgAddFallbackFontId(ctx, nvgFindFont(ctx, baseFont), nvgFindFont(ctx, fallbackFont));
+            return nvgAddFallbackFontId(ctx, nvgFindFont(ctx, baseFont), nvgFindFont(ctx, fallbackFont));
             */
         }
 
@@ -1546,8 +1495,8 @@ namespace NanoVG
         {
             throw new NotImplementedException();
             /*
-	NVGstate* state = nvg__getState(ctx);
-	state->fontSize = size;
+            NVGstate* state = nvg__getState(ctx);
+            state->fontSize = size;
             */
         }
 
@@ -1556,8 +1505,8 @@ namespace NanoVG
         {
             throw new NotImplementedException();
             /*
-	NVGstate* state = nvg__getState(ctx);
-	state->fontBlur = blur;
+            NVGstate* state = nvg__getState(ctx);
+            state->fontBlur = blur;
             */
         }
 
@@ -1566,8 +1515,8 @@ namespace NanoVG
         {
             throw new NotImplementedException();
             /*
-	NVGstate* state = nvg__getState(ctx);
-	state->letterSpacing = spacing;
+            NVGstate* state = nvg__getState(ctx);
+            state->letterSpacing = spacing;
             */
         }
 
@@ -1576,8 +1525,8 @@ namespace NanoVG
         {
             throw new NotImplementedException();
             /*
-	NVGstate* state = nvg__getState(ctx);
-	state->lineHeight = lineHeight;
+            NVGstate* state = nvg__getState(ctx);
+            state->lineHeight = lineHeight;
             */
         }
 
@@ -1586,8 +1535,8 @@ namespace NanoVG
         {
             throw new NotImplementedException();
             /*
-	NVGstate* state = nvg__getState(ctx);
-	state->textAlign = align;
+            NVGstate* state = nvg__getState(ctx);
+            state->textAlign = align;
             */
         }
 
@@ -1596,8 +1545,8 @@ namespace NanoVG
         {
             throw new NotImplementedException();
             /*
-	NVGstate* state = nvg__getState(ctx);
-	state->fontId = font;
+            NVGstate* state = nvg__getState(ctx);
+            state->fontId = font;
             */
         }
 
@@ -1606,8 +1555,8 @@ namespace NanoVG
         {
             throw new NotImplementedException();
             /*
-	NVGstate* state = nvg__getState(ctx);
-	state->fontId = fonsGetFontByName(ctx->fs, font);
+            NVGstate* state = nvg__getState(ctx);
+            state->fontId = fonsGetFontByName(ctx->fs, font);
             */
         }
 
@@ -1616,69 +1565,69 @@ namespace NanoVG
         {
             throw new NotImplementedException();
             /*
-	NVGstate* state = nvg__getState(ctx);
-	FONStextIter iter, prevIter;
-	FONSquad q;
-	NVGvertex* verts;
-	float scale = nvg__getFontScale(state) * ctx->devicePxRatio;
-	float invscale = 1.0f / scale;
-	int cverts = 0;
-	int nverts = 0;
+            NVGstate* state = nvg__getState(ctx);
+            FONStextIter iter, prevIter;
+            FONSquad q;
+            NVGvertex* verts;
+            float scale = nvg__getFontScale(state) * ctx->devicePxRatio;
+            float invscale = 1.0f / scale;
+            int cverts = 0;
+            int nverts = 0;
 
-	if (end == NULL)
-		end = string + strlen(string);
+            if (end == NULL)
+                end = string + strlen(string);
 
-	if (state->fontId == FONS_INVALID) return x;
+            if (state->fontId == FONS_INVALID) return x;
 
-	fonsSetSize(ctx->fs, state->fontSize*scale);
-	fonsSetSpacing(ctx->fs, state->letterSpacing*scale);
-	fonsSetBlur(ctx->fs, state->fontBlur*scale);
-	fonsSetAlign(ctx->fs, state->textAlign);
-	fonsSetFont(ctx->fs, state->fontId);
+            fonsSetSize(ctx->fs, state->fontSize*scale);
+            fonsSetSpacing(ctx->fs, state->letterSpacing*scale);
+            fonsSetBlur(ctx->fs, state->fontBlur*scale);
+            fonsSetAlign(ctx->fs, state->textAlign);
+            fonsSetFont(ctx->fs, state->fontId);
 
-	cverts = nvg__maxi(2, (int)(end - string)) * 6; // conservative estimate.
-	verts = nvg__allocTempVerts(ctx, cverts);
-	if (verts == NULL) return x;
+            cverts = nvg__maxi(2, (int)(end - string)) * 6; // conservative estimate.
+            verts = nvg__allocTempVerts(ctx, cverts);
+            if (verts == NULL) return x;
 
-	fonsTextIterInit(ctx->fs, &iter, x*scale, y*scale, string, end, FONS_GLYPH_BITMAP_REQUIRED);
-	prevIter = iter;
-	while (fonsTextIterNext(ctx->fs, &iter, &q)) {
-		float c[4*2];
-		if (iter.prevGlyphIndex == -1) { // can not retrieve glyph?
-			if (nverts != 0) {
-				nvg__renderText(ctx, verts, nverts);
-				nverts = 0;
-			}
-			if (!nvg__allocTextAtlas(ctx))
-				break; // no memory :(
-			iter = prevIter;
-			fonsTextIterNext(ctx->fs, &iter, &q); // try again
-			if (iter.prevGlyphIndex == -1) // still can not find glyph?
-				break;
-		}
-		prevIter = iter;
-		// Transform corners.
-		nvgTransformPoint(&c[0],&c[1], state->xform, q.x0*invscale, q.y0*invscale);
-		nvgTransformPoint(&c[2],&c[3], state->xform, q.x1*invscale, q.y0*invscale);
-		nvgTransformPoint(&c[4],&c[5], state->xform, q.x1*invscale, q.y1*invscale);
-		nvgTransformPoint(&c[6],&c[7], state->xform, q.x0*invscale, q.y1*invscale);
-		// Create triangles
-		if (nverts+6 <= cverts) {
-			nvg__vset(&verts[nverts], c[0], c[1], q.s0, q.t0); nverts++;
-			nvg__vset(&verts[nverts], c[4], c[5], q.s1, q.t1); nverts++;
-			nvg__vset(&verts[nverts], c[2], c[3], q.s1, q.t0); nverts++;
-			nvg__vset(&verts[nverts], c[0], c[1], q.s0, q.t0); nverts++;
-			nvg__vset(&verts[nverts], c[6], c[7], q.s0, q.t1); nverts++;
-			nvg__vset(&verts[nverts], c[4], c[5], q.s1, q.t1); nverts++;
-		}
-	}
+            fonsTextIterInit(ctx->fs, &iter, x*scale, y*scale, string, end, FONS_GLYPH_BITMAP_REQUIRED);
+            prevIter = iter;
+            while (fonsTextIterNext(ctx->fs, &iter, &q)) {
+                float c[4*2];
+                if (iter.prevGlyphIndex == -1) { // can not retrieve glyph?
+                    if (nverts != 0) {
+                        nvg__renderText(ctx, verts, nverts);
+                        nverts = 0;
+                    }
+                    if (!nvg__allocTextAtlas(ctx))
+                        break; // no memory :(
+                    iter = prevIter;
+                    fonsTextIterNext(ctx->fs, &iter, &q); // try again
+                    if (iter.prevGlyphIndex == -1) // still can not find glyph?
+                        break;
+                }
+                prevIter = iter;
+                // Transform corners.
+                nvgTransformPoint(&c[0],&c[1], state->xform, q.x0*invscale, q.y0*invscale);
+                nvgTransformPoint(&c[2],&c[3], state->xform, q.x1*invscale, q.y0*invscale);
+                nvgTransformPoint(&c[4],&c[5], state->xform, q.x1*invscale, q.y1*invscale);
+                nvgTransformPoint(&c[6],&c[7], state->xform, q.x0*invscale, q.y1*invscale);
+                // Create triangles
+                if (nverts+6 <= cverts) {
+                    nvg__vset(&verts[nverts], c[0], c[1], q.s0, q.t0); nverts++;
+                    nvg__vset(&verts[nverts], c[4], c[5], q.s1, q.t1); nverts++;
+                    nvg__vset(&verts[nverts], c[2], c[3], q.s1, q.t0); nverts++;
+                    nvg__vset(&verts[nverts], c[0], c[1], q.s0, q.t0); nverts++;
+                    nvg__vset(&verts[nverts], c[6], c[7], q.s0, q.t1); nverts++;
+                    nvg__vset(&verts[nverts], c[4], c[5], q.s1, q.t1); nverts++;
+                }
+            }
 
-	// TODO: add back-end bit to do this just once per frame.
-	nvg__flushTextTexture(ctx);
+            // TODO: add back-end bit to do this just once per frame.
+            nvg__flushTextTexture(ctx);
 
-	nvg__renderText(ctx, verts, nverts);
+            nvg__renderText(ctx, verts, nverts);
 
-	return iter.nextx / scale;
+            return iter.nextx / scale;
             */
         }
 
@@ -1689,35 +1638,35 @@ namespace NanoVG
         {
             throw new NotImplementedException();
             /*
-	NVGstate* state = nvg__getState(ctx);
-	NVGtextRow rows[2];
-	int nrows = 0, i;
-	int oldAlign = state->textAlign;
-	int haling = state->textAlign & (NVG_ALIGN_LEFT | NVG_ALIGN_CENTER | NVG_ALIGN_RIGHT);
-	int valign = state->textAlign & (NVG_ALIGN_TOP | NVG_ALIGN_MIDDLE | NVG_ALIGN_BOTTOM | NVG_ALIGN_BASELINE);
-	float lineh = 0;
+            NVGstate* state = nvg__getState(ctx);
+            NVGtextRow rows[2];
+            int nrows = 0, i;
+            int oldAlign = state->textAlign;
+            int haling = state->textAlign & (NVG_ALIGN_LEFT | NVG_ALIGN_CENTER | NVG_ALIGN_RIGHT);
+            int valign = state->textAlign & (NVG_ALIGN_TOP | NVG_ALIGN_MIDDLE | NVG_ALIGN_BOTTOM | NVG_ALIGN_BASELINE);
+            float lineh = 0;
 
-	if (state->fontId == FONS_INVALID) return;
+            if (state->fontId == FONS_INVALID) return;
 
-	nvgTextMetrics(ctx, NULL, NULL, &lineh);
+            nvgTextMetrics(ctx, NULL, NULL, &lineh);
 
-	state->textAlign = NVG_ALIGN_LEFT | valign;
+            state->textAlign = NVG_ALIGN_LEFT | valign;
 
-	while ((nrows = nvgTextBreakLines(ctx, string, end, breakRowWidth, rows, 2))) {
-		for (i = 0; i < nrows; i++) {
-			NVGtextRow* row = &rows[i];
-			if (haling & NVG_ALIGN_LEFT)
-				nvgText(ctx, x, y, row->start, row->end);
-			else if (haling & NVG_ALIGN_CENTER)
-				nvgText(ctx, x + breakRowWidth*0.5f - row->width*0.5f, y, row->start, row->end);
-			else if (haling & NVG_ALIGN_RIGHT)
-				nvgText(ctx, x + breakRowWidth - row->width, y, row->start, row->end);
-			y += lineh * state->lineHeight;
-		}
-		string = rows[nrows-1].next;
-	}
+            while ((nrows = nvgTextBreakLines(ctx, string, end, breakRowWidth, rows, 2))) {
+                for (i = 0; i < nrows; i++) {
+                    NVGtextRow* row = &rows[i];
+                    if (haling & NVG_ALIGN_LEFT)
+                        nvgText(ctx, x, y, row->start, row->end);
+                    else if (haling & NVG_ALIGN_CENTER)
+                        nvgText(ctx, x + breakRowWidth*0.5f - row->width*0.5f, y, row->start, row->end);
+                    else if (haling & NVG_ALIGN_RIGHT)
+                        nvgText(ctx, x + breakRowWidth - row->width, y, row->start, row->end);
+                    y += lineh * state->lineHeight;
+                }
+                string = rows[nrows-1].next;
+            }
 
-	state->textAlign = oldAlign;
+            state->textAlign = oldAlign;
             */
         }
 
@@ -1725,156 +1674,156 @@ namespace NanoVG
         // if the bounding box of the text should be returned. The bounds value are [xmin,ymin, xmax,ymax]
         // Returns the horizontal advance of the measured text (i.e. where the next character should drawn).
         // Measured values are returned in local coordinate space.
-        public static float TextBounds(Context ctx, float x, float y, string @string, int chars, float* bounds)
+        public static float TextBounds(Context ctx, float x, float y, string @string, int chars, float[] bounds)
         {
             throw new NotImplementedException();
             /*
-	NVGstate* state = nvg__getState(ctx);
-	float scale = nvg__getFontScale(state) * ctx->devicePxRatio;
-	float invscale = 1.0f / scale;
-	float width;
+            NVGstate* state = nvg__getState(ctx);
+            float scale = nvg__getFontScale(state) * ctx->devicePxRatio;
+            float invscale = 1.0f / scale;
+            float width;
 
-	if (state->fontId == FONS_INVALID) return 0;
+            if (state->fontId == FONS_INVALID) return 0;
 
-	fonsSetSize(ctx->fs, state->fontSize*scale);
-	fonsSetSpacing(ctx->fs, state->letterSpacing*scale);
-	fonsSetBlur(ctx->fs, state->fontBlur*scale);
-	fonsSetAlign(ctx->fs, state->textAlign);
-	fonsSetFont(ctx->fs, state->fontId);
+            fonsSetSize(ctx->fs, state->fontSize*scale);
+            fonsSetSpacing(ctx->fs, state->letterSpacing*scale);
+            fonsSetBlur(ctx->fs, state->fontBlur*scale);
+            fonsSetAlign(ctx->fs, state->textAlign);
+            fonsSetFont(ctx->fs, state->fontId);
 
-	width = fonsTextBounds(ctx->fs, x*scale, y*scale, string, end, bounds);
-	if (bounds != NULL) {
-		// Use line bounds for height.
-		fonsLineBounds(ctx->fs, y*scale, &bounds[1], &bounds[3]);
-		bounds[0] *= invscale;
-		bounds[1] *= invscale;
-		bounds[2] *= invscale;
-		bounds[3] *= invscale;
-	}
-	return width * invscale;
+            width = fonsTextBounds(ctx->fs, x*scale, y*scale, string, end, bounds);
+            if (bounds != NULL) {
+                // Use line bounds for height.
+                fonsLineBounds(ctx->fs, y*scale, &bounds[1], &bounds[3]);
+                bounds[0] *= invscale;
+                bounds[1] *= invscale;
+                bounds[2] *= invscale;
+                bounds[3] *= invscale;
+            }
+            return width * invscale;
             */
         }
 
         // Measures the specified multi-text string. Parameter bounds should be a pointer to float[4],
         // if the bounding box of the text should be returned. The bounds value are [xmin,ymin, xmax,ymax]
         // Measured values are returned in local coordinate space.
-        public static void TextBoxBounds(Context ctx, float x, float y, float breakRowWidth, string @string, int chars, float* bounds)
+        public static void TextBoxBounds(Context ctx, float x, float y, float breakRowWidth, string @string, int chars, float[] bounds)
         {
             throw new NotImplementedException();
             /*
-	NVGstate* state = nvg__getState(ctx);
-	NVGtextRow rows[2];
-	float scale = nvg__getFontScale(state) * ctx->devicePxRatio;
-	float invscale = 1.0f / scale;
-	int nrows = 0, i;
-	int oldAlign = state->textAlign;
-	int haling = state->textAlign & (NVG_ALIGN_LEFT | NVG_ALIGN_CENTER | NVG_ALIGN_RIGHT);
-	int valign = state->textAlign & (NVG_ALIGN_TOP | NVG_ALIGN_MIDDLE | NVG_ALIGN_BOTTOM | NVG_ALIGN_BASELINE);
-	float lineh = 0, rminy = 0, rmaxy = 0;
-	float minx, miny, maxx, maxy;
+            NVGstate* state = nvg__getState(ctx);
+            NVGtextRow rows[2];
+            float scale = nvg__getFontScale(state) * ctx->devicePxRatio;
+            float invscale = 1.0f / scale;
+            int nrows = 0, i;
+            int oldAlign = state->textAlign;
+            int haling = state->textAlign & (NVG_ALIGN_LEFT | NVG_ALIGN_CENTER | NVG_ALIGN_RIGHT);
+            int valign = state->textAlign & (NVG_ALIGN_TOP | NVG_ALIGN_MIDDLE | NVG_ALIGN_BOTTOM | NVG_ALIGN_BASELINE);
+            float lineh = 0, rminy = 0, rmaxy = 0;
+            float minx, miny, maxx, maxy;
 
-	if (state->fontId == FONS_INVALID) {
-		if (bounds != NULL)
-			bounds[0] = bounds[1] = bounds[2] = bounds[3] = 0.0f;
-		return;
-	}
+            if (state->fontId == FONS_INVALID) {
+                if (bounds != NULL)
+                    bounds[0] = bounds[1] = bounds[2] = bounds[3] = 0.0f;
+                return;
+            }
 
-	nvgTextMetrics(ctx, NULL, NULL, &lineh);
+            nvgTextMetrics(ctx, NULL, NULL, &lineh);
 
-	state->textAlign = NVG_ALIGN_LEFT | valign;
+            state->textAlign = NVG_ALIGN_LEFT | valign;
 
-	minx = maxx = x;
-	miny = maxy = y;
+            minx = maxx = x;
+            miny = maxy = y;
 
-	fonsSetSize(ctx->fs, state->fontSize*scale);
-	fonsSetSpacing(ctx->fs, state->letterSpacing*scale);
-	fonsSetBlur(ctx->fs, state->fontBlur*scale);
-	fonsSetAlign(ctx->fs, state->textAlign);
-	fonsSetFont(ctx->fs, state->fontId);
-	fonsLineBounds(ctx->fs, 0, &rminy, &rmaxy);
-	rminy *= invscale;
-	rmaxy *= invscale;
+            fonsSetSize(ctx->fs, state->fontSize*scale);
+            fonsSetSpacing(ctx->fs, state->letterSpacing*scale);
+            fonsSetBlur(ctx->fs, state->fontBlur*scale);
+            fonsSetAlign(ctx->fs, state->textAlign);
+            fonsSetFont(ctx->fs, state->fontId);
+            fonsLineBounds(ctx->fs, 0, &rminy, &rmaxy);
+            rminy *= invscale;
+            rmaxy *= invscale;
 
-	while ((nrows = nvgTextBreakLines(ctx, string, end, breakRowWidth, rows, 2))) {
-		for (i = 0; i < nrows; i++) {
-			NVGtextRow* row = &rows[i];
-			float rminx, rmaxx, dx = 0;
-			// Horizontal bounds
-			if (haling & NVG_ALIGN_LEFT)
-				dx = 0;
-			else if (haling & NVG_ALIGN_CENTER)
-				dx = breakRowWidth*0.5f - row->width*0.5f;
-			else if (haling & NVG_ALIGN_RIGHT)
-				dx = breakRowWidth - row->width;
-			rminx = x + row->minx + dx;
-			rmaxx = x + row->maxx + dx;
-			minx = nvg__minf(minx, rminx);
-			maxx = nvg__maxf(maxx, rmaxx);
-			// Vertical bounds.
-			miny = nvg__minf(miny, y + rminy);
-			maxy = nvg__maxf(maxy, y + rmaxy);
+            while ((nrows = nvgTextBreakLines(ctx, string, end, breakRowWidth, rows, 2))) {
+                for (i = 0; i < nrows; i++) {
+                    NVGtextRow* row = &rows[i];
+                    float rminx, rmaxx, dx = 0;
+                    // Horizontal bounds
+                    if (haling & NVG_ALIGN_LEFT)
+                        dx = 0;
+                    else if (haling & NVG_ALIGN_CENTER)
+                        dx = breakRowWidth*0.5f - row->width*0.5f;
+                    else if (haling & NVG_ALIGN_RIGHT)
+                        dx = breakRowWidth - row->width;
+                    rminx = x + row->minx + dx;
+                    rmaxx = x + row->maxx + dx;
+                    minx = nvg__minf(minx, rminx);
+                    maxx = nvg__maxf(maxx, rmaxx);
+                    // Vertical bounds.
+                    miny = nvg__minf(miny, y + rminy);
+                    maxy = nvg__maxf(maxy, y + rmaxy);
 
-			y += lineh * state->lineHeight;
-		}
-		string = rows[nrows-1].next;
-	}
+                    y += lineh * state->lineHeight;
+                }
+                string = rows[nrows-1].next;
+            }
 
-	state->textAlign = oldAlign;
+            state->textAlign = oldAlign;
 
-	if (bounds != NULL) {
-		bounds[0] = minx;
-		bounds[1] = miny;
-		bounds[2] = maxx;
-		bounds[3] = maxy;
-	}
+            if (bounds != NULL) {
+                bounds[0] = minx;
+                bounds[1] = miny;
+                bounds[2] = maxx;
+                bounds[3] = maxy;
+            }
             */
         }
 
         // Calculates the glyph x positions of the specified text. If end is specified only the sub-string will be used.
         // Measured values are returned in local coordinate space.
-        public static int TextGlyphPositions(Context ctx, float x, float y, string @string, int chars, GlyphPosition* positions, int maxPositions)
+        public static int TextGlyphPositions(Context ctx, float x, float y, string @string, int chars, GlyphPosition[] positions, int maxPositions)
         {
             throw new NotImplementedException();
             /*
-	NVGstate* state = nvg__getState(ctx);
-	float scale = nvg__getFontScale(state) * ctx->devicePxRatio;
-	float invscale = 1.0f / scale;
-	FONStextIter iter, prevIter;
-	FONSquad q;
-	int npos = 0;
+            NVGstate* state = nvg__getState(ctx);
+            float scale = nvg__getFontScale(state) * ctx->devicePxRatio;
+            float invscale = 1.0f / scale;
+            FONStextIter iter, prevIter;
+            FONSquad q;
+            int npos = 0;
 
-	if (state->fontId == FONS_INVALID) return 0;
+            if (state->fontId == FONS_INVALID) return 0;
 
-	if (end == NULL)
-		end = string + strlen(string);
+            if (end == NULL)
+                end = string + strlen(string);
 
-	if (string == end)
-		return 0;
+            if (string == end)
+                return 0;
 
-	fonsSetSize(ctx->fs, state->fontSize*scale);
-	fonsSetSpacing(ctx->fs, state->letterSpacing*scale);
-	fonsSetBlur(ctx->fs, state->fontBlur*scale);
-	fonsSetAlign(ctx->fs, state->textAlign);
-	fonsSetFont(ctx->fs, state->fontId);
+            fonsSetSize(ctx->fs, state->fontSize*scale);
+            fonsSetSpacing(ctx->fs, state->letterSpacing*scale);
+            fonsSetBlur(ctx->fs, state->fontBlur*scale);
+            fonsSetAlign(ctx->fs, state->textAlign);
+            fonsSetFont(ctx->fs, state->fontId);
 
-	fonsTextIterInit(ctx->fs, &iter, x*scale, y*scale, string, end, FONS_GLYPH_BITMAP_OPTIONAL);
-	prevIter = iter;
-	while (fonsTextIterNext(ctx->fs, &iter, &q)) {
-		if (iter.prevGlyphIndex < 0 && nvg__allocTextAtlas(ctx)) { // can not retrieve glyph?
-			iter = prevIter;
-			fonsTextIterNext(ctx->fs, &iter, &q); // try again
-		}
-		prevIter = iter;
-		positions[npos].str = iter.str;
-		positions[npos].x = iter.x * invscale;
-		positions[npos].minx = nvg__minf(iter.x, q.x0) * invscale;
-		positions[npos].maxx = nvg__maxf(iter.nextx, q.x1) * invscale;
-		npos++;
-		if (npos >= maxPositions)
-			break;
-	}
+            fonsTextIterInit(ctx->fs, &iter, x*scale, y*scale, string, end, FONS_GLYPH_BITMAP_OPTIONAL);
+            prevIter = iter;
+            while (fonsTextIterNext(ctx->fs, &iter, &q)) {
+                if (iter.prevGlyphIndex < 0 && nvg__allocTextAtlas(ctx)) { // can not retrieve glyph?
+                    iter = prevIter;
+                    fonsTextIterNext(ctx->fs, &iter, &q); // try again
+                }
+                prevIter = iter;
+                positions[npos].str = iter.str;
+                positions[npos].x = iter.x * invscale;
+                positions[npos].minx = nvg__minf(iter.x, q.x0) * invscale;
+                positions[npos].maxx = nvg__maxf(iter.nextx, q.x1) * invscale;
+                npos++;
+                if (npos >= maxPositions)
+                    break;
+            }
 
-	return npos;
+            return npos;
             */
         }
 
@@ -1884,237 +1833,237 @@ namespace NanoVG
         {
             throw new NotImplementedException();
             /*
-	NVGstate* state = nvg__getState(ctx);
-	float scale = nvg__getFontScale(state) * ctx->devicePxRatio;
-	float invscale = 1.0f / scale;
+            NVGstate* state = nvg__getState(ctx);
+            float scale = nvg__getFontScale(state) * ctx->devicePxRatio;
+            float invscale = 1.0f / scale;
 
-	if (state->fontId == FONS_INVALID) return;
+            if (state->fontId == FONS_INVALID) return;
 
-	fonsSetSize(ctx->fs, state->fontSize*scale);
-	fonsSetSpacing(ctx->fs, state->letterSpacing*scale);
-	fonsSetBlur(ctx->fs, state->fontBlur*scale);
-	fonsSetAlign(ctx->fs, state->textAlign);
-	fonsSetFont(ctx->fs, state->fontId);
+            fonsSetSize(ctx->fs, state->fontSize*scale);
+            fonsSetSpacing(ctx->fs, state->letterSpacing*scale);
+            fonsSetBlur(ctx->fs, state->fontBlur*scale);
+            fonsSetAlign(ctx->fs, state->textAlign);
+            fonsSetFont(ctx->fs, state->fontId);
 
-	fonsVertMetrics(ctx->fs, ascender, descender, lineh);
-	if (ascender != NULL)
-		*ascender *= invscale;
-	if (descender != NULL)
-		*descender *= invscale;
-	if (lineh != NULL)
-		*lineh *= invscale;
+            fonsVertMetrics(ctx->fs, ascender, descender, lineh);
+            if (ascender != NULL)
+                *ascender *= invscale;
+            if (descender != NULL)
+                *descender *= invscale;
+            if (lineh != NULL)
+                *lineh *= invscale;
             */
         }
 
         // Breaks the specified text into lines. If end is specified only the sub-string will be used.
         // White space is stripped at the beginning of the rows, the text is split at word boundaries or when new-line characters are encountered.
         // Words longer than the max width are slit at nearest character (i.e. no hyphenation).
-        public static int TextBreakLines(Context ctx, string @string, int chars, float breakRowWidth, TextRow* rows, int maxRows)
+        public static int TextBreakLines(Context ctx, string @string, int chars, float breakRowWidth, TextRow[] rows, int maxRows)
         {
             throw new NotImplementedException();
             /*
-	NVGstate* state = nvg__getState(ctx);
-	float scale = nvg__getFontScale(state) * ctx->devicePxRatio;
-	float invscale = 1.0f / scale;
-	FONStextIter iter, prevIter;
-	FONSquad q;
-	int nrows = 0;
-	float rowStartX = 0;
-	float rowWidth = 0;
-	float rowMinX = 0;
-	float rowMaxX = 0;
-	const char* rowStart = NULL;
-	const char* rowEnd = NULL;
-	const char* wordStart = NULL;
-	float wordStartX = 0;
-	float wordMinX = 0;
-	const char* breakEnd = NULL;
-	float breakWidth = 0;
-	float breakMaxX = 0;
-	int type = NVG_SPACE, ptype = NVG_SPACE;
-	unsigned int pcodepoint = 0;
+            NVGstate* state = nvg__getState(ctx);
+            float scale = nvg__getFontScale(state) * ctx->devicePxRatio;
+            float invscale = 1.0f / scale;
+            FONStextIter iter, prevIter;
+            FONSquad q;
+            int nrows = 0;
+            float rowStartX = 0;
+            float rowWidth = 0;
+            float rowMinX = 0;
+            float rowMaxX = 0;
+            const char* rowStart = NULL;
+            const char* rowEnd = NULL;
+            const char* wordStart = NULL;
+            float wordStartX = 0;
+            float wordMinX = 0;
+            const char* breakEnd = NULL;
+            float breakWidth = 0;
+            float breakMaxX = 0;
+            int type = NVG_SPACE, ptype = NVG_SPACE;
+            unsigned int pcodepoint = 0;
 
-	if (maxRows == 0) return 0;
-	if (state->fontId == FONS_INVALID) return 0;
+            if (maxRows == 0) return 0;
+            if (state->fontId == FONS_INVALID) return 0;
 
-	if (end == NULL)
-		end = string + strlen(string);
+            if (end == NULL)
+                end = string + strlen(string);
 
-	if (string == end) return 0;
+            if (string == end) return 0;
 
-	fonsSetSize(ctx->fs, state->fontSize*scale);
-	fonsSetSpacing(ctx->fs, state->letterSpacing*scale);
-	fonsSetBlur(ctx->fs, state->fontBlur*scale);
-	fonsSetAlign(ctx->fs, state->textAlign);
-	fonsSetFont(ctx->fs, state->fontId);
+            fonsSetSize(ctx->fs, state->fontSize*scale);
+            fonsSetSpacing(ctx->fs, state->letterSpacing*scale);
+            fonsSetBlur(ctx->fs, state->fontBlur*scale);
+            fonsSetAlign(ctx->fs, state->textAlign);
+            fonsSetFont(ctx->fs, state->fontId);
 
-	breakRowWidth *= scale;
+            breakRowWidth *= scale;
 
-	fonsTextIterInit(ctx->fs, &iter, 0, 0, string, end, FONS_GLYPH_BITMAP_OPTIONAL);
-	prevIter = iter;
-	while (fonsTextIterNext(ctx->fs, &iter, &q)) {
-		if (iter.prevGlyphIndex < 0 && nvg__allocTextAtlas(ctx)) { // can not retrieve glyph?
-			iter = prevIter;
-			fonsTextIterNext(ctx->fs, &iter, &q); // try again
-		}
-		prevIter = iter;
-		switch (iter.codepoint) {
-			case 9:			// \t
-			case 11:		// \v
-			case 12:		// \f
-			case 32:		// space
-			case 0x00a0:	// NBSP
-				type = NVG_SPACE;
-				break;
-			case 10:		// \n
-				type = pcodepoint == 13 ? NVG_SPACE : NVG_NEWLINE;
-				break;
-			case 13:		// \r
-				type = pcodepoint == 10 ? NVG_SPACE : NVG_NEWLINE;
-				break;
-			case 0x0085:	// NEL
-				type = NVG_NEWLINE;
-				break;
-			default:
-				if ((iter.codepoint >= 0x4E00 && iter.codepoint <= 0x9FFF) ||
-					(iter.codepoint >= 0x3000 && iter.codepoint <= 0x30FF) ||
-					(iter.codepoint >= 0xFF00 && iter.codepoint <= 0xFFEF) ||
-					(iter.codepoint >= 0x1100 && iter.codepoint <= 0x11FF) ||
-					(iter.codepoint >= 0x3130 && iter.codepoint <= 0x318F) ||
-					(iter.codepoint >= 0xAC00 && iter.codepoint <= 0xD7AF))
-					type = NVG_CJK_CHAR;
-				else
-					type = NVG_CHAR;
-				break;
-		}
+            fonsTextIterInit(ctx->fs, &iter, 0, 0, string, end, FONS_GLYPH_BITMAP_OPTIONAL);
+            prevIter = iter;
+            while (fonsTextIterNext(ctx->fs, &iter, &q)) {
+                if (iter.prevGlyphIndex < 0 && nvg__allocTextAtlas(ctx)) { // can not retrieve glyph?
+                    iter = prevIter;
+                    fonsTextIterNext(ctx->fs, &iter, &q); // try again
+                }
+                prevIter = iter;
+                switch (iter.codepoint) {
+                    case 9:			// \t
+                    case 11:		// \v
+                    case 12:		// \f
+                    case 32:		// space
+                    case 0x00a0:	// NBSP
+                        type = NVG_SPACE;
+                        break;
+                    case 10:		// \n
+                        type = pcodepoint == 13 ? NVG_SPACE : NVG_NEWLINE;
+                        break;
+                    case 13:		// \r
+                        type = pcodepoint == 10 ? NVG_SPACE : NVG_NEWLINE;
+                        break;
+                    case 0x0085:	// NEL
+                        type = NVG_NEWLINE;
+                        break;
+                    default:
+                        if ((iter.codepoint >= 0x4E00 && iter.codepoint <= 0x9FFF) ||
+                            (iter.codepoint >= 0x3000 && iter.codepoint <= 0x30FF) ||
+                            (iter.codepoint >= 0xFF00 && iter.codepoint <= 0xFFEF) ||
+                            (iter.codepoint >= 0x1100 && iter.codepoint <= 0x11FF) ||
+                            (iter.codepoint >= 0x3130 && iter.codepoint <= 0x318F) ||
+                            (iter.codepoint >= 0xAC00 && iter.codepoint <= 0xD7AF))
+                            type = NVG_CJK_CHAR;
+                        else
+                            type = NVG_CHAR;
+                        break;
+                }
 
-		if (type == NVG_NEWLINE) {
-			// Always handle new lines.
-			rows[nrows].start = rowStart != NULL ? rowStart : iter.str;
-			rows[nrows].end = rowEnd != NULL ? rowEnd : iter.str;
-			rows[nrows].width = rowWidth * invscale;
-			rows[nrows].minx = rowMinX * invscale;
-			rows[nrows].maxx = rowMaxX * invscale;
-			rows[nrows].next = iter.next;
-			nrows++;
-			if (nrows >= maxRows)
-				return nrows;
-			// Set null break point
-			breakEnd = rowStart;
-			breakWidth = 0.0;
-			breakMaxX = 0.0;
-			// Indicate to skip the white space at the beginning of the row.
-			rowStart = NULL;
-			rowEnd = NULL;
-			rowWidth = 0;
-			rowMinX = rowMaxX = 0;
-		} else {
-			if (rowStart == NULL) {
-				// Skip white space until the beginning of the line
-				if (type == NVG_CHAR || type == NVG_CJK_CHAR) {
-					// The current char is the row so far
-					rowStartX = iter.x;
-					rowStart = iter.str;
-					rowEnd = iter.next;
-					rowWidth = iter.nextx - rowStartX; // q.x1 - rowStartX;
-					rowMinX = q.x0 - rowStartX;
-					rowMaxX = q.x1 - rowStartX;
-					wordStart = iter.str;
-					wordStartX = iter.x;
-					wordMinX = q.x0 - rowStartX;
-					// Set null break point
-					breakEnd = rowStart;
-					breakWidth = 0.0;
-					breakMaxX = 0.0;
-				}
-			} else {
-				float nextWidth = iter.nextx - rowStartX;
+                if (type == NVG_NEWLINE) {
+                    // Always handle new lines.
+                    rows[nrows].start = rowStart != NULL ? rowStart : iter.str;
+                    rows[nrows].end = rowEnd != NULL ? rowEnd : iter.str;
+                    rows[nrows].width = rowWidth * invscale;
+                    rows[nrows].minx = rowMinX * invscale;
+                    rows[nrows].maxx = rowMaxX * invscale;
+                    rows[nrows].next = iter.next;
+                    nrows++;
+                    if (nrows >= maxRows)
+                        return nrows;
+                    // Set null break point
+                    breakEnd = rowStart;
+                    breakWidth = 0.0;
+                    breakMaxX = 0.0;
+                    // Indicate to skip the white space at the beginning of the row.
+                    rowStart = NULL;
+                    rowEnd = NULL;
+                    rowWidth = 0;
+                    rowMinX = rowMaxX = 0;
+                } else {
+                    if (rowStart == NULL) {
+                        // Skip white space until the beginning of the line
+                        if (type == NVG_CHAR || type == NVG_CJK_CHAR) {
+                            // The current char is the row so far
+                            rowStartX = iter.x;
+                            rowStart = iter.str;
+                            rowEnd = iter.next;
+                            rowWidth = iter.nextx - rowStartX; // q.x1 - rowStartX;
+                            rowMinX = q.x0 - rowStartX;
+                            rowMaxX = q.x1 - rowStartX;
+                            wordStart = iter.str;
+                            wordStartX = iter.x;
+                            wordMinX = q.x0 - rowStartX;
+                            // Set null break point
+                            breakEnd = rowStart;
+                            breakWidth = 0.0;
+                            breakMaxX = 0.0;
+                        }
+                    } else {
+                        float nextWidth = iter.nextx - rowStartX;
 
-				// track last non-white space character
-				if (type == NVG_CHAR || type == NVG_CJK_CHAR) {
-					rowEnd = iter.next;
-					rowWidth = iter.nextx - rowStartX;
-					rowMaxX = q.x1 - rowStartX;
-				}
-				// track last end of a word
-				if (((ptype == NVG_CHAR || ptype == NVG_CJK_CHAR) && type == NVG_SPACE) || type == NVG_CJK_CHAR) {
-					breakEnd = iter.str;
-					breakWidth = rowWidth;
-					breakMaxX = rowMaxX;
-				}
-				// track last beginning of a word
-				if ((ptype == NVG_SPACE && (type == NVG_CHAR || type == NVG_CJK_CHAR)) || type == NVG_CJK_CHAR) {
-					wordStart = iter.str;
-					wordStartX = iter.x;
-					wordMinX = q.x0 - rowStartX;
-				}
+                        // track last non-white space character
+                        if (type == NVG_CHAR || type == NVG_CJK_CHAR) {
+                            rowEnd = iter.next;
+                            rowWidth = iter.nextx - rowStartX;
+                            rowMaxX = q.x1 - rowStartX;
+                        }
+                        // track last end of a word
+                        if (((ptype == NVG_CHAR || ptype == NVG_CJK_CHAR) && type == NVG_SPACE) || type == NVG_CJK_CHAR) {
+                            breakEnd = iter.str;
+                            breakWidth = rowWidth;
+                            breakMaxX = rowMaxX;
+                        }
+                        // track last beginning of a word
+                        if ((ptype == NVG_SPACE && (type == NVG_CHAR || type == NVG_CJK_CHAR)) || type == NVG_CJK_CHAR) {
+                            wordStart = iter.str;
+                            wordStartX = iter.x;
+                            wordMinX = q.x0 - rowStartX;
+                        }
 
-				// Break to new line when a character is beyond break width.
-				if ((type == NVG_CHAR || type == NVG_CJK_CHAR) && nextWidth > breakRowWidth) {
-					// The run length is too long, need to break to new line.
-					if (breakEnd == rowStart) {
-						// The current word is longer than the row length, just break it from here.
-						rows[nrows].start = rowStart;
-						rows[nrows].end = iter.str;
-						rows[nrows].width = rowWidth * invscale;
-						rows[nrows].minx = rowMinX * invscale;
-						rows[nrows].maxx = rowMaxX * invscale;
-						rows[nrows].next = iter.str;
-						nrows++;
-						if (nrows >= maxRows)
-							return nrows;
-						rowStartX = iter.x;
-						rowStart = iter.str;
-						rowEnd = iter.next;
-						rowWidth = iter.nextx - rowStartX;
-						rowMinX = q.x0 - rowStartX;
-						rowMaxX = q.x1 - rowStartX;
-						wordStart = iter.str;
-						wordStartX = iter.x;
-						wordMinX = q.x0 - rowStartX;
-					} else {
-						// Break the line from the end of the last word, and start new line from the beginning of the new.
-						rows[nrows].start = rowStart;
-						rows[nrows].end = breakEnd;
-						rows[nrows].width = breakWidth * invscale;
-						rows[nrows].minx = rowMinX * invscale;
-						rows[nrows].maxx = breakMaxX * invscale;
-						rows[nrows].next = wordStart;
-						nrows++;
-						if (nrows >= maxRows)
-							return nrows;
-						rowStartX = wordStartX;
-						rowStart = wordStart;
-						rowEnd = iter.next;
-						rowWidth = iter.nextx - rowStartX;
-						rowMinX = wordMinX;
-						rowMaxX = q.x1 - rowStartX;
-						// No change to the word start
-					}
-					// Set null break point
-					breakEnd = rowStart;
-					breakWidth = 0.0;
-					breakMaxX = 0.0;
-				}
-			}
-		}
+                        // Break to new line when a character is beyond break width.
+                        if ((type == NVG_CHAR || type == NVG_CJK_CHAR) && nextWidth > breakRowWidth) {
+                            // The run length is too long, need to break to new line.
+                            if (breakEnd == rowStart) {
+                                // The current word is longer than the row length, just break it from here.
+                                rows[nrows].start = rowStart;
+                                rows[nrows].end = iter.str;
+                                rows[nrows].width = rowWidth * invscale;
+                                rows[nrows].minx = rowMinX * invscale;
+                                rows[nrows].maxx = rowMaxX * invscale;
+                                rows[nrows].next = iter.str;
+                                nrows++;
+                                if (nrows >= maxRows)
+                                    return nrows;
+                                rowStartX = iter.x;
+                                rowStart = iter.str;
+                                rowEnd = iter.next;
+                                rowWidth = iter.nextx - rowStartX;
+                                rowMinX = q.x0 - rowStartX;
+                                rowMaxX = q.x1 - rowStartX;
+                                wordStart = iter.str;
+                                wordStartX = iter.x;
+                                wordMinX = q.x0 - rowStartX;
+                            } else {
+                                // Break the line from the end of the last word, and start new line from the beginning of the new.
+                                rows[nrows].start = rowStart;
+                                rows[nrows].end = breakEnd;
+                                rows[nrows].width = breakWidth * invscale;
+                                rows[nrows].minx = rowMinX * invscale;
+                                rows[nrows].maxx = breakMaxX * invscale;
+                                rows[nrows].next = wordStart;
+                                nrows++;
+                                if (nrows >= maxRows)
+                                    return nrows;
+                                rowStartX = wordStartX;
+                                rowStart = wordStart;
+                                rowEnd = iter.next;
+                                rowWidth = iter.nextx - rowStartX;
+                                rowMinX = wordMinX;
+                                rowMaxX = q.x1 - rowStartX;
+                                // No change to the word start
+                            }
+                            // Set null break point
+                            breakEnd = rowStart;
+                            breakWidth = 0.0;
+                            breakMaxX = 0.0;
+                        }
+                    }
+                }
 
-		pcodepoint = iter.codepoint;
-		ptype = type;
-	}
+                pcodepoint = iter.codepoint;
+                ptype = type;
+            }
 
-	// Break the line from the end of the last word, and start new line from the beginning of the new.
-	if (rowStart != NULL) {
-		rows[nrows].start = rowStart;
-		rows[nrows].end = rowEnd;
-		rows[nrows].width = rowWidth * invscale;
-		rows[nrows].minx = rowMinX * invscale;
-		rows[nrows].maxx = rowMaxX * invscale;
-		rows[nrows].next = end;
-		nrows++;
-	}
+            // Break the line from the end of the last word, and start new line from the beginning of the new.
+            if (rowStart != NULL) {
+                rows[nrows].start = rowStart;
+                rows[nrows].end = rowEnd;
+                rows[nrows].width = rowWidth * invscale;
+                rows[nrows].minx = rowMinX * invscale;
+                rows[nrows].maxx = rowMaxX * invscale;
+                rows[nrows].next = end;
+                nrows++;
+            }
 
-	return nrows;
+            return nrows;
             */
         }
 
@@ -2130,8 +2079,8 @@ namespace NanoVG
 
         internal struct Scissor
         {
-            float[] xform;//[6];
-            float[] extent;//[2];
+            public float[] xform;//[6];
+            public float[] extent;//[2];
         }
 
         internal struct Vertex
@@ -2139,36 +2088,35 @@ namespace NanoVG
             float x, y, u, v;
         }
 
-        internal struct Path
-        {
-            int first;
-            int count;
-            unsigned char closed;
-            int nbevel;
-            NVGvertex* fill;
-            int nfill;
-            NVGvertex* stroke;
-            int nstroke;
-            int winding;
-            int convex;
-        }
-
         internal class Params
         {
-            void* userPtr;
-            int edgeAntiAlias;
-            int (* renderCreate) (void* uptr);
-            int (* renderCreateTexture) (void* uptr, int type, int w, int h, int imageFlags, const unsigned char* data);
-            int (* renderDeleteTexture) (void* uptr, int image);
-            int (* renderUpdateTexture) (void* uptr, int image, int x, int y, int w, int h, const unsigned char* data);
-            int (* renderGetTextureSize) (void* uptr, int image, int* w, int* h);
-            void (* renderViewport) (void* uptr, float width, float height, float devicePixelRatio);
-            void (* renderCancel) (void* uptr);
-            void (* renderFlush) (void* uptr);
-            void (* renderFill) (void* uptr, NVGpaint* paint, NVGcompositeOperationState compositeOperation, NVGscissor* scissor, float fringe, const float* bounds, const NVGpath* paths, int npaths);
-            void (* renderStroke) (void* uptr, NVGpaint* paint, NVGcompositeOperationState compositeOperation, NVGscissor* scissor, float fringe, float strokeWidth, const NVGpath* paths, int npaths);
-            void (* renderTriangles) (void* uptr, NVGpaint* paint, NVGcompositeOperationState compositeOperation, NVGscissor* scissor, const NVGvertex* verts, int nverts);
-            void (* renderDelete) (void* uptr);
+            public delegate int RenderCreate(object uptr);
+            public delegate int RenderCreateTexture(object uptr, int type, int w, int h, int imageFlags, byte[] data);
+            public delegate int RenderDeleteTexture(object uptr, int image);
+            public delegate int RenderUpdateTexture(object uptr, int image, int x, int y, int w, int h, byte[] data);
+            public delegate int RenderGetTextureSize(object uptr, int image, out int w, out int h);
+            public delegate void RenderViewport(object uptr, float width, float height, float devicePixelRatio);
+            public delegate void RenderCancel(object uptr);
+            public delegate void RenderFlush(object uptr);
+            public delegate void RenderFill(object uptr, NVGpaint* paint, NVGcompositeOperationState compositeOperation, NVGscissor* scissor, float fringe, const float* bounds, const NVGpath* paths, int npaths);
+            public delegate void RenderStroke(object uptr, NVGpaint* paint, NVGcompositeOperationState compositeOperation, NVGscissor* scissor, float fringe, float strokeWidth, const NVGpath* paths, int npaths);
+            public delegate void RenderTriangles (object uptr, NVGpaint* paint, NVGcompositeOperationState compositeOperation, NVGscissor* scissor, const NVGvertex* verts, int nverts);
+            public delegate void RenderDelete (object uptr);
+
+            public object userPtr;
+            public int edgeAntiAlias;
+            public RenderCreate renderCreate;
+            public RenderCreateTexture renderCreateTexture;
+            public RenderDeleteTexture renderDeleteTexture;
+            public RenderUpdateTexture renderUpdateTexture;
+            public RenderGetTextureSize renderGetTextureSize;
+            public RenderViewport renderViewport;
+            public RenderCancel renderCancel;
+            public RenderFlush renderFlush;
+            public RenderFill renderFill;
+            public RenderStroke renderStroke;
+            public RenderTriangles renderTriangles;
+            public RenderDelete renderDelete;
         }
 
         // Constructor and destructor, called by the render back-end.
@@ -2195,6 +2143,540 @@ namespace NanoVG
 
         #endregion
 
+        #region Private - vector math
+
+        static float nvg__cross(float dx0, float dy0, float dx1, float dy1) { return dx1 * dy0 - dx0 * dy1; }
+
+        #endregion
+
+        #region Private methods - geometry
+
+        static void nvg__isectRects(
+            float[] dst,
+            float ax, float ay, float aw, float ah,
+            float bx, float by, float bw, float bh)
+        {
+            float minx = Math.Max(ax, bx);
+            float miny = Math.Max(ay, by);
+            float maxx = Math.Min(ax + aw, bx + bw);
+            float maxy = Math.Min(ay + ah, by + bh);
+            dst[0] = minx;
+            dst[1] = miny;
+            dst[2] = Math.Max(0.0f, maxx - minx);
+            dst[3] = Math.Max(0.0f, maxy - miny);
+        }
+
+        static bool nvg__ptEquals(float x1, float y1, float x2, float y2, float tol)
+        {
+            float dx = x2 - x1;
+            float dy = y2 - y1;
+            return dx * dx + dy * dy < tol * tol;
+        }
+
+        static float nvg__distPtSeg(float x, float y, float px, float py, float qx, float qy)
+        {
+            float pqx, pqy, dx, dy, d, t;
+            pqx = qx - px;
+            pqy = qy - py;
+            dx = x - px;
+            dy = y - py;
+            d = pqx * pqx + pqy * pqy;
+            t = pqx * dx + pqy * dy;
+            if (d > 0) t /= d;
+            if (t < 0) t = 0;
+            else if (t > 1) t = 1;
+            dx = px + t * pqx - x;
+            dy = py + t * pqy - y;
+            return dx * dx + dy * dy;
+        }
+
+        static float nvg__normalize(ref float x, ref float y)
+        {
+            float d = (float)Math.Sqrt(x * x + y * y);
+            if (d > 1e-6f)
+            {
+                float id = 1.0f / d;
+                x *= id;
+                y *= id;
+            }
+            return d;
+        }
+
+        #endregion
+
+        #region Private - paths
+
+        [Flags]
+        internal enum NVGpointFlags
+        {
+            NVG_PT_CORNER = 0x01,
+            NVG_PT_LEFT = 0x02,
+            NVG_PT_BEVEL = 0x04,
+            NVG_PR_INNERBEVEL = 0x08,
+        };
+
+        internal struct NVGpoint
+        {
+            public float x, y;
+            public float dx, dy;
+            public float len;
+            public float dmx, dmy;
+            public NVGpointFlags flags;
+        }
+
+        internal class Path
+        {
+            public int first;
+            public int count;
+            public bool closed;
+            public int nbevel;
+            public Vertex[] fill;
+            public int nfill;
+            public Vertex[] stroke;
+            public int nstroke;
+            public Winding winding;
+            public int convex;
+        }
+
+        internal class NVGpathCache
+        {
+            public NVGpoint[] points;
+            public int npoints;
+            public int cpoints;
+
+            public Path[] paths;
+            public int npaths;
+            public int cpaths;
+
+            public Vertex[] verts;
+            public int nverts;
+            public int cverts;
+
+            public float[] bounds;//[4]
+        }
+
+        static void nvg__clearPathCache(Context ctx)
+        {
+            ctx.cache.npoints = 0;
+            ctx.cache.npaths = 0;
+        }
+
+        static void nvg__addPath(Context ctx)
+        {
+            // resize array if needed
+            if (ctx.cache.npaths + 1 > ctx.cache.cpaths)
+            {
+                int cpaths = ctx.cache.npaths + 1 + ctx.cache.cpaths / 2;
+                Array.Resize(ref ctx.cache.paths, cpaths);
+                ctx.cache.cpaths = cpaths;
+            }
+
+            ctx.cache.paths[ctx.cache.npaths] = new Path()
+            {
+                first = ctx.cache.npoints,
+                winding = Winding.NVG_CCW,
+            };
+
+            ctx.cache.npaths++;
+        }
+
+        static void nvg__pathWinding(Context ctx, Winding winding)
+        {
+            Path path = nvg__lastPath(ctx);
+            if (path == null) return;
+            path.winding = winding;
+        }
+
+        static void nvg__closePath(Context ctx)
+        {
+            var path = nvg__lastPath(ctx);
+            if (path == null) return;
+            path.closed = true;
+        }
+
+        static Path nvg__lastPath(Context ctx)
+        {
+            if (ctx.cache.npaths > 0)
+            {
+                return ctx.cache.paths[ctx.cache.npaths - 1];
+            }
+
+            return null;
+        }
+
+        static void nvg__flattenPaths(Context ctx)
+        {
+            NVGpathCache cache = ctx.cache;
+
+            if (cache.npaths > 0) return;
+
+            // Flatten
+            for (int i = 0; i < ctx.ncommands;)
+            {
+                NVGcommands cmd = (NVGcommands)ctx.commands[i];
+                switch (cmd)
+                {
+                    case NVGcommands.NVG_MOVETO:
+                        nvg__addPath(ctx);
+                        nvg__addPoint(ctx, ctx.commands[i + 1], ctx.commands[i + 2], NVGpointFlags.NVG_PT_CORNER);
+                        i += 3;
+                        break;
+                    case NVGcommands.NVG_LINETO:
+                        nvg__addPoint(ctx, ctx.commands[i + 1], ctx.commands[i + 2], NVGpointFlags.NVG_PT_CORNER);
+                        i += 3;
+                        break;
+                    case NVGcommands.NVG_BEZIERTO:
+                        ref NVGpoint last = ref nvg__lastPoint(ctx);
+                        if (last != null)
+                        {
+                            nvg__tesselateBezier(
+                                ctx,
+                                last.x,
+                                last.y,
+                                ctx.commands[i + 1],
+                                ctx.commands[i + 2],
+                                ctx.commands[i + 3],
+                                ctx.commands[i + 4],
+                                ctx.commands[i + 5],
+                                ctx.commands[i + 6],
+                                0,
+                                NVGpointFlags.NVG_PT_CORNER);
+                        }
+                        i += 7;
+                        break;
+                    case NVGcommands.NVG_CLOSE:
+                        nvg__closePath(ctx);
+                        i++;
+                        break;
+                    case NVGcommands.NVG_WINDING:
+                        nvg__pathWinding(ctx, (Winding)ctx.commands[i + 1]);
+                        i += 2;
+                        break;
+                    default:
+                        i++;
+                        break;
+                }
+            }
+
+            cache.bounds[0] = cache.bounds[1] = 1e6f;
+            cache.bounds[2] = cache.bounds[3] = -1e6f;
+
+            // Calculate the direction and length of line segments.
+            for (int j = 0; j < cache.npaths; j++)
+            {
+                var path = cache.paths[j];
+                var pts = new Span<NVGpoint>(cache.points, path.first, path.count);
+
+                // If the first and last points are the same, remove the last, mark as closed path.
+                ref NVGpoint p0 = ref pts[path.count - 1];
+                ref NVGpoint p1 = ref pts[0];
+                if (nvg__ptEquals(p0.x, p0.y, p1.x, p1.y, ctx.distTol))
+                {
+                    path.count--;
+                    p0 = ref pts[path.count - 1];
+                    path.closed = true;
+                }
+
+                // Enforce winding.
+                if (path.count > 2)
+                {
+                    float area = nvg__polyArea(pts, path.count);
+                    if (path.winding == Winding.NVG_CCW && area < 0.0f)
+                        nvg__polyReverse(pts, path.count);
+                    if (path.winding == Winding.NVG_CW && area > 0.0f)
+                        nvg__polyReverse(pts, path.count);
+                }
+
+                for (int i = 0; i < path.count; i++)
+                {
+                    // Calculate segment direction and length
+                    p0.dx = p1.x - p0.x;
+                    p0.dy = p1.y - p0.y;
+                    p0.len = nvg__normalize(ref p0.dx, ref p0.dy);
+                    // Update bounds
+                    cache.bounds[0] = Math.Min(cache.bounds[0], p0.x);
+                    cache.bounds[1] = Math.Min(cache.bounds[1], p0.y);
+                    cache.bounds[2] = Math.Max(cache.bounds[2], p0.x);
+                    cache.bounds[3] = Math.Max(cache.bounds[3], p0.y);
+                    // Advance
+                    p0 = p1++; //TODOO!!!!!!
+                }
+            }
+        }
+
+        static void nvg__addPoint(Context ctx, float x, float y, NVGpointFlags flags)
+        {
+            var path = nvg__lastPath(ctx);
+
+            if (path == null) return; // todo: throw
+
+            if (path.count > 0 && ctx.cache.npoints > 0)
+            {
+                // if its the same point as last one, just add flags appropriately
+                ref NVGpoint pt = ref nvg__lastPoint(ctx);
+                if (nvg__ptEquals(pt.x, pt.y, x, y, ctx.distTol))
+                {
+                    pt.flags |= flags;
+                    return;
+                }
+            }
+
+            // resize array if needed
+            if (ctx.cache.npoints + 1 > ctx.cache.cpoints)
+            {
+                int cpoints = ctx.cache.npoints + 1 + ctx.cache.cpoints / 2;
+                Array.Resize(ref ctx.cache.points, cpoints);
+                ctx.cache.cpoints = cpoints;
+            }
+
+            ctx.cache.points[ctx.cache.npoints] = new NVGpoint()
+            {
+                x = x,
+                y = y,
+                flags = flags,
+            };
+
+            ctx.cache.npoints++;
+            path.count++;
+        }
+
+        static ref NVGpoint nvg__lastPoint(Context ctx)
+        {
+            if (ctx.cache.npoints > 0)
+            {
+                return ref ctx.cache.points[ctx.cache.npoints - 1];
+            }
+
+            return ref null;
+        }
+
+        static float nvg__triarea2(float ax, float ay, float bx, float by, float cx, float cy)
+        {
+            float abx = bx - ax;
+            float aby = by - ay;
+            float acx = cx - ax;
+            float acy = cy - ay;
+            return acx * aby - abx * acy;
+        }
+
+        static float nvg__polyArea(Span<NVGpoint> pts, int npts)
+        {
+            int i;
+            float area = 0;
+            for (i = 2; i < npts; i++)
+            {
+                ref var a = ref pts[0];
+                ref var b = ref pts[i - 1];
+                ref var c = ref pts[i];
+                area += nvg__triarea2(a.x, a.y, b.x, b.y, c.x, c.y);
+            }
+            return area * 0.5f;
+        }
+
+        static void nvg__polyReverse(Span<NVGpoint> pts, int npts) // todo: can be replaced with span.reverse?
+        {
+            NVGpoint tmp;
+            int i = 0, j = npts - 1;
+            while (i < j)
+            {
+                tmp = pts[i];
+                pts[i] = pts[j];
+                pts[j] = tmp;
+                i++;
+                j--;
+            }
+        }
+
+        static void nvg__tesselateBezier(
+            Context ctx,
+            float x1, float y1, float x2, float y2,
+            float x3, float y3, float x4, float y4,
+            int level, NVGpointFlags type)
+        {
+            float x12, y12, x23, y23, x34, y34, x123, y123, x234, y234, x1234, y1234;
+            float dx, dy, d2, d3;
+
+            if (level > 10) return;
+
+            x12 = (x1 + x2) * 0.5f;
+            y12 = (y1 + y2) * 0.5f;
+            x23 = (x2 + x3) * 0.5f;
+            y23 = (y2 + y3) * 0.5f;
+            x34 = (x3 + x4) * 0.5f;
+            y34 = (y3 + y4) * 0.5f;
+            x123 = (x12 + x23) * 0.5f;
+            y123 = (y12 + y23) * 0.5f;
+
+            dx = x4 - x1;
+            dy = y4 - y1;
+            d2 = Math.Abs(((x2 - x4) * dy - (y2 - y4) * dx));
+            d3 = Math.Abs(((x3 - x4) * dy - (y3 - y4) * dx));
+
+            if ((d2 + d3) * (d2 + d3) < ctx.tessTol * (dx * dx + dy * dy))
+            {
+                nvg__addPoint(ctx, x4, y4, type);
+                return;
+            }
+
+            /*	if (nvg__absf(x1+x3-x2-x2) + nvg__absf(y1+y3-y2-y2) + nvg__absf(x2+x4-x3-x3) + nvg__absf(y2+y4-y3-y3) < ctx->tessTol) {
+                    nvg__addPoint(ctx, x4, y4, type);
+                    return;
+                }*/
+
+            x234 = (x23 + x34) * 0.5f;
+            y234 = (y23 + y34) * 0.5f;
+            x1234 = (x123 + x234) * 0.5f;
+            y1234 = (y123 + y234) * 0.5f;
+
+            nvg__tesselateBezier(ctx, x1, y1, x12, y12, x123, y123, x1234, y1234, level + 1, 0);
+            nvg__tesselateBezier(ctx, x1234, y1234, x234, y234, x34, y34, x4, y4, level + 1, type);
+        }
+
+        static int nvg__expandFill(Context ctx, float w, int lineJoin, float miterLimit)
+        {
+            var cache = ctx.cache;
+            //NVGvertex* verts;
+            //NVGvertex* dst;
+            //int cverts, convex, i, j;
+            float aa = ctx.fringeWidth;
+            bool fringe = w > 0.0f;
+
+            nvg__calculateJoins(ctx, w, lineJoin, miterLimit);
+
+            // Calculate max vertex usage.
+            cverts = 0;
+            for (i = 0; i < cache->npaths; i++)
+            {
+                NVGpath* path = &cache->paths[i];
+                cverts += path->count + path->nbevel + 1;
+                if (fringe)
+                    cverts += (path->count + path->nbevel * 5 + 1) * 2; // plus one for loop
+            }
+
+            verts = nvg__allocTempVerts(ctx, cverts);
+            if (verts == NULL) return 0;
+
+            convex = cache->npaths == 1 && cache->paths[0].convex;
+
+            for (i = 0; i < cache->npaths; i++)
+            {
+                NVGpath* path = &cache->paths[i];
+                NVGpoint* pts = &cache->points[path->first];
+                NVGpoint* p0;
+                NVGpoint* p1;
+                float rw, lw, woff;
+                float ru, lu;
+
+                // Calculate shape vertices.
+                woff = 0.5f * aa;
+                dst = verts;
+                path->fill = dst;
+
+                if (fringe)
+                {
+                    // Looping
+                    p0 = &pts[path->count - 1];
+                    p1 = &pts[0];
+                    for (j = 0; j < path->count; ++j)
+                    {
+                        if (p1->flags & NVG_PT_BEVEL)
+                        {
+                            float dlx0 = p0->dy;
+                            float dly0 = -p0->dx;
+                            float dlx1 = p1->dy;
+                            float dly1 = -p1->dx;
+                            if (p1->flags & NVG_PT_LEFT)
+                            {
+                                float lx = p1->x + p1->dmx * woff;
+                                float ly = p1->y + p1->dmy * woff;
+                                nvg__vset(dst, lx, ly, 0.5f, 1); dst++;
+                            }
+                            else
+                            {
+                                float lx0 = p1->x + dlx0 * woff;
+                                float ly0 = p1->y + dly0 * woff;
+                                float lx1 = p1->x + dlx1 * woff;
+                                float ly1 = p1->y + dly1 * woff;
+                                nvg__vset(dst, lx0, ly0, 0.5f, 1); dst++;
+                                nvg__vset(dst, lx1, ly1, 0.5f, 1); dst++;
+                            }
+                        }
+                        else
+                        {
+                            nvg__vset(dst, p1->x + (p1->dmx * woff), p1->y + (p1->dmy * woff), 0.5f, 1); dst++;
+                        }
+                        p0 = p1++;
+                    }
+                }
+                else
+                {
+                    for (j = 0; j < path->count; ++j)
+                    {
+                        nvg__vset(dst, pts[j].x, pts[j].y, 0.5f, 1);
+                        dst++;
+                    }
+                }
+
+                path->nfill = (int)(dst - verts);
+                verts = dst;
+
+                // Calculate fringe
+                if (fringe)
+                {
+                    lw = w + woff;
+                    rw = w - woff;
+                    lu = 0;
+                    ru = 1;
+                    dst = verts;
+                    path->stroke = dst;
+
+                    // Create only half a fringe for convex shapes so that
+                    // the shape can be rendered without stenciling.
+                    if (convex)
+                    {
+                        lw = woff;  // This should generate the same vertex as fill inset above.
+                        lu = 0.5f;  // Set outline fade at middle.
+                    }
+
+                    // Looping
+                    p0 = &pts[path->count - 1];
+                    p1 = &pts[0];
+
+                    for (j = 0; j < path->count; ++j)
+                    {
+                        if ((p1->flags & (NVG_PT_BEVEL | NVG_PR_INNERBEVEL)) != 0)
+                        {
+                            dst = nvg__bevelJoin(dst, p0, p1, lw, rw, lu, ru, ctx->fringeWidth);
+                        }
+                        else
+                        {
+                            nvg__vset(dst, p1->x + (p1->dmx * lw), p1->y + (p1->dmy * lw), lu, 1); dst++;
+                            nvg__vset(dst, p1->x - (p1->dmx * rw), p1->y - (p1->dmy * rw), ru, 1); dst++;
+                        }
+                        p0 = p1++;
+                    }
+
+                    // Loop it
+                    nvg__vset(dst, verts[0].x, verts[0].y, lu, 1); dst++;
+                    nvg__vset(dst, verts[1].x, verts[1].y, ru, 1); dst++;
+
+                    path->nstroke = (int)(dst - verts);
+                    verts = dst;
+                }
+                else
+                {
+                    path->stroke = NULL;
+                    path->nstroke = 0;
+                }
+            }
+
+            return 1;
+        }
+
+        #endregion
+
+        #region Private methods
+
         private static void nvg__setDevicePixelRatio(Context ctx, float ratio)
         {
             ctx.tessTol = 0.25f / ratio;
@@ -2202,5 +2684,184 @@ namespace NanoVG
             ctx.fringeWidth = 1.0f / ratio;
             ctx.devicePxRatio = ratio;
         }
+
+        private static CompositeOperationState nvg__compositeOperationState(CompositeOperation op)
+        {
+            int sfactor = 0, dfactor = 0;
+
+            if (op == CompositeOperation.NVG_SOURCE_OVER)
+            {
+                sfactor = NVG_ONE;
+                dfactor = NVG_ONE_MINUS_SRC_ALPHA;
+            }
+            else if (op == CompositeOperation.NVG_SOURCE_IN)
+            {
+                sfactor = NVG_DST_ALPHA;
+                dfactor = NVG_ZERO;
+            }
+            else if (op == CompositeOperation.NVG_SOURCE_OUT)
+            {
+                sfactor = NVG_ONE_MINUS_DST_ALPHA;
+                dfactor = NVG_ZERO;
+            }
+            else if (op == CompositeOperation.NVG_ATOP)
+            {
+                sfactor = NVG_DST_ALPHA;
+                dfactor = NVG_ONE_MINUS_SRC_ALPHA;
+            }
+            else if (op == CompositeOperation.NVG_DESTINATION_OVER)
+            {
+                sfactor = NVG_ONE_MINUS_DST_ALPHA;
+                dfactor = NVG_ONE;
+            }
+            else if (op == CompositeOperation.NVG_DESTINATION_IN)
+            {
+                sfactor = NVG_ZERO;
+                dfactor = NVG_SRC_ALPHA;
+            }
+            else if (op == CompositeOperation.NVG_DESTINATION_OUT)
+            {
+                sfactor = NVG_ZERO;
+                dfactor = NVG_ONE_MINUS_SRC_ALPHA;
+            }
+            else if (op == CompositeOperation.NVG_DESTINATION_ATOP)
+            {
+                sfactor = NVG_ONE_MINUS_DST_ALPHA;
+                dfactor = NVG_SRC_ALPHA;
+            }
+            else if (op == CompositeOperation.NVG_LIGHTER)
+            {
+                sfactor = NVG_ONE;
+                dfactor = NVG_ONE;
+            }
+            else if (op == CompositeOperation.NVG_COPY)
+            {
+                sfactor = NVG_ONE;
+                dfactor = NVG_ZERO;
+            }
+            else if (op == CompositeOperation.NVG_XOR)
+            {
+                sfactor = NVG_ONE_MINUS_DST_ALPHA;
+                dfactor = NVG_ONE_MINUS_SRC_ALPHA;
+            }
+            else
+            {
+                sfactor = NVG_ONE;
+                dfactor = NVG_ZERO;
+            }
+
+            CompositeOperationState state;
+            state.srcRGB = sfactor;
+            state.dstRGB = dfactor;
+            state.srcAlpha = sfactor;
+            state.dstAlpha = dfactor;
+            return state;
+        }
+
+        private static NVGstate nvg__getState(Context ctx)
+        {
+            return ctx.states[ctx.nstates - 1];
+        }
+
+        private static void nvg__setPaintColor(ref Paint p, Color color)
+        {
+            p.extent = new float[2];
+            TransformIdentity(p.xform);
+            p.radius = 0.0f;
+            p.feather = 1.0f;
+            p.innerColor = color;
+            p.outerColor = color;
+            p.image = 0;
+        }
+
+        private enum NVGcommands
+        {
+            NVG_MOVETO = 0,
+            NVG_LINETO = 1,
+            NVG_BEZIERTO = 2,
+            NVG_CLOSE = 3,
+            NVG_WINDING = 4,
+        }
+
+        static void nvg__appendCommands(Context ctx, float[] vals, int nvals)
+        {
+            var state = nvg__getState(ctx);
+            int i;
+
+            // resize command array if necessary
+            if (ctx.ncommands + nvals > ctx.ccommands)
+            {
+                float[] commands;
+                int ccommands = ctx.ncommands + nvals + ctx.ccommands / 2;
+                Array.Resize(ref ctx.commands, ccommands);
+                ctx.ccommands = ccommands;
+            }
+
+            // transform commands
+            if ((int)vals[0] != (int)NVGcommands.NVG_CLOSE && (int)vals[0] != (int)NVGcommands.NVG_WINDING)
+            {
+                ctx.commandx = vals[nvals - 2];
+                ctx.commandy = vals[nvals - 1];
+            }
+
+            i = 0;
+            while (i < nvals)
+            {
+                var cmd = (NVGcommands)vals[i];
+                switch (cmd)
+                {
+                    case NVGcommands.NVG_MOVETO:
+                        TransformPoint(out vals[i + 1], out vals[i + 2], state.xform, vals[i + 1], vals[i + 2]);
+                        i += 3;
+                        break;
+                    case NVGcommands.NVG_LINETO:
+                        TransformPoint(out vals[i + 1], out vals[i + 2], state.xform, vals[i + 1], vals[i + 2]);
+                        i += 3;
+                        break;
+                    case NVGcommands.NVG_BEZIERTO:
+                        TransformPoint(out vals[i + 1], out vals[i + 2], state.xform, vals[i + 1], vals[i + 2]);
+                        TransformPoint(out vals[i + 3], out vals[i + 4], state.xform, vals[i + 3], vals[i + 4]);
+                        TransformPoint(out vals[i + 5], out vals[i + 6], state.xform, vals[i + 5], vals[i + 6]);
+                        i += 7;
+                        break;
+                    case NVGcommands.NVG_CLOSE:
+                        i++;
+                        break;
+                    case NVGcommands.NVG_WINDING:
+                        i += 2;
+                        break;
+                    default:
+                        i++;
+                        break;
+                }
+            }
+
+            // append commands to context
+            Array.Copy(vals, 0, ctx.commands, ctx.ncommands, nvals);
+            ctx.ncommands += nvals;
+        }
+
+        private class NVGstate
+        {
+            public CompositeOperationState compositeOperation;
+            public int shapeAntiAlias;
+            public Paint fill;
+            public Paint stroke;
+            public float strokeWidth;
+            public float miterLimit;
+            public int lineJoin;
+            public int lineCap;
+            public float alpha;
+            public float[] xform;//[6];
+            public Scissor scissor;
+            public float fontSize;
+            public float letterSpacing;
+            public float lineHeight;
+            public float fontBlur;
+            public int textAlign;
+            public int fontId;
+        }
+
+        #endregion
     }
 }
