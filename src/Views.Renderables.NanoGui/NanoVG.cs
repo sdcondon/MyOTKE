@@ -37,14 +37,14 @@ namespace NanoVG
         internal int ncommands;
         internal float commandx;
         internal float commandy;
-        internal NVGstate[] states;//[NVG_MAX_STATES];
+        internal NanoVG.NVGstate[] states;//[NVG_MAX_STATES];
         internal int nstates;
         internal NanoVG.NVGpathCache cache;
         internal float tessTol;
         internal float distTol;
         internal float fringeWidth;
         internal float devicePxRatio;
-        internal struct FONScontext* fs;
+        internal FONScontext* fs;
         internal int[] fontImages;//[NVG_MAX_FONTIMAGES];
         internal int fontImageIdx;
         internal int drawCallCount;
@@ -66,8 +66,15 @@ namespace NanoVG
 
     public enum Winding
     {
-        NVG_CCW = 1, // Winding for solid shapes
-        NVG_CW = 2, // Winding for holes
+        /// <summary>
+        /// Winding for solid shapes
+        /// </summary>
+        NVG_CCW = 1,
+
+        /// <summary>
+        /// Winding for holes
+        /// </summary>
+        NVG_CW = 2,
     }
 
     enum Solidity
@@ -76,7 +83,7 @@ namespace NanoVG
         NVG_HOLE = 2, // CW
     }
 
-    enum LineCap
+    enum nvgLineCap
     {
         NVG_BUTT,
         NVG_ROUND,
@@ -88,14 +95,14 @@ namespace NanoVG
     enum Align
     {
         // Horizontal align
-        NVG_ALIGN_LEFT = 1 << 0,    // Default, align text horizontally to left.
-        NVG_ALIGN_CENTER = 1 << 1,  // Align text horizontally to center.
-        NVG_ALIGN_RIGHT = 1 << 2,   // Align text horizontally to right.
+        NVG_ALIGN_LEFT = 1 << 0, // Default, align text horizontally to left.
+        NVG_ALIGN_CENTER = 1 << 1, // Align text horizontally to center.
+        NVG_ALIGN_RIGHT = 1 << 2, // Align text horizontally to right.
 
         // Vertical align
         NVG_ALIGN_TOP = 1 << 3, // Align text vertically to top.
-        NVG_ALIGN_MIDDLE = 1 << 4,  // Align text vertically to middle.
-        NVG_ALIGN_BOTTOM = 1 << 5,  // Align text vertically to bottom.
+        NVG_ALIGN_MIDDLE = 1 << 4, // Align text vertically to middle.
+        NVG_ALIGN_BOTTOM = 1 << 5, // Align text vertically to bottom.
         NVG_ALIGN_BASELINE = 1 << 6, // Default, align text vertically to baseline.
     }
 
@@ -167,6 +174,8 @@ namespace NanoVG
     {
         private const float NVG_KAPPA90 = 0.5522847493f; // Length proportional to radius of a cubic bezier handle for 90deg arcs.
 
+        private const int NVG_MAX_FONTIMAGES = 4;
+
         #region Frames
 
         // Begin drawing a new frame
@@ -201,17 +210,21 @@ namespace NanoVG
             ctx.textTriCount = 0;
         }
 
-        // Cancels drawing the current frame.
+        /// <summary>
+        /// Cancels drawing the current frame.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
         public static void CancelFrame(Context ctx)
         {
             ctx.@params.renderCancel(ctx.@params.userPtr);
         }
 
-        // Ends drawing flushing remaining render state.
+        /// <summary>
+        /// Ends drawing flushing remaining render state.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
         public static void EndFrame(Context ctx)
         {
-            //throw new NotImplementedException();
-
             ctx.@params.renderFlush(ctx.@params.userPtr);
             if (ctx.fontImageIdx != 0)
             {
@@ -220,7 +233,10 @@ namespace NanoVG
 
                 // delete images that smaller than current one
                 if (fontImage == 0)
+                {
                     return;
+                }
+
                 ImageSize(ctx, fontImage, out iw, out ih);
                 for (i = j = 0; i < ctx.fontImageIdx; i++)
                 {
@@ -229,9 +245,13 @@ namespace NanoVG
                         int nw, nh;
                         ImageSize(ctx, ctx.fontImages[i], out nw, out nh);
                         if (nw < iw || nh < ih)
+                        {
                             DeleteImage(ctx, ctx.fontImages[i]);
+                        }
                         else
+                        {
                             ctx.fontImages[j++] = ctx.fontImages[i];
+                        }
                     }
                 }
 
@@ -242,7 +262,9 @@ namespace NanoVG
 
                 // clear all images after j
                 for (i = j; i < NVG_MAX_FONTIMAGES; i++)
+                {
                     ctx.fontImages[i] = 0;
+                }
             }
         }
 
@@ -254,7 +276,11 @@ namespace NanoVG
         //// the blend func is based on OpenGL (see corresponding manuals for more info).
         //// The colors in the blending state have premultiplied alpha.
 
-        // Sets the composite operation. The op parameter should be one of NVGcompositeOperation.
+        /// <summary>
+        /// Sets the composite operation.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="op">The operation to set.</param>
         public static void GlobalCompositeOperation(Context ctx, CompositeOperation op)
         {
             var state = nvg__getState(ctx);
@@ -286,13 +312,32 @@ namespace NanoVG
 
         //// Colors in NanoVG are stored as unsigned ints in ABGR format.
 
-        // Returns a color value from red, green, blue values. Alpha will be set to 255 (1.0f).
+        /// <summary>
+        /// Returns a color value from red, green, blue values. Alpha will be set to 255 (1.0f).
+        /// </summary>
+        /// <param name="r">The red component of the color.</param>
+        /// <param name="g">The green component of the color.</param>
+        /// <param name="b">The blue component of the color.</param>
+        /// <returns>The generated color value.</returns>
         public static Color RGB(byte r, byte g, byte b) => RGBA(r, g, b, 255);
 
-        // Returns a color value from red, green, blue values. Alpha will be set to 1.0f.
+        /// <summary>
+        /// Returns a color value from red, green, blue values. Alpha will be set to 1.0f.
+        /// </summary>
+        /// <param name="r">The red component of the color.</param>
+        /// <param name="g">The green component of the color.</param>
+        /// <param name="b">The blue component of the color.</param>
+        /// <returns>The generated color value.</returns>
         public static Color RGBf(float r, float g, float b) => RGBAf(r, g, b, 1.0f);
 
-        // Returns a color value from red, green, blue and alpha values.
+        /// <summary>
+        /// Returns a color value from red, green, blue and alpha values.
+        /// </summary>
+        /// <param name="r">The red component of the color.</param>
+        /// <param name="g">The green component of the color.</param>
+        /// <param name="b">The blue component of the color.</param>
+        /// <param name="a">The alpha component of the color.</param>
+        /// <returns>The generated color value.</returns>
         public static Color RGBA(byte r, byte g, byte b, byte a)
         {
             return new Color
@@ -304,7 +349,14 @@ namespace NanoVG
             };
         }
 
-        // Returns a color value from red, green, blue and alpha values.
+        /// <summary>
+        /// Returns a color value from red, green, blue and alpha values.
+        /// </summary>
+        /// <param name="r">The red component of the color.</param>
+        /// <param name="g">The green component of the color.</param>
+        /// <param name="b">The blue component of the color.</param>
+        /// <param name="a">The alpha component of the color.</param>
+        /// <returns>The generated color value.</returns>
         public static Color RGBAf(float r, float g, float b, float a)
         {
             return new Color
@@ -316,7 +368,13 @@ namespace NanoVG
             };
         }
 
-        // Linearly interpolates from color c0 to c1, and returns resulting color value.
+        /// <summary>
+        /// Linearly interpolates from color c0 to c1, and returns resulting color value.
+        /// </summary>
+        /// <param name="c0">One color of the pair to interpolate between.</param>
+        /// <param name="c1">The other color of the pair to interpolate between.</param>
+        /// <param name="u">The weight of <see cref="c1"/> in the generated color.</param>
+        /// <returns>The generated color.</returns>
         public static Color LerpRGBA(Color c0, Color c1, float u)
         {
             u = Math.Max(0f, Math.Min(u, 1f)); // clamp
@@ -331,38 +389,78 @@ namespace NanoVG
             };
         }
 
-        // Sets transparency of a color value.
+        /// <summary>
+        /// Sets transparency of a color value.
+        /// </summary>
+        /// <param name="c0">The color to set the transparency of.</param>
+        /// <param name="a">The new alpha value of the color.</param>
+        /// <returns>The updated color.</returns>
         public static Color TransRGBA(Color c0, byte a)
         {
             c0.A = a / 255.0f;
             return c0;
         }
 
-        // Sets transparency of a color value.
+        /// <summary>
+        /// Sets transparency of a color value.
+        /// </summary>
+        /// <param name="c0">The color to set the transparency of.</param>
+        /// <param name="a">The new alpha value of the color.</param>
+        /// <returns>The updated color.</returns>
         public static Color TransRGBAf(Color c0, float a)
         {
             c0.A = a;
             return c0;
         }
 
-        // Returns color value specified by hue, saturation and lightness.
-        // HSL values are all in range [0..1], alpha will be set to 255.
+        /// <summary>
+        /// Returns a color value specified by hue, saturation and lightness.
+        /// HSL values are all in range [0..1], alpha will be set to 255.
+        /// </summary>
+        /// <param name="h">The hue of the generated color.</param>
+        /// <param name="s">The saturation of the generated color.</param>
+        /// <param name="l">The lightness of the generated color.</param>
+        /// <returns>The generated color.</returns>
         public static Color HSL(float h, float s, float l) => HSLA(h, s, l, 255);
 
-        // Returns color value specified by hue, saturation and lightness and alpha.
-        // HSL values are all in range [0..1], alpha in range [0..255]
+        /// <summary>
+        /// Returns color value specified by hue, saturation and lightness and alpha.
+        /// HSL values are all in range [0..1], alpha in range [0..255].
+        /// </summary>
+        /// <param name="h">The hue of the generated color.</param>
+        /// <param name="s">The saturation of the generated color.</param>
+        /// <param name="l">The lightness of the generated color.</param>
+        /// <param name="a">The alpha of the generated color.</param>
+        /// <returns>The generated color.</returns>
         public static Color HSLA(float h, float s, float l, byte a)
         {
             float Hue(float hue, float n1, float n2)
             {
-                if (hue < 0) hue += 1;
-                if (hue > 1) hue -= 1;
+                // TODO: while? modulo?
+                if (hue < 0)
+                {
+                    hue += 1;
+                }
+
+                // TODO: while? modulo?
+                if (hue > 1)
+                {
+                    hue -= 1;
+                }
+
                 if (hue < 1.0f / 6.0f)
+                {
                     return n1 + (n2 - n1) * hue * 6.0f;
+                }
                 else if (hue < 3.0f / 6.0f)
+                {
                     return n2;
+                }
                 else if (hue < 4.0f / 6.0f)
+                {
                     return n1 + (n2 - n1) * (2.0f / 3.0f - hue) * 6.0f;
+                }
+
                 return n1;
             }
 
@@ -371,7 +469,10 @@ namespace NanoVG
             float m1, m2;
 
             h %= 1;
-            if (h < 0.0f) h += 1.0f;
+            if (h < 0.0f)
+            {
+                h += 1.0f;
+            }
 
             s = Clamp(s, 0.0f, 1.0f);
             l = Clamp(l, 0.0f, 1.0f);
@@ -395,8 +496,11 @@ namespace NanoVG
         //// The state contains transform, fill and stroke styles, text and font styles,
         //// and scissor clipping.
 
-        // Pushes and saves the current render state into a state stack.
-        // A matching nvgRestore() must be used to restore the state.
+        /// <summary>
+        /// Pushes and saves the current render state into a state stack.
+        /// A matching <see cref="nvgRestore"/> must be used to restore the state.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
         public static void Save(Context ctx)
         {
             throw new NotSupportedException();
@@ -409,46 +513,49 @@ namespace NanoVG
             */
         }
 
-        // Pops and restores current render state.
+        /// <summary>
+        /// Pops and restores current render state.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
         public static void Restore(Context ctx)
         {
-            throw new NotSupportedException();
-            /*
-            if (ctx->nstates <= 1)
-                return;
-            ctx->nstates--;
-            */
+            if (ctx.nstates <= 1)
+            {
+                return; // TODO: Throw?
+            }
+
+            ctx.nstates--;
         }
 
-        // Resets current render state to default values. Does not affect the render state stack.
+        /// <summary>
+        /// Resets current render state to default values. Does not affect the render state stack.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
         public static void Reset(Context ctx)
         {
-            throw new NotSupportedException();
-            /*
-            NVGstate* state = nvg__getState(ctx);
-            memset(state, 0, sizeof(*state));
+            var state = nvg__getState(ctx);
+            ////memset(state, 0, sizeof(*state));
 
-            nvg__setPaintColor(&state->fill, nvgRGBA(255, 255, 255, 255));
-            nvg__setPaintColor(&state->stroke, nvgRGBA(0, 0, 0, 255));
-            state->compositeOperation = nvg__compositeOperationState(NVG_SOURCE_OVER);
-            state->shapeAntiAlias = 1;
-            state->strokeWidth = 1.0f;
-            state->miterLimit = 10.0f;
-            state->lineCap = NVG_BUTT;
-            state->lineJoin = NVG_MITER;
-            state->alpha = 1.0f;
-            nvgTransformIdentity(state->xform);
+            nvg__setPaintColor(ref state.fill, RGBA(255, 255, 255, 255));
+            nvg__setPaintColor(ref state.stroke, RGBA(0, 0, 0, 255));
+            state.compositeOperation = nvg__compositeOperationState(CompositeOperation.NVG_SOURCE_OVER);
+            state.shapeAntiAlias = 1;
+            state.strokeWidth = 1.0f;
+            state.miterLimit = 10.0f;
+            state.lineCap = (int)nvgLineCap.NVG_BUTT;
+            state.lineJoin = (int)nvgLineCap.NVG_MITER;
+            state.alpha = 1.0f;
+            TransformIdentity(state.xform);
 
-            state->scissor.extent[0] = -1.0f;
-            state->scissor.extent[1] = -1.0f;
+            state.scissor.extent[0] = -1.0f;
+            state.scissor.extent[1] = -1.0f;
 
-            state->fontSize = 16.0f;
-            state->letterSpacing = 0.0f;
-            state->lineHeight = 1.0f;
-            state->fontBlur = 0.0f;
-            state->textAlign = NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE;
-            state->fontId = 0;
-            */
+            state.fontSize = 16.0f;
+            state.letterSpacing = 0.0f;
+            state.lineHeight = 1.0f;
+            state.fontBlur = 0.0f;
+            state.textAlign = (int)(Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_BASELINE);
+            state.fontId = 0;
         }
 
         #endregion
@@ -461,21 +568,33 @@ namespace NanoVG
         ////
         //// Current render style can be saved and restored using nvgSave() and nvgRestore().
 
-        // Sets whether to draw antialias for nvgStroke() and nvgFill(). It's enabled by default.
+        /// <summary>
+        /// Sets whether to draw antialias for nvgStroke() and nvgFill(). It's enabled by default.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="enabled">A value indicating whether antialiasing should be enabled.</param>
         public static void ShapeAntiAlias(Context ctx, int enabled)
         {
             var state = nvg__getState(ctx);
             state.shapeAntiAlias = enabled;
         }
 
-        // Sets current stroke style to a solid color.
+        /// <summary>
+        /// Sets current stroke style to a solid color.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="color">The color to use.</param>
         public static void StrokeColor(Context ctx, Color color)
         {
             var state = nvg__getState(ctx);
             nvg__setPaintColor(ref state.stroke, color);
         }
 
-        // Sets current stroke style to a paint, which can be a one of the gradients or a pattern.
+        /// <summary>
+        /// Sets current stroke style to a paint, which can be a one of the gradients or a pattern.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="paint">The paint to use.</param>
         public static void StrokePaint(Context ctx, Paint paint)
         {
             var state = nvg__getState(ctx);
@@ -483,14 +602,22 @@ namespace NanoVG
             TransformMultiply(state.stroke.xform, state.xform);
         }
 
-        // Sets current fill style to a solid color.
+        /// <summary>
+        /// Sets current fill style to a solid color.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="color">The color to use.</param>
         public static void FillColor(Context ctx, Color color)
         {
             var state = nvg__getState(ctx);
             nvg__setPaintColor(ref state.fill, color);
         }
 
-        // Sets current fill style to a paint, which can be a one of the gradients or a pattern.
+        /// <summary>
+        /// Sets current fill style to a paint, which can be a one of the gradients or a pattern.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="paint">The paint to use.</param>
         public static void FillPaint(Context ctx, Paint paint)
         {
             var state = nvg__getState(ctx);
@@ -498,43 +625,63 @@ namespace NanoVG
             TransformMultiply(state.fill.xform, state.xform);
         }
 
-        // Sets the miter limit of the stroke style.
-        // Miter limit controls when a sharp corner is beveled.
+        /// <summary>
+        /// Sets the miter limit of the stroke style.
+        /// Miter limit controls when a sharp corner is beveled.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="limit">The miter limit to use.</param>
         public static void MiterLimit(Context ctx, float limit)
         {
             var state = nvg__getState(ctx);
             state.miterLimit = limit;
         }
 
-        // Sets the stroke width of the stroke style.
+        /// <summary>
+        /// Sets the stroke width of the stroke style.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="size">The stroke width to use.</param>
         public static void StrokeWidth(Context ctx, float size)
         {
             var state = nvg__getState(ctx);
             state.strokeWidth = size;
         }
 
-        // Sets how the end of the line (cap) is drawn,
-        // Can be one of: NVG_BUTT (default), NVG_ROUND, NVG_SQUARE.
+        /// <summary>
+        /// Sets how the end of the line (cap) is drawn,
+        /// Can be one of: NVG_BUTT (default), NVG_ROUND, NVG_SQUARE.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="cap">The cap type to use.</param>
         public static void LineCap(Context ctx, int cap)
         {
             var state = nvg__getState(ctx);
-            state.lineCap = cap;
+            state.lineCap = cap; // TODO: Verify it is a valid enum value (or split the enum)
         }
 
-        // Sets how sharp path corners are drawn.
-        // Can be one of NVG_MITER (default), NVG_ROUND, NVG_BEVEL.
+        /// <summary>
+        /// Sets how sharp path corners are drawn.
+        /// Can be one of NVG_MITER (default), NVG_ROUND, NVG_BEVEL.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="join">The corner type to use.</param>
         public static void LineJoin(Context ctx, int join)
         {
             var state = nvg__getState(ctx);
-            state.lineJoin = join;
+            state.lineJoin = join; // TODO: Verify it is a valid enum value (or split the enum)
         }
 
-        // Sets the transparency applied to all rendered shapes.
-        // Already transparent paths will get proportionally more transparent as well.
+        /// <summary>
+        /// Sets the transparency applied to all rendered shapes.
+        /// Already transparent paths will get proportionally more transparent as well.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="alpha">The alpha level to use.</param>
         public static void GlobalAlpha(Context ctx, float alpha)
         {
             var state = nvg__getState(ctx);
-            state.alpha = alpha;
+            state.alpha = alpha; // TODO: Validate or clamp to 0 - 1 range?
         }
 
         #endregion
@@ -555,26 +702,39 @@ namespace NanoVG
         ////
         //// Current coordinate system (transformation) can be saved and restored using nvgSave() and nvgRestore().
 
-        // Resets current transform to a identity matrix.
+        /// <summary>
+        /// Resets current transform to a identity matrix.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
         public static void ResetTransform(Context ctx)
         {
             var state = nvg__getState(ctx);
             TransformIdentity(state.xform);
         }
 
-        // Premultiplies current coordinate system by specified matrix.
-        // The parameters are interpreted as matrix as follows:
-        //   [a c e]
-        //   [b d f]
-        //   [0 0 1]
-        public static void Transform(Context ctx, float a, float b, float c, float d, float e, float f)
+        /// <summary>
+        /// Premultiplies current coordinate system by the specified matrix.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="m11">The value of the first column in the first row.</param>
+        /// <param name="m21">The value of the first column in the second row.</param>
+        /// <param name="m12">The value of the second column in the first row.</param>
+        /// <param name="m22">The value of the second column in the second row.</param>
+        /// <param name="m13">The value of the third column in the first row.</param>
+        /// <param name="m23">The value of the third column in the second row.</param>
+        public static void Transform(Context ctx, float m11, float m21, float m12, float m22, float m13, float m23)
         {
             var state = nvg__getState(ctx);
-            float[] t = { a, b, c, d, e, f };
+            float[] t = { m11, m21, m12, m22, m13, m23 };
             TransformPremultiply(state.xform, t);
         }
 
-        // Translates current coordinate system.
+        /// <summary>
+        /// Translates current coordinate system.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="x">The x-offset of the translation.</param>
+        /// <param name="y">The y-offset of the translation.</param>
         public static void Translate(Context ctx, float x, float y)
         {
             var state = nvg__getState(ctx);
@@ -583,7 +743,11 @@ namespace NanoVG
             TransformPremultiply(state.xform, t);
         }
 
-        // Rotates current coordinate system. Angle is specified in radians.
+        /// <summary>
+        /// Rotates current coordinate system.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="angle">The angle (in radians) of the rotation.</param>
         public static void Rotate(Context ctx, float angle)
         {
             var state = nvg__getState(ctx);
@@ -592,7 +756,11 @@ namespace NanoVG
             TransformPremultiply(state.xform, t);
         }
 
-        // Skews the current coordinate system along X axis. Angle is specified in radians.
+        /// <summary>
+        /// Skews the current coordinate system along X axis.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="angle">The angle of the skew, in radians.</param>
         public static void SkewX(Context ctx, float angle)
         {
             var state = nvg__getState(ctx);
@@ -601,7 +769,11 @@ namespace NanoVG
             TransformPremultiply(state.xform, t);
         }
 
-        // Skews the current coordinate system along Y axis. Angle is specified in radians.
+        /// <summary>
+        /// Skews the current coordinate system along Y axis.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="angle">The angle of the skew, in radians.</param>
         public static void SkewY(Context ctx, float angle)
         {
             var state = nvg__getState(ctx);
@@ -610,7 +782,12 @@ namespace NanoVG
             TransformPremultiply(state.xform, t);
         }
 
-        // Scales the current coordinate system.
+        /// <summary>
+        /// Scales the current coordinate system.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="x">The scale in the x-direction.</param>
+        /// <param name="y">The scale in the y-direction.</param>
         public static void Scale(Context ctx, float x, float y)
         {
             var state = nvg__getState(ctx);
@@ -619,73 +796,123 @@ namespace NanoVG
             TransformPremultiply(state.xform, t);
         }
 
-        // Stores the top part (a-f) of the current transformation matrix in to the specified buffer.
-        //   [a c e]
-        //   [b d f]
-        //   [0 0 1]
-        // There should be space for 6 floats in the return buffer for the values a-f.
+        /// <summary>
+        /// Stores the top part (a-f) of the current transformation matrix in to the specified buffer.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="xform">Buffer to be populated with values of the first two rows of the transform matrix, in column-major order.</param>
         public static void CurrentTransform(Context ctx, float[] xform)
         {
             var state = nvg__getState(ctx);
             if (xform == null)
+            {
                 return;
+            }
+
             Array.Copy(state.xform, xform, 6);
         }
 
         // The following functions can be used to make calculations on 2x3 transformation matrices.
         // A 2x3 matrix is represented as float[6].
 
-        // Sets the transform to identity matrix.
+        /// <summary>
+        /// Sets a matrix buffer to the identity matrix.
+        /// </summary>
+        /// <param name="dst">The buffer to populate with (the first two rows of) the identity matrix (in column-major order).</param>
         public static void TransformIdentity(float[] dst)
         {
-            dst[0] = 1.0f; dst[1] = 0.0f;
-            dst[2] = 0.0f; dst[3] = 1.0f;
-            dst[4] = 0.0f; dst[5] = 0.0f;
+            dst[0] = 1.0f;
+            dst[1] = 0.0f;
+            dst[2] = 0.0f;
+            dst[3] = 1.0f;
+            dst[4] = 0.0f;
+            dst[5] = 0.0f;
         }
 
-        // Sets the transform to translation matrix matrix.
+        /// <summary>
+        /// Sets a matrix buffer to a translation matrix.
+        /// </summary>
+        /// <param name="dst">The buffer to populate with (the first two rows of) the transform matrix (in column-major order).</param>
+        /// <param name="tx">The x-offset of the translation.</param>
+        /// <param name="ty">The y-offset of the translation.</param>
         public static void TransformTranslate(float[] dst, float tx, float ty)
         {
-            dst[0] = 1.0f; dst[1] = 0.0f;
-            dst[2] = 0.0f; dst[3] = 1.0f;
-            dst[4] = tx; dst[5] = ty;
+            dst[0] = 1.0f;
+            dst[1] = 0.0f;
+            dst[2] = 0.0f;
+            dst[3] = 1.0f;
+            dst[4] = tx;
+            dst[5] = ty;
         }
 
-        // Sets the transform to scale matrix.
+        /// <summary>
+        /// Sets a matrix buffer to a scale matrix.
+        /// </summary>
+        /// <param name="dst"></param>
+        /// <param name="sx"></param>
+        /// <param name="sy"></param>
         public static void TransformScale(float[] dst, float sx, float sy)
         {
-            dst[0] = sx; dst[1] = 0.0f;
-            dst[2] = 0.0f; dst[3] = sy;
-            dst[4] = 0.0f; dst[5] = 0.0f;
+            dst[0] = sx;
+            dst[1] = 0.0f;
+            dst[2] = 0.0f;
+            dst[3] = sy;
+            dst[4] = 0.0f;
+            dst[5] = 0.0f;
         }
 
-        // Sets the transform to rotate matrix. Angle is specified in radians.
+        /// <summary>
+        /// Sets the transform to rotate matrix. Angle is specified in radians.
+        /// </summary>
+        /// <param name="dst"></param>
+        /// <param name="a"></param>
         public static void TransformRotate(float[] dst, float a)
         {
             float cs = (float)Math.Cos(a);
             float sn = (float)Math.Sin(a);
-            dst[0] = cs; dst[1] = sn;
-            dst[2] = -sn; dst[3] = cs;
-            dst[4] = 0.0f; dst[5] = 0.0f;
+            dst[0] = cs;
+            dst[1] = sn;
+            dst[2] = -sn;
+            dst[3] = cs;
+            dst[4] = 0.0f;
+            dst[5] = 0.0f;
         }
 
-        // Sets the transform to skew-x matrix. Angle is specified in radians.
+        /// <summary>
+        /// Sets the transform to skew-x matrix. Angle is specified in radians.
+        /// </summary>
+        /// <param name="dst"></param>
+        /// <param name="a"></param>
         public static void TransformSkewX(float[] dst, float a)
         {
-            dst[0] = 1.0f; dst[1] = 0.0f;
-            dst[2] = (float)Math.Tan(a); dst[3] = 1.0f;
-            dst[4] = 0.0f; dst[5] = 0.0f;
+            dst[0] = 1.0f;
+            dst[1] = 0.0f;
+            dst[2] = (float)Math.Tan(a);
+            dst[3] = 1.0f;
+            dst[4] = 0.0f;
+            dst[5] = 0.0f;
         }
 
-        // Sets the transform to skew-y matrix. Angle is specified in radians.
+        /// <summary>
+        /// // Sets the transform to skew-y matrix. Angle is specified in radians.
+        /// </summary>
+        /// <param name="dst"></param>
+        /// <param name="a"></param>
         public static void TransformSkewY(float[] dst, float a)
         {
-            dst[0] = 1.0f; dst[1] = (float)Math.Tan(a);
-            dst[2] = 0.0f; dst[3] = 1.0f;
-            dst[4] = 0.0f; dst[5] = 0.0f;
+            dst[0] = 1.0f;
+            dst[1] = (float)Math.Tan(a);
+            dst[2] = 0.0f;
+            dst[3] = 1.0f;
+            dst[4] = 0.0f;
+            dst[5] = 0.0f;
         }
 
-        // Sets the transform to the result of multiplication of two transforms, of A = A*B.
+        /// <summary>
+        /// // Sets the transform to the result of multiplication of two transforms, of A = A*B.
+        /// </summary>
+        /// <param name="dst"></param>
+        /// <param name="src"></param>
         public static void TransformMultiply(float[] dst, float[] src)
         {
             float t0 = dst[0] * src[0] + dst[1] * src[2];
@@ -699,7 +926,11 @@ namespace NanoVG
             dst[4] = t4;
         }
 
-        // Sets the transform to the result of multiplication of two transforms, of A = B*A.
+        /// <summary>
+        /// Sets the transform to the result of multiplication of two transforms, of A = B*A.
+        /// </summary>
+        /// <param name="dst"></param>
+        /// <param name="src"></param>
         public static void TransformPremultiply(float[] dst, float[] src)
         {
             float[] s2 = new float[6];
@@ -708,16 +939,22 @@ namespace NanoVG
             Array.Copy(s2, dst, 6);
         }
 
-        // Sets the destination to inverse of specified transform.
-        // Returns 1 if the inverse could be calculated, else 0.
+        /// <summary>
+        /// Sets the destination to inverse of specified transform.
+        /// </summary>
+        /// <param name="dst">The buffer to populate with the (first two rows of the) inverse matrix (in column-major order).</param>
+        /// <param name="src">The (first two rows of the) transform matrix (in column-major order).</param>
+        /// <returns>1 if the inverse could be calculated, else 0.</returns>
         public static int TransformInverse(float[] dst, float[] src)
         {
+            //// TODO: rename to 'Try..' & return a boolean
             double invdet, det = (double)src[0] * src[3] - (double)src[2] * src[1];
             if (det > -1e-6 && det < 1e-6)
             {
                 TransformIdentity(dst);
                 return 0;
             }
+
             invdet = 1.0 / det;
             dst[0] = (float)(src[3] * invdet);
             dst[2] = (float)(-src[2] * invdet);
@@ -728,16 +965,32 @@ namespace NanoVG
             return 1;
         }
 
-        // Transform a point by given transform.
+        /// <summary>
+        /// Transform a point by given transform.
+        /// </summary>
+        /// <param name="dx">The x-ordinate of the resultant point.</param>
+        /// <param name="dy">The y-ordinate of the resultant point.</param>
+        /// <param name="t">The transformation matrix.</param>
+        /// <param name="sx">The x-ordinate of the source point.</param>
+        /// <param name="sy">The y-ordinate of the source point.</param>
         public static void TransformPoint(out float dx, out float dy, float[] t, float sx, float sy)
         {
             dx = sx * t[0] + sy * t[2] + t[4];
             dy = sx * t[1] + sy * t[3] + t[5];
         }
 
-        // Converts degrees to radians and vice versa.
+        /// <summary>
+        /// Converts degrees to radians.
+        /// </summary>
+        /// <param name="deg">The value to convert.</param>
+        /// <returns>The input value converted to radians.</returns>
         public static float DegToRad(float deg) => deg / 180.0f * (float)Math.PI;
 
+        /// <summary>
+        /// Converts radians to degrees.
+        /// </summary>
+        /// <param name="rad">The value to convert.</param>
+        /// <returns>The input value converted to degrees.</returns>
         public static float RadToDeg(float rad) => rad / (float)Math.PI * 180.0f;
 
         #endregion
@@ -748,10 +1001,16 @@ namespace NanoVG
         //// In addition you can upload your own image. The image loading is provided by stb_image.
         //// The parameter imageFlags is combination of flags defined in NVGimageFlags.
 
-        // Creates image by loading it from the disk from specified file name.
-        // Returns handle to the image.
+        /// <summary>
+        /// Creates image by loading it from the disk from specified file name.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="filename">The name of the file to load image data from.</param>
+        /// <param name="imageFlags">Image flags.</param>
+        /// <returns>The handle to the image.</returns>
         public static int CreateImage(Context ctx, string filename, int imageFlags)
         {
+            throw new NotImplementedException();
             /*
             int w, h, n, image;
             unsigned char* img;
@@ -760,44 +1019,61 @@ namespace NanoVG
             img = stbi_load(filename, &w, &h, &n, 4);
             if (img == NULL)
             {
-                //		printf("Failed to load %s - %s\n", filename, stbi_failure_reason());
+                ////printf("Failed to load %s - %s\n", filename, stbi_failure_reason());
                 return 0;
             }
             image = nvgCreateImageRGBA(ctx, w, h, imageFlags, img);
             stbi_image_free(img);
             return image;
             */
-            return 0;
         }
 
-        // Creates image by loading it from the specified chunk of memory.
-        // Returns handle to the image.
+        /// <summary>
+        /// Creates image by loading it from the specified chunk of memory.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="imageFlags">Image flags</param>
+        /// <param name="data">Buffer containing image data.</param>
+        /// <param name="ndata">The number of bytes of buffer data that there is.</param>
+        /// <returns>The handle to the image.</returns>
         public static int CreateImageMem(Context ctx, int imageFlags, byte[] data, int ndata)
         {
+            throw new NotImplementedException();
             /*
             int w, h, n, image;
             unsigned char* img = stbi_load_from_memory(data, ndata, &w, &h, &n, 4);
             if (img == NULL)
             {
-                //		printf("Failed to load %s - %s\n", filename, stbi_failure_reason());
+                ////printf("Failed to load %s - %s\n", filename, stbi_failure_reason());
                 return 0;
             }
             image = nvgCreateImageRGBA(ctx, w, h, imageFlags, img);
             stbi_image_free(img);
             return image;
             */
-            return 0;
         }
 
-        // Creates image from specified image data.
-        // Returns handle to the image.
+        /// <summary>
+        /// Creates an image from specified image data.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="w">The width of the image.</param>
+        /// <param name="h">The height of the image.</param>
+        /// <param name="imageFlags">Image flags.</param>
+        /// <param name="data">Image data.</param>
+        /// <returns>The handle to the image.</returns>
         public static int CreateImageRGBA(Context ctx, int w, int h, int imageFlags, byte[] data)
         {
-            // return ctx->params.renderCreateTexture(ctx->params.userPtr, NVG_TEXTURE_RGBA, w, h, imageFlags, data);
-            return 0;
+            throw new NotImplementedException();
+            ////return ctx->params.renderCreateTexture(ctx->params.userPtr, NVG_TEXTURE_RGBA, w, h, imageFlags, data);
         }
 
-        // Updates image data specified by image handle.
+        /// <summary>
+        /// Updates image data specified by image handle.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="image">The ID of the image to update.</param>
+        /// <param name="data">The image data.</param>
         public static void UpdateImage(Context ctx, int image, byte[] data)
         {
             int w, h;
@@ -805,13 +1081,23 @@ namespace NanoVG
             ctx.@params.renderUpdateTexture(ctx.@params.userPtr, image, 0, 0, w, h, data);
         }
 
-        // Returns the dimensions of a created image.
+        /// <summary>
+        /// Returns the dimensions of a created image.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="image">The ID of the image.</param>
+        /// <param name="w">The width of the image.</param>
+        /// <param name="h">The height of the image.</param>
         public static void ImageSize(Context ctx, int image, out int w, out int h)
         {
             ctx.@params.renderGetTextureSize(ctx.@params.userPtr, image, out w, out h);
         }
 
-        // Deletes created image.
+        /// <summary>
+        /// Deletes a created image.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="image">The ID of the image to delete.</param>
         public static void DeleteImage(Context ctx, int image)
         {
             ctx.@params.renderDeleteTexture(ctx.@params.userPtr, image);
@@ -947,7 +1233,7 @@ namespace NanoVG
         //// user interface cases like rendering a text edit or a timeline.
 
         // Sets the current scissor rectangle.
-        // The scissor rectangle is transformed by the current transform.
+        // NB: When applied, the scissor rectangle is transformed by the current transform.
         public static void Scissor(Context ctx, float x, float y, float w, float h)
         {
             var state = nvg__getState(ctx);
@@ -1000,7 +1286,10 @@ namespace NanoVG
             Scissor(ctx, rect[0], rect[1], rect[2], rect[3]);
         }
 
-        // Reset and disables scissoring.
+        /// <summary>
+        /// Reset and disables scissoring.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
         public static void ResetScissor(Context ctx)
         {
             var state = nvg__getState(ctx);
@@ -1037,28 +1326,54 @@ namespace NanoVG
             nvg__clearPathCache(ctx);
         }
 
-        // Starts new sub-path with specified point as first point.
+        /// <summary>
+        /// Starts new sub-path with specified point as first point.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="x">The x-ordinate of the first point.</param>
+        /// <param name="y">The y-ordinate of the first point.</param>
         public static void MoveTo(Context ctx, float x, float y)
         {
             float[] vals = { (float)NVGcommands.NVG_MOVETO, x, y };
             nvg__appendCommands(ctx, vals, vals.Length);
         }
 
-        // Adds line segment from the last point in the path to the specified point.
+        /// <summary>
+        /// Adds line segment from the last point in the path to the specified point.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="x">The x-ordinate of the new point.</param>
+        /// <param name="y">The y-ordinate of the new point.</param>
         public static void LineTo(Context ctx, float x, float y)
         {
             float[] vals = { (float)NVGcommands.NVG_LINETO, x, y };
             nvg__appendCommands(ctx, vals, vals.Length);
         }
 
-        // Adds cubic bezier segment from last point in the path via two control points to the specified point.
+        /// <summary>
+        /// Adds cubic bezier segment from last point in the path via two control points to the specified point.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="c1x">The x-ordinate of the first control point.</param>
+        /// <param name="c1y">The y-ordinate of the first control point.</param>
+        /// <param name="c2x">The x-ordinate of the second control point.</param>
+        /// <param name="c2y">The y-ordinate of the second control point.</param>
+        /// <param name="x">The x-ordinate of the end point.</param>
+        /// <param name="y">The y-ordinate of the end point.</param>
         public static void BezierTo(Context ctx, float c1x, float c1y, float c2x, float c2y, float x, float y)
         {
             float[] vals = { (float)NVGcommands.NVG_BEZIERTO, c1x, c1y, c2x, c2y, x, y };
             nvg__appendCommands(ctx, vals, vals.Length);
         }
 
-        // Adds quadratic bezier segment from last point in the path via a control point to the specified point.
+        /// <summary>
+        /// Adds quadratic bezier segment from last point in the path via a control point to the specified point.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="cx">The x-ordinate of the control point.</param>
+        /// <param name="cy">The y-ordinate of the control point.</param>
+        /// <param name="x">The x-ordinate of the end point.</param>
+        /// <param name="y">The y-ordinate of the end point.</param>
         public static void QuadTo(Context ctx, float cx, float cy, float x, float y)
         {
             float x0 = ctx.commandx;
@@ -1073,7 +1388,15 @@ namespace NanoVG
             nvg__appendCommands(ctx, vals, vals.Length);
         }
 
-        // Adds an arc segment at the corner defined by the last path point, and two specified points.
+        /// <summary>
+        /// Adds an arc segment at the corner defined by the last path point, and two specified points.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="x1"></param>
+        /// <param name="y1"></param>
+        /// <param name="x2"></param>
+        /// <param name="y2"></param>
+        /// <param name="radius"></param>
         public static void ArcTo(Context ctx, float x1, float y1, float x2, float y2, float radius)
         {
             float x0 = ctx.commandx;
@@ -1106,7 +1429,7 @@ namespace NanoVG
             a = (float)Math.Acos(dx0 * dx1 + dy0 * dy1);
             d = radius / (float)Math.Tan(a / 2.0f);
 
-            //	printf("a=%f° d=%f\n", a/NVG_PI*180.0f, d);
+            ////printf("a=%f° d=%f\n", a/NVG_PI*180.0f, d);
 
             if (d > 10000.0f)
             {
@@ -1121,7 +1444,7 @@ namespace NanoVG
                 a0 = (float)Math.Atan2(dx0, -dy0);
                 a1 = (float)Math.Atan2(-dx1, dy1);
                 dir = Winding.NVG_CW;
-                // printf("CW c=(%f, %f) a0=%f° a1=%f°\n", cx, cy, a0/NVG_PI*180.0f, a1/NVG_PI*180.0f);
+                ////printf("CW c=(%f, %f) a0=%f° a1=%f°\n", cx, cy, a0/NVG_PI*180.0f, a1/NVG_PI*180.0f);
             }
             else
             {
@@ -1130,7 +1453,7 @@ namespace NanoVG
                 a0 = (float)Math.Atan2(-dx0, dy0);
                 a1 = (float)Math.Atan2(dx1, -dy1);
                 dir = Winding.NVG_CCW;
-                //printf("CCW c=(%f, %f) a0=%f° a1=%f°\n", cx, cy, a0/NVG_PI*180.0f, a1/NVG_PI*180.0f);
+                ////printf("CCW c=(%f, %f) a0=%f° a1=%f°\n", cx, cy, a0/NVG_PI*180.0f, a1/NVG_PI*180.0f);
             }
 
             Arc(ctx, cx, cy, radius, a0, a1, dir);
@@ -1146,7 +1469,11 @@ namespace NanoVG
             nvg__appendCommands(ctx, vals, vals.Length);
         }
 
-        // Sets the current sub-path winding, see NVGwinding and NVGsolidity.
+        /// <summary>
+        /// Sets the current sub-path winding, see NVGwinding and NVGsolidity.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="dir">The winding direction to use.</param>
         public static void PathWinding(Context ctx, Winding dir)
         {
             float[] vals = { (float)NVGcommands.NVG_WINDING, (float)dir };
@@ -1297,7 +1624,14 @@ namespace NanoVG
             }
         }
 
-        // Creates new ellipse shaped sub-path.
+        /// <summary>
+        /// Creates new ellipse shaped sub-path.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="cx">The x-ordinate of the center of the ellipse.</param>
+        /// <param name="cy">The y-ordinate of the center of the ellipse.</param>
+        /// <param name="rx">The x-radius of the elllipse.</param>
+        /// <param name="ry">The y-radius of the ellipse.</param>
         public static void Ellipse(Context ctx, float cx, float cy, float rx, float ry)
         {
             float[] vals =
@@ -1313,10 +1647,16 @@ namespace NanoVG
             nvg__appendCommands(ctx, vals, vals.Length);
         }
 
-        // Creates new circle shaped sub-path.
+        /// <summary>
+        /// Creates new circle shaped sub-path.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="cx">The x-ordinate of the center of the circle.</param>
+        /// <param name="cy">The y-ordinate of the center of the circle.</param>
+        /// <param name="r">The radius of the circle.</param>
         public static void Circle(Context ctx, float cx, float cy, float r)
         {
-            Ellipse(ctx, cx,cy, r,r);
+            Ellipse(ctx, cx, cy, r, r);
         }
 
         /// <summary>
@@ -1332,13 +1672,17 @@ namespace NanoVG
 
             nvg__flattenPaths(ctx);
             if (ctx.@params.edgeAntiAlias != 0 && state.shapeAntiAlias != 0)
-                nvg__expandFill(ctx, ctx.fringeWidth, NVG_MITER, 2.4f);
+            {
+                nvg__expandFill(ctx, ctx.fringeWidth, nvgLineCap.NVG_MITER, 2.4f);
+            }
             else
-                nvg__expandFill(ctx, 0.0f, NVG_MITER, 2.4f);
+            {
+                nvg__expandFill(ctx, 0.0f, nvgLineCap.NVG_MITER, 2.4f);
+            }
 
             // Apply global alpha
-            fillPaint.innerColor.a *= state.alpha;
-            fillPaint.outerColor.a *= state.alpha;
+            fillPaint.innerColor.A *= state.alpha;
+            fillPaint.outerColor.A *= state.alpha;
 
             ctx.@params.renderFill(
                 ctx.@params.userPtr,
@@ -1351,7 +1695,8 @@ namespace NanoVG
                 ctx.cache.npaths);
 
             // Count triangles
-            for (i = 0; i < ctx.cache.npaths; i++) {
+            for (i = 0; i < ctx.cache.npaths; i++)
+            {
                 path = ctx.cache.paths[i];
                 ctx.fillTriCount += path.nfill-2;
                 ctx.fillTriCount += path.nstroke-2;
@@ -1363,83 +1708,90 @@ namespace NanoVG
         /// Fills the current path with current stroke style.
         /// </summary>
         /// <param name="ctx">The context to use.</param>
-        public static void nvgStroke(Context ctx)
+        public static void Stroke(Context ctx)
         {
-            throw new NotImplementedException();
-            /*
-            NVGstate* state = nvg__getState(ctx);
-            float scale = nvg__getAverageScale(state->xform);
-            float strokeWidth = nvg__clampf(state->strokeWidth * scale, 0.0f, 200.0f);
-            NVGpaint strokePaint = state->stroke;
-            const NVGpath* path;
-            int i;
+            NVGstate state = nvg__getState(ctx);
+            float scale = nvg__getAverageScale(state.xform);
+            float strokeWidth = nvg__clampf(state.strokeWidth * scale, 0.0f, 200.0f);
+            Paint strokePaint = state.stroke;
 
-
-            if (strokeWidth < ctx->fringeWidth) {
+            if (strokeWidth < ctx.fringeWidth)
+            {
                 // If the stroke width is less than pixel size, use alpha to emulate coverage.
                 // Since coverage is area, scale by alpha*alpha.
-                float alpha = nvg__clampf(strokeWidth / ctx->fringeWidth, 0.0f, 1.0f);
-                strokePaint.innerColor.a *= alpha*alpha;
-                strokePaint.outerColor.a *= alpha*alpha;
-                strokeWidth = ctx->fringeWidth;
+                float alpha = nvg__clampf(strokeWidth / ctx.fringeWidth, 0.0f, 1.0f);
+                strokePaint.innerColor.A *= alpha * alpha;
+                strokePaint.outerColor.A *= alpha * alpha;
+                strokeWidth = ctx.fringeWidth;
             }
 
             // Apply global alpha
-            strokePaint.innerColor.a *= state->alpha;
-            strokePaint.outerColor.a *= state->alpha;
+            strokePaint.innerColor.A *= state.alpha;
+            strokePaint.outerColor.A *= state.alpha;
 
             nvg__flattenPaths(ctx);
 
-            if (ctx->params.edgeAntiAlias && state->shapeAntiAlias)
-                nvg__expandStroke(ctx, strokeWidth*0.5f, ctx->fringeWidth, state->lineCap, state->lineJoin, state->miterLimit);
+            if (ctx.@params.edgeAntiAlias != 0 && state.shapeAntiAlias != 0)
+            {
+                nvg__expandStroke(ctx, strokeWidth * 0.5f, ctx.fringeWidth, state.lineCap, state.lineJoin, state.miterLimit);
+            }
             else
-                nvg__expandStroke(ctx, strokeWidth*0.5f, 0.0f, state->lineCap, state->lineJoin, state->miterLimit);
+            {
+                nvg__expandStroke(ctx, strokeWidth * 0.5f, 0.0f, state.lineCap, state.lineJoin, state.miterLimit);
+            }
 
-            ctx->params.renderStroke(ctx->params.userPtr, &strokePaint, state->compositeOperation, &state->scissor, ctx->fringeWidth,
-                                     strokeWidth, ctx->cache->paths, ctx->cache->npaths);
+            ctx.@params.renderStroke(
+                ctx.@params.userPtr,
+                &strokePaint,
+                state.compositeOperation,
+                &state.scissor,
+                ctx.fringeWidth,
+                strokeWidth,
+                ctx.cache.paths,
+                ctx.cache.npaths);
 
             // Count triangles
-            for (i = 0; i < ctx->cache->npaths; i++) {
-                path = &ctx->cache->paths[i];
-                ctx->strokeTriCount += path->nstroke-2;
-                ctx->drawCallCount++;
+            for (int i = 0; i < ctx.cache.npaths; i++)
+            {
+                var path = ctx.cache.paths[i];
+                ctx.strokeTriCount += path.nstroke - 2;
+                ctx.drawCallCount++;
             }
-            */
         }
 
         #endregion
 
         #region Text
-        //
-        // NanoVG allows you to load .ttf files and use the font to render text.
-        //
-        // The appearance of the text can be defined by setting the current text style
-        // and by specifying the fill color. Common text and font settings such as
-        // font size, letter spacing and text align are supported. Font blur allows you
-        // to create simple text effects such as drop shadows.
-        //
-        // At render time the font face can be set based on the font handles or name.
-        //
-        // Font measure functions return values in local space, the calculations are
-        // carried in the same resolution as the final rendering. This is done because
-        // the text glyph positions are snapped to the nearest pixels sharp rendering.
-        //
-        // The local space means that values are not rotated or scale as per the current
-        // transformation. For example if you set font size to 12, which would mean that
-        // line height is 16, then regardless of the current scaling and rotation, the
-        // returned line height is always 16. Some measures may vary because of the scaling
-        // since aforementioned pixel snapping.
-        //
-        // While this may sound a little odd, the setup allows you to always render the
-        // same way regardless of scaling. I.e. following works regardless of scaling:
-        //
-        //		const char* txt = "Text me up.";
-        //		nvgTextBounds(vg, x,y, txt, NULL, bounds);
-        //		nvgBeginPath(vg);
-        //		nvgRoundedRect(vg, bounds[0],bounds[1], bounds[2]-bounds[0], bounds[3]-bounds[1]);
-        //		nvgFill(vg);
-        //
-        // Note: currently only solid color fill is supported for text.
+
+        ////NanoVG allows you to load .ttf files and use the font to render text.
+        ////
+        ////The appearance of the text can be defined by setting the current text style
+        ////and by specifying the fill color. Common text and font settings such as
+        ////font size, letter spacing and text align are supported. Font blur allows you
+        ////to create simple text effects such as drop shadows.
+        ////
+        ////At render time the font face can be set based on the font handles or name.
+        ////
+        ////Font measure functions return values in local space, the calculations are
+        ////carried in the same resolution as the final rendering. This is done because
+        ////the text glyph positions are snapped to the nearest pixels sharp rendering.
+        ////
+        ////The local space means that values are not rotated or scale as per the current
+        ////transformation. For example if you set font size to 12, which would mean that
+        ////line height is 16, then regardless of the current scaling and rotation, the
+        ////returned line height is always 16. Some measures may vary because of the scaling
+        ////since aforementioned pixel snapping.
+        ////
+        ////While this may sound a little odd, the setup allows you to always render the
+        ////same way regardless of scaling. I.e. following works regardless of scaling:
+        ////
+        ////	const char* txt = "Text me up.";
+        ////	nvgTextBounds(vg, x,y, txt, NULL, bounds);
+        ////	nvgBeginPath(vg);
+        ////	nvgRoundedRect(vg, bounds[0],bounds[1], bounds[2]-bounds[0], bounds[3]-bounds[1]);
+        ////	nvgFill(vg);
+        ////
+        ////Note: currently only solid color fill is supported for text.
 
         // Creates font by loading it from the disk from specified file name.
         // Returns handle to the font.
@@ -2077,7 +2429,7 @@ namespace NanoVG
             NVG_TEXTURE_RGBA = 0x02,
         }
 
-        internal struct Scissor
+        internal struct nvgScissor
         {
             public float[] xform;//[6];
             public float[] extent;//[2];
@@ -2085,7 +2437,18 @@ namespace NanoVG
 
         internal struct Vertex
         {
-            float x, y, u, v;
+            public float x;
+            public float y;
+            public float u;
+            public float v;
+        }
+
+        static void nvg__vset(ref Vertex vtx, float x, float y, float u, float v)
+        {
+            vtx.x = x;
+            vtx.y = y;
+            vtx.u = u;
+            vtx.v = v;
         }
 
         internal class Params
@@ -2147,9 +2510,11 @@ namespace NanoVG
 
         static float nvg__cross(float dx0, float dy0, float dx1, float dy1) { return dx1 * dy0 - dx0 * dy1; }
 
+        static float nvg__clampf(float a, float mn, float mx) { return a < mn ? mn : (a > mx ? mx : a); }
+
         #endregion
 
-        #region Private methods - geometry
+        #region Private - geometry
 
         static void nvg__isectRects(
             float[] dst,
@@ -2217,10 +2582,13 @@ namespace NanoVG
 
         internal struct NVGpoint
         {
-            public float x, y;
-            public float dx, dy;
+            public float x;
+            public float y;
+            public float dx;
+            public float dy;
             public float len;
-            public float dmx, dmy;
+            public float dmx;
+            public float dmy;
             public NVGpointFlags flags;
         }
 
@@ -2235,7 +2603,7 @@ namespace NanoVG
             public Vertex[] stroke;
             public int nstroke;
             public Winding winding;
-            public int convex;
+            public bool convex;
         }
 
         internal class NVGpathCache
@@ -2509,8 +2877,8 @@ namespace NanoVG
 
             dx = x4 - x1;
             dy = y4 - y1;
-            d2 = Math.Abs(((x2 - x4) * dy - (y2 - y4) * dx));
-            d3 = Math.Abs(((x3 - x4) * dy - (y3 - y4) * dx));
+            d2 = Math.Abs((x2 - x4) * dy - (y2 - y4) * dx);
+            d3 = Math.Abs((x3 - x4) * dy - (y3 - y4) * dx);
 
             if ((d2 + d3) * (d2 + d3) < ctx.tessTol * (dx * dx + dy * dy))
             {
@@ -2518,10 +2886,13 @@ namespace NanoVG
                 return;
             }
 
-            /*	if (nvg__absf(x1+x3-x2-x2) + nvg__absf(y1+y3-y2-y2) + nvg__absf(x2+x4-x3-x3) + nvg__absf(y2+y4-y3-y3) < ctx->tessTol) {
-                    nvg__addPoint(ctx, x4, y4, type);
-                    return;
-                }*/
+            /*
+            if (nvg__absf(x1+x3-x2-x2) + nvg__absf(y1+y3-y2-y2) + nvg__absf(x2+x4-x3-x3) + nvg__absf(y2+y4-y3-y3) < ctx->tessTol)
+            {
+                nvg__addPoint(ctx, x4, y4, type);
+                return;
+            }
+            */
 
             x234 = (x23 + x34) * 0.5f;
             y234 = (y23 + y34) * 0.5f;
@@ -2532,7 +2903,7 @@ namespace NanoVG
             nvg__tesselateBezier(ctx, x1234, y1234, x234, y234, x34, y34, x4, y4, level + 1, type);
         }
 
-        static int nvg__expandFill(Context ctx, float w, int lineJoin, float miterLimit)
+        static int nvg__expandFill(Context ctx, float w, nvgLineCap lineJoin, float miterLimit)
         {
             var cache = ctx.cache;
             //NVGvertex* verts;
@@ -2544,80 +2915,86 @@ namespace NanoVG
             nvg__calculateJoins(ctx, w, lineJoin, miterLimit);
 
             // Calculate max vertex usage.
-            cverts = 0;
-            for (i = 0; i < cache->npaths; i++)
+            int cverts = 0;
+            for (int i = 0; i < cache.npaths; i++)
             {
-                NVGpath* path = &cache->paths[i];
-                cverts += path->count + path->nbevel + 1;
+                Path path = cache.paths[i];
+                cverts += path.count + path.nbevel + 1;
                 if (fringe)
-                    cverts += (path->count + path->nbevel * 5 + 1) * 2; // plus one for loop
+                {
+                    cverts += (path.count + path.nbevel * 5 + 1) * 2; // plus one for loop
+                }
             }
 
-            verts = nvg__allocTempVerts(ctx, cverts);
-            if (verts == NULL) return 0;
+            var verts = nvg__allocTempVerts(ctx, cverts);
 
-            convex = cache->npaths == 1 && cache->paths[0].convex;
+            bool convex = cache.npaths == 1 && cache.paths[0].convex;
 
-            for (i = 0; i < cache->npaths; i++)
+            for (int i = 0; i < cache.npaths; i++)
             {
-                NVGpath* path = &cache->paths[i];
-                NVGpoint* pts = &cache->points[path->first];
-                NVGpoint* p0;
-                NVGpoint* p1;
-                float rw, lw, woff;
+                Path path = cache.paths[i];
+                var pts = new Span<NVGpoint>(cache.points, path.first, path.count);
+                ref NVGpoint p0;
+                ref NVGpoint p1;
+                float rw, lw;
                 float ru, lu;
 
                 // Calculate shape vertices.
-                woff = 0.5f * aa;
-                dst = verts;
-                path->fill = dst;
+                float woff = 0.5f * aa;
+                ref Vertex dst = ref verts[0];
+                path.fill = verts;
 
                 if (fringe)
                 {
                     // Looping
-                    p0 = &pts[path->count - 1];
-                    p1 = &pts[0];
-                    for (j = 0; j < path->count; ++j)
+                    p0 = ref pts[path.count - 1];
+                    p1 = ref pts[0];
+                    for (j = 0; j < path.count; ++j)
                     {
-                        if (p1->flags & NVG_PT_BEVEL)
+                        if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL))
                         {
-                            float dlx0 = p0->dy;
-                            float dly0 = -p0->dx;
-                            float dlx1 = p1->dy;
-                            float dly1 = -p1->dx;
-                            if (p1->flags & NVG_PT_LEFT)
+                            float dlx0 = p0.dy;
+                            float dly0 = -p0.dx;
+                            float dlx1 = p1.dy;
+                            float dly1 = -p1.dx;
+                            if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_LEFT))
                             {
-                                float lx = p1->x + p1->dmx * woff;
-                                float ly = p1->y + p1->dmy * woff;
-                                nvg__vset(dst, lx, ly, 0.5f, 1); dst++;
+                                float lx = p1.x + p1.dmx * woff;
+                                float ly = p1.y + p1.dmy * woff;
+                                nvg__vset(ref dst, lx, ly, 0.5f, 1);
+                                dst++;
                             }
                             else
                             {
-                                float lx0 = p1->x + dlx0 * woff;
-                                float ly0 = p1->y + dly0 * woff;
-                                float lx1 = p1->x + dlx1 * woff;
-                                float ly1 = p1->y + dly1 * woff;
-                                nvg__vset(dst, lx0, ly0, 0.5f, 1); dst++;
-                                nvg__vset(dst, lx1, ly1, 0.5f, 1); dst++;
+                                float lx0 = p1.x + dlx0 * woff;
+                                float ly0 = p1.y + dly0 * woff;
+                                float lx1 = p1.x + dlx1 * woff;
+                                float ly1 = p1.y + dly1 * woff;
+                                nvg__vset(ref dst, lx0, ly0, 0.5f, 1);
+                                dst++;
+                                nvg__vset(ref dst, lx1, ly1, 0.5f, 1);
+                                dst++;
                             }
                         }
                         else
                         {
-                            nvg__vset(dst, p1->x + (p1->dmx * woff), p1->y + (p1->dmy * woff), 0.5f, 1); dst++;
+                            nvg__vset(ref dst, p1.x + (p1.dmx * woff), p1.y + (p1.dmy * woff), 0.5f, 1);
+                            dst++;
                         }
+
                         p0 = p1++;
                     }
                 }
                 else
                 {
-                    for (j = 0; j < path->count; ++j)
+                    for (int j = 0; j < path.count; ++j)
                     {
-                        nvg__vset(dst, pts[j].x, pts[j].y, 0.5f, 1);
+                        nvg__vset(ref dst, pts[j].x, pts[j].y, 0.5f, 1);
                         dst++;
                     }
                 }
 
-                path->nfill = (int)(dst - verts);
+                path.nfill = (int)(dst - verts);
                 verts = dst;
 
                 // Calculate fringe
@@ -2628,7 +3005,7 @@ namespace NanoVG
                     lu = 0;
                     ru = 1;
                     dst = verts;
-                    path->stroke = dst;
+                    path.stroke = dst;
 
                     // Create only half a fringe for convex shapes so that
                     // the shape can be rendered without stenciling.
@@ -2639,38 +3016,239 @@ namespace NanoVG
                     }
 
                     // Looping
-                    p0 = &pts[path->count - 1];
-                    p1 = &pts[0];
+                    p0 = ref pts[path.count - 1];
+                    p1 = ref pts[0];
 
-                    for (j = 0; j < path->count; ++j)
+                    for (int j = 0; j < path.count; ++j)
                     {
-                        if ((p1->flags & (NVG_PT_BEVEL | NVG_PR_INNERBEVEL)) != 0)
+                        if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL | NVGpointFlags.NVG_PR_INNERBEVEL))
                         {
-                            dst = nvg__bevelJoin(dst, p0, p1, lw, rw, lu, ru, ctx->fringeWidth);
+                            dst = nvg__bevelJoin(ref dst, ref p0, ref p1, lw, rw, lu, ru, ctx.fringeWidth);
                         }
                         else
                         {
-                            nvg__vset(dst, p1->x + (p1->dmx * lw), p1->y + (p1->dmy * lw), lu, 1); dst++;
-                            nvg__vset(dst, p1->x - (p1->dmx * rw), p1->y - (p1->dmy * rw), ru, 1); dst++;
+                            nvg__vset(ref dst, p1.x + (p1.dmx * lw), p1.y + (p1.dmy * lw), lu, 1);
+                            dst++;
+                            nvg__vset(ref dst, p1.x - (p1.dmx * rw), p1.y - (p1.dmy * rw), ru, 1);
+                            dst++;
                         }
                         p0 = p1++;
                     }
 
                     // Loop it
-                    nvg__vset(dst, verts[0].x, verts[0].y, lu, 1); dst++;
-                    nvg__vset(dst, verts[1].x, verts[1].y, ru, 1); dst++;
+                    nvg__vset(ref dst, verts[0].x, verts[0].y, lu, 1);
+                    dst++;
+                    nvg__vset(ref dst, verts[1].x, verts[1].y, ru, 1);
+                    dst++;
 
-                    path->nstroke = (int)(dst - verts);
+                    path.nstroke = (int)(dst - verts);
                     verts = dst;
                 }
                 else
                 {
-                    path->stroke = NULL;
-                    path->nstroke = 0;
+                    path.stroke = null;
+                    path.nstroke = 0;
                 }
             }
 
             return 1;
+        }
+
+        static void nvg__chooseBevel(
+            bool bevel, ref NVGpoint p0, ref NVGpoint p1, float w,
+            out float x0, out float y0, out float x1, out float y1)
+        {
+            if (bevel)
+            {
+                x0 = p1.x + p0.dy * w;
+                y0 = p1.y - p0.dx * w;
+                x1 = p1.x + p1.dy * w;
+                y1 = p1.y - p1.dx * w;
+            }
+            else
+            {
+                x0 = p1.x + p1.dmx * w;
+                y0 = p1.y + p1.dmy * w;
+                x1 = p1.x + p1.dmx * w;
+                y1 = p1.y + p1.dmy * w;
+            }
+        }
+
+        static ref Vertex nvg__bevelJoin(
+            ref Vertex dst, ref NVGpoint p0, ref NVGpoint p1,
+            float lw, float rw, float lu, float ru, float fringe)
+        {
+            float rx0, ry0, rx1, ry1;
+            float lx0, ly0, lx1, ly1;
+            float dlx0 = p0.dy;
+            float dly0 = -p0.dx;
+            float dlx1 = p1.dy;
+            float dly1 = -p1.dx;
+            //NVG_NOTUSED(fringe);
+
+            if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_LEFT))
+            {
+                nvg__chooseBevel(p1.flags.HasFlag(NVGpointFlags.NVG_PR_INNERBEVEL), ref p0, ref p1, lw, out lx0, out ly0, out lx1, out ly1);
+
+                nvg__vset(ref dst, lx0, ly0, lu, 1); dst++;
+                nvg__vset(ref dst, p1.x - dlx0 * rw, p1.y - dly0 * rw, ru, 1); dst++;
+
+                if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL))
+                {
+                    nvg__vset(ref dst, lx0, ly0, lu, 1); dst++;
+                    nvg__vset(ref dst, p1.x - dlx0 * rw, p1.y - dly0 * rw, ru, 1); dst++;
+
+                    nvg__vset(ref dst, lx1, ly1, lu, 1); dst++;
+                    nvg__vset(ref dst, p1.x - dlx1 * rw, p1.y - dly1 * rw, ru, 1); dst++;
+                }
+                else
+                {
+                    rx0 = p1.x - p1.dmx * rw;
+                    ry0 = p1.y - p1.dmy * rw;
+
+                    nvg__vset(ref dst, p1.x, p1.y, 0.5f, 1); dst++;
+                    nvg__vset(ref dst, p1.x - dlx0 * rw, p1.y - dly0 * rw, ru, 1); dst++;
+
+                    nvg__vset(ref dst, rx0, ry0, ru, 1); dst++;
+                    nvg__vset(ref dst, rx0, ry0, ru, 1); dst++;
+
+                    nvg__vset(ref dst, p1.x, p1.y, 0.5f, 1); dst++;
+                    nvg__vset(ref dst, p1.x - dlx1 * rw, p1.y - dly1 * rw, ru, 1); dst++;
+                }
+
+                nvg__vset(ref dst, lx1, ly1, lu, 1); dst++;
+                nvg__vset(ref dst, p1.x - dlx1 * rw, p1.y - dly1 * rw, ru, 1); dst++;
+            }
+            else
+            {
+                nvg__chooseBevel(p1.flags.HasFlag(NVGpointFlags.NVG_PR_INNERBEVEL), p0, p1, -rw, out rx0, out ry0, out rx1, out ry1);
+
+                nvg__vset(ref dst, p1.x + dlx0 * lw, p1.y + dly0 * lw, lu, 1); dst++;
+                nvg__vset(ref dst, rx0, ry0, ru, 1); dst++;
+
+                if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL))
+                {
+                    nvg__vset(ref dst, p1.x + dlx0 * lw, p1.y + dly0 * lw, lu, 1); dst++;
+                    nvg__vset(ref dst, rx0, ry0, ru, 1); dst++;
+
+                    nvg__vset(ref dst, p1.x + dlx1 * lw, p1.y + dly1 * lw, lu, 1); dst++;
+                    nvg__vset(ref dst, rx1, ry1, ru, 1); dst++;
+                }
+                else
+                {
+                    lx0 = p1.x + p1.dmx * lw;
+                    ly0 = p1.y + p1.dmy * lw;
+
+                    nvg__vset(ref dst, p1.x + dlx0 * lw, p1.y + dly0 * lw, lu, 1); dst++;
+                    nvg__vset(ref dst, p1.x, p1.y, 0.5f, 1); dst++;
+
+                    nvg__vset(ref dst, lx0, ly0, lu, 1); dst++;
+                    nvg__vset(ref dst, lx0, ly0, lu, 1); dst++;
+
+                    nvg__vset(ref dst, p1.x + dlx1 * lw, p1.y + dly1 * lw, lu, 1); dst++;
+                    nvg__vset(ref dst, p1.x, p1.y, 0.5f, 1); dst++;
+                }
+
+                nvg__vset(ref dst, p1.x + dlx1 * lw, p1.y + dly1 * lw, lu, 1); dst++;
+                nvg__vset(ref dst, rx1, ry1, ru, 1); dst++;
+            }
+
+            return ref dst;
+        }
+
+        static void nvg__calculateJoins(Context ctx, float w, nvgLineCap lineJoin, float miterLimit)
+        {
+            var cache = ctx.cache;
+
+            float iw = 0.0f;
+            if (w > 0.0f)
+            {
+                iw = 1.0f / w;
+            }
+
+            // Calculate which joins needs extra vertices to append, and gather vertex count.
+            for (int i = 0; i < cache.npaths; i++)
+            {
+                Path path = cache.paths[i];
+                var pts = new Span<NVGpoint>(cache.points, path.first, path.count);
+                ref NVGpoint p0 = ref pts[path.count - 1];
+                ref NVGpoint p1 = ref pts[0];
+                int nleft = 0;
+
+                path.nbevel = 0;
+
+                for (int j = 0; j < path.count; j++)
+                {
+                    float cross, limit;
+                    float dlx0 = p0.dy;
+                    float dly0 = -p0.dx;
+                    float dlx1 = p1.dy;
+                    float dly1 = -p1.dx;
+
+                    // Calculate extrusions
+                    p1.dmx = (dlx0 + dlx1) * 0.5f;
+                    p1.dmy = (dly0 + dly1) * 0.5f;
+                    float dmr2 = p1.dmx * p1.dmx + p1.dmy * p1.dmy;
+                    if (dmr2 > 0.000001f)
+                    {
+                        float scale = 1.0f / dmr2;
+                        if (scale > 600.0f)
+                        {
+                            scale = 600.0f;
+                        }
+                        p1.dmx *= scale;
+                        p1.dmy *= scale;
+                    }
+
+                    // Clear flags, but keep the corner.
+                    p1.flags = p1.flags.HasFlag(NVGpointFlags.NVG_PT_CORNER) ? NVGpointFlags.NVG_PT_CORNER : 0;
+
+                    // Keep track of left turns.
+                    cross = p1.dx * p0.dy - p0.dx * p1.dy;
+                    if (cross > 0.0f)
+                    {
+                        nleft++;
+                        p1.flags |= NVGpointFlags.NVG_PT_LEFT;
+                    }
+
+                    // Calculate if we should use bevel or miter for inner join.
+                    limit = Math.Max(1.01f, Math.Min(p0.len, p1.len) * iw);
+                    if ((dmr2 * limit * limit) < 1.0f)
+                    {
+                        p1.flags |= NVGpointFlags.NVG_PR_INNERBEVEL;
+                    }
+
+                    // Check to see if the corner needs to be beveled.
+                    if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_CORNER))
+                    {
+                        if ((dmr2 * miterLimit * miterLimit) < 1.0f || lineJoin == nvgLineCap.NVG_BEVEL || lineJoin == nvgLineCap.NVG_ROUND)
+                        {
+                            p1.flags |= NVGpointFlags.NVG_PT_BEVEL;
+                        }
+                    }
+
+                    if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL | NVGpointFlags.NVG_PR_INNERBEVEL))
+                    {
+                        path.nbevel++;
+                    }
+
+                    p0 = p1++; // TODO!!!?
+                }
+
+                path.convex = nleft == path.count;
+            }
+        }
+
+        static Vertex[] nvg__allocTempVerts(Context ctx, int nverts)
+        {
+            if (nverts > ctx.cache.cverts)
+            {
+                int cverts = (nverts + 0xff) & ~0xff; // Round up to prevent allocations when things change just slightly.
+                Array.Resize(ref ctx.cache.verts, cverts);
+                ctx.cache.cverts = cverts;
+            }
+
+            return ctx.cache.verts;
         }
 
         #endregion
@@ -2761,6 +3339,13 @@ namespace NanoVG
         private static NVGstate nvg__getState(Context ctx)
         {
             return ctx.states[ctx.nstates - 1];
+        }
+
+        static float nvg__getAverageScale(float[] t)
+        {
+            float sx = (float)Math.Sqrt(t[0] * t[0] + t[2] * t[2]);
+            float sy = (float)Math.Sqrt(t[1] * t[1] + t[3] * t[3]);
+            return (sx + sy) * 0.5f;
         }
 
         private static void nvg__setPaintColor(ref Paint p, Color color)
