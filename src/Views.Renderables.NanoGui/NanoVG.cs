@@ -1,4 +1,6 @@
-﻿//
+﻿#pragma warning disable SA1124
+
+//
 // Copyright (c) 2013 Mikko Mononen memon@inside.org
 //
 // This software is provided 'as-is', without any express or implied
@@ -83,7 +85,7 @@ namespace NanoVG
         NVG_HOLE = 2, // CW
     }
 
-    enum nvgLineCap
+    public enum nvgLineCap
     {
         NVG_BUTT,
         NVG_ROUND,
@@ -175,17 +177,26 @@ namespace NanoVG
         private const float NVG_KAPPA90 = 0.5522847493f; // Length proportional to radius of a cubic bezier handle for 90deg arcs.
 
         private const int NVG_MAX_FONTIMAGES = 4;
+        private const int NVG_MAX_STATES = 32;
 
         #region Frames
 
-        // Begin drawing a new frame
-        // Calls to nanovg drawing API should be wrapped in nvgBeginFrame() & nvgEndFrame()
-        // nvgBeginFrame() defines the size of the window to render to in relation currently
-        // set viewport (i.e. glViewport on GL backends). Device pixel ration allows to
-        // control the rendering on Hi-DPI devices.
-        // For example, GLFW returns two dimension for an opened window: window size and
-        // frame buffer size. In that case you would set windowWidth/Height to the window size
-        // devicePixelRatio to: frameBufferWidth / windowWidth.
+        /// <summary>
+        /// Begin drawing a new frame.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="windowWidth">Window width.</param>
+        /// <param name="windowHeight">Window height.</param>
+        /// <param name="devicePixelRatio">Device pixel ratio.</param>
+        /// <remarks>
+        /// Calls to nanovg drawing API should be wrapped in nvgBeginFrame() & nvgEndFrame()
+        /// nvgBeginFrame() defines the size of the window to render to in relation currently
+        /// set viewport (i.e. glViewport on GL backends). Device pixel ration allows to
+        /// control the rendering on Hi-DPI devices.
+        /// For example, GLFW returns two dimension for an opened window: window size and
+        /// frame buffer size. In that case you would set windowWidth/Height to the window size
+        /// devicePixelRatio to: frameBufferWidth / windowWidth.
+        /// </remarks>
         public static void BeginFrame(Context ctx, float windowWidth, float windowHeight, float devicePixelRatio)
         {
             Debug.WriteLine(
@@ -287,13 +298,25 @@ namespace NanoVG
             state.compositeOperation = nvg__compositeOperationState(op);
         }
 
-        // Sets the composite operation with custom pixel arithmetic.
+        /// <summary>
+        /// // Sets the composite operation with custom pixel arithmetic.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="sfactor">Source blend factor.</param>
+        /// <param name="dfactor">Destination blend factor.</param>
         public static void GlobalCompositeBlendFunc(Context ctx, BlendFactor sfactor, BlendFactor dfactor)
         {
             GlobalCompositeBlendFuncSeparate(ctx, sfactor, dfactor, sfactor, dfactor);
         }
 
-        // Sets the composite operation with custom pixel arithmetic for RGB and alpha components separately.
+        /// <summary>
+        /// Sets the composite operation with custom pixel arithmetic for RGB and alpha components separately.
+        /// </summary>
+        /// <param name="ctx">The context to use.</param>
+        /// <param name="srcRGB">Source blend factor for RGB components.</param>
+        /// <param name="dstRGB">Destination blend factor for RGB components.</param>
+        /// <param name="srcAlpha">Source blend factor for alpha component.</param>
+        /// <param name="dstAlpha">Destination blend factor for alpha component.</param>
         public static void GlobalCompositeBlendFuncSeparate(Context ctx, BlendFactor srcRGB, BlendFactor dstRGB, BlendFactor srcAlpha, BlendFactor dstAlpha)
         {
             CompositeOperationState op;
@@ -503,14 +526,17 @@ namespace NanoVG
         /// <param name="ctx">The context to use.</param>
         public static void Save(Context ctx)
         {
-            throw new NotSupportedException();
-            /*
-            if (ctx->nstates >= NVG_MAX_STATES)
-                return;
-            if (ctx->nstates > 0)
-                memcpy(&ctx->states[ctx->nstates], &ctx->states[ctx->nstates - 1], sizeof(NVGstate));
-            ctx->nstates++;
-            */
+            if (ctx.nstates >= NVG_MAX_STATES)
+            {
+                return; // todo: throw invalidoperationexception?
+            }
+
+            if (ctx.nstates > 0)
+            {
+                memcpy(&ctx->states[ctx->nstates], &ctx->states[ctx->nstates - 1], sizeof(NVGstate)); // todo: value copy!!!
+            }
+
+            ctx.nstates++;
         }
 
         /// <summary>
@@ -542,8 +568,8 @@ namespace NanoVG
             state.shapeAntiAlias = 1;
             state.strokeWidth = 1.0f;
             state.miterLimit = 10.0f;
-            state.lineCap = (int)nvgLineCap.NVG_BUTT;
-            state.lineJoin = (int)nvgLineCap.NVG_MITER;
+            state.lineCap = nvgLineCap.NVG_BUTT;
+            state.lineJoin = nvgLineCap.NVG_MITER;
             state.alpha = 1.0f;
             TransformIdentity(state.xform);
 
@@ -654,7 +680,7 @@ namespace NanoVG
         /// </summary>
         /// <param name="ctx">The context to use.</param>
         /// <param name="cap">The cap type to use.</param>
-        public static void LineCap(Context ctx, int cap)
+        public static void LineCap(Context ctx, nvgLineCap cap)
         {
             var state = nvg__getState(ctx);
             state.lineCap = cap; // TODO: Verify it is a valid enum value (or split the enum)
@@ -666,7 +692,7 @@ namespace NanoVG
         /// </summary>
         /// <param name="ctx">The context to use.</param>
         /// <param name="join">The corner type to use.</param>
-        public static void LineJoin(Context ctx, int join)
+        public static void LineJoin(Context ctx, nvgLineCap join)
         {
             var state = nvg__getState(ctx);
             state.lineJoin = join; // TODO: Verify it is a valid enum value (or split the enum)
@@ -1420,10 +1446,10 @@ namespace NanoVG
             }
 
             // Calculate tangential circle to lines (x0,y0)-(x1,y1) and (x1,y1)-(x2,y2).
-            dx0 = x0-x1;
-            dy0 = y0-y1;
-            dx1 = x2-x1;
-            dy1 = y2-y1;
+            dx0 = x0 - x1;
+            dy0 = y0 - y1;
+            dx1 = x2 - x1;
+            dy1 = y2 - y1;
             nvg__normalize(ref dx0, ref dy0);
             nvg__normalize(ref dx1, ref dy1);
             a = (float)Math.Acos(dx0 * dx1 + dy0 * dy1);
@@ -1437,10 +1463,10 @@ namespace NanoVG
                 return;
             }
 
-            if (nvg__cross(dx0,dy0, dx1,dy1) > 0.0f)
+            if (nvg__cross(dx0, dy0, dx1, dy1) > 0.0f)
             {
-                cx = x1 + dx0*d + dy0*radius;
-                cy = y1 + dy0*d + -dx0*radius;
+                cx = x1 + dx0 * d + dy0 * radius;
+                cy = y1 + dy0 * d + -dx0 * radius;
                 a0 = (float)Math.Atan2(dx0, -dy0);
                 a1 = (float)Math.Atan2(-dx1, dy1);
                 dir = Winding.NVG_CW;
@@ -1448,8 +1474,8 @@ namespace NanoVG
             }
             else
             {
-                cx = x1 + dx0*d + -dy0*radius;
-                cy = y1 + dy0*d + dx0*radius;
+                cx = x1 + dx0 * d + -dy0 * radius;
+                cy = y1 + dy0 * d + dx0 * radius;
                 a0 = (float)Math.Atan2(-dx0, dy0);
                 a1 = (float)Math.Atan2(dx1, -dy1);
                 dir = Winding.NVG_CCW;
@@ -1539,16 +1565,19 @@ namespace NanoVG
                 a = a0 + da * (i / (float)ndivs);
                 dx = (float)Math.Cos(a);
                 dy = (float)Math.Sin(a);
-                x = cx + dx*r;
-                y = cy + dy*r;
-                tanx = -dy*r*kappa;
-                tany = dx*r*kappa;
+                x = cx + dx * r;
+                y = cy + dy * r;
+                tanx = -dy * r * kappa;
+                tany = dx * r * kappa;
 
-                if (i == 0) {
+                if (i == 0)
+                {
                     vals[nvals++] = (float)move;
                     vals[nvals++] = x;
                     vals[nvals++] = y;
-                } else {
+                }
+                else
+                {
                     vals[nvals++] = (float)NVGcommands.NVG_BEZIERTO;
                     vals[nvals++] = px+ptanx;
                     vals[nvals++] = py+ptany;
@@ -1557,6 +1586,7 @@ namespace NanoVG
                     vals[nvals++] = x;
                     vals[nvals++] = y;
                 }
+
                 px = x;
                 py = y;
                 ptanx = tanx;
@@ -1686,9 +1716,9 @@ namespace NanoVG
 
             ctx.@params.renderFill(
                 ctx.@params.userPtr,
-                &fillPaint,
+                ref fillPaint,
                 state.compositeOperation,
-                &state.scissor,
+                ref state.scissor,
                 ctx.fringeWidth,
                 ctx.cache.bounds,
                 ctx.cache.paths,
@@ -1742,9 +1772,9 @@ namespace NanoVG
 
             ctx.@params.renderStroke(
                 ctx.@params.userPtr,
-                &strokePaint,
+                ref strokePaint,
                 state.compositeOperation,
-                &state.scissor,
+                ref state.scissor,
                 ctx.fringeWidth,
                 strokeWidth,
                 ctx.cache.paths,
@@ -2454,16 +2484,27 @@ namespace NanoVG
         internal class Params
         {
             public delegate int RenderCreate(object uptr);
+
             public delegate int RenderCreateTexture(object uptr, int type, int w, int h, int imageFlags, byte[] data);
+
             public delegate int RenderDeleteTexture(object uptr, int image);
+
             public delegate int RenderUpdateTexture(object uptr, int image, int x, int y, int w, int h, byte[] data);
+
             public delegate int RenderGetTextureSize(object uptr, int image, out int w, out int h);
+
             public delegate void RenderViewport(object uptr, float width, float height, float devicePixelRatio);
+
             public delegate void RenderCancel(object uptr);
+
             public delegate void RenderFlush(object uptr);
-            public delegate void RenderFill(object uptr, NVGpaint* paint, NVGcompositeOperationState compositeOperation, NVGscissor* scissor, float fringe, const float* bounds, const NVGpath* paths, int npaths);
-            public delegate void RenderStroke(object uptr, NVGpaint* paint, NVGcompositeOperationState compositeOperation, NVGscissor* scissor, float fringe, float strokeWidth, const NVGpath* paths, int npaths);
-            public delegate void RenderTriangles (object uptr, NVGpaint* paint, NVGcompositeOperationState compositeOperation, NVGscissor* scissor, const NVGvertex* verts, int nverts);
+
+            public delegate void RenderFill(object uptr, ref Paint paint, CompositeOperationState compositeOperation, ref nvgScissor scissor, float fringe, const float* bounds, const NVGpath* paths, int npaths);
+
+            public delegate void RenderStroke(object uptr, ref Paint paint, CompositeOperationState compositeOperation, ref nvgScissor scissor, float fringe, float strokeWidth, const NVGpath* paths, int npaths);
+
+            public delegate void RenderTriangles (object uptr, ref Paint paint, CompositeOperationState compositeOperation, ref nvgScissor scissor, const NVGvertex* verts, int nverts);
+
             public delegate void RenderDelete (object uptr);
 
             public object userPtr;
@@ -2949,7 +2990,7 @@ namespace NanoVG
                     // Looping
                     p0 = ref pts[path.count - 1];
                     p1 = ref pts[0];
-                    for (j = 0; j < path.count; ++j)
+                    for (int j = 0; j < path.count; ++j)
                     {
                         if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL))
                         {
@@ -3054,6 +3095,162 @@ namespace NanoVG
             return 1;
         }
 
+        static int nvg__expandStroke(Context ctx, float w, float fringe, nvgLineCap lineCap, nvgLineCap lineJoin, float miterLimit)
+        {
+            NVGpathCache cache = ctx.cache;
+            //NVGvertex* verts;
+            //NVGvertex* dst;
+            //int cverts, i, j;
+            float aa = fringe;//ctx->fringeWidth;
+            float u0 = 0.0f, u1 = 1.0f;
+            int ncap = nvg__curveDivs(w, Math.PI, ctx.tessTol); // Calculate divisions per half circle.
+
+            w += aa * 0.5f;
+
+            // Disable the gradient used for antialiasing when antialiasing is not used.
+            if (aa == 0.0f)
+            {
+                u0 = 0.5f;
+                u1 = 0.5f;
+            }
+
+            nvg__calculateJoins(ctx, w, lineJoin, miterLimit);
+
+            // Calculate max vertex usage.
+            int cverts = 0;
+            for (int i = 0; i < cache.npaths; i++)
+            {
+                Path path = cache.paths[i];
+                bool loop = !path.closed;
+                if (lineJoin == nvgLineCap.NVG_ROUND)
+                {
+                    cverts += (path.count + path.nbevel * (ncap + 2) + 1) * 2; // plus one for loop
+                }
+                else
+                {
+                    cverts += (path.count + path.nbevel * 5 + 1) * 2; // plus one for loop
+                }
+
+                if (!loop)
+                {
+                    // space for caps
+                    if (lineCap == nvgLineCap.NVG_ROUND)
+                    {
+                        cverts += (ncap * 2 + 2) * 2;
+                    }
+                    else
+                    {
+                        cverts += (3 + 3) * 2;
+                    }
+                }
+            }
+
+            Vertex[] verts = nvg__allocTempVerts(ctx, cverts);
+
+            for (int i = 0; i < cache.npaths; i++)
+            {
+                Path path = cache.paths[i];
+                Span<NVGpoint> pts = new Span<NVGpoint>(cache.points, path.first, path.count);
+                ref NVGpoint p0;
+                ref NVGpoint p1;
+                int s, e;
+                float dx, dy;
+
+                path.fill = null;
+                path.nfill = 0;
+
+                // Calculate fringe or stroke
+                bool loop = !path.closed;
+                ref Vertex dst = ref verts[0];
+                path.stroke = dst;
+
+                if (loop)
+                {
+                    // Looping
+                    p0 = ref pts[path.count - 1];
+                    p1 = ref pts[0];
+                    s = 0;
+                    e = path.count;
+                }
+                else
+                {
+                    // Add cap
+                    p0 = ref pts[0];
+                    p1 = ref pts[1];
+                    s = 1;
+                    e = path.count - 1;
+                }
+
+                if (!loop)
+                {
+                    // Add cap
+                    dx = p1.x - p0.x;
+                    dy = p1.y - p0.y;
+                    nvg__normalize(ref dx, ref dy);
+                    if (lineCap == nvgLineCap.NVG_BUTT)
+                    {
+                        dst = nvg__buttCapStart(dst, p0, dx, dy, w, -aa * 0.5f, aa, u0, u1);
+                    }
+                    else if (lineCap == nvgLineCap.NVG_BUTT || lineCap == nvgLineCap.NVG_SQUARE)
+                    {
+                        dst = nvg__buttCapStart(dst, p0, dx, dy, w, w - aa, aa, u0, u1);
+                    }
+                    else if (lineCap == nvgLineCap.NVG_ROUND)
+                    {
+                        dst = nvg__roundCapStart(dst, p0, dx, dy, w, ncap, aa, u0, u1);
+                    }
+                }
+
+                for (int j = s; j < e; ++j)
+                {
+                    if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL | NVGpointFlags.NVG_PR_INNERBEVEL))
+                    {
+                        if (lineJoin == nvgLineCap.NVG_ROUND)
+                        {
+                            dst = nvg__roundJoin(dst, p0, p1, w, w, u0, u1, ncap, aa);
+                        }
+                        else
+                        {
+                            dst = nvg__bevelJoin(ref dst, ref p0, ref p1, w, w, u0, u1, aa);
+                        }
+                    }
+                    else
+                    {
+                        nvg__vset(ref dst, p1.x + (p1.dmx * w), p1.y + (p1.dmy * w), u0, 1); dst++;
+                        nvg__vset(ref dst, p1.x - (p1.dmx * w), p1.y - (p1.dmy * w), u1, 1); dst++;
+                    }
+
+                    p0 = p1++;
+                }
+
+                if (loop)
+                {
+                    // Loop it
+                    nvg__vset(ref dst, verts[0].x, verts[0].y, u0, 1); dst++;
+                    nvg__vset(ref dst, verts[1].x, verts[1].y, u1, 1); dst++;
+                }
+                else
+                {
+                    // Add cap
+                    dx = p1.x - p0.x;
+                    dy = p1.y - p0.y;
+                    nvg__normalize(ref dx, ref dy);
+                    if (lineCap == nvgLineCap.NVG_BUTT)
+                        dst = nvg__buttCapEnd(dst, p1, dx, dy, w, -aa * 0.5f, aa, u0, u1);
+                    else if (lineCap == nvgLineCap.NVG_BUTT || lineCap == nvgLineCap.NVG_SQUARE)
+                        dst = nvg__buttCapEnd(dst, p1, dx, dy, w, w - aa, aa, u0, u1);
+                    else if (lineCap == nvgLineCap.NVG_ROUND)
+                        dst = nvg__roundCapEnd(dst, p1, dx, dy, w, ncap, aa, u0, u1);
+                }
+
+                path.nstroke = (int)(dst - verts);
+
+                verts = dst;
+            }
+
+            return 1;
+        }
+
         static void nvg__chooseBevel(
             bool bevel, ref NVGpoint p0, ref NVGpoint p1, float w,
             out float x0, out float y0, out float x1, out float y1)
@@ -3121,7 +3318,7 @@ namespace NanoVG
             }
             else
             {
-                nvg__chooseBevel(p1.flags.HasFlag(NVGpointFlags.NVG_PR_INNERBEVEL), p0, p1, -rw, out rx0, out ry0, out rx1, out ry1);
+                nvg__chooseBevel(p1.flags.HasFlag(NVGpointFlags.NVG_PR_INNERBEVEL), ref p0, ref p1, -rw, out rx0, out ry0, out rx1, out ry1);
 
                 nvg__vset(ref dst, p1.x + dlx0 * lw, p1.y + dly0 * lw, lu, 1); dst++;
                 nvg__vset(ref dst, rx0, ry0, ru, 1); dst++;
@@ -3265,67 +3462,67 @@ namespace NanoVG
 
         private static CompositeOperationState nvg__compositeOperationState(CompositeOperation op)
         {
-            int sfactor = 0, dfactor = 0;
+            BlendFactor sfactor, dfactor;
 
             if (op == CompositeOperation.NVG_SOURCE_OVER)
             {
-                sfactor = NVG_ONE;
-                dfactor = NVG_ONE_MINUS_SRC_ALPHA;
+                sfactor = BlendFactor.NVG_ONE;
+                dfactor = BlendFactor.NVG_ONE_MINUS_SRC_ALPHA;
             }
             else if (op == CompositeOperation.NVG_SOURCE_IN)
             {
-                sfactor = NVG_DST_ALPHA;
-                dfactor = NVG_ZERO;
+                sfactor = BlendFactor.NVG_DST_ALPHA;
+                dfactor = BlendFactor.NVG_ZERO;
             }
             else if (op == CompositeOperation.NVG_SOURCE_OUT)
             {
-                sfactor = NVG_ONE_MINUS_DST_ALPHA;
-                dfactor = NVG_ZERO;
+                sfactor = BlendFactor.NVG_ONE_MINUS_DST_ALPHA;
+                dfactor = BlendFactor.NVG_ZERO;
             }
             else if (op == CompositeOperation.NVG_ATOP)
             {
-                sfactor = NVG_DST_ALPHA;
-                dfactor = NVG_ONE_MINUS_SRC_ALPHA;
+                sfactor = BlendFactor.NVG_DST_ALPHA;
+                dfactor = BlendFactor.NVG_ONE_MINUS_SRC_ALPHA;
             }
             else if (op == CompositeOperation.NVG_DESTINATION_OVER)
             {
-                sfactor = NVG_ONE_MINUS_DST_ALPHA;
-                dfactor = NVG_ONE;
+                sfactor = BlendFactor.NVG_ONE_MINUS_DST_ALPHA;
+                dfactor = BlendFactor.NVG_ONE;
             }
             else if (op == CompositeOperation.NVG_DESTINATION_IN)
             {
-                sfactor = NVG_ZERO;
-                dfactor = NVG_SRC_ALPHA;
+                sfactor = BlendFactor.NVG_ZERO;
+                dfactor = BlendFactor.NVG_SRC_ALPHA;
             }
             else if (op == CompositeOperation.NVG_DESTINATION_OUT)
             {
-                sfactor = NVG_ZERO;
-                dfactor = NVG_ONE_MINUS_SRC_ALPHA;
+                sfactor = BlendFactor.NVG_ZERO;
+                dfactor = BlendFactor.NVG_ONE_MINUS_SRC_ALPHA;
             }
             else if (op == CompositeOperation.NVG_DESTINATION_ATOP)
             {
-                sfactor = NVG_ONE_MINUS_DST_ALPHA;
-                dfactor = NVG_SRC_ALPHA;
+                sfactor = BlendFactor.NVG_ONE_MINUS_DST_ALPHA;
+                dfactor = BlendFactor.NVG_SRC_ALPHA;
             }
             else if (op == CompositeOperation.NVG_LIGHTER)
             {
-                sfactor = NVG_ONE;
-                dfactor = NVG_ONE;
+                sfactor = BlendFactor.NVG_ONE;
+                dfactor = BlendFactor.NVG_ONE;
             }
             else if (op == CompositeOperation.NVG_COPY)
             {
-                sfactor = NVG_ONE;
-                dfactor = NVG_ZERO;
+                sfactor = BlendFactor.NVG_ONE;
+                dfactor = BlendFactor.NVG_ZERO;
             }
             else if (op == CompositeOperation.NVG_XOR)
             {
-                sfactor = NVG_ONE_MINUS_DST_ALPHA;
-                dfactor = NVG_ONE_MINUS_SRC_ALPHA;
+                sfactor = BlendFactor.NVG_ONE_MINUS_DST_ALPHA;
+                dfactor = BlendFactor.NVG_ONE_MINUS_SRC_ALPHA;
             }
             else
             {
-                sfactor = NVG_ONE;
-                dfactor = NVG_ZERO;
+                sfactor = BlendFactor.NVG_ONE;
+                dfactor = BlendFactor.NVG_ZERO;
             }
 
             CompositeOperationState state;
@@ -3426,7 +3623,7 @@ namespace NanoVG
             ctx.ncommands += nvals;
         }
 
-        private class NVGstate
+        internal class NVGstate
         {
             public CompositeOperationState compositeOperation;
             public int shapeAntiAlias;
@@ -3434,11 +3631,11 @@ namespace NanoVG
             public Paint stroke;
             public float strokeWidth;
             public float miterLimit;
-            public int lineJoin;
-            public int lineCap;
+            public nvgLineCap lineJoin;
+            public nvgLineCap lineCap;
             public float alpha;
             public float[] xform;//[6];
-            public Scissor scissor;
+            public nvgScissor scissor;
             public float fontSize;
             public float letterSpacing;
             public float lineHeight;
@@ -3450,3 +3647,5 @@ namespace NanoVG
         #endregion
     }
 }
+
+#pragma warning restore SA1124

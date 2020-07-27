@@ -60,7 +60,6 @@ namespace NanoVG
     }
 #endif
 
-
     public class NanoVGGL
     {
         // Creates NanoVG contexts for different OpenGL (ES) versions.
@@ -115,12 +114,12 @@ namespace NanoVG
 
 
     struct GLNVGshader
-{
-    GLuint prog;
-    GLuint frag;
-    GLuint vert;
-    GLint loc[GLNVG_MAX_LOCS];
-};
+    {
+        GLuint prog;
+        GLuint frag;
+        GLuint vert;
+        GLint loc[GLNVG_MAX_LOCS];
+    };
 typedef struct GLNVGshader GLNVGshader;
 
 struct GLNVGtexture
