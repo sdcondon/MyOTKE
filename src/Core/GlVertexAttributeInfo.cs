@@ -12,16 +12,16 @@ namespace MyOTKE.Core
     public struct GlVertexAttributeInfo
     {
         /// <summary>
-        /// A mapping of .NET types to equivalent primitive OpenGL attribute info for them.
+        /// A mapping of .NET types to appropriate primitive OpenGL attribute info for them.
         /// </summary>
         private static readonly Dictionary<Type, (VertexAttribPointerType type, int count)> KnownTypes = new Dictionary<Type, (VertexAttribPointerType, int)>()
         {
-            { typeof(Vector4), (VertexAttribPointerType.Float, 4) },
-            { typeof(Vector3), (VertexAttribPointerType.Float, 3) },
-            { typeof(Vector2), (VertexAttribPointerType.Float, 2) },
-            { typeof(float), (VertexAttribPointerType.Float, 1) },
-            { typeof(uint), (VertexAttribPointerType.UnsignedInt, 1) },
-            { typeof(int), (VertexAttribPointerType.Int, 1) },
+            [typeof(Vector4)] = (VertexAttribPointerType.Float, 4),
+            [typeof(Vector3)] = (VertexAttribPointerType.Float, 3),
+            [typeof(Vector2)] = (VertexAttribPointerType.Float, 2),
+            [typeof(float)] = (VertexAttribPointerType.Float, 1),
+            [typeof(uint)] = (VertexAttribPointerType.UnsignedInt, 1),
+            [typeof(int)] = (VertexAttribPointerType.Int, 1),
         };
 
         /// <summary>
