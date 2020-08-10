@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Views.Renderables.Gui", "Vi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Views.Renderables.ReactivePrimitives", "Views.Renderables.ReactivePrimitives\Views.Renderables.ReactivePrimitives.csproj", "{B87E758F-EC42-4E06-9A7F-78F0B2CB4ACA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NanoVG", "Views.Renderables.NanoGui\NanoVG.csproj", "{C5365538-68DF-4C66-BC55-3185F9F2F927}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NanoVG", "NanoVG\NanoVG.csproj", "{C5365538-68DF-4C66-BC55-3185F9F2F927}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NanoVG.Example", "NanoVG.Example\NanoVG.Example.csproj", "{03A4CB84-F512-4E3A-8CB9-0120071615B0}"
 EndProject
