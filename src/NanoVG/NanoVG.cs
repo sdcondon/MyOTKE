@@ -2878,9 +2878,11 @@ namespace NanoVG
             public int count;
             public bool closed;
             public int nbevel;
-            public Vertex[] fill;
+
+            public ArraySegment<Vertex> fill;
             public int nfill;
-            public Vertex[] stroke;
+
+            public ArraySegment<Vertex> stroke;
             public int nstroke;
             public Winding winding;
             public bool convex;
@@ -2985,8 +2987,7 @@ namespace NanoVG
                         i += 3;
                         break;
                     case NVGcommands.NVG_BEZIERTO:
-                        ref NVGpoint last = ref nvg__lastPoint(ctx);
-                        if (last != null)
+                        if (nvg__lastPoint(ctx, out NVGpoint last))
                         {
                             nvg__tesselateBezier(
                                 ctx,
@@ -3028,12 +3029,12 @@ namespace NanoVG
                 var pts = new Span<NVGpoint>(cache.points, path.first, path.count);
 
                 // If the first and last points are the same, remove the last, mark as closed path.
-                ref NVGpoint p0 = ref pts[path.count - 1];
-                ref NVGpoint p1 = ref pts[0];
-                if (nvg__ptEquals(p0.x, p0.y, p1.x, p1.y, ctx.distTol))
+                var p0 = path.count - 1;
+                var p1 = 0;
+                if (nvg__ptEquals(pts[p0].x, pts[p0].y, pts[p1].x, pts[p1].y, ctx.distTol))
                 {
                     path.count--;
-                    p0 = ref pts[path.count - 1];
+                    p0 = path.count - 1;
                     path.closed = true;
                 }
 
@@ -3055,18 +3056,18 @@ namespace NanoVG
                 for (int i = 0; i < path.count; i++)
                 {
                     // Calculate segment direction and length
-                    p0.dx = p1.x - p0.x;
-                    p0.dy = p1.y - p0.y;
-                    p0.len = nvg__normalize(ref p0.dx, ref p0.dy);
+                    pts[p0].dx = pts[p1].x - pts[p0].x;
+                    pts[p0].dy = pts[p1].y - pts[p0].y;
+                    pts[p0].len = nvg__normalize(ref pts[p0].dx, ref pts[p0].dy);
 
                     // Update bounds
-                    cache.bounds[0] = Math.Min(cache.bounds[0], p0.x);
-                    cache.bounds[1] = Math.Min(cache.bounds[1], p0.y);
-                    cache.bounds[2] = Math.Max(cache.bounds[2], p0.x);
-                    cache.bounds[3] = Math.Max(cache.bounds[3], p0.y);
+                    cache.bounds[0] = Math.Min(cache.bounds[0], pts[p0].x);
+                    cache.bounds[1] = Math.Min(cache.bounds[1], pts[p0].y);
+                    cache.bounds[2] = Math.Max(cache.bounds[2], pts[p0].x);
+                    cache.bounds[3] = Math.Max(cache.bounds[3], pts[p0].y);
 
                     // Advance
-                    p0 = p1++; // TODO!!!!!!
+                    p0 = p1++;
                 }
             }
         }
@@ -3083,7 +3084,7 @@ namespace NanoVG
             if (path.count > 0 && ctx.cache.npoints > 0)
             {
                 // if its the same point as last one, just add flags appropriately
-                ref NVGpoint pt = ref nvg__lastPoint(ctx);
+                nvg__lastPoint(ctx, out NVGpoint pt);
                 if (nvg__ptEquals(pt.x, pt.y, x, y, ctx.distTol))
                 {
                     pt.flags |= flags;
@@ -3110,14 +3111,16 @@ namespace NanoVG
             path.count++;
         }
 
-        private static ref NVGpoint nvg__lastPoint(Context ctx)
+        private static bool nvg__lastPoint(Context ctx, out NVGpoint pt)
         {
             if (ctx.cache.npoints > 0)
             {
-                return ref ctx.cache.points[ctx.cache.npoints - 1];
+                pt = ctx.cache.points[ctx.cache.npoints - 1];
+                return true;
             }
 
-            return ref null;
+            pt = default;
+            return false;
         }
 
         private static float nvg__triarea2(float ax, float ay, float bx, float by, float cx, float cy)
@@ -3140,6 +3143,7 @@ namespace NanoVG
                 ref var c = ref pts[i];
                 area += nvg__triarea2(a.x, a.y, b.x, b.y, c.x, c.y);
             }
+
             return area * 0.5f;
         }
 
@@ -3173,7 +3177,10 @@ namespace NanoVG
             float x12, y12, x23, y23, x34, y34, x123, y123, x234, y234, x1234, y1234;
             float dx, dy, d2, d3;
 
-            if (level > 10) return;
+            if (level > 10)
+            {
+                return;
+            }
 
             x12 = (x1 + x2) * 0.5f;
             y12 = (y1 + y2) * 0.5f;
@@ -3233,6 +3240,7 @@ namespace NanoVG
             }
 
             var verts = nvg__allocTempVerts(ctx, cverts);
+            var dst = 0;
 
             bool convex = cache.npaths == 1 && cache.paths[0].convex;
 
@@ -3240,49 +3248,45 @@ namespace NanoVG
             {
                 Path path = cache.paths[i];
                 var pts = new Span<NVGpoint>(cache.points, path.first, path.count);
-                ref NVGpoint p0;
-                ref NVGpoint p1;
 
                 // Calculate shape vertices
                 float woff = 0.5f * aa;
-                ref Vertex dst = ref verts[0];
-                path.fill = verts;
-
+                var currentSegmentOffset = dst;
                 if (fringe)
                 {
                     // Looping
-                    p0 = ref pts[path.count - 1];
-                    p1 = ref pts[0];
+                    int p0 = path.count - 1;
+                    int p1 = 0;
                     for (int j = 0; j < path.count; ++j)
                     {
-                        if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL))
+                        if (pts[p1].flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL))
                         {
-                            float dlx0 = p0.dy;
-                            float dly0 = -p0.dx;
-                            float dlx1 = p1.dy;
-                            float dly1 = -p1.dx;
-                            if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_LEFT))
+                            float dlx0 = pts[p0].dy;
+                            float dly0 = -pts[p0].dx;
+                            float dlx1 = pts[p1].dy;
+                            float dly1 = -pts[p1].dx;
+                            if (pts[p1].flags.HasFlag(NVGpointFlags.NVG_PT_LEFT))
                             {
-                                float lx = p1.x + p1.dmx * woff;
-                                float ly = p1.y + p1.dmy * woff;
-                                nvg__vset(ref dst, lx, ly, 0.5f, 1);
+                                float lx = pts[p1].x + pts[p1].dmx * woff;
+                                float ly = pts[p1].y + pts[p1].dmy * woff;
+                                nvg__vset(ref verts[dst], lx, ly, 0.5f, 1);
                                 dst++;
                             }
                             else
                             {
-                                float lx0 = p1.x + dlx0 * woff;
-                                float ly0 = p1.y + dly0 * woff;
-                                float lx1 = p1.x + dlx1 * woff;
-                                float ly1 = p1.y + dly1 * woff;
-                                nvg__vset(ref dst, lx0, ly0, 0.5f, 1);
+                                float lx0 = pts[p1].x + dlx0 * woff;
+                                float ly0 = pts[p1].y + dly0 * woff;
+                                float lx1 = pts[p1].x + dlx1 * woff;
+                                float ly1 = pts[p1].y + dly1 * woff;
+                                nvg__vset(ref verts[dst], lx0, ly0, 0.5f, 1);
                                 dst++;
-                                nvg__vset(ref dst, lx1, ly1, 0.5f, 1);
+                                nvg__vset(ref verts[dst], lx1, ly1, 0.5f, 1);
                                 dst++;
                             }
                         }
                         else
                         {
-                            nvg__vset(ref dst, p1.x + (p1.dmx * woff), p1.y + (p1.dmy * woff), 0.5f, 1);
+                            nvg__vset(ref verts[dst], pts[p1].x + (pts[p1].dmx * woff), pts[p1].y + (pts[p1].dmy * woff), 0.5f, 1);
                             dst++;
                         }
 
@@ -3293,13 +3297,14 @@ namespace NanoVG
                 {
                     for (int j = 0; j < path.count; ++j)
                     {
-                        nvg__vset(ref dst, pts[j].x, pts[j].y, 0.5f, 1);
+                        nvg__vset(ref verts[dst], pts[j].x, pts[j].y, 0.5f, 1);
                         dst++;
                     }
                 }
 
-                path.nfill = (int)(dst - verts);
-                verts = dst;
+                path.fill = new ArraySegment<Vertex>(verts, currentSegmentOffset, dst - currentSegmentOffset);
+                path.nfill = dst - currentSegmentOffset;
+                currentSegmentOffset = dst;
 
                 // Calculate fringe
                 if (fringe)
@@ -3308,8 +3313,6 @@ namespace NanoVG
                     float rw = w - woff;
                     float lu = 0;
                     float ru = 1;
-                    dst = verts;
-                    path.stroke = dst;
 
                     // Create only half a fringe for convex shapes so that
                     // the shape can be rendered without stenciling.
@@ -3320,35 +3323,38 @@ namespace NanoVG
                     }
 
                     // Looping
-                    p0 = ref pts[path.count - 1];
-                    p1 = ref pts[0];
+                    int p0 = path.count - 1;
+                    int p1 = 0;
 
                     for (int j = 0; j < path.count; ++j)
                     {
-                        if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL | NVGpointFlags.NVG_PR_INNERBEVEL))
+                        if (pts[p1].flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL | NVGpointFlags.NVG_PR_INNERBEVEL))
                         {
-                            dst = nvg__bevelJoin(ref dst, ref p0, ref p1, lw, rw, lu, ru, ctx.fringeWidth);
+                            nvg__bevelJoin(verts, ref dst, ref pts[p0], ref pts[p1], lw, rw, lu, ru, ctx.fringeWidth);
                         }
                         else
                         {
-                            nvg__vset(ref dst, p1.x + (p1.dmx * lw), p1.y + (p1.dmy * lw), lu, 1);
+                            nvg__vset(ref verts[dst], pts[p1].x + (pts[p1].dmx * lw), pts[p1].y + (pts[p1].dmy * lw), lu, 1);
                             dst++;
-                            nvg__vset(ref dst, p1.x - (p1.dmx * rw), p1.y - (p1.dmy * rw), ru, 1);
+                            nvg__vset(ref verts[dst], pts[p1].x - (pts[p1].dmx * rw), pts[p1].y - (pts[p1].dmy * rw), ru, 1);
                             dst++;
                         }
+
                         p0 = p1++;
                     }
 
                     // Loop it
-                    nvg__vset(ref dst, verts[0].x, verts[0].y, lu, 1); dst++;
-                    nvg__vset(ref dst, verts[1].x, verts[1].y, ru, 1); dst++;
+                    nvg__vset(ref verts[dst], verts[currentSegmentOffset].x, verts[currentSegmentOffset].y, lu, 1);
+                    dst++;
+                    nvg__vset(ref verts[dst], verts[currentSegmentOffset + 1].x, verts[currentSegmentOffset + 1].y, ru, 1);
+                    dst++;
 
-                    path.nstroke = (int)(dst - verts);
-                    verts = dst;
+                    path.stroke = new ArraySegment<Vertex>(verts, currentSegmentOffset, dst - currentSegmentOffset);
+                    path.nstroke = dst - currentSegmentOffset;
                 }
                 else
                 {
-                    path.stroke = null;
+                    path.stroke = new ArraySegment<Vertex>(verts, currentSegmentOffset, 0);
                     path.nstroke = 0;
                 }
             }
@@ -3359,7 +3365,7 @@ namespace NanoVG
         private static int nvg__expandStroke(Context ctx, float w, float fringe, nvgLineCap lineCap, nvgLineCap lineJoin, float miterLimit)
         {
             NVGpathCache cache = ctx.cache;
-            float aa = fringe;//ctx->fringeWidth; nottodo - commented in source, too..
+            float aa = fringe; // ctx->fringeWidth; nottodo - commented in source, too..
             float u0 = 0.0f, u1 = 1.0f;
             int ncap = nvg__curveDivs(w, (float)Math.PI, ctx.tessTol); // Calculate divisions per half circle.
 
@@ -3404,37 +3410,37 @@ namespace NanoVG
             }
 
             Vertex[] verts = nvg__allocTempVerts(ctx, cverts);
+            int dst = 0;
 
             for (int i = 0; i < cache.npaths; i++)
             {
                 Path path = cache.paths[i];
                 Span<NVGpoint> pts = new Span<NVGpoint>(cache.points, path.first, path.count);
-                ref NVGpoint p0;
-                ref NVGpoint p1;
+                int p0;
+                int p1;
                 int s, e;
                 float dx, dy;
 
-                path.fill = null;
-                path.nfill = 0;
-
                 // Calculate fringe or stroke
                 bool loop = !path.closed;
-                ref Vertex dst = ref verts[0];
-                path.stroke = verts;
+                var currentSegmentOffset = dst;
+
+                path.fill = new ArraySegment<Vertex>(verts, currentSegmentOffset, 0);
+                path.nfill = 0;
 
                 if (loop)
                 {
                     // Looping
-                    p0 = ref pts[path.count - 1];
-                    p1 = ref pts[0];
+                    p0 = path.count - 1;
+                    p1 = 0;
                     s = 0;
                     e = path.count;
                 }
                 else
                 {
                     // Add cap
-                    p0 = ref pts[0];
-                    p1 = ref pts[1];
+                    p0 = 0;
+                    p1 = 1;
                     s = 1;
                     e = path.count - 1;
                 }
@@ -3442,40 +3448,42 @@ namespace NanoVG
                 if (!loop)
                 {
                     // Add cap
-                    dx = p1.x - p0.x;
-                    dy = p1.y - p0.y;
+                    dx = pts[p1].x - pts[p0].x;
+                    dy = pts[p1].y - pts[p0].y;
                     nvg__normalize(ref dx, ref dy);
                     if (lineCap == nvgLineCap.NVG_BUTT)
                     {
-                        dst = nvg__buttCapStart(ref dst, ref p0, dx, dy, w, -aa * 0.5f, aa, u0, u1);
+                        nvg__buttCapStart(verts, ref dst, ref pts[p0], dx, dy, w, -aa * 0.5f, aa, u0, u1);
                     }
                     else if (lineCap == nvgLineCap.NVG_BUTT || lineCap == nvgLineCap.NVG_SQUARE)
                     {
-                        dst = nvg__buttCapStart(ref dst, ref p0, dx, dy, w, w - aa, aa, u0, u1);
+                        nvg__buttCapStart(verts, ref dst, ref pts[p0], dx, dy, w, w - aa, aa, u0, u1);
                     }
                     else if (lineCap == nvgLineCap.NVG_ROUND)
                     {
-                        dst = nvg__roundCapStart(ref dst, ref p0, dx, dy, w, ncap, aa, u0, u1);
+                        nvg__roundCapStart(verts, ref dst, ref pts[p0], dx, dy, w, ncap, aa, u0, u1);
                     }
                 }
 
                 for (int j = s; j < e; ++j)
                 {
-                    if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL | NVGpointFlags.NVG_PR_INNERBEVEL))
+                    if (pts[p1].flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL | NVGpointFlags.NVG_PR_INNERBEVEL))
                     {
                         if (lineJoin == nvgLineCap.NVG_ROUND)
                         {
-                            dst = nvg__roundJoin(ref dst, ref p0, ref p1, w, w, u0, u1, ncap, aa);
+                            nvg__roundJoin(verts, ref dst, ref pts[p0], ref pts[p1], w, w, u0, u1, ncap, aa);
                         }
                         else
                         {
-                            dst = nvg__bevelJoin(ref dst, ref p0, ref p1, w, w, u0, u1, aa);
+                            nvg__bevelJoin(verts, ref dst, ref pts[p0], ref pts[p1], w, w, u0, u1, aa);
                         }
                     }
                     else
                     {
-                        nvg__vset(ref dst, p1.x + (p1.dmx * w), p1.y + (p1.dmy * w), u0, 1); dst++;
-                        nvg__vset(ref dst, p1.x - (p1.dmx * w), p1.y - (p1.dmy * w), u1, 1); dst++;
+                        nvg__vset(ref verts[dst], pts[p1].x + (pts[p1].dmx * w), pts[p1].y + (pts[p1].dmy * w), u0, 1);
+                        dst++;
+                        nvg__vset(ref verts[dst], pts[p1].x - (pts[p1].dmx * w), pts[p1].y - (pts[p1].dmy * w), u1, 1);
+                        dst++;
                     }
 
                     p0 = p1++;
@@ -3484,32 +3492,33 @@ namespace NanoVG
                 if (loop)
                 {
                     // Loop it
-                    nvg__vset(ref dst, verts[0].x, verts[0].y, u0, 1); dst++;
-                    nvg__vset(ref dst, verts[1].x, verts[1].y, u1, 1); dst++;
+                    nvg__vset(ref verts[dst], verts[currentSegmentOffset].x, verts[currentSegmentOffset].y, u0, 1);
+                    dst++;
+                    nvg__vset(ref verts[dst], verts[currentSegmentOffset + 1].x, verts[currentSegmentOffset + 1].y, u1, 1);
+                    dst++;
                 }
                 else
                 {
                     // Add cap
-                    dx = p1.x - p0.x;
-                    dy = p1.y - p0.y;
+                    dx = pts[p1].x - pts[p0].x;
+                    dy = pts[p1].y - pts[p0].y;
                     nvg__normalize(ref dx, ref dy);
                     if (lineCap == nvgLineCap.NVG_BUTT)
                     {
-                        dst = nvg__buttCapEnd(ref dst, ref p1, dx, dy, w, -aa * 0.5f, aa, u0, u1);
+                        nvg__buttCapEnd(verts, ref dst, ref pts[p1], dx, dy, w, -aa * 0.5f, aa, u0, u1);
                     }
                     else if (lineCap == nvgLineCap.NVG_BUTT || lineCap == nvgLineCap.NVG_SQUARE)
                     {
-                        dst = nvg__buttCapEnd(ref dst, ref p1, dx, dy, w, w - aa, aa, u0, u1);
+                        nvg__buttCapEnd(verts, ref dst, ref pts[p1], dx, dy, w, w - aa, aa, u0, u1);
                     }
                     else if (lineCap == nvgLineCap.NVG_ROUND)
                     {
-                        dst = nvg__roundCapEnd(ref dst, ref p1, dx, dy, w, ncap, aa, u0, u1);
+                        nvg__roundCapEnd(verts, ref dst, ref pts[p1], dx, dy, w, ncap, aa, u0, u1);
                     }
                 }
 
-                path.nstroke = (int)(dst - verts);
-
-                verts = dst;
+                path.stroke = new ArraySegment<Vertex>(verts, currentSegmentOffset, dst - currentSegmentOffset);
+                path.nstroke = dst - currentSegmentOffset;
             }
 
             return 1;
@@ -4038,7 +4047,6 @@ namespace NanoVG
             // resize command array if necessary
             if (ctx.ncommands + nvals > ctx.ccommands)
             {
-                float[] commands;
                 int ccommands = ctx.ncommands + nvals + ctx.ccommands / 2;
                 Array.Resize(ref ctx.commands, ccommands);
                 ctx.ccommands = ccommands;
