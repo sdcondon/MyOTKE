@@ -12,6 +12,8 @@ namespace MyOTKE.Core
     internal sealed class GlVertexBufferObject<T> : IVertexBufferObject<T>, IDisposable
         where T : struct
     {
+        private readonly int elementSize;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GlVertexBufferObject{T}"/> class. SIDE EFFECT: New buffer will be bound to the given target.
         /// </summary>
@@ -24,6 +26,7 @@ namespace MyOTKE.Core
         {
             this.Attributes = GlVertexAttributeInfo.ForType(elementType);
             this.Capacity = elementCapacity;
+            elementSize = Marshal.SizeOf(typeof(T));
 
             this.Id = GL.GenBuffer();
             GL.BindBuffer(target, this.Id); // NB: Side effect - leaves this buffer bound.
@@ -49,7 +52,6 @@ namespace MyOTKE.Core
         {
             get
             {
-                var elementSize = Marshal.SizeOf(typeof(T));
                 T data = default;
                 GL.GetNamedBufferSubData(
                     buffer: Id,
@@ -63,8 +65,8 @@ namespace MyOTKE.Core
             {
                 GL.NamedBufferSubData(
                     buffer: Id,
-                    offset: new IntPtr(index * Marshal.SizeOf(value)),
-                    size: Marshal.SizeOf(value),
+                    offset: new IntPtr(index * elementSize),
+                    size: elementSize,
                     data: ref value);
             }
         }
@@ -72,7 +74,6 @@ namespace MyOTKE.Core
         /// <inheritdoc />
         public void Copy(int readIndex, int writeIndex, int count)
         {
-            var elementSize = Marshal.SizeOf(typeof(T));
             GL.CopyNamedBufferSubData(
                 readBuffer: Id,
                 writeBuffer: Id,

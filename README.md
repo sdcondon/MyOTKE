@@ -8,4 +8,4 @@ Hobbyist mucking about with [the Open Toolkit](https://opentk.net/).
 
 ## Usage
 
-See the [example app code](./src/ExampleApps.WinForms).
+See the [example app code](./src/ExampleApps.GameWindow).
