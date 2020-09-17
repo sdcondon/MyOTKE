@@ -1,4 +1,4 @@
-# My OTK Engine
+# My OpenTK Engine
 
 Hobbyist mucking about with [the Open Toolkit](https://opentk.net/).
 
