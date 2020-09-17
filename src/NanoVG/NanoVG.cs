@@ -816,7 +816,7 @@ namespace NanoVG
         //// Current coordinate system (transformation) can be saved and restored using nvgSave() and nvgRestore().
 
         /// <summary>
-        /// Resets current transform to a identity matrix.
+        /// Resets current transform to the identity matrix.
         /// </summary>
         /// <param name="ctx">The context to use.</param>
         public static void ResetTransform(Context ctx)

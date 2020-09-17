@@ -61,7 +61,7 @@ namespace NanoVG
             GLNVG_LOC_VIEWSIZE,
             GLNVG_LOC_TEX,
             GLNVG_LOC_FRAG,
-            GLNVG_MAX_LOCS
+            GLNVG_MAX_LOCS,
         }
 
         enum GLNVGshaderType
@@ -69,7 +69,7 @@ namespace NanoVG
             NSVG_SHADER_FILLGRAD,
             NSVG_SHADER_FILLIMG,
             NSVG_SHADER_SIMPLE,
-            NSVG_SHADER_IMG
+            NSVG_SHADER_IMG,
         }
 
 #if NANOVG_GL_USE_UNIFORMBUFFER
@@ -83,7 +83,7 @@ namespace NanoVG
             public int prog;
             public int frag;
             public int vert;
-            public int[] loc;//TODO [(int)GLNVGuniformLoc.GLNVG_MAX_LOCS];
+            public int[] loc; // TODO [(int)GLNVGuniformLoc.GLNVG_MAX_LOCS];
         }
 
         struct GLNVGtexture
@@ -153,7 +153,7 @@ namespace NanoVG
         class GLNVGcontext
         {
             public GLNVGshader shader;
-            public float[] view;//[2];
+            public float[] view; //TODO [2];
 
             public GLNVGtexture[] textures;
             public int ntextures;
@@ -277,8 +277,10 @@ namespace NanoVG
                 texi = ++gl.ntextures;
             }
 
-            gl.textures[texi] = new GLNVGtexture();
-            gl.textures[texi].id = ++gl.textureId;
+            gl.textures[texi] = new GLNVGtexture
+            {
+                id = ++gl.textureId,
+            };
 
             return ref gl.textures[texi];
         }
