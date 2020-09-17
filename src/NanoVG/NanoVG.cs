@@ -67,10 +67,56 @@ namespace NanoVG
         }
     }
 
+    public struct Extent2D
+    {
+        public float X;
+        public float Y;
+
+        public static implicit operator Extent2D((float x, float y) valueTuple)
+        {
+            return new Extent2D
+            {
+                X = valueTuple.x,
+                Y = valueTuple.y,
+            };
+        }
+    }
+
+    public struct Transform2D
+    {
+        /// <summary>Row 1, column 1 - the coefficient of X in the X component of the output.</summary>
+        public float R1C1;
+
+        /// <summary>Row 2, column 1 - the coefficient of X in the Y component of the output.</summary>
+        public float R2C1;
+
+        /// <summary>Row 1, column 2 - the coefficient of Y in the X component of the output.</summary>
+        public float R1C2;
+
+        /// <summary>Row 2, column 2 - the coefficient of Y in the Y component of the output.</summary>
+        public float R2C2;
+
+        /// <summary>Row 1, column 3 - the constant term in the X component of the output.</summary>
+        public float R1C3;
+
+        /// <summary>Row 2, column 3 - the constant term in the Y component of the output.</summary>
+        public float R2C3;
+
+        public Transform2D(float r1c1, float r2c1, float r1c2, float r2c2, float r1c3, float r2c3)
+        {
+            R1C1 = r1c1;
+            R2C1 = r2c1;
+            R1C2 = r1c2;
+            R2C2 = r2c2;
+            R1C3 = r1c3;
+            R2C3 = r2c3;
+        }
+    }
+
     public struct Paint
     {
-        public float[] xform;//[6]; // TODO
-        public float[] extent;//[2]; // TODO
+        public Transform2D xform;
+        public Extent2D extent;
         public float radius;
         public float feather;
         public Color innerColor;
@@ -106,18 +152,31 @@ namespace NanoVG
         NVG_MITER,
     }
 
+    /// <summary>
+    /// Enumeration of text alignment flags.
+    /// </summary>
     enum Align
     {
-        // Horizontal align
-        NVG_ALIGN_LEFT = 1 << 0, // Default, align text horizontally to left.
-        NVG_ALIGN_CENTER = 1 << 1, // Align text horizontally to center.
-        NVG_ALIGN_RIGHT = 1 << 2, // Align text horizontally to right.
+        /// <summary>Default, align text horizontally to left.</summary>
+        NVG_ALIGN_LEFT = 1 << 0,
 
-        // Vertical align
-        NVG_ALIGN_TOP = 1 << 3, // Align text vertically to top.
-        NVG_ALIGN_MIDDLE = 1 << 4, // Align text vertically to middle.
-        NVG_ALIGN_BOTTOM = 1 << 5, // Align text vertically to bottom.
-        NVG_ALIGN_BASELINE = 1 << 6, // Default, align text vertically to baseline.
+        /// <summary>Align text horizontally to center.</summary>
+        NVG_ALIGN_CENTER = 1 << 1,
+
+        /// <summary>Align text horizontally to right.</summary>
+        NVG_ALIGN_RIGHT = 1 << 2,
+
+        /// <summary>Align text vertically to top.</summary>
+        NVG_ALIGN_TOP = 1 << 3,
+
+        /// <summary>Align text vertically to middle.</summary>
+        NVG_ALIGN_MIDDLE = 1 << 4,
+
+        /// <summary>Align text vertically to bottom.</summary>
+        NVG_ALIGN_BOTTOM = 1 << 5,
+
+        /// <summary>Default, align text vertically to baseline.</summary>
+        NVG_ALIGN_BASELINE = 1 << 6,
     }
 
     public enum BlendFactor
@@ -562,7 +621,7 @@ namespace NanoVG
 
             if (ctx.nstates > 0)
             {
-                memcpy(&ctx->states[ctx->nstates], &ctx->states[ctx->nstates - 1], sizeof(NVGstate)); // todo: value copy!!!
+                ctx.states[ctx.nstates] = ctx.states[ctx.nstates - 1].Clone();
             }
 
             ctx.nstates++;
@@ -600,10 +659,9 @@ namespace NanoVG
             state.lineCap = nvgLineCap.NVG_BUTT;
             state.lineJoin = nvgLineCap.NVG_MITER;
             state.alpha = 1.0f;
-            TransformIdentity(state.xform);
+            TransformIdentity(ref state.xform);
 
-            state.scissor.extent[0] = -1.0f;
-            state.scissor.extent[1] = -1.0f;
+            state.scissor.extent = (-1.0f, -1.0f);
 
             state.fontSize = 16.0f;
             state.letterSpacing = 0.0f;
@@ -654,7 +712,7 @@ namespace NanoVG
         {
             var state = nvg__getState(ctx);
             state.stroke = paint;
-            TransformMultiply(state.stroke.xform, state.xform);
+            TransformMultiply(ref state.stroke.xform, state.xform);
         }
 
         /// <summary>
@@ -677,7 +735,7 @@ namespace NanoVG
         {
             var state = nvg__getState(ctx);
             state.fill = paint;
-            TransformMultiply(state.fill.xform, state.xform);
+            TransformMultiply(ref state.fill.xform, state.xform);
         }
 
         /// <summary>
@@ -764,7 +822,7 @@ namespace NanoVG
         public static void ResetTransform(Context ctx)
         {
             var state = nvg__getState(ctx);
-            TransformIdentity(state.xform);
+            TransformIdentity(ref state.xform);
         }
 
         /// <summary>
@@ -780,8 +838,8 @@ namespace NanoVG
         public static void Transform(Context ctx, float m11, float m21, float m12, float m22, float m13, float m23)
         {
             var state = nvg__getState(ctx);
-            float[] t = { m11, m21, m12, m22, m13, m23 };
-            TransformPremultiply(state.xform, t);
+            var t = new Transform2D(m11, m21, m12, m22, m13, m23);
+            TransformPremultiply(ref state.xform, t);
         }
 
         /// <summary>
@@ -793,9 +851,9 @@ namespace NanoVG
         public static void Translate(Context ctx, float x, float y)
         {
             var state = nvg__getState(ctx);
-            var t = new float[6];
-            TransformTranslate(t, x, y);
-            TransformPremultiply(state.xform, t);
+            var t = new Transform2D();
+            TransformTranslate(ref t, x, y);
+            TransformPremultiply(ref state.xform, t);
         }
 
         /// <summary>
@@ -806,9 +864,9 @@ namespace NanoVG
         public static void Rotate(Context ctx, float angle)
         {
             var state = nvg__getState(ctx);
-            var t = new float[6];
-            TransformRotate(t, angle);
-            TransformPremultiply(state.xform, t);
+            var t = new Transform2D();
+            TransformRotate(ref t, angle);
+            TransformPremultiply(ref state.xform, t);
         }
 
         /// <summary>
@@ -819,9 +877,9 @@ namespace NanoVG
         public static void SkewX(Context ctx, float angle)
         {
             var state = nvg__getState(ctx);
-            var t = new float[6];
-            TransformSkewX(t, angle);
-            TransformPremultiply(state.xform, t);
+            var t = new Transform2D();
+            TransformSkewX(ref t, angle);
+            TransformPremultiply(ref state.xform, t);
         }
 
         /// <summary>
@@ -832,9 +890,9 @@ namespace NanoVG
         public static void SkewY(Context ctx, float angle)
         {
             var state = nvg__getState(ctx);
-            var t = new float[6];
-            TransformSkewY(t, angle);
-            TransformPremultiply(state.xform, t);
+            var t = new Transform2D();
+            TransformSkewY(ref t, angle);
+            TransformPremultiply(ref state.xform, t);
         }
 
         /// <summary>
@@ -846,9 +904,9 @@ namespace NanoVG
         public static void Scale(Context ctx, float x, float y)
         {
             var state = nvg__getState(ctx);
-            var t = new float[6];
-            TransformScale(t, x, y);
-            TransformPremultiply(state.xform, t);
+            var t = new Transform2D();
+            TransformScale(ref t, x, y);
+            TransformPremultiply(ref state.xform, t);
         }
 
         /// <summary>
@@ -856,32 +914,27 @@ namespace NanoVG
         /// </summary>
         /// <param name="ctx">The context to use.</param>
         /// <param name="xform">Buffer to be populated with values of the first two rows of the transform matrix, in column-major order.</param>
-        public static void CurrentTransform(Context ctx, float[] xform)
+        public static void CurrentTransform(Context ctx, Transform2D xform)
         {
             var state = nvg__getState(ctx);
-            if (xform == null)
-            {
-                return;
-            }
-
-            Array.Copy(state.xform, xform, 6);
+            state.xform = xform;
         }
 
         // The following functions can be used to make calculations on 2x3 transformation matrices.
         // A 2x3 matrix is represented as float[6].
 
         /// <summary>
-        /// Sets a matrix buffer to the identity matrix.
+        /// Sets a <see cref="Transform2D"/> to the identity transform.
         /// </summary>
-        /// <param name="dst">The buffer to populate with (the first two rows of) the identity matrix (in column-major order).</param>
-        public static void TransformIdentity(float[] dst)
+        /// <param name="dst">A reference to the transform to populate.</param>
+        public static void TransformIdentity(ref Transform2D dst)
         {
-            dst[0] = 1.0f;
-            dst[1] = 0.0f;
-            dst[2] = 0.0f;
-            dst[3] = 1.0f;
-            dst[4] = 0.0f;
-            dst[5] = 0.0f;
+            dst.R1C1 = 1.0f;
+            dst.R2C1 = 0.0f;
+            dst.R1C2 = 0.0f;
+            dst.R2C2 = 1.0f;
+            dst.R1C3 = 0.0f;
+            dst.R2C3 = 0.0f;
         }
 
         /// <summary>
@@ -890,14 +943,14 @@ namespace NanoVG
         /// <param name="dst">The buffer to populate with (the first two rows of) the translation matrix (in column-major order).</param>
         /// <param name="tx">The x-offset of the translation.</param>
         /// <param name="ty">The y-offset of the translation.</param>
-        public static void TransformTranslate(float[] dst, float tx, float ty)
+        public static void TransformTranslate(ref Transform2D dst, float tx, float ty)
         {
-            dst[0] = 1.0f;
-            dst[1] = 0.0f;
-            dst[2] = 0.0f;
-            dst[3] = 1.0f;
-            dst[4] = tx;
-            dst[5] = ty;
+            dst.R1C1 = 1.0f;
+            dst.R2C1 = 0.0f;
+            dst.R1C2 = 0.0f;
+            dst.R2C2 = 1.0f;
+            dst.R1C3 = tx;
+            dst.R2C3 = ty;
         }
 
         /// <summary>
@@ -906,14 +959,14 @@ namespace NanoVG
         /// <param name="dst">The buffer to populate with (the first two rows of) the scale matrix (in column-major order).</param>
         /// <param name="sx">The scale in the x-direction.</param>
         /// <param name="sy">The scale in the y-direction.</param>
-        public static void TransformScale(float[] dst, float sx, float sy)
+        public static void TransformScale(ref Transform2D dst, float sx, float sy)
         {
-            dst[0] = sx;
-            dst[1] = 0.0f;
-            dst[2] = 0.0f;
-            dst[3] = sy;
-            dst[4] = 0.0f;
-            dst[5] = 0.0f;
+            dst.R1C1 = sx;
+            dst.R2C1 = 0.0f;
+            dst.R1C2 = 0.0f;
+            dst.R2C2 = sy;
+            dst.R1C3 = 0.0f;
+            dst.R2C3 = 0.0f;
         }
 
         /// <summary>
@@ -921,16 +974,16 @@ namespace NanoVG
         /// </summary>
         /// <param name="dst">The buffer to populate with (the first two rows of) the rotation matrix (in column-major order).</param>
         /// <param name="a">The angle (in radians) of the rotation.</param>
-        public static void TransformRotate(float[] dst, float a)
+        public static void TransformRotate(ref Transform2D dst, float a)
         {
             float cs = (float)Math.Cos(a);
             float sn = (float)Math.Sin(a);
-            dst[0] = cs;
-            dst[1] = sn;
-            dst[2] = -sn;
-            dst[3] = cs;
-            dst[4] = 0.0f;
-            dst[5] = 0.0f;
+            dst.R1C1 = cs;
+            dst.R2C1 = sn;
+            dst.R1C2 = -sn;
+            dst.R2C2 = cs;
+            dst.R1C3 = 0.0f;
+            dst.R2C3 = 0.0f;
         }
 
         /// <summary>
@@ -938,14 +991,14 @@ namespace NanoVG
         /// </summary>
         /// <param name="dst">The buffer to populate with (the first two rows of) the skew matrix (in column-major order).</param>
         /// <param name="a">The angle of the skew, in radians.</param>
-        public static void TransformSkewX(float[] dst, float a)
+        public static void TransformSkewX(ref Transform2D dst, float a)
         {
-            dst[0] = 1.0f;
-            dst[1] = 0.0f;
-            dst[2] = (float)Math.Tan(a);
-            dst[3] = 1.0f;
-            dst[4] = 0.0f;
-            dst[5] = 0.0f;
+            dst.R1C1 = 1.0f;
+            dst.R2C1 = 0.0f;
+            dst.R1C2 = (float)Math.Tan(a);
+            dst.R2C2 = 1.0f;
+            dst.R1C3 = 0.0f;
+            dst.R2C3 = 0.0f;
         }
 
         /// <summary>
@@ -953,14 +1006,14 @@ namespace NanoVG
         /// </summary>
         /// <param name="dst">The buffer to populate with (the first two rows of) the skew matrix (in column-major order).</param>
         /// <param name="a">The angle of the skew, in radians.</param>
-        public static void TransformSkewY(float[] dst, float a)
+        public static void TransformSkewY(ref Transform2D dst, float a)
         {
-            dst[0] = 1.0f;
-            dst[1] = (float)Math.Tan(a);
-            dst[2] = 0.0f;
-            dst[3] = 1.0f;
-            dst[4] = 0.0f;
-            dst[5] = 0.0f;
+            dst.R1C1 = 1.0f;
+            dst.R2C1 = (float)Math.Tan(a);
+            dst.R1C2 = 0.0f;
+            dst.R2C2 = 1.0f;
+            dst.R1C3 = 0.0f;
+            dst.R2C3 = 0.0f;
         }
 
         /// <summary>
@@ -968,17 +1021,17 @@ namespace NanoVG
         /// </summary>
         /// <param name="dst">The initial matrix to be updated.</param>
         /// <param name="src">The matrix to multiply <see cref="dst"/> by (on the right).</param>
-        public static void TransformMultiply(float[] dst, float[] src)
+        public static void TransformMultiply(ref Transform2D dst, Transform2D src)
         {
-            float t0 = dst[0] * src[0] + dst[1] * src[2];
-            float t2 = dst[2] * src[0] + dst[3] * src[2];
-            float t4 = dst[4] * src[0] + dst[5] * src[2] + src[4];
-            dst[1] = dst[0] * src[1] + dst[1] * src[3];
-            dst[3] = dst[2] * src[1] + dst[3] * src[3];
-            dst[5] = dst[4] * src[1] + dst[5] * src[3] + src[5];
-            dst[0] = t0;
-            dst[2] = t2;
-            dst[4] = t4;
+            float r1c1 = dst.R1C1 * src.R1C1 + dst.R2C1 * src.R1C2;
+            float r1c2 = dst.R1C2 * src.R1C1 + dst.R2C2 * src.R1C2;
+            float r1c3 = dst.R1C3 * src.R1C1 + dst.R2C3 * src.R1C2 + src.R1C3;
+            dst.R2C1 = dst.R1C1 * src.R2C1 + dst.R2C1 * src.R2C2;
+            dst.R2C2 = dst.R1C2 * src.R2C1 + dst.R2C2 * src.R2C2;
+            dst.R2C3 = dst.R1C3 * src.R2C1 + dst.R2C3 * src.R2C2 + src.R2C3;
+            dst.R1C1 = r1c1;
+            dst.R1C2 = r1c2;
+            dst.R1C3 = r1c3;
         }
 
         /// <summary>
@@ -986,12 +1039,11 @@ namespace NanoVG
         /// </summary>
         /// <param name="dst">The initial matrix to be updated.</param>
         /// <param name="src">The matrix to multiply <see cref="dst"/> by (on the left).</param>
-        public static void TransformPremultiply(float[] dst, float[] src)
+        public static void TransformPremultiply(ref Transform2D dst, Transform2D src)
         {
-            float[] s2 = new float[6];
-            Array.Copy(src, s2, 6);
-            TransformMultiply(s2, dst);
-            Array.Copy(s2, dst, 6);
+            var s2 = src;
+            TransformMultiply(ref s2, dst);
+            dst = s2;
         }
 
         /// <summary>
@@ -1000,23 +1052,23 @@ namespace NanoVG
         /// <param name="dst">The buffer to populate with the (first two rows of the) inverse matrix (in column-major order).</param>
         /// <param name="src">The (first two rows of the) transform matrix (in column-major order).</param>
         /// <returns>1 if the inverse could be calculated, else 0.</returns>
-        public static int TransformInverse(float[] dst, float[] src)
+        public static int TransformInverse(ref Transform2D dst, Transform2D src)
         {
             //// TODO: rename to 'Try..' & return a boolean
-            double invdet, det = (double)src[0] * src[3] - (double)src[2] * src[1];
+            double invdet, det = (double)src.R1C1 * src.R2C2 - (double)src.R1C2 * src.R2C1;
             if (det > -1e-6 && det < 1e-6)
             {
-                TransformIdentity(dst);
+                TransformIdentity(ref dst);
                 return 0;
             }
 
             invdet = 1.0 / det;
-            dst[0] = (float)(src[3] * invdet);
-            dst[2] = (float)(-src[2] * invdet);
-            dst[4] = (float)(((double)src[2] * src[5] - (double)src[3] * src[4]) * invdet);
-            dst[1] = (float)(-src[1] * invdet);
-            dst[3] = (float)(src[0] * invdet);
-            dst[5] = (float)(((double)src[1] * src[4] - (double)src[0] * src[5]) * invdet);
+            dst.R1C1 = (float)(src.R2C2 * invdet);
+            dst.R1C2 = (float)(-src.R1C2 * invdet);
+            dst.R1C3 = (float)(((double)src.R1C2 * src.R2C3 - (double)src.R2C2 * src.R1C3) * invdet);
+            dst.R2C1 = (float)(-src.R2C1 * invdet);
+            dst.R2C2 = (float)(src.R1C1 * invdet);
+            dst.R2C3 = (float)(((double)src.R2C1 * src.R1C3 - (double)src.R1C1 * src.R2C3) * invdet);
             return 1;
         }
 
@@ -1028,10 +1080,10 @@ namespace NanoVG
         /// <param name="t">The transformation matrix.</param>
         /// <param name="sx">The x-ordinate of the source point.</param>
         /// <param name="sy">The y-ordinate of the source point.</param>
-        public static void TransformPoint(out float dx, out float dy, float[] t, float sx, float sy)
+        public static void TransformPoint(out float dx, out float dy, Transform2D t, float sx, float sy)
         {
-            dx = sx * t[0] + sy * t[2] + t[4];
-            dy = sx * t[1] + sy * t[3] + t[5];
+            dx = sx * t.R1C1 + sy * t.R1C2 + t.R1C3;
+            dy = sx * t.R2C1 + sy * t.R2C2 + t.R2C3;
         }
 
         /// <summary>
@@ -1198,15 +1250,15 @@ namespace NanoVG
                 dy = 1;
             }
 
-            p.xform[0] = dy;
-            p.xform[1] = -dx;
-            p.xform[2] = dx;
-            p.xform[3] = dy;
-            p.xform[4] = sx - dx * large;
-            p.xform[5] = sy - dy * large;
+            p.xform.R1C1 = dy;
+            p.xform.R2C1 = -dx;
+            p.xform.R1C2 = dx;
+            p.xform.R2C2 = dy;
+            p.xform.R1C3 = sx - dx * large;
+            p.xform.R2C3 = sy - dy * large;
 
-            p.extent[0] = large;
-            p.extent[1] = large + d * 0.5f;
+            p.extent.X = large;
+            p.extent.Y = large + d * 0.5f;
 
             p.radius = 0.0f;
 
@@ -1238,12 +1290,12 @@ namespace NanoVG
         {
             Paint p = new Paint();
 
-            TransformIdentity(p.xform);
-            p.xform[4] = x + w * 0.5f;
-            p.xform[5] = y + h * 0.5f;
+            TransformIdentity(ref p.xform);
+            p.xform.R1C3 = x + w * 0.5f;
+            p.xform.R2C3 = y + h * 0.5f;
 
-            p.extent[0] = w * 0.5f;
-            p.extent[1] = h * 0.5f;
+            p.extent.X = w * 0.5f;
+            p.extent.Y = h * 0.5f;
 
             p.radius = r;
 
@@ -1274,12 +1326,12 @@ namespace NanoVG
             float r = (inr + outr) * 0.5f;
             float f = outr - inr;
 
-            TransformIdentity(p.xform);
-            p.xform[4] = cx;
-            p.xform[5] = cy;
+            TransformIdentity(ref p.xform);
+            p.xform.R1C3 = cx;
+            p.xform.R2C3 = cy;
 
-            p.extent[0] = r;
-            p.extent[1] = r;
+            p.extent.X = r;
+            p.extent.Y = r;
 
             p.radius = r;
 
@@ -1287,7 +1339,7 @@ namespace NanoVG
 
             p.innerColor = icol;
             p.outerColor = ocol;
- 
+
             return p;
         }
 
@@ -1309,12 +1361,12 @@ namespace NanoVG
         {
             Paint p = new Paint();
 
-            TransformRotate(p.xform, angle);
-            p.xform[4] = cx;
-            p.xform[5] = cy;
+            TransformRotate(ref p.xform, angle);
+            p.xform.R1C3 = cx;
+            p.xform.R2C3 = cy;
 
-            p.extent[0] = w;
-            p.extent[1] = h;
+            p.extent.X = w;
+            p.extent.Y = h;
 
             p.image = image;
 
@@ -1347,13 +1399,13 @@ namespace NanoVG
             w = Math.Max(0.0f, w);
             h = Math.Max(0.0f, h);
 
-            TransformIdentity(state.scissor.xform);
-            state.scissor.xform[4] = x + w * 0.5f;
-            state.scissor.xform[5] = y + h * 0.5f;
-            TransformMultiply(state.scissor.xform, state.xform);
+            TransformIdentity(ref state.scissor.xform);
+            state.scissor.xform.R1C3 = x + w * 0.5f;
+            state.scissor.xform.R2C3 = y + h * 0.5f;
+            TransformMultiply(ref state.scissor.xform, state.xform);
 
-            state.scissor.extent[0] = w * 0.5f;
-            state.scissor.extent[1] = h * 0.5f;
+            state.scissor.extent.X = w * 0.5f;
+            state.scissor.extent.Y = h * 0.5f;
         }
 
         /// <summary>
@@ -1372,13 +1424,13 @@ namespace NanoVG
         public static void IntersectScissor(Context ctx, float x, float y, float w, float h)
         {
             var state = nvg__getState(ctx);
-            float[] pxform = new float[6];
-            float[] invxorm = new float[6];
+            Transform2D pxform = new Transform2D();
+            Transform2D invxorm = new Transform2D();
             float[] rect = new float[4];
             float ex, ey, tex, tey;
 
             // If no previous scissor has been set, set the scissor as current scissor.
-            if (state.scissor.extent[0] < 0)
+            if (state.scissor.extent.X < 0)
             {
                 Scissor(ctx, x, y, w, h);
                 return;
@@ -1386,16 +1438,16 @@ namespace NanoVG
 
             // Transform the current scissor rect into current transform space.
             // If there is difference in rotation, this will be approximation.
-            Array.Copy(state.scissor.xform, pxform, 6);
-            ex = state.scissor.extent[0];
-            ey = state.scissor.extent[1];
-            TransformInverse(invxorm, state.xform);
-            TransformMultiply(pxform, invxorm);
-            tex = ex * Math.Abs(pxform[0]) + ey * Math.Abs(pxform[2]);
-            tey = ex * Math.Abs(pxform[1]) + ey * Math.Abs(pxform[3]);
+            pxform = state.scissor.xform;
+            ex = state.scissor.extent.X;
+            ey = state.scissor.extent.Y;
+            TransformInverse(ref invxorm, state.xform);
+            TransformMultiply(ref pxform, invxorm);
+            tex = ex * Math.Abs(pxform.R1C1) + ey * Math.Abs(pxform.R1C2);
+            tey = ex * Math.Abs(pxform.R2C1) + ey * Math.Abs(pxform.R2C2);
 
             // Intersect rects.
-            nvg__isectRects(rect, pxform[4] - tex, pxform[5] - tey, tex * 2, tey * 2, x, y, w, h);
+            nvg__isectRects(rect, pxform.R1C3 - tex, pxform.R2C3 - tey, tex * 2, tey * 2, x, y, w, h);
             Scissor(ctx, rect[0], rect[1], rect[2], rect[3]);
         }
 
@@ -1406,9 +1458,8 @@ namespace NanoVG
         public static void ResetScissor(Context ctx)
         {
             var state = nvg__getState(ctx);
-            Array.Clear(state.scissor.xform, 0, state.scissor.xform.Length);
-            state.scissor.extent[0] = -1.0f;
-            state.scissor.extent[1] = -1.0f;
+            state.scissor.xform = default;
+            state.scissor.extent = (-1.0f, -1.0f);
         }
 
         #endregion
@@ -2578,8 +2629,8 @@ namespace NanoVG
 
         internal struct nvgScissor
         {
-            public float[] xform;//[6]; // TODO Transform2D struct
-            public float[] extent;//[2]; // TODO Vector2F struct
+            public Transform2D xform;
+            public Extent2D extent; // todo: needed? xform could be implicitly of unit square..
         }
 
         internal struct Vertex
@@ -2616,7 +2667,7 @@ namespace NanoVG
 
             public delegate void RenderFlush(object uptr);
 
-            public delegate void RenderFill(object uptr, ref Paint paint, CompositeOperationState compositeOperation, ref nvgScissor scissor, float fringe, float[] bounds, Path[] paths, int npaths);
+            public delegate void RenderFill(object uptr, ref Paint paint, CompositeOperationState compositeOperation, ref nvgScissor scissor, float fringe, Bounds2D bounds, Path[] paths, int npaths);
 
             public delegate void RenderStroke(object uptr, ref Paint paint, CompositeOperationState compositeOperation, ref nvgScissor scissor, float fringe, float strokeWidth, Path[] paths, int npaths);
 
@@ -2884,6 +2935,7 @@ namespace NanoVG
 
             public ArraySegment<Vertex> stroke;
             public int nstroke;
+
             public Winding winding;
             public bool convex;
         }
@@ -2902,7 +2954,23 @@ namespace NanoVG
             public int nverts;
             public int cverts;
 
-            public float[] bounds;//[4]
+            public Bounds2D bounds;
+        }
+
+        internal struct Bounds2D
+        {
+            public float MinX;
+            public float MinY;
+            public float MaxX;
+            public float MaxY;
+
+            public Bounds2D(float minX, float minY, float maxX, float maxY)
+            {
+                MinX = minX;
+                MinY = minY;
+                MaxX = maxX;
+                MaxY = maxY;
+            }
         }
 
         private static void nvg__clearPathCache(Context ctx)
@@ -3019,8 +3087,8 @@ namespace NanoVG
                 }
             }
 
-            cache.bounds[0] = cache.bounds[1] = 1e6f;
-            cache.bounds[2] = cache.bounds[3] = -1e6f;
+            cache.bounds.MinX = cache.bounds.MinY = 1e6f;
+            cache.bounds.MaxX = cache.bounds.MaxY = -1e6f;
 
             // Calculate the direction and length of line segments.
             for (int j = 0; j < cache.npaths; j++)
@@ -3061,10 +3129,10 @@ namespace NanoVG
                     pts[p0].len = nvg__normalize(ref pts[p0].dx, ref pts[p0].dy);
 
                     // Update bounds
-                    cache.bounds[0] = Math.Min(cache.bounds[0], pts[p0].x);
-                    cache.bounds[1] = Math.Min(cache.bounds[1], pts[p0].y);
-                    cache.bounds[2] = Math.Max(cache.bounds[2], pts[p0].x);
-                    cache.bounds[3] = Math.Max(cache.bounds[3], pts[p0].y);
+                    cache.bounds.MinX = Math.Min(cache.bounds.MinX, pts[p0].x);
+                    cache.bounds.MinY = Math.Min(cache.bounds.MinY, pts[p0].y);
+                    cache.bounds.MaxX = Math.Max(cache.bounds.MaxX, pts[p0].x);
+                    cache.bounds.MaxY = Math.Max(cache.bounds.MaxY, pts[p0].y);
 
                     // Advance
                     p0 = p1++;
@@ -4012,17 +4080,18 @@ namespace NanoVG
             return ctx.states[ctx.nstates - 1];
         }
 
-        private static float nvg__getAverageScale(float[] t)
+        private static float nvg__getAverageScale(Transform2D t)
         {
-            float sx = (float)Math.Sqrt(t[0] * t[0] + t[2] * t[2]);
-            float sy = (float)Math.Sqrt(t[1] * t[1] + t[3] * t[3]);
+            float sx = (float)Math.Sqrt(t.R1C1 * t.R1C1 + t.R1C2 * t.R1C2);
+            float sy = (float)Math.Sqrt(t.R2C1 * t.R2C1 + t.R2C2 * t.R2C2);
             return (sx + sy) * 0.5f;
         }
 
         private static void nvg__setPaintColor(ref Paint p, Color color)
         {
-            p.extent = new float[2];
-            TransformIdentity(p.xform);
+            p.extent.X = 0f;
+            p.extent.Y = 0f;
+            TransformIdentity(ref p.xform);
             p.radius = 0.0f;
             p.feather = 1.0f;
             p.innerColor = color;
@@ -4107,7 +4176,7 @@ namespace NanoVG
             public nvgLineCap lineJoin;
             public nvgLineCap lineCap;
             public float alpha;
-            public float[] xform;//[6]; // TODO Transform2D struct
+            public Transform2D xform;
             public nvgScissor scissor;
             public float fontSize;
             public float letterSpacing;
@@ -4115,6 +4184,11 @@ namespace NanoVG
             public float fontBlur;
             public int textAlign;
             public int fontId;
+
+            public NVGstate Clone()
+            {
+                return (NVGstate)this.MemberwiseClone();
+            }
         }
 
         #endregion
