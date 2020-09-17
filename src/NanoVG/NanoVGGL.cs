@@ -83,7 +83,7 @@ namespace NanoVG
             public int prog;
             public int frag;
             public int vert;
-            public int[] loc;//[(int)GLNVGuniformLoc.GLNVG_MAX_LOCS]; // TODO
+            public int[] loc;//TODO [(int)GLNVGuniformLoc.GLNVG_MAX_LOCS];
         }
 
         struct GLNVGtexture
@@ -135,13 +135,13 @@ namespace NanoVG
 
         struct GLNVGfragUniforms
         {
-            public float[] scissorMat;//[12]; // matrices are actually 3 vec4s
-            public float[] paintMat;//[12];
+            public float[] scissorMat;//TODO [12]; // matrices are actually 3 vec4s
+            public float[] paintMat;//TODO [12];
             public Color innerCol;
             public Color outerCol;
-            public float[] scissorExt;//[2];
-            public float[] scissorScale;//[2];
-            public float[] extent;//[2];
+            public Extent2D scissorExt;
+            public Extent2D scissorScale;
+            public Extent2D extent;
             public float radius;
             public float feather;
             public float strokeMult;
@@ -154,9 +154,11 @@ namespace NanoVG
         {
             public GLNVGshader shader;
             public float[] view;//[2];
+
             public GLNVGtexture[] textures;
             public int ntextures;
             public int ctextures;
+
             public int textureId;
             public uint vertBuf;
 #if NANOVG_GL3
@@ -171,12 +173,15 @@ namespace NanoVG
             public GLNVGcall[] calls;
             public int ccalls;
             public int ncalls;
+
             public GLNVGpath[] paths;
             public int cpaths;
             public int npaths;
+
             public Vertex[] verts;
             public int cverts;
             public int nverts;
+
             public byte[] uniforms;
             public int cuniforms;
             public int nuniforms;
@@ -278,17 +283,19 @@ namespace NanoVG
             return ref gl.textures[texi];
         }
 
-        static ref GLNVGtexture glnvg__findTexture(GLNVGcontext gl, int id)
+        static bool glnvg__findTexture(GLNVGcontext gl, int id, out GLNVGtexture tex)
         {
             for (int i = 0; i < gl.ntextures; i++)
             {
                 if (gl.textures[i].id == id)
                 {
-                    return ref gl.textures[i];
+                    tex = gl.textures[i];
+                    return true;
                 }
             }
 
-            return null;
+            tex = default;
+            return false;
         }
 
         static int glnvg__deleteTexture(GLNVGcontext gl, int id)
@@ -355,7 +362,7 @@ namespace NanoVG
 
             GL.CompileShader(vert);
             GL.GetShader(vert, ShaderParameter.CompileStatus, out var status);
-            if (status != GL_TRUE)
+            if (status != 1/*GL_TRUE*/)
             {
                 glnvg__dumpShaderError(vert, name, "vert");
                 return 0;
@@ -363,7 +370,7 @@ namespace NanoVG
 
             GL.CompileShader(frag);
             GL.GetShader(frag, ShaderParameter.CompileStatus, out status);
-            if (status != GL_TRUE)
+            if (status != 1/*GL_TRUE*/)
             {
                 glnvg__dumpShaderError(frag, name, "frag");
                 return 0;
@@ -377,7 +384,7 @@ namespace NanoVG
 
             GL.LinkProgram(prog);
             GL.GetProgram(prog, GetProgramParameterName.LinkStatus, out status);
-            if (status != GL_TRUE)
+            if (status != 1/*GL_TRUE*/)
             {
                 glnvg__dumpProgramError(prog, name);
                 return 0;
@@ -764,8 +771,7 @@ namespace NanoVG
         static int glnvg__renderUpdateTexture(object cxt, int image, int x, int y, int w, int h, byte[] data)
         {
             GLNVGcontext gl = (GLNVGcontext)cxt;
-            ref GLNVGtexture tex = ref glnvg__findTexture(gl, image);
-            //if (tex == NULL) return 0;
+            if (!glnvg__findTexture(gl, image, out var tex)) return 0;
 
             glnvg__bindTexture(gl, tex.tex);
 
@@ -813,26 +819,29 @@ namespace NanoVG
         static int glnvg__renderGetTextureSize(object cxt, int image, out int w, out int h)
         {
             GLNVGcontext gl = (GLNVGcontext)cxt;
-            ref GLNVGtexture tex = ref glnvg__findTexture(gl, image);
-            //if (tex == NULL) return 0;
+            if (!glnvg__findTexture(gl, image, out var tex))
+            {
+                w = h = 0;
+                return 0;
+            }
 
             w = tex.width;
             h = tex.height;
             return 1;
         }
 
-        static void glnvg__xformToMat3x4(float[] m3, float[] t)
+        static void glnvg__xformToMat3x4(float[] m3, Transform2D t)
         {
-            m3[0] = t[0];
-            m3[1] = t[1];
+            m3[0] = t.R1C1;
+            m3[1] = t.R2C1;
             m3[2] = 0.0f;
             m3[3] = 0.0f;
-            m3[4] = t[2];
-            m3[5] = t[3];
+            m3[4] = t.R1C2;
+            m3[5] = t.R2C2;
             m3[6] = 0.0f;
             m3[7] = 0.0f;
-            m3[8] = t[4];
-            m3[9] = t[5];
+            m3[8] = t.R1C3;
+            m3[9] = t.R2C3;
             m3[10] = 1.0f;
             m3[11] = 0.0f;
         }
@@ -854,53 +863,53 @@ namespace NanoVG
             float fringe,
             float strokeThr)
         {
-            float[] invxform = new float[6];
+            Transform2D invxform = new Transform2D();
 
             frag = new GLNVGfragUniforms();
 
             frag.innerCol = glnvg__premulColor(paint.innerColor);
             frag.outerCol = glnvg__premulColor(paint.outerColor);
 
-            if (scissor.extent[0] < -0.5f || scissor.extent[1] < -0.5f)
+            if (scissor.extent.X < -0.5f || scissor.extent.Y < -0.5f)
             {
                 Array.Clear(frag.scissorMat, 0, frag.scissorMat.Length);
-                frag.scissorExt[0] = 1.0f;
-                frag.scissorExt[1] = 1.0f;
-                frag.scissorScale[0] = 1.0f;
-                frag.scissorScale[1] = 1.0f;
+                frag.scissorExt.X = 1.0f;
+                frag.scissorExt.Y = 1.0f;
+                frag.scissorScale.X = 1.0f;
+                frag.scissorScale.Y = 1.0f;
             }
             else
             {
-                TransformInverse(invxform, scissor.xform);
+                TransformInverse(ref invxform, scissor.xform);
                 glnvg__xformToMat3x4(frag.scissorMat, invxform);
-                frag.scissorExt[0] = scissor.extent[0];
-                frag.scissorExt[1] = scissor.extent[1];
-                frag.scissorScale[0] = (float)Math.Sqrt(scissor.xform[0] * scissor.xform[0] + scissor.xform[2] * scissor.xform[2]) / fringe;
-                frag.scissorScale[1] = (float)Math.Sqrt(scissor.xform[1] * scissor.xform[1] + scissor.xform[3] * scissor.xform[3]) / fringe;
+                frag.scissorExt = scissor.extent;
+                frag.scissorScale.X = (float)Math.Sqrt(scissor.xform.R1C1 * scissor.xform.R1C1 + scissor.xform.R1C2 * scissor.xform.R1C2) / fringe;
+                frag.scissorScale.Y = (float)Math.Sqrt(scissor.xform.R2C1 * scissor.xform.R2C1 + scissor.xform.R2C2 * scissor.xform.R2C2) / fringe;
             }
 
-            Array.Copy(paint.extent, frag.extent, frag.extent.Length);
+            frag.extent = paint.extent;
             frag.strokeMult = (width * 0.5f + fringe * 0.5f) / fringe;
             frag.strokeThr = strokeThr;
 
             if (paint.image != 0)
             {
-                ref var tex = ref glnvg__findTexture(gl, paint.image);
-                //if (tex == NULL) return 0; // todo
+                if (!glnvg__findTexture(gl, paint.image, out var tex)) return 0;
+
                 if (tex.flags.HasFlag(NVGimageFlags.NVG_IMAGE_FLIPY))
                 {
-                    float[] m1 = new float[6], m2 = new float[6];
-                    TransformTranslate(m1, 0.0f, frag.extent[1] * 0.5f);
-                    TransformMultiply(m1, paint.xform);
-                    TransformScale(m2, 1.0f, -1.0f);
-                    TransformMultiply(m2, m1);
-                    TransformTranslate(m1, 0.0f, -frag.extent[1] * 0.5f);
-                    TransformMultiply(m1, m2);
-                    TransformInverse(invxform, m1);
+                    Transform2D m1 = new Transform2D();
+                    Transform2D m2 = new Transform2D();
+                    TransformTranslate(ref m1, 0.0f, frag.extent.Y * 0.5f);
+                    TransformMultiply(ref m1, paint.xform);
+                    TransformScale(ref m2, 1.0f, -1.0f);
+                    TransformMultiply(ref m2, m1);
+                    TransformTranslate(ref m1, 0.0f, -frag.extent.Y * 0.5f);
+                    TransformMultiply(ref m1, m2);
+                    TransformInverse(ref invxform, m1);
                 }
                 else
                 {
-                    TransformInverse(invxform, paint.xform);
+                    TransformInverse(ref invxform, paint.xform);
                 }
 
                 frag.type = GLNVGshaderType.NSVG_SHADER_FILLIMG;
@@ -927,7 +936,7 @@ namespace NanoVG
                 frag.type = GLNVGshaderType.NSVG_SHADER_FILLGRAD;
                 frag.radius = paint.radius;
                 frag.feather = paint.feather;
-                TransformInverse(invxform, paint.xform);
+                TransformInverse(ref invxform, paint.xform);
             }
 
             glnvg__xformToMat3x4(frag.paintMat, invxform);
@@ -938,7 +947,12 @@ namespace NanoVG
         static void glnvg__setUniforms(GLNVGcontext gl, int uniformOffset, int image)
         {
 #if NANOVG_GL_USE_UNIFORMBUFFER
-            GL.BindBufferRange(BufferRangeTarget.UniformBuffer, (int)GLNVGuniformBindings.GLNVG_FRAG_BINDING, gl.fragBuf, uniformOffset, sizeof(GLNVGfragUniforms));
+            GL.BindBufferRange(
+                target: BufferRangeTarget.UniformBuffer,
+                index: (int)GLNVGuniformBindings.GLNVG_FRAG_BINDING,
+                buffer: gl.fragBuf,
+                offset: uniformOffset,
+                size: sizeof(GLNVGfragUniforms));
 #else
             GLNVGfragUniforms* frag = nvg__fragUniformPtr(gl, uniformOffset);
             GL.Uniform4fv(gl->shader.loc[GLNVG_LOC_FRAG], NANOVG_GL_UNIFORMARRAY_SIZE, &(frag->uniformArray[0][0]));
@@ -946,8 +960,8 @@ namespace NanoVG
 
             if (image != 0)
             {
-                ref GLNVGtexture tex = ref glnvg__findTexture(gl, image);
-                glnvg__bindTexture(gl, tex != null ? tex.tex : 0);
+                var foundtex = glnvg__findTexture(gl, image, out var tex);
+                glnvg__bindTexture(gl, foundtex ? tex.tex : 0);
                 glnvg__checkError(gl, "tex paint tex");
             }
             else
@@ -1108,30 +1122,58 @@ namespace NanoVG
             gl.nuniforms = 0;
         }
 
-        static BlendingFactor glnvg_convertBlendFuncFactor(BlendFactor factor)
+        static BlendingFactorSrc glnvg_convertBlendFuncFactorSrc(BlendFactor factor)
         {
             if (factor == BlendFactor.NVG_ZERO)
-                return BlendingFactor.Zero;
+                return BlendingFactorSrc.Zero;
             if (factor == BlendFactor.NVG_ONE)
-                return BlendingFactor.One;
+                return BlendingFactorSrc.One;
             if (factor == BlendFactor.NVG_SRC_COLOR)
-                return BlendingFactor.SrcColor;
+                return BlendingFactorSrc.SrcColor;
             if (factor == BlendFactor.NVG_ONE_MINUS_SRC_COLOR)
-                return BlendingFactor.OneMinusSrcColor;
+                return BlendingFactorSrc.OneMinusSrcColor;
             if (factor == BlendFactor.NVG_DST_COLOR)
-                return BlendingFactor.DstColor;
+                return BlendingFactorSrc.DstColor;
             if (factor == BlendFactor.NVG_ONE_MINUS_DST_COLOR)
-                return BlendingFactor.OneMinusDstColor;
+                return BlendingFactorSrc.OneMinusDstColor;
             if (factor == BlendFactor.NVG_SRC_ALPHA)
-                return BlendingFactor.SrcAlpha;
+                return BlendingFactorSrc.SrcAlpha;
             if (factor == BlendFactor.NVG_ONE_MINUS_SRC_ALPHA)
-                return BlendingFactor.OneMinusSrcAlpha;
+                return BlendingFactorSrc.OneMinusSrcAlpha;
             if (factor == BlendFactor.NVG_DST_ALPHA)
-                return BlendingFactor.DstAlpha;
+                return BlendingFactorSrc.DstAlpha;
             if (factor == BlendFactor.NVG_ONE_MINUS_DST_ALPHA)
-                return BlendingFactor.OneMinusDstAlpha;
+                return BlendingFactorSrc.OneMinusDstAlpha;
             if (factor == BlendFactor.NVG_SRC_ALPHA_SATURATE)
-                return BlendingFactor.SrcAlphaSaturate;
+                return BlendingFactorSrc.SrcAlphaSaturate;
+            throw new ArgumentException(nameof(factor));
+            //return BlendingFactor.GL_INVALID_ENUM;
+        }
+
+        static BlendingFactorDest glnvg_convertBlendFuncFactorDest(BlendFactor factor)
+        {
+            if (factor == BlendFactor.NVG_ZERO)
+                return BlendingFactorDest.Zero;
+            if (factor == BlendFactor.NVG_ONE)
+                return BlendingFactorDest.One;
+            if (factor == BlendFactor.NVG_SRC_COLOR)
+                return BlendingFactorDest.SrcColor;
+            if (factor == BlendFactor.NVG_ONE_MINUS_SRC_COLOR)
+                return BlendingFactorDest.OneMinusSrcColor;
+            if (factor == BlendFactor.NVG_DST_COLOR)
+                return BlendingFactorDest.DstColor;
+            if (factor == BlendFactor.NVG_ONE_MINUS_DST_COLOR)
+                return BlendingFactorDest.OneMinusDstColor;
+            if (factor == BlendFactor.NVG_SRC_ALPHA)
+                return BlendingFactorDest.SrcAlpha;
+            if (factor == BlendFactor.NVG_ONE_MINUS_SRC_ALPHA)
+                return BlendingFactorDest.OneMinusSrcAlpha;
+            if (factor == BlendFactor.NVG_DST_ALPHA)
+                return BlendingFactorDest.DstAlpha;
+            if (factor == BlendFactor.NVG_ONE_MINUS_DST_ALPHA)
+                return BlendingFactorDest.OneMinusDstAlpha;
+            if (factor == BlendFactor.NVG_SRC_ALPHA_SATURATE)
+                return BlendingFactorDest.SrcAlphaSaturate;
             throw new ArgumentException(nameof(factor));
             //return BlendingFactor.GL_INVALID_ENUM;
         }
@@ -1139,20 +1181,20 @@ namespace NanoVG
         static GLNVGblend glnvg__blendCompositeOperation(CompositeOperationState op)
         {
             GLNVGblend blend;
-            blend.srcRGB = glnvg_convertBlendFuncFactor(op.srcRGB);
-            blend.dstRGB = glnvg_convertBlendFuncFactor(op.dstRGB);
-            blend.srcAlpha = glnvg_convertBlendFuncFactor(op.srcAlpha);
-            blend.dstAlpha = glnvg_convertBlendFuncFactor(op.dstAlpha);
-            if (blend.srcRGB == GL_INVALID_ENUM
-                || blend.dstRGB == GL_INVALID_ENUM
-                || blend.srcAlpha == GL_INVALID_ENUM
-                || blend.dstAlpha == GL_INVALID_ENUM)
-            {
-                blend.srcRGB = GL_ONE;
-                blend.dstRGB = GL_ONE_MINUS_SRC_ALPHA;
-                blend.srcAlpha = GL_ONE;
-                blend.dstAlpha = GL_ONE_MINUS_SRC_ALPHA;
-            }
+            blend.srcRGB = glnvg_convertBlendFuncFactorSrc(op.srcRGB);
+            blend.dstRGB = glnvg_convertBlendFuncFactorDest(op.dstRGB);
+            blend.srcAlpha = glnvg_convertBlendFuncFactorSrc(op.srcAlpha);
+            blend.dstAlpha = glnvg_convertBlendFuncFactorDest(op.dstAlpha);
+            ////if (blend.srcRGB == GL_INVALID_ENUM
+            ////    || blend.dstRGB == GL_INVALID_ENUM
+            ////    || blend.srcAlpha == GL_INVALID_ENUM
+            ////    || blend.dstAlpha == GL_INVALID_ENUM)
+            ////{
+            ////    blend.srcRGB = GL_ONE;
+            ////    blend.dstRGB = GL_ONE_MINUS_SRC_ALPHA;
+            ////    blend.srcAlpha = GL_ONE;
+            ////    blend.dstAlpha = GL_ONE_MINUS_SRC_ALPHA;
+            ////}
 
             return blend;
         }
@@ -1349,7 +1391,7 @@ namespace NanoVG
             CompositeOperationState compositeOperation,
             ref NVG.nvgScissor scissor,
             float fringe,
-            float[] bounds,
+            Bounds2D bounds,
             Path[] paths,
             int npaths)
         {
@@ -1382,7 +1424,7 @@ namespace NanoVG
                 {
                     copy.fillOffset = offset;
                     copy.fillCount = path.nfill;
-                    Array.Copy(path.fill, 0, gl.verts, offset, path.nfill);
+                    Array.Copy(path.fill.Array, path.fill.Offset, gl.verts, offset, path.nfill);
                     offset += path.nfill;
                 }
 
@@ -1390,7 +1432,7 @@ namespace NanoVG
                 {
                     copy.strokeOffset = offset;
                     copy.strokeCount = path.nstroke;
-                    Array.Copy(path.stroke, 0, gl.verts, offset, path.nstroke);
+                    Array.Copy(path.stroke.Array, path.stroke.Offset, gl.verts, offset, path.nstroke);
                     offset += path.nstroke;
                 }
             }
@@ -1401,10 +1443,10 @@ namespace NanoVG
                 // Quad
                 call.triangleOffset = offset;
                 var quad = new Span<Vertex>(gl.verts, call.triangleOffset, 4);
-                glnvg__vset(ref quad[0], bounds[2], bounds[3], 0.5f, 1.0f);
-                glnvg__vset(ref quad[1], bounds[2], bounds[1], 0.5f, 1.0f);
-                glnvg__vset(ref quad[2], bounds[0], bounds[3], 0.5f, 1.0f);
-                glnvg__vset(ref quad[3], bounds[0], bounds[1], 0.5f, 1.0f);
+                glnvg__vset(ref quad[0], bounds.MaxX, bounds.MaxY, 0.5f, 1.0f);
+                glnvg__vset(ref quad[1], bounds.MaxX, bounds.MinY, 0.5f, 1.0f);
+                glnvg__vset(ref quad[2], bounds.MinX, bounds.MaxY, 0.5f, 1.0f);
+                glnvg__vset(ref quad[3], bounds.MinX, bounds.MinY, 0.5f, 1.0f);
 
                 call.uniformOffset = glnvg__allocFragUniforms(gl, 2);
 
@@ -1458,7 +1500,7 @@ namespace NanoVG
                 {
                     copy.strokeOffset = offset;
                     copy.strokeCount = path.nstroke;
-                    Array.Copy(path.stroke, 0, gl.verts, offset, path.nstroke);
+                    Array.Copy(path.stroke.Array, path.stroke.Offset, gl.verts, offset, path.nstroke);
                     offset += path.nstroke;
                 }
             }
@@ -1625,7 +1667,7 @@ namespace NanoVG
 #endif
         {
             GLNVGcontext gl = (GLNVGcontext)NVG.InternalParams(ctx).userPtr;
-            ref GLNVGtexture tex = ref glnvg__findTexture(gl, image);
+            glnvg__findTexture(gl, image, out var tex);
             return tex.tex;
         }
     }
