@@ -4,9 +4,10 @@
     <Company />
     <Product>My Open Toolkit Engine</Product>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/sdcondon/GLHDN</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/sdcondon/GLHDN</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/sdcondon/MyOTKE.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/sdcondon/MyOTKE</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+	<PackageTags>opengl opentk</PackageTags>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
