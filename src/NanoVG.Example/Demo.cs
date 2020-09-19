@@ -19,13 +19,7 @@
 #endif
  */
 
-using OpenTK.Input;
 using System;
-using System.Collections.Generic;
-using System.Numerics;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Text;
 
 namespace NanoVG
 {
@@ -47,14 +41,9 @@ namespace NanoVG
         static float clampf(float a, float mn, float mx) { return a < mn ? mn : (a > mx ? mx : a); }
 
         // Returns 1 if col.rgba is 0.0f,0.0f,0.0f,0.0f, 0 otherwise
-        int isBlack(Color col)
+        static bool isBlack(Color col)
         {
-            if (col.r == 0.0f && col.g == 0.0f && col.b == 0.0f && col.a == 0.0f)
-            {
-                return 1;
-            }
-
-            return 0;
+            return col.R == 0.0f && col.G == 0.0f && col.B == 0.0f && col.A == 0.0f;
         }
 
         static char* cpToUTF8(int cp, char* str)
@@ -79,310 +68,310 @@ namespace NanoVG
             return str;
         }
 
-        void drawWindow(NVGcontext* vg, constchar* title, float x, float y, float w, float h)
+        static void drawWindow(Context vg, string title, float x, float y, float w, float h)
         {
             float cornerRadius = 3.0f;
-            NVGpaint shadowPaint;
-            NVGpaint headerPaint;
+            Paint shadowPaint;
+            Paint headerPaint;
 
-            nvgSave(vg);
+            NVG.Save(vg);
             //	nvgClearState(vg);
 
             // Window
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, x, y, w, h, cornerRadius);
-            nvgFillColor(vg, nvgRGBA(28, 30, 34, 192));
+            NVG.BeginPath(vg);
+            NVG.RoundedRect(vg, x, y, w, h, cornerRadius);
+            NVG.FillColor(vg, NVG.RGBA(28, 30, 34, 192));
             //	nvgFillColor(vg, nvgRGBA(0,0,0,128));
-            nvgFill(vg);
+            NVG.Fill(vg);
 
             // Drop shadow
-            shadowPaint = nvgBoxGradient(vg, x, y + 2, w, h, cornerRadius * 2, 10, nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
-            nvgBeginPath(vg);
-            nvgRect(vg, x - 10, y - 10, w + 20, h + 30);
-            nvgRoundedRect(vg, x, y, w, h, cornerRadius);
-            nvgPathWinding(vg, NVG_HOLE);
-            nvgFillPaint(vg, shadowPaint);
-            nvgFill(vg);
+            shadowPaint = NVG.BoxGradient(vg, x, y + 2, w, h, cornerRadius * 2, 10, NVG.RGBA(0, 0, 0, 128), NVG.RGBA(0, 0, 0, 0));
+            NVG.BeginPath(vg);
+            NVG.Rect(vg, x - 10, y - 10, w + 20, h + 30);
+            NVG.RoundedRect(vg, x, y, w, h, cornerRadius);
+            NVG.PathWinding(vg, Winding.NVG_HOLE);
+            NVG.FillPaint(vg, shadowPaint);
+            NVG.Fill(vg);
 
             // Header
-            headerPaint = nvgLinearGradient(vg, x, y, x, y + 15, nvgRGBA(255, 255, 255, 8), nvgRGBA(0, 0, 0, 16));
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, x + 1, y + 1, w - 2, 30, cornerRadius - 1);
-            nvgFillPaint(vg, headerPaint);
-            nvgFill(vg);
-            nvgBeginPath(vg);
-            nvgMoveTo(vg, x + 0.5f, y + 0.5f + 30);
-            nvgLineTo(vg, x + 0.5f + w - 1, y + 0.5f + 30);
-            nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 32));
-            nvgStroke(vg);
+            headerPaint = NVG.LinearGradient(vg, x, y, x, y + 15, NVG.RGBA(255, 255, 255, 8), NVG.RGBA(0, 0, 0, 16));
+            NVG.BeginPath(vg);
+            NVG.RoundedRect(vg, x + 1, y + 1, w - 2, 30, cornerRadius - 1);
+            NVG.FillPaint(vg, headerPaint);
+            NVG.Fill(vg);
+            NVG.BeginPath(vg);
+            NVG.MoveTo(vg, x + 0.5f, y + 0.5f + 30);
+            NVG.LineTo(vg, x + 0.5f + w - 1, y + 0.5f + 30);
+            NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 32));
+            NVG.Stroke(vg);
 
-            nvgFontSize(vg, 15.0f);
-            nvgFontFace(vg, "sans-bold");
-            nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+            NVG.FontSize(vg, 15.0f);
+            NVG.FontFace(vg, "sans-bold");
+            NVG.TextAlign(vg, Align.NVG_ALIGN_CENTER | Align.NVG_ALIGN_MIDDLE);
 
-            nvgFontBlur(vg, 2);
-            nvgFillColor(vg, nvgRGBA(0, 0, 0, 128));
-            nvgText(vg, x + w / 2, y + 16 + 1, title, NULL);
+            NVG.FontBlur(vg, 2);
+            NVG.FillColor(vg, NVG.RGBA(0, 0, 0, 128));
+            NVG.Text(vg, x + w / 2, y + 16 + 1, title, 0);
 
-            nvgFontBlur(vg, 0);
-            nvgFillColor(vg, nvgRGBA(220, 220, 220, 160));
-            nvgText(vg, x + w / 2, y + 16, title, NULL);
+            NVG.FontBlur(vg, 0);
+            NVG.FillColor(vg, NVG.RGBA(220, 220, 220, 160));
+            NVG.Text(vg, x + w / 2, y + 16, title, 0);
 
-            nvgRestore(vg);
+            NVG.Restore(vg);
         }
 
-        void drawSearchBox(NVGcontext* vg, constchar* text, float x, float y, float w, float h)
+        static void drawSearchBox(Context vg, string text, float x, float y, float w, float h)
         {
-            NVGpaint bg;
+            Paint bg;
             char icon[8];
             float cornerRadius = h / 2 - 1;
 
             // Edit
-            bg = nvgBoxGradient(vg, x, y + 1.5f, w, h, h / 2, 5, nvgRGBA(0, 0, 0, 16), nvgRGBA(0, 0, 0, 92));
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, x, y, w, h, cornerRadius);
-            nvgFillPaint(vg, bg);
-            nvgFill(vg);
+            bg = NVG.BoxGradient(vg, x, y + 1.5f, w, h, h / 2, 5, NVG.RGBA(0, 0, 0, 16), NVG.RGBA(0, 0, 0, 92));
+            NVG.BeginPath(vg);
+            NVG.RoundedRect(vg, x, y, w, h, cornerRadius);
+            NVG.FillPaint(vg, bg);
+            NVG.Fill(vg);
 
             /*	nvgBeginPath(vg);
                 nvgRoundedRect(vg, x+0.5f,y+0.5f, w-1,h-1, cornerRadius-0.5f);
                 nvgStrokeColor(vg, nvgRGBA(0,0,0,48));
                 nvgStroke(vg);*/
 
-            nvgFontSize(vg, h * 1.3f);
-            nvgFontFace(vg, "icons");
-            nvgFillColor(vg, nvgRGBA(255, 255, 255, 64));
-            nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-            nvgText(vg, x + h * 0.55f, y + h * 0.55f, cpToUTF8(ICON_SEARCH, icon), NULL);
+            NVG.FontSize(vg, h * 1.3f);
+            NVG.FontFace(vg, "icons");
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 64));
+            NVG.TextAlign(vg, Align.NVG_ALIGN_CENTER | Align.NVG_ALIGN_MIDDLE);
+            NVG.Text(vg, x + h * 0.55f, y + h * 0.55f, cpToUTF8(ICON_SEARCH, icon), 0);
 
-            nvgFontSize(vg, 17.0f);
-            nvgFontFace(vg, "sans");
-            nvgFillColor(vg, nvgRGBA(255, 255, 255, 32));
+            NVG.FontSize(vg, 17.0f);
+            NVG.FontFace(vg, "sans");
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 32));
 
-            nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-            nvgText(vg, x + h * 1.05f, y + h * 0.5f, text, NULL);
+            NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
+            NVG.Text(vg, x + h * 1.05f, y + h * 0.5f, text, 0);
 
-            nvgFontSize(vg, h * 1.3f);
-            nvgFontFace(vg, "icons");
-            nvgFillColor(vg, nvgRGBA(255, 255, 255, 32));
-            nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-            nvgText(vg, x + w - h * 0.55f, y + h * 0.55f, cpToUTF8(ICON_CIRCLED_CROSS, icon), NULL);
+            NVG.FontSize(vg, h * 1.3f);
+            NVG.FontFace(vg, "icons");
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 32));
+            NVG.TextAlign(vg, Align.NVG_ALIGN_CENTER | Align.NVG_ALIGN_MIDDLE);
+            NVG.Text(vg, x + w - h * 0.55f, y + h * 0.55f, cpToUTF8(ICON_CIRCLED_CROSS, icon), 0);
         }
 
-        void drawDropDown(NVGcontext* vg, constchar* text, float x, float y, float w, float h)
+        static void drawDropDown(Context vg, string text, float x, float y, float w, float h)
         {
-            NVGpaint bg;
+            Paint bg;
             char icon[8];
             float cornerRadius = 4.0f;
 
-            bg = nvgLinearGradient(vg, x, y, x, y + h, nvgRGBA(255, 255, 255, 16), nvgRGBA(0, 0, 0, 16));
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, x + 1, y + 1, w - 2, h - 2, cornerRadius - 1);
-            nvgFillPaint(vg, bg);
-            nvgFill(vg);
+            bg = NVG.LinearGradient(vg, x, y, x, y + h, NVG.RGBA(255, 255, 255, 16), NVG.RGBA(0, 0, 0, 16));
+            NVG.BeginPath(vg);
+            NVG.RoundedRect(vg, x + 1, y + 1, w - 2, h - 2, cornerRadius - 1);
+            NVG.FillPaint(vg, bg);
+            NVG.Fill(vg);
 
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, cornerRadius - 0.5f);
-            nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 48));
-            nvgStroke(vg);
+            NVG.BeginPath(vg);
+            NVG.RoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, cornerRadius - 0.5f);
+            NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 48));
+            NVG.Stroke(vg);
 
-            nvgFontSize(vg, 17.0f);
-            nvgFontFace(vg, "sans");
-            nvgFillColor(vg, nvgRGBA(255, 255, 255, 160));
-            nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-            nvgText(vg, x + h * 0.3f, y + h * 0.5f, text, NULL);
+            NVG.FontSize(vg, 17.0f);
+            NVG.FontFace(vg, "sans");
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 160));
+            NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
+            NVG.Text(vg, x + h * 0.3f, y + h * 0.5f, text, 0);
 
-            nvgFontSize(vg, h * 1.3f);
-            nvgFontFace(vg, "icons");
-            nvgFillColor(vg, nvgRGBA(255, 255, 255, 64));
-            nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-            nvgText(vg, x + w - h * 0.5f, y + h * 0.5f, cpToUTF8(ICON_CHEVRON_RIGHT, icon), NULL);
+            NVG.FontSize(vg, h * 1.3f);
+            NVG.FontFace(vg, "icons");
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 64));
+            NVG.TextAlign(vg, Align.NVG_ALIGN_CENTER | Align.NVG_ALIGN_MIDDLE);
+            NVG.Text(vg, x + w - h * 0.5f, y + h * 0.5f, cpToUTF8(ICON_CHEVRON_RIGHT, icon), 0);
         }
 
-        void drawLabel(NVGcontext* vg, constchar* text, float x, float y, float w, float h)
+        static void drawLabel(Context vg, string text, float x, float y, float w, float h)
         {
-            NVG_NOTUSED(w);
+            //NVG_NOTUSED(w);
 
-            nvgFontSize(vg, 15.0f);
-            nvgFontFace(vg, "sans");
-            nvgFillColor(vg, nvgRGBA(255, 255, 255, 128));
+            NVG.FontSize(vg, 15.0f);
+            NVG.FontFace(vg, "sans");
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 128));
 
-            nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-            nvgText(vg, x, y + h * 0.5f, text, NULL);
+            NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
+            NVG.Text(vg, x, y + h * 0.5f, text, 0);
         }
 
-        void drawEditBoxBase(NVGcontext* vg, float x, float y, float w, float h)
+        static void drawEditBoxBase(Context vg, float x, float y, float w, float h)
         {
-            NVGpaint bg;
+            Paint bg;
             // Edit
-            bg = nvgBoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, nvgRGBA(255, 255, 255, 32), nvgRGBA(32, 32, 32, 32));
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, x + 1, y + 1, w - 2, h - 2, 4 - 1);
-            nvgFillPaint(vg, bg);
-            nvgFill(vg);
+            bg = NVG.BoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, NVG.RGBA(255, 255, 255, 32), NVG.RGBA(32, 32, 32, 32));
+            NVG.BeginPath(vg);
+            NVG.RoundedRect(vg, x + 1, y + 1, w - 2, h - 2, 4 - 1);
+            NVG.FillPaint(vg, bg);
+            NVG.Fill(vg);
 
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, 4 - 0.5f);
-            nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 48));
-            nvgStroke(vg);
+            NVG.BeginPath(vg);
+            NVG.RoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, 4 - 0.5f);
+            NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 48));
+            NVG.Stroke(vg);
         }
 
-        void drawEditBox(NVGcontext* vg, constchar* text, float x, float y, float w, float h)
+        static void drawEditBox(Context vg, string text, float x, float y, float w, float h)
         {
-
             drawEditBoxBase(vg, x, y, w, h);
 
-            nvgFontSize(vg, 17.0f);
-            nvgFontFace(vg, "sans");
-            nvgFillColor(vg, nvgRGBA(255, 255, 255, 64));
-            nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-            nvgText(vg, x + h * 0.3f, y + h * 0.5f, text, NULL);
+            NVG.FontSize(vg, 17.0f);
+            NVG.FontFace(vg, "sans");
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 64));
+            NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
+            NVG.Text(vg, x + h * 0.3f, y + h * 0.5f, text, 0);
         }
 
-        void drawEditBoxNum(NVGcontext* vg, constchar* text, constchar* units, float x, float y, float w, float h)
+        static void drawEditBoxNum(Context vg, string text, string units, float x, float y, float w, float h)
         {
             float uw;
 
             drawEditBoxBase(vg, x, y, w, h);
 
-            uw = nvgTextBounds(vg, 0, 0, units, NULL, NULL);
+            uw = NVG.TextBounds(vg, 0, 0, units, 0, null);
 
-            nvgFontSize(vg, 15.0f);
-            nvgFontFace(vg, "sans");
-            nvgFillColor(vg, nvgRGBA(255, 255, 255, 64));
-            nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
-            nvgText(vg, x + w - h * 0.3f, y + h * 0.5f, units, NULL);
+            NVG.FontSize(vg, 15.0f);
+            NVG.FontFace(vg, "sans");
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 64));
+            NVG.TextAlign(vg, Align.NVG_ALIGN_RIGHT | Align.NVG_ALIGN_MIDDLE);
+            NVG.Text(vg, x + w - h * 0.3f, y + h * 0.5f, units, 0);
 
-            nvgFontSize(vg, 17.0f);
-            nvgFontFace(vg, "sans");
-            nvgFillColor(vg, nvgRGBA(255, 255, 255, 128));
-            nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
-            nvgText(vg, x + w - uw - h * 0.5f, y + h * 0.5f, text, NULL);
+            NVG.FontSize(vg, 17.0f);
+            NVG.FontFace(vg, "sans");
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 128));
+            NVG.TextAlign(vg, Align.NVG_ALIGN_RIGHT | Align.NVG_ALIGN_MIDDLE);
+            NVG.Text(vg, x + w - uw - h * 0.5f, y + h * 0.5f, text, 0);
         }
 
-        void drawCheckBox(NVGcontext* vg, constchar* text, float x, float y, float w, float h)
+        static void drawCheckBox(Context vg, string text, float x, float y, float w, float h)
         {
-            NVGpaint bg;
+            Paint bg;
             char icon[8];
-            NVG_NOTUSED(w);
+            //NVG_NOTUSED(w);
 
-            nvgFontSize(vg, 15.0f);
-            nvgFontFace(vg, "sans");
-            nvgFillColor(vg, nvgRGBA(255, 255, 255, 160));
+            NVG.FontSize(vg, 15.0f);
+            NVG.FontFace(vg, "sans");
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 160));
 
-            nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-            nvgText(vg, x + 28, y + h * 0.5f, text, NULL);
+            NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
+            NVG.Text(vg, x + 28, y + h * 0.5f, text, 0);
 
-            bg = nvgBoxGradient(vg, x + 1, y + (int)(h * 0.5f) - 9 + 1, 18, 18, 3, 3, nvgRGBA(0, 0, 0, 32), nvgRGBA(0, 0, 0, 92));
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, x + 1, y + (int)(h * 0.5f) - 9, 18, 18, 3);
-            nvgFillPaint(vg, bg);
-            nvgFill(vg);
+            bg = NVG.BoxGradient(vg, x + 1, y + (int)(h * 0.5f) - 9 + 1, 18, 18, 3, 3, NVG.RGBA(0, 0, 0, 32), NVG.RGBA(0, 0, 0, 92));
+            NVG.BeginPath(vg);
+            NVG.RoundedRect(vg, x + 1, y + (int)(h * 0.5f) - 9, 18, 18, 3);
+            NVG.FillPaint(vg, bg);
+            NVG.Fill(vg);
 
-            nvgFontSize(vg, 33);
-            nvgFontFace(vg, "icons");
-            nvgFillColor(vg, nvgRGBA(255, 255, 255, 128));
-            nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-            nvgText(vg, x + 9 + 2, y + h * 0.5f, cpToUTF8(ICON_CHECK, icon), NULL);
+            NVG.FontSize(vg, 33);
+            NVG.FontFace(vg, "icons");
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 128));
+            NVG.TextAlign(vg, Align.NVG_ALIGN_CENTER | Align.NVG_ALIGN_MIDDLE);
+            NVG.Text(vg, x + 9 + 2, y + h * 0.5f, cpToUTF8(ICON_CHECK, icon), 0);
         }
 
-        void drawButton(NVGcontext* vg, int preicon, constchar* text, float x, float y, float w, float h, NVGcolor col)
+        static void drawButton(Context vg, int preicon, string text, float x, float y, float w, float h, Color col)
         {
-            NVGpaint bg;
+            Paint bg;
             char icon[8];
             float cornerRadius = 4.0f;
             float tw = 0, iw = 0;
 
-            bg = nvgLinearGradient(vg, x, y, x, y + h, nvgRGBA(255, 255, 255, isBlack(col) ? 16 : 32), nvgRGBA(0, 0, 0, isBlack(col) ? 16 : 32));
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, x + 1, y + 1, w - 2, h - 2, cornerRadius - 1);
+            bg = NVG.LinearGradient(vg, x, y, x, y + h, NVG.RGBA(255, 255, 255, isBlack(col) ? (byte)16 : (byte)32), NVG.RGBA(0, 0, 0, isBlack(col) ? (byte)16 : (byte)32));
+            NVG.BeginPath(vg);
+            NVG.RoundedRect(vg, x + 1, y + 1, w - 2, h - 2, cornerRadius - 1);
             if (!isBlack(col))
             {
-                nvgFillColor(vg, col);
-                nvgFill(vg);
+                NVG.FillColor(vg, col);
+                NVG.Fill(vg);
             }
-            nvgFillPaint(vg, bg);
-            nvgFill(vg);
 
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, cornerRadius - 0.5f);
-            nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 48));
-            nvgStroke(vg);
+            NVG.FillPaint(vg, bg);
+            NVG.Fill(vg);
 
-            nvgFontSize(vg, 17.0f);
-            nvgFontFace(vg, "sans-bold");
-            tw = nvgTextBounds(vg, 0, 0, text, NULL, NULL);
+            NVG.BeginPath(vg);
+            NVG.RoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, cornerRadius - 0.5f);
+            NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 48));
+            NVG.Stroke(vg);
+
+            NVG.FontSize(vg, 17.0f);
+            NVG.FontFace(vg, "sans-bold");
+            tw = NVG.TextBounds(vg, 0, 0, text, 0, null);
             if (preicon != 0)
             {
-                nvgFontSize(vg, h * 1.3f);
-                nvgFontFace(vg, "icons");
-                iw = nvgTextBounds(vg, 0, 0, cpToUTF8(preicon, icon), NULL, NULL);
+                NVG.FontSize(vg, h * 1.3f);
+                NVG.FontFace(vg, "icons");
+                iw = NVG.TextBounds(vg, 0, 0, cpToUTF8(preicon, icon), 0, null);
                 iw += h * 0.15f;
             }
 
             if (preicon != 0)
             {
-                nvgFontSize(vg, h * 1.3f);
-                nvgFontFace(vg, "icons");
-                nvgFillColor(vg, nvgRGBA(255, 255, 255, 96));
-                nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-                nvgText(vg, x + w * 0.5f - tw * 0.5f - iw * 0.75f, y + h * 0.5f, cpToUTF8(preicon, icon), NULL);
+                NVG.FontSize(vg, h * 1.3f);
+                NVG.FontFace(vg, "icons");
+                NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 96));
+                NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
+                NVG.Text(vg, x + w * 0.5f - tw * 0.5f - iw * 0.75f, y + h * 0.5f, cpToUTF8(preicon, icon), 0);
             }
 
-            nvgFontSize(vg, 17.0f);
-            nvgFontFace(vg, "sans-bold");
-            nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-            nvgFillColor(vg, nvgRGBA(0, 0, 0, 160));
-            nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f - 1, text, NULL);
-            nvgFillColor(vg, nvgRGBA(255, 255, 255, 160));
-            nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f, text, NULL);
+            NVG.FontSize(vg, 17.0f);
+            NVG.FontFace(vg, "sans-bold");
+            NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
+            NVG.FillColor(vg, NVG.RGBA(0, 0, 0, 160));
+            NVG.Text(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f - 1, text, 0);
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 160));
+            NVG.Text(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f, text, 0);
         }
 
-        void drawSlider(NVGcontext* vg, float pos, float x, float y, float w, float h)
+        static void drawSlider(Context vg, float pos, float x, float y, float w, float h)
         {
-            NVGpaint bg, knob;
+            Paint bg, knob;
             float cy = y + (int)(h * 0.5f);
             float kr = (int)(h * 0.25f);
 
-            nvgSave(vg);
+            NVG.Save(vg);
             //	nvgClearState(vg);
 
             // Slot
-            bg = nvgBoxGradient(vg, x, cy - 2 + 1, w, 4, 2, 2, nvgRGBA(0, 0, 0, 32), nvgRGBA(0, 0, 0, 128));
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, x, cy - 2, w, 4, 2);
-            nvgFillPaint(vg, bg);
-            nvgFill(vg);
+            bg = NVG.BoxGradient(vg, x, cy - 2 + 1, w, 4, 2, 2, NVG.RGBA(0, 0, 0, 32), NVG.RGBA(0, 0, 0, 128));
+            NVG.BeginPath(vg);
+            NVG.RoundedRect(vg, x, cy - 2, w, 4, 2);
+            NVG.FillPaint(vg, bg);
+            NVG.Fill(vg);
 
             // Knob Shadow
-            bg = nvgRadialGradient(vg, x + (int)(pos * w), cy + 1, kr - 3, kr + 3, nvgRGBA(0, 0, 0, 64), nvgRGBA(0, 0, 0, 0));
-            nvgBeginPath(vg);
-            nvgRect(vg, x + (int)(pos * w) - kr - 5, cy - kr - 5, kr * 2 + 5 + 5, kr * 2 + 5 + 5 + 3);
-            nvgCircle(vg, x + (int)(pos * w), cy, kr);
-            nvgPathWinding(vg, NVG_HOLE);
-            nvgFillPaint(vg, bg);
-            nvgFill(vg);
+            bg = NVG.RadialGradient(vg, x + (int)(pos * w), cy + 1, kr - 3, kr + 3, NVG.RGBA(0, 0, 0, 64), NVG.RGBA(0, 0, 0, 0));
+            NVG.BeginPath(vg);
+            NVG.Rect(vg, x + (int)(pos * w) - kr - 5, cy - kr - 5, kr * 2 + 5 + 5, kr * 2 + 5 + 5 + 3);
+            NVG.Circle(vg, x + (int)(pos * w), cy, kr);
+            NVG.PathWinding(vg, Winding.NVG_HOLE);
+            NVG.FillPaint(vg, bg);
+            NVG.Fill(vg);
 
             // Knob
-            knob = nvgLinearGradient(vg, x, cy - kr, x, cy + kr, nvgRGBA(255, 255, 255, 16), nvgRGBA(0, 0, 0, 16));
-            nvgBeginPath(vg);
-            nvgCircle(vg, x + (int)(pos * w), cy, kr - 1);
-            nvgFillColor(vg, nvgRGBA(40, 43, 48, 255));
-            nvgFill(vg);
-            nvgFillPaint(vg, knob);
-            nvgFill(vg);
+            knob = NVG.LinearGradient(vg, x, cy - kr, x, cy + kr, NVG.RGBA(255, 255, 255, 16), NVG.RGBA(0, 0, 0, 16));
+            NVG.BeginPath(vg);
+            NVG.Circle(vg, x + (int)(pos * w), cy, kr - 1);
+            NVG.FillColor(vg, NVG.RGBA(40, 43, 48, 255));
+            NVG.Fill(vg);
+            NVG.FillPaint(vg, knob);
+            NVG.Fill(vg);
 
-            nvgBeginPath(vg);
-            nvgCircle(vg, x + (int)(pos * w), cy, kr - 0.5f);
-            nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 92));
-            nvgStroke(vg);
+            NVG.BeginPath(vg);
+            NVG.Circle(vg, x + (int)(pos * w), cy, kr - 0.5f);
+            NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 92));
+            NVG.Stroke(vg);
 
-            nvgRestore(vg);
+            NVG.Restore(vg);
         }
 
-        void drawEyes(NVGcontext* vg, float x, float y, float w, float h, float mx, float my, float t)
+        static void drawEyes(Context vg, float x, float y, float w, float h, float mx, float my, float t)
         {
-            NVGpaint gloss, bg;
+            Paint gloss, bg;
             float ex = w * 0.23f;
             float ey = h * 0.5f;
             float lx = x + ex;
@@ -391,77 +380,83 @@ namespace NanoVG
             float ry = y + ey;
             float dx, dy, d;
             float br = (ex < ey ? ex : ey) * 0.5f;
-            float blink = 1 - pow(sinf(t * 0.5f), 200) * 0.8f;
+            float blink = 1 - (float)Math.Pow(Math.Sin(t * 0.5f), 200) * 0.8f;
 
-            bg = nvgLinearGradient(vg, x, y + h * 0.5f, x + w * 0.1f, y + h, nvgRGBA(0, 0, 0, 32), nvgRGBA(0, 0, 0, 16));
-            nvgBeginPath(vg);
-            nvgEllipse(vg, lx + 3.0f, ly + 16.0f, ex, ey);
-            nvgEllipse(vg, rx + 3.0f, ry + 16.0f, ex, ey);
-            nvgFillPaint(vg, bg);
-            nvgFill(vg);
+            bg = NVG.LinearGradient(vg, x, y + h * 0.5f, x + w * 0.1f, y + h, NVG.RGBA(0, 0, 0, 32), NVG.RGBA(0, 0, 0, 16));
+            NVG.BeginPath(vg);
+            NVG.Ellipse(vg, lx + 3.0f, ly + 16.0f, ex, ey);
+            NVG.Ellipse(vg, rx + 3.0f, ry + 16.0f, ex, ey);
+            NVG.FillPaint(vg, bg);
+            NVG.Fill(vg);
 
-            bg = nvgLinearGradient(vg, x, y + h * 0.25f, x + w * 0.1f, y + h, nvgRGBA(220, 220, 220, 255), nvgRGBA(128, 128, 128, 255));
-            nvgBeginPath(vg);
-            nvgEllipse(vg, lx, ly, ex, ey);
-            nvgEllipse(vg, rx, ry, ex, ey);
-            nvgFillPaint(vg, bg);
-            nvgFill(vg);
-
-            dx = (mx - rx) / (ex * 10);
-            dy = (my - ry) / (ey * 10);
-            d = sqrtf(dx * dx + dy * dy);
-            if (d > 1.0f)
-            {
-                dx /= d; dy /= d;
-            }
-            dx *= ex * 0.4f;
-            dy *= ey * 0.5f;
-            nvgBeginPath(vg);
-            nvgEllipse(vg, lx + dx, ly + dy + ey * 0.25f * (1 - blink), br, br * blink);
-            nvgFillColor(vg, nvgRGBA(32, 32, 32, 255));
-            nvgFill(vg);
+            bg = NVG.LinearGradient(vg, x, y + h * 0.25f, x + w * 0.1f, y + h, NVG.RGBA(220, 220, 220, 255), NVG.RGBA(128, 128, 128, 255));
+            NVG.BeginPath(vg);
+            NVG.Ellipse(vg, lx, ly, ex, ey);
+            NVG.Ellipse(vg, rx, ry, ex, ey);
+            NVG.FillPaint(vg, bg);
+            NVG.Fill(vg);
 
             dx = (mx - rx) / (ex * 10);
             dy = (my - ry) / (ey * 10);
-            d = sqrtf(dx * dx + dy * dy);
+            d = (float)Math.Sqrt(dx * dx + dy * dy);
             if (d > 1.0f)
             {
-                dx /= d; dy /= d;
+                dx /= d;
+                dy /= d;
             }
+
             dx *= ex * 0.4f;
             dy *= ey * 0.5f;
-            nvgBeginPath(vg);
-            nvgEllipse(vg, rx + dx, ry + dy + ey * 0.25f * (1 - blink), br, br * blink);
-            nvgFillColor(vg, nvgRGBA(32, 32, 32, 255));
-            nvgFill(vg);
+            NVG.BeginPath(vg);
+            NVG.Ellipse(vg, lx + dx, ly + dy + ey * 0.25f * (1 - blink), br, br * blink);
+            NVG.FillColor(vg, NVG.RGBA(32, 32, 32, 255));
+            NVG.Fill(vg);
 
-            gloss = nvgRadialGradient(vg, lx - ex * 0.25f, ly - ey * 0.5f, ex * 0.1f, ex * 0.75f, nvgRGBA(255, 255, 255, 128), nvgRGBA(255, 255, 255, 0));
-            nvgBeginPath(vg);
-            nvgEllipse(vg, lx, ly, ex, ey);
-            nvgFillPaint(vg, gloss);
-            nvgFill(vg);
+            dx = (mx - rx) / (ex * 10);
+            dy = (my - ry) / (ey * 10);
+            d = (float)Math.Sqrt(dx * dx + dy * dy);
+            if (d > 1.0f)
+            {
+                dx /= d;
+                dy /= d;
+            }
 
-            gloss = nvgRadialGradient(vg, rx - ex * 0.25f, ry - ey * 0.5f, ex * 0.1f, ex * 0.75f, nvgRGBA(255, 255, 255, 128), nvgRGBA(255, 255, 255, 0));
-            nvgBeginPath(vg);
-            nvgEllipse(vg, rx, ry, ex, ey);
-            nvgFillPaint(vg, gloss);
-            nvgFill(vg);
+            dx *= ex * 0.4f;
+            dy *= ey * 0.5f;
+            NVG.BeginPath(vg);
+            NVG.Ellipse(vg, rx + dx, ry + dy + ey * 0.25f * (1 - blink), br, br * blink);
+            NVG.FillColor(vg, NVG.RGBA(32, 32, 32, 255));
+            NVG.Fill(vg);
+
+            gloss = NVG.RadialGradient(vg, lx - ex * 0.25f, ly - ey * 0.5f, ex * 0.1f, ex * 0.75f, NVG.RGBA(255, 255, 255, 128), NVG.RGBA(255, 255, 255, 0));
+            NVG.BeginPath(vg);
+            NVG.Ellipse(vg, lx, ly, ex, ey);
+            NVG.FillPaint(vg, gloss);
+            NVG.Fill(vg);
+
+            gloss = NVG.RadialGradient(vg, rx - ex * 0.25f, ry - ey * 0.5f, ex * 0.1f, ex * 0.75f, NVG.RGBA(255, 255, 255, 128), NVG.RGBA(255, 255, 255, 0));
+            NVG.BeginPath(vg);
+            NVG.Ellipse(vg, rx, ry, ex, ey);
+            NVG.FillPaint(vg, gloss);
+            NVG.Fill(vg);
         }
 
-        void drawGraph(NVGcontext* vg, float x, float y, float w, float h, float t)
+        static void drawGraph(Context vg, float x, float y, float w, float h, float t)
         {
-            NVGpaint bg;
-            float samples[6];
-            float sx[6], sy[6];
+            Paint bg;
+            float[] samples = new float[]
+            {
+                (1 + (float)Math.Sin(t * 1.2345f + Math.Cos(t * 0.33457f) * 0.44f)) * 0.5f,
+                (1 + (float)Math.Sin(t * 0.68363f + Math.Cos(t * 1.3f) * 1.55f)) * 0.5f,
+                (1 + (float)Math.Sin(t * 1.1642f + Math.Cos(t * 0.33457) * 1.24f)) * 0.5f,
+                (1 + (float)Math.Sin(t * 0.56345f + Math.Cos(t * 1.63f) * 0.14f)) * 0.5f,
+                (1 + (float)Math.Sin(t * 1.6245f + Math.Cos(t * 0.254f) * 0.3f)) * 0.5f,
+                (1 + (float)Math.Sin(t * 0.345f + Math.Cos(t * 0.03f) * 0.6f)) * 0.5f,
+            };
+            float[] sx = new float[6];
+            float[] sy = new float[6];
             float dx = w / 5.0f;
             int i;
-
-            samples[0] = (1 + sinf(t * 1.2345f + cosf(t * 0.33457f) * 0.44f)) * 0.5f;
-            samples[1] = (1 + sinf(t * 0.68363f + cosf(t * 1.3f) * 1.55f)) * 0.5f;
-            samples[2] = (1 + sinf(t * 1.1642f + cosf(t * 0.33457) * 1.24f)) * 0.5f;
-            samples[3] = (1 + sinf(t * 0.56345f + cosf(t * 1.63f) * 0.14f)) * 0.5f;
-            samples[4] = (1 + sinf(t * 1.6245f + cosf(t * 0.254f) * 0.3f)) * 0.5f;
-            samples[5] = (1 + sinf(t * 0.345f + cosf(t * 0.03f) * 0.6f)) * 0.5f;
 
             for (i = 0; i < 6; i++)
             {
@@ -470,121 +465,136 @@ namespace NanoVG
             }
 
             // Graph background
-            bg = nvgLinearGradient(vg, x, y, x, y + h, nvgRGBA(0, 160, 192, 0), nvgRGBA(0, 160, 192, 64));
-            nvgBeginPath(vg);
-            nvgMoveTo(vg, sx[0], sy[0]);
+            bg = NVG.LinearGradient(vg, x, y, x, y + h, NVG.RGBA(0, 160, 192, 0), NVG.RGBA(0, 160, 192, 64));
+            NVG.BeginPath(vg);
+            NVG.MoveTo(vg, sx[0], sy[0]);
             for (i = 1; i < 6; i++)
-                nvgBezierTo(vg, sx[i - 1] + dx * 0.5f, sy[i - 1], sx[i] - dx * 0.5f, sy[i], sx[i], sy[i]);
-            nvgLineTo(vg, x + w, y + h);
-            nvgLineTo(vg, x, y + h);
-            nvgFillPaint(vg, bg);
-            nvgFill(vg);
+            {
+                NVG.BezierTo(vg, sx[i - 1] + dx * 0.5f, sy[i - 1], sx[i] - dx * 0.5f, sy[i], sx[i], sy[i]);
+            }
+
+            NVG.LineTo(vg, x + w, y + h);
+            NVG.LineTo(vg, x, y + h);
+            NVG.FillPaint(vg, bg);
+            NVG.Fill(vg);
 
             // Graph line
-            nvgBeginPath(vg);
-            nvgMoveTo(vg, sx[0], sy[0] + 2);
+            NVG.BeginPath(vg);
+            NVG.MoveTo(vg, sx[0], sy[0] + 2);
             for (i = 1; i < 6; i++)
-                nvgBezierTo(vg, sx[i - 1] + dx * 0.5f, sy[i - 1] + 2, sx[i] - dx * 0.5f, sy[i] + 2, sx[i], sy[i] + 2);
-            nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 32));
-            nvgStrokeWidth(vg, 3.0f);
-            nvgStroke(vg);
+            {
+                NVG.BezierTo(vg, sx[i - 1] + dx * 0.5f, sy[i - 1] + 2, sx[i] - dx * 0.5f, sy[i] + 2, sx[i], sy[i] + 2);
+            }
 
-            nvgBeginPath(vg);
-            nvgMoveTo(vg, sx[0], sy[0]);
+            NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 32));
+            NVG.StrokeWidth(vg, 3.0f);
+            NVG.Stroke(vg);
+
+            NVG.BeginPath(vg);
+            NVG.MoveTo(vg, sx[0], sy[0]);
             for (i = 1; i < 6; i++)
-                nvgBezierTo(vg, sx[i - 1] + dx * 0.5f, sy[i - 1], sx[i] - dx * 0.5f, sy[i], sx[i], sy[i]);
-            nvgStrokeColor(vg, nvgRGBA(0, 160, 192, 255));
-            nvgStrokeWidth(vg, 3.0f);
-            nvgStroke(vg);
+            {
+                NVG.BezierTo(vg, sx[i - 1] + dx * 0.5f, sy[i - 1], sx[i] - dx * 0.5f, sy[i], sx[i], sy[i]);
+            }
+
+            NVG.StrokeColor(vg, NVG.RGBA(0, 160, 192, 255));
+            NVG.StrokeWidth(vg, 3.0f);
+            NVG.Stroke(vg);
 
             // Graph sample pos
             for (i = 0; i < 6; i++)
             {
-                bg = nvgRadialGradient(vg, sx[i], sy[i] + 2, 3.0f, 8.0f, nvgRGBA(0, 0, 0, 32), nvgRGBA(0, 0, 0, 0));
-                nvgBeginPath(vg);
-                nvgRect(vg, sx[i] - 10, sy[i] - 10 + 2, 20, 20);
-                nvgFillPaint(vg, bg);
-                nvgFill(vg);
+                bg = NVG.RadialGradient(vg, sx[i], sy[i] + 2, 3.0f, 8.0f, NVG.RGBA(0, 0, 0, 32), NVG.RGBA(0, 0, 0, 0));
+                NVG.BeginPath(vg);
+                NVG.Rect(vg, sx[i] - 10, sy[i] - 10 + 2, 20, 20);
+                NVG.FillPaint(vg, bg);
+                NVG.Fill(vg);
             }
 
-            nvgBeginPath(vg);
+            NVG.BeginPath(vg);
             for (i = 0; i < 6; i++)
-                nvgCircle(vg, sx[i], sy[i], 4.0f);
-            nvgFillColor(vg, nvgRGBA(0, 160, 192, 255));
-            nvgFill(vg);
-            nvgBeginPath(vg);
-            for (i = 0; i < 6; i++)
-                nvgCircle(vg, sx[i], sy[i], 2.0f);
-            nvgFillColor(vg, nvgRGBA(220, 220, 220, 255));
-            nvgFill(vg);
+            {
+                NVG.Circle(vg, sx[i], sy[i], 4.0f);
+            }
 
-            nvgStrokeWidth(vg, 1.0f);
+            NVG.FillColor(vg, NVG.RGBA(0, 160, 192, 255));
+            NVG.Fill(vg);
+            NVG.BeginPath(vg);
+            for (i = 0; i < 6; i++)
+            {
+                NVG.Circle(vg, sx[i], sy[i], 2.0f);
+            }
+
+            NVG.FillColor(vg, NVG.RGBA(220, 220, 220, 255));
+            NVG.Fill(vg);
+
+            NVG.StrokeWidth(vg, 1.0f);
         }
 
-        void drawSpinner(NVGcontext* vg, float cx, float cy, float r, float t)
+        static void drawSpinner(Context vg, float cx, float cy, float r, float t)
         {
             float a0 = 0.0f + t * 6;
-            float a1 = NVG_PI + t * 6;
+            float a1 = (float)Math.PI + t * 6;
             float r0 = r;
             float r1 = r * 0.75f;
             float ax, ay, bx, by;
-            NVGpaint paint;
+            Paint paint;
 
-            nvgSave(vg);
+            NVG.Save(vg);
 
-            nvgBeginPath(vg);
-            nvgArc(vg, cx, cy, r0, a0, a1, NVG_CW);
-            nvgArc(vg, cx, cy, r1, a1, a0, NVG_CCW);
-            nvgClosePath(vg);
-            ax = cx + cosf(a0) * (r0 + r1) * 0.5f;
-            ay = cy + sinf(a0) * (r0 + r1) * 0.5f;
-            bx = cx + cosf(a1) * (r0 + r1) * 0.5f;
-            by = cy + sinf(a1) * (r0 + r1) * 0.5f;
-            paint = nvgLinearGradient(vg, ax, ay, bx, by, nvgRGBA(0, 0, 0, 0), nvgRGBA(0, 0, 0, 128));
-            nvgFillPaint(vg, paint);
-            nvgFill(vg);
+            NVG.BeginPath(vg);
+            NVG.Arc(vg, cx, cy, r0, a0, a1, Winding.NVG_CW);
+            NVG.Arc(vg, cx, cy, r1, a1, a0, Winding.NVG_CCW);
+            NVG.ClosePath(vg);
+            ax = cx + (float)Math.Cos(a0) * (r0 + r1) * 0.5f;
+            ay = cy + (float)Math.Sin(a0) * (r0 + r1) * 0.5f;
+            bx = cx + (float)Math.Cos(a1) * (r0 + r1) * 0.5f;
+            by = cy + (float)Math.Sin(a1) * (r0 + r1) * 0.5f;
+            paint = NVG.LinearGradient(vg, ax, ay, bx, by, NVG.RGBA(0, 0, 0, 0), NVG.RGBA(0, 0, 0, 128));
+            NVG.FillPaint(vg, paint);
+            NVG.Fill(vg);
 
-            nvgRestore(vg);
+            NVG.Restore(vg);
         }
 
-        void drawThumbnails(NVGcontext* vg, float x, float y, float w, float h, constint* images, int nimages, float t)
+        static void drawThumbnails(Context vg, float x, float y, float w, float h, constint* images, int nimages, float t)
         {
             float cornerRadius = 3.0f;
-            NVGpaint shadowPaint, imgPaint, fadePaint;
+            Paint shadowPaint, imgPaint, fadePaint;
             float ix, iy, iw, ih;
             float thumb = 60.0f;
             float arry = 30.5f;
             int imgw, imgh;
             float stackh = (nimages / 2) * (thumb + 10) + 10;
             int i;
-            float u = (1 + cosf(t * 0.5f)) * 0.5f;
-            float u2 = (1 - cosf(t * 0.2f)) * 0.5f;
+            float u = (1 + (float)Math.Cos(t * 0.5f)) * 0.5f;
+            float u2 = (1 - (float)Math.Cos(t * 0.2f)) * 0.5f;
             float scrollh, dv;
 
-            nvgSave(vg);
+            NVG.Save(vg);
             //	nvgClearState(vg);
 
             // Drop shadow
-            shadowPaint = nvgBoxGradient(vg, x, y + 4, w, h, cornerRadius * 2, 20, nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
-            nvgBeginPath(vg);
-            nvgRect(vg, x - 10, y - 10, w + 20, h + 30);
-            nvgRoundedRect(vg, x, y, w, h, cornerRadius);
-            nvgPathWinding(vg, NVG_HOLE);
-            nvgFillPaint(vg, shadowPaint);
-            nvgFill(vg);
+            shadowPaint = NVG.BoxGradient(vg, x, y + 4, w, h, cornerRadius * 2, 20, NVG.RGBA(0, 0, 0, 128), NVG.RGBA(0, 0, 0, 0));
+            NVG.BeginPath(vg);
+            NVG.Rect(vg, x - 10, y - 10, w + 20, h + 30);
+            NVG.RoundedRect(vg, x, y, w, h, cornerRadius);
+            NVG.PathWinding(vg, Winding.NVG_HOLE);
+            NVG.FillPaint(vg, shadowPaint);
+            NVG.Fill(vg);
 
             // Window
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, x, y, w, h, cornerRadius);
-            nvgMoveTo(vg, x - 10, y + arry);
-            nvgLineTo(vg, x + 1, y + arry - 11);
-            nvgLineTo(vg, x + 1, y + arry + 11);
-            nvgFillColor(vg, nvgRGBA(200, 200, 200, 255));
-            nvgFill(vg);
+            NVG.BeginPath(vg);
+            NVG.RoundedRect(vg, x, y, w, h, cornerRadius);
+            NVG.MoveTo(vg, x - 10, y + arry);
+            NVG.LineTo(vg, x + 1, y + arry - 11);
+            NVG.LineTo(vg, x + 1, y + arry + 11);
+            NVG.FillColor(vg, NVG.RGBA(200, 200, 200, 255));
+            NVG.Fill(vg);
 
-            nvgSave(vg);
-            nvgScissor(vg, x, y, w, h);
-            nvgTranslate(vg, 0, -(stackh - h) * u);
+            NVG.Save(vg);
+            NVG.Scissor(vg, x, y, w, h);
+            NVG.Translate(vg, 0, -(stackh - h) * u);
 
             dv = 1.0f / (float)(nimages - 1);
 
@@ -595,7 +605,7 @@ namespace NanoVG
                 ty = y + 10;
                 tx += (i % 2) * (thumb + 10);
                 ty += (i / 2) * (thumb + 10);
-                nvgImageSize(vg, images[i], &imgw, &imgh);
+                NVG.ImageSize(vg, images[i], &imgw, &imgh);
                 if (imgw < imgh)
                 {
                     iw = thumb;
@@ -617,68 +627,69 @@ namespace NanoVG
                 if (a < 1.0f)
                     drawSpinner(vg, tx + thumb / 2, ty + thumb / 2, thumb * 0.25f, t);
 
-                imgPaint = nvgImagePattern(vg, tx + ix, ty + iy, iw, ih, 0.0f / 180.0f * NVG_PI, images[i], a);
-                nvgBeginPath(vg);
-                nvgRoundedRect(vg, tx, ty, thumb, thumb, 5);
-                nvgFillPaint(vg, imgPaint);
-                nvgFill(vg);
+                imgPaint = NVG.ImagePattern(vg, tx + ix, ty + iy, iw, ih, 0.0f / 180.0f * (float)Math.PI, images[i], a);
+                NVG.BeginPath(vg);
+                NVG.RoundedRect(vg, tx, ty, thumb, thumb, 5);
+                NVG.FillPaint(vg, imgPaint);
+                NVG.Fill(vg);
 
-                shadowPaint = nvgBoxGradient(vg, tx - 1, ty, thumb + 2, thumb + 2, 5, 3, nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
-                nvgBeginPath(vg);
-                nvgRect(vg, tx - 5, ty - 5, thumb + 10, thumb + 10);
-                nvgRoundedRect(vg, tx, ty, thumb, thumb, 6);
-                nvgPathWinding(vg, NVG_HOLE);
-                nvgFillPaint(vg, shadowPaint);
-                nvgFill(vg);
+                shadowPaint = NVG.BoxGradient(vg, tx - 1, ty, thumb + 2, thumb + 2, 5, 3, NVG.RGBA(0, 0, 0, 128), NVG.RGBA(0, 0, 0, 0));
+                NVG.BeginPath(vg);
+                NVG.Rect(vg, tx - 5, ty - 5, thumb + 10, thumb + 10);
+                NVG.RoundedRect(vg, tx, ty, thumb, thumb, 6);
+                NVG.PathWinding(vg, Winding.NVG_HOLE);
+                NVG.FillPaint(vg, shadowPaint);
+                NVG.Fill(vg);
 
-                nvgBeginPath(vg);
-                nvgRoundedRect(vg, tx + 0.5f, ty + 0.5f, thumb - 1, thumb - 1, 4 - 0.5f);
-                nvgStrokeWidth(vg, 1.0f);
-                nvgStrokeColor(vg, nvgRGBA(255, 255, 255, 192));
-                nvgStroke(vg);
+                NVG.BeginPath(vg);
+                NVG.RoundedRect(vg, tx + 0.5f, ty + 0.5f, thumb - 1, thumb - 1, 4 - 0.5f);
+                NVG.StrokeWidth(vg, 1.0f);
+                NVG.StrokeColor(vg, NVG.RGBA(255, 255, 255, 192));
+                NVG.Stroke(vg);
             }
-            nvgRestore(vg);
+
+            NVG.Restore(vg);
 
             // Hide fades
-            fadePaint = nvgLinearGradient(vg, x, y, x, y + 6, nvgRGBA(200, 200, 200, 255), nvgRGBA(200, 200, 200, 0));
-            nvgBeginPath(vg);
-            nvgRect(vg, x + 4, y, w - 8, 6);
-            nvgFillPaint(vg, fadePaint);
-            nvgFill(vg);
+            fadePaint = NVG.LinearGradient(vg, x, y, x, y + 6, NVG.RGBA(200, 200, 200, 255), NVG.RGBA(200, 200, 200, 0));
+            NVG.BeginPath(vg);
+            NVG.Rect(vg, x + 4, y, w - 8, 6);
+            NVG.FillPaint(vg, fadePaint);
+            NVG.Fill(vg);
 
-            fadePaint = nvgLinearGradient(vg, x, y + h, x, y + h - 6, nvgRGBA(200, 200, 200, 255), nvgRGBA(200, 200, 200, 0));
-            nvgBeginPath(vg);
-            nvgRect(vg, x + 4, y + h - 6, w - 8, 6);
-            nvgFillPaint(vg, fadePaint);
-            nvgFill(vg);
+            fadePaint = NVG.LinearGradient(vg, x, y + h, x, y + h - 6, NVG.RGBA(200, 200, 200, 255), NVG.RGBA(200, 200, 200, 0));
+            NVG.BeginPath(vg);
+            NVG.Rect(vg, x + 4, y + h - 6, w - 8, 6);
+            NVG.FillPaint(vg, fadePaint);
+            NVG.Fill(vg);
 
             // Scroll bar
-            shadowPaint = nvgBoxGradient(vg, x + w - 12 + 1, y + 4 + 1, 8, h - 8, 3, 4, nvgRGBA(0, 0, 0, 32), nvgRGBA(0, 0, 0, 92));
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, x + w - 12, y + 4, 8, h - 8, 3);
-            nvgFillPaint(vg, shadowPaint);
+            shadowPaint = NVG.BoxGradient(vg, x + w - 12 + 1, y + 4 + 1, 8, h - 8, 3, 4, NVG.RGBA(0, 0, 0, 32), NVG.RGBA(0, 0, 0, 92));
+            NVG.BeginPath(vg);
+            NVG.RoundedRect(vg, x + w - 12, y + 4, 8, h - 8, 3);
+            NVG.FillPaint(vg, shadowPaint);
             //	nvgFillColor(vg, nvgRGBA(255,0,0,128));
-            nvgFill(vg);
+            NVG.Fill(vg);
 
             scrollh = (h / stackh) * (h - 8);
-            shadowPaint = nvgBoxGradient(vg, x + w - 12 - 1, y + 4 + (h - 8 - scrollh) * u - 1, 8, scrollh, 3, 4, nvgRGBA(220, 220, 220, 255), nvgRGBA(128, 128, 128, 255));
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, x + w - 12 + 1, y + 4 + 1 + (h - 8 - scrollh) * u, 8 - 2, scrollh - 2, 2);
-            nvgFillPaint(vg, shadowPaint);
+            shadowPaint = NVG.BoxGradient(vg, x + w - 12 - 1, y + 4 + (h - 8 - scrollh) * u - 1, 8, scrollh, 3, 4, NVG.RGBA(220, 220, 220, 255), NVG.RGBA(128, 128, 128, 255));
+            NVG.BeginPath(vg);
+            NVG.RoundedRect(vg, x + w - 12 + 1, y + 4 + 1 + (h - 8 - scrollh) * u, 8 - 2, scrollh - 2, 2);
+            NVG.FillPaint(vg, shadowPaint);
             //	nvgFillColor(vg, nvgRGBA(0,0,0,128));
-            nvgFill(vg);
+            NVG.Fill(vg);
 
-            nvgRestore(vg);
+            NVG.Restore(vg);
         }
 
-        void drawColorwheel(NVGcontext* vg, float x, float y, float w, float h, float t)
+        static void drawColorwheel(Context vg, float x, float y, float w, float h, float t)
         {
             int i;
             float r0, r1, ax, ay, bx, by, cx, cy, aeps, r;
-            float hue = sinf(t * 0.12f);
-            NVGpaint paint;
+            float hue = (float)Math.Sin(t * 0.12f);
+            Paint paint;
 
-            nvgSave(vg);
+            NVG.Save(vg);
 
             /*	nvgBeginPath(vg);
                 nvgRect(vg, x,y,w,h);
@@ -693,108 +704,109 @@ namespace NanoVG
 
             for (i = 0; i < 6; i++)
             {
-                float a0 = (float)i / 6.0f * NVG_PI * 2.0f - aeps;
-                float a1 = (float)(i + 1.0f) / 6.0f * NVG_PI * 2.0f + aeps;
-                nvgBeginPath(vg);
-                nvgArc(vg, cx, cy, r0, a0, a1, NVG_CW);
-                nvgArc(vg, cx, cy, r1, a1, a0, NVG_CCW);
-                nvgClosePath(vg);
-                ax = cx + cosf(a0) * (r0 + r1) * 0.5f;
-                ay = cy + sinf(a0) * (r0 + r1) * 0.5f;
-                bx = cx + cosf(a1) * (r0 + r1) * 0.5f;
-                by = cy + sinf(a1) * (r0 + r1) * 0.5f;
-                paint = nvgLinearGradient(vg, ax, ay, bx, by, nvgHSLA(a0 / (NVG_PI * 2), 1.0f, 0.55f, 255), nvgHSLA(a1 / (NVG_PI * 2), 1.0f, 0.55f, 255));
-                nvgFillPaint(vg, paint);
-                nvgFill(vg);
+                float a0 = (float)i / 6.0f * (float)Math.PI * 2.0f - aeps;
+                float a1 = (float)(i + 1.0f) / 6.0f * (float)Math.PI * 2.0f + aeps;
+                NVG.BeginPath(vg);
+                NVG.Arc(vg, cx, cy, r0, a0, a1, Winding.NVG_CW);
+                NVG.Arc(vg, cx, cy, r1, a1, a0, Winding.NVG_CCW);
+                NVG.ClosePath(vg);
+                ax = cx + (float)Math.Cos(a0) * (r0 + r1) * 0.5f;
+                ay = cy + (float)Math.Sin(a0) * (r0 + r1) * 0.5f;
+                bx = cx + (float)Math.Cos(a1) * (r0 + r1) * 0.5f;
+                by = cy + (float)Math.Sin(a1) * (r0 + r1) * 0.5f;
+                paint = NVG.LinearGradient(vg, ax, ay, bx, by, NVG.HSLA(a0 / ((float)Math.PI * 2), 1.0f, 0.55f, 255), NVG.HSLA(a1 / ((float)Math.PI * 2), 1.0f, 0.55f, 255));
+                NVG.FillPaint(vg, paint);
+                NVG.Fill(vg);
             }
 
-            nvgBeginPath(vg);
-            nvgCircle(vg, cx, cy, r0 - 0.5f);
-            nvgCircle(vg, cx, cy, r1 + 0.5f);
-            nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 64));
-            nvgStrokeWidth(vg, 1.0f);
-            nvgStroke(vg);
+            NVG.BeginPath(vg);
+            NVG.Circle(vg, cx, cy, r0 - 0.5f);
+            NVG.Circle(vg, cx, cy, r1 + 0.5f);
+            NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 64));
+            NVG.StrokeWidth(vg, 1.0f);
+            NVG.Stroke(vg);
 
             // Selector
-            nvgSave(vg);
-            nvgTranslate(vg, cx, cy);
-            nvgRotate(vg, hue * NVG_PI * 2);
+            NVG.Save(vg);
+            NVG.Translate(vg, cx, cy);
+            NVG.Rotate(vg, hue * (float)Math.PI * 2);
 
             // Marker on
-            nvgStrokeWidth(vg, 2.0f);
-            nvgBeginPath(vg);
-            nvgRect(vg, r0 - 1, -3, r1 - r0 + 2, 6);
-            nvgStrokeColor(vg, nvgRGBA(255, 255, 255, 192));
-            nvgStroke(vg);
+            NVG.StrokeWidth(vg, 2.0f);
+            NVG.BeginPath(vg);
+            NVG.Rect(vg, r0 - 1, -3, r1 - r0 + 2, 6);
+            NVG.StrokeColor(vg, NVG.RGBA(255, 255, 255, 192));
+            NVG.Stroke(vg);
 
-            paint = nvgBoxGradient(vg, r0 - 3, -5, r1 - r0 + 6, 10, 2, 4, nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
-            nvgBeginPath(vg);
-            nvgRect(vg, r0 - 2 - 10, -4 - 10, r1 - r0 + 4 + 20, 8 + 20);
-            nvgRect(vg, r0 - 2, -4, r1 - r0 + 4, 8);
-            nvgPathWinding(vg, NVG_HOLE);
-            nvgFillPaint(vg, paint);
-            nvgFill(vg);
+            paint = NVG.BoxGradient(vg, r0 - 3, -5, r1 - r0 + 6, 10, 2, 4, NVG.RGBA(0, 0, 0, 128), NVG.RGBA(0, 0, 0, 0));
+            NVG.BeginPath(vg);
+            NVG.Rect(vg, r0 - 2 - 10, -4 - 10, r1 - r0 + 4 + 20, 8 + 20);
+            NVG.Rect(vg, r0 - 2, -4, r1 - r0 + 4, 8);
+            NVG.PathWinding(vg, Winding.NVG_HOLE);
+            NVG.FillPaint(vg, paint);
+            NVG.Fill(vg);
 
             // Center triangle
             r = r0 - 6;
-            ax = cosf(120.0f / 180.0f * NVG_PI) * r;
-            ay = sinf(120.0f / 180.0f * NVG_PI) * r;
-            bx = cosf(-120.0f / 180.0f * NVG_PI) * r;
-            by = sinf(-120.0f / 180.0f * NVG_PI) * r;
-            nvgBeginPath(vg);
-            nvgMoveTo(vg, r, 0);
-            nvgLineTo(vg, ax, ay);
-            nvgLineTo(vg, bx, by);
-            nvgClosePath(vg);
-            paint = nvgLinearGradient(vg, r, 0, ax, ay, nvgHSLA(hue, 1.0f, 0.5f, 255), nvgRGBA(255, 255, 255, 255));
-            nvgFillPaint(vg, paint);
-            nvgFill(vg);
-            paint = nvgLinearGradient(vg, (r + ax) * 0.5f, (0 + ay) * 0.5f, bx, by, nvgRGBA(0, 0, 0, 0), nvgRGBA(0, 0, 0, 255));
-            nvgFillPaint(vg, paint);
-            nvgFill(vg);
-            nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 64));
-            nvgStroke(vg);
+            ax = (float)Math.Cos(120.0f / 180.0f * (float)Math.PI) * r;
+            ay = (float)Math.Sin(120.0f / 180.0f * (float)Math.PI) * r;
+            bx = (float)Math.Cos(-120.0f / 180.0f * (float)Math.PI) * r;
+            by = (float)Math.Sin(-120.0f / 180.0f * (float)Math.PI) * r;
+            NVG.BeginPath(vg);
+            NVG.MoveTo(vg, r, 0);
+            NVG.LineTo(vg, ax, ay);
+            NVG.LineTo(vg, bx, by);
+            NVG.ClosePath(vg);
+            paint = NVG.LinearGradient(vg, r, 0, ax, ay, NVG.HSLA(hue, 1.0f, 0.5f, 255), NVG.RGBA(255, 255, 255, 255));
+            NVG.FillPaint(vg, paint);
+            NVG.Fill(vg);
+            paint = NVG.LinearGradient(vg, (r + ax) * 0.5f, (0 + ay) * 0.5f, bx, by, NVG.RGBA(0, 0, 0, 0), NVG.RGBA(0, 0, 0, 255));
+            NVG.FillPaint(vg, paint);
+            NVG.Fill(vg);
+            NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 64));
+            NVG.Stroke(vg);
 
             // Select circle on triangle
-            ax = cosf(120.0f / 180.0f * NVG_PI) * r * 0.3f;
-            ay = sinf(120.0f / 180.0f * NVG_PI) * r * 0.4f;
-            nvgStrokeWidth(vg, 2.0f);
-            nvgBeginPath(vg);
-            nvgCircle(vg, ax, ay, 5);
-            nvgStrokeColor(vg, nvgRGBA(255, 255, 255, 192));
-            nvgStroke(vg);
+            ax = (float)Math.Cos(120.0f / 180.0f * (float)Math.PI) * r * 0.3f;
+            ay = (float)Math.Sin(120.0f / 180.0f * (float)Math.PI) * r * 0.4f;
+            NVG.StrokeWidth(vg, 2.0f);
+            NVG.BeginPath(vg);
+            NVG.Circle(vg, ax, ay, 5);
+            NVG.StrokeColor(vg, NVG.RGBA(255, 255, 255, 192));
+            NVG.Stroke(vg);
 
-            paint = nvgRadialGradient(vg, ax, ay, 7, 9, nvgRGBA(0, 0, 0, 64), nvgRGBA(0, 0, 0, 0));
-            nvgBeginPath(vg);
-            nvgRect(vg, ax - 20, ay - 20, 40, 40);
-            nvgCircle(vg, ax, ay, 7);
-            nvgPathWinding(vg, NVG_HOLE);
-            nvgFillPaint(vg, paint);
-            nvgFill(vg);
+            paint = NVG.RadialGradient(vg, ax, ay, 7, 9, NVG.RGBA(0, 0, 0, 64), NVG.RGBA(0, 0, 0, 0));
+            NVG.BeginPath(vg);
+            NVG.Rect(vg, ax - 20, ay - 20, 40, 40);
+            NVG.Circle(vg, ax, ay, 7);
+            NVG.PathWinding(vg, Winding.NVG_HOLE);
+            NVG.FillPaint(vg, paint);
+            NVG.Fill(vg);
 
-            nvgRestore(vg);
+            NVG.Restore(vg);
 
-            nvgRestore(vg);
+            NVG.Restore(vg);
         }
 
-        void drawLines(NVGcontext* vg, float x, float y, float w, float h, float t)
+        static void drawLines(Context vg, float x, float y, float w, float h, float t)
         {
             int i, j;
             float pad = 5.0f, s = w / 9.0f - pad * 2;
-            float pts[4 * 2], fx, fy;
-            int joins[3] = { NVG_MITER, NVG_ROUND, NVG_BEVEL };
-            int caps[3] = { NVG_BUTT, NVG_ROUND, NVG_SQUARE };
-            NVG_NOTUSED(h);
+            float[] pts = new float[4 * 2];
+            float fx, fy;
+            var joins = new nvgLineCap[] { nvgLineCap.NVG_MITER, nvgLineCap.NVG_ROUND, nvgLineCap.NVG_BEVEL };
+            var caps = new nvgLineCap[] { nvgLineCap.NVG_BUTT, nvgLineCap.NVG_ROUND, nvgLineCap.NVG_SQUARE };
+            //NVG_NOTUSED(h);
 
-            nvgSave(vg);
-            pts[0] = -s * 0.25f + cosf(t * 0.3f) * s * 0.5f;
-            pts[1] = sinf(t * 0.3f) * s * 0.5f;
-            pts[2] = -s * 0.25;
+            NVG.Save(vg);
+            pts[0] = -s * 0.25f + (float)Math.Cos(t * 0.3f) * s * 0.5f;
+            pts[1] = (float)Math.Sin(t * 0.3f) * s * 0.5f;
+            pts[2] = -s * 0.25f;
             pts[3] = 0;
             pts[4] = s * 0.25f;
             pts[5] = 0;
-            pts[6] = s * 0.25f + cosf(-t * 0.3f) * s * 0.5f;
-            pts[7] = sinf(-t * 0.3f) * s * 0.5f;
+            pts[6] = s * 0.25f + (float)Math.Cos(-t * 0.3f) * s * 0.5f;
+            pts[7] = (float)Math.Sin(-t * 0.3f) * s * 0.5f;
 
             for (i = 0; i < 3; i++)
             {
@@ -803,48 +815,47 @@ namespace NanoVG
                     fx = x + s * 0.5f + (i * 3 + j) / 9.0f * w + pad;
                     fy = y - s * 0.5f + pad;
 
-                    nvgLineCap(vg, caps[i]);
-                    nvgLineJoin(vg, joins[j]);
+                    NVG.LineCap(vg, caps[i]);
+                    NVG.LineJoin(vg, joins[j]);
 
-                    nvgStrokeWidth(vg, s * 0.3f);
-                    nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 160));
-                    nvgBeginPath(vg);
-                    nvgMoveTo(vg, fx + pts[0], fy + pts[1]);
-                    nvgLineTo(vg, fx + pts[2], fy + pts[3]);
-                    nvgLineTo(vg, fx + pts[4], fy + pts[5]);
-                    nvgLineTo(vg, fx + pts[6], fy + pts[7]);
-                    nvgStroke(vg);
+                    NVG.StrokeWidth(vg, s * 0.3f);
+                    NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 160));
+                    NVG.BeginPath(vg);
+                    NVG.MoveTo(vg, fx + pts[0], fy + pts[1]);
+                    NVG.LineTo(vg, fx + pts[2], fy + pts[3]);
+                    NVG.LineTo(vg, fx + pts[4], fy + pts[5]);
+                    NVG.LineTo(vg, fx + pts[6], fy + pts[7]);
+                    NVG.Stroke(vg);
 
-                    nvgLineCap(vg, NVG_BUTT);
-                    nvgLineJoin(vg, NVG_BEVEL);
+                    NVG.LineCap(vg, nvgLineCap.NVG_BUTT);
+                    NVG.LineJoin(vg, nvgLineCap.NVG_BEVEL);
 
-                    nvgStrokeWidth(vg, 1.0f);
-                    nvgStrokeColor(vg, nvgRGBA(0, 192, 255, 255));
-                    nvgBeginPath(vg);
-                    nvgMoveTo(vg, fx + pts[0], fy + pts[1]);
-                    nvgLineTo(vg, fx + pts[2], fy + pts[3]);
-                    nvgLineTo(vg, fx + pts[4], fy + pts[5]);
-                    nvgLineTo(vg, fx + pts[6], fy + pts[7]);
-                    nvgStroke(vg);
+                    NVG.StrokeWidth(vg, 1.0f);
+                    NVG.StrokeColor(vg, NVG.RGBA(0, 192, 255, 255));
+                    NVG.BeginPath(vg);
+                    NVG.MoveTo(vg, fx + pts[0], fy + pts[1]);
+                    NVG.LineTo(vg, fx + pts[2], fy + pts[3]);
+                    NVG.LineTo(vg, fx + pts[4], fy + pts[5]);
+                    NVG.LineTo(vg, fx + pts[6], fy + pts[7]);
+                    NVG.Stroke(vg);
                 }
             }
 
-
-            nvgRestore(vg);
+            NVG.Restore(vg);
         }
 
-        int loadDemoData(NVGcontext* vg, DemoData* data)
+        static int loadDemoData(Context vg, DemoData* data)
         {
             int i;
 
-            if (vg == NULL)
+            if (vg == null)
                 return -1;
 
             for (i = 0; i < 12; i++)
             {
                 char file[128];
                 snprintf(file, 128, "../example/images/image%d.jpg", i + 1);
-                data->images[i] = nvgCreateImage(vg, file, 0);
+                data->images[i] = NVG.CreateImage(vg, file, 0);
                 if (data->images[i] == 0)
                 {
                     printf("Could not load %s.\n", file);
@@ -852,48 +863,48 @@ namespace NanoVG
                 }
             }
 
-            data->fontIcons = nvgCreateFont(vg, "icons", "../example/entypo.ttf");
+            data->fontIcons = NVG.CreateFont(vg, "icons", "../example/entypo.ttf");
             if (data->fontIcons == -1)
             {
                 printf("Could not add font icons.\n");
                 return -1;
             }
-            data->fontNormal = nvgCreateFont(vg, "sans", "../example/Roboto-Regular.ttf");
+            data->fontNormal = NVG.CreateFont(vg, "sans", "../example/Roboto-Regular.ttf");
             if (data->fontNormal == -1)
             {
                 printf("Could not add font italic.\n");
                 return -1;
             }
-            data->fontBold = nvgCreateFont(vg, "sans-bold", "../example/Roboto-Bold.ttf");
+            data->fontBold = NVG.CreateFont(vg, "sans-bold", "../example/Roboto-Bold.ttf");
             if (data->fontBold == -1)
             {
                 printf("Could not add font bold.\n");
                 return -1;
             }
-            data->fontEmoji = nvgCreateFont(vg, "emoji", "../example/NotoEmoji-Regular.ttf");
+            data->fontEmoji = NVG.CreateFont(vg, "emoji", "../example/NotoEmoji-Regular.ttf");
             if (data->fontEmoji == -1)
             {
                 printf("Could not add font emoji.\n");
                 return -1;
             }
-            nvgAddFallbackFontId(vg, data->fontNormal, data->fontEmoji);
-            nvgAddFallbackFontId(vg, data->fontBold, data->fontEmoji);
+            NVG.AddFallbackFontId(vg, data->fontNormal, data->fontEmoji);
+            NVG.AddFallbackFontId(vg, data->fontBold, data->fontEmoji);
 
             return 0;
         }
 
-        void freeDemoData(NVGcontext* vg, DemoData* data)
+        static void freeDemoData(Context vg, DemoData* data)
         {
             int i;
 
-            if (vg == NULL)
+            if (vg == null)
                 return;
 
             for (i = 0; i < 12; i++)
-                nvgDeleteImage(vg, data->images[i]);
+                NVG.DeleteImage(vg, data->images[i]);
         }
 
-        void drawParagraph(NVGcontext* vg, float x, float y, float width, float height, float mx, float my)
+        static void drawParagraph(Context vg, float x, float y, float width, float height, float mx, float my)
         {
             NVGtextRow rows[3];
             NVGglyphPosition glyphs[100];
@@ -909,61 +920,67 @@ namespace NanoVG
             float gx, gy;
             int gutter = 0;
             const char* boxText = "Testing\nsome multiline\ntext.";
-            NVG_NOTUSED(height);
+            //NVG_NOTUSED(height);
 
-            nvgSave(vg);
+            NVG.Save(vg);
 
-            nvgFontSize(vg, 15.0f);
-            nvgFontFace(vg, "sans");
-            nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-            nvgTextMetrics(vg, NULL, NULL, &lineh);
+            NVG.FontSize(vg, 15.0f);
+            NVG.FontFace(vg, "sans");
+            NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_TOP);
+            NVG.TextMetrics(vg, NULL, NULL, &lineh);
 
             // The text break API can be used to fill a large buffer of rows,
             // or to iterate over the text just few lines (or just one) at a time.
             // The "next" variable of the last returned item tells where to continue.
             start = text;
             end = text + strlen(text);
-            while ((nrows = nvgTextBreakLines(vg, start, end, width, rows, 3)))
+            while ((nrows = NVG.TextBreakLines(vg, start, end, width, rows, 3)))
             {
                 for (i = 0; i < nrows; i++)
                 {
                     NVGtextRow* row = &rows[i];
                     int hit = mx > x && mx < (x + width) && my >= y && my < (y + lineh);
 
-                    nvgBeginPath(vg);
-                    nvgFillColor(vg, nvgRGBA(255, 255, 255, hit ? 64 : 16));
-                    nvgRect(vg, x + row->minx, y, row->maxx - row->minx, lineh);
-                    nvgFill(vg);
+                    NVG.BeginPath(vg);
+                    NVG.FillColor(vg, NVG.RGBA(255, 255, 255, hit ? 64 : 16));
+                    NVG.Rect(vg, x + row->minx, y, row->maxx - row->minx, lineh);
+                    NVG.Fill(vg);
 
-                    nvgFillColor(vg, nvgRGBA(255, 255, 255, 255));
-                    nvgText(vg, x, y, row->start, row->end);
+                    NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 255));
+                    NVG.Text(vg, x, y, row->start, row->end);
 
                     if (hit)
                     {
                         caretx = (mx < x + row->width / 2) ? x : x + row->width;
                         px = x;
-                        nglyphs = nvgTextGlyphPositions(vg, x, y, row->start, row->end, glyphs, 100);
+                        nglyphs = NVG.TextGlyphPositions(vg, x, y, row->start, row->end, glyphs, 100);
                         for (j = 0; j < nglyphs; j++)
                         {
                             float x0 = glyphs[j].x;
                             float x1 = (j + 1 < nglyphs) ? glyphs[j + 1].x : x + row->width;
                             float gx = x0 * 0.3f + x1 * 0.7f;
                             if (mx >= px && mx < gx)
+                            {
                                 caretx = glyphs[j].x;
+                            }
+
                             px = gx;
                         }
-                        nvgBeginPath(vg);
-                        nvgFillColor(vg, nvgRGBA(255, 192, 0, 255));
-                        nvgRect(vg, caretx, y, 1, lineh);
-                        nvgFill(vg);
+
+                        NVG.BeginPath(vg);
+                        NVG.FillColor(vg, NVG.RGBA(255, 192, 0, 255));
+                        NVG.Rect(vg, caretx, y, 1, lineh);
+                        NVG.Fill(vg);
 
                         gutter = lnum + 1;
                         gx = x - 10;
                         gy = y + lineh / 2;
                     }
+
                     lnum++;
                     y += lineh;
                 }
+
                 // Keep going...
                 start = rows[nrows - 1].next;
             }
@@ -972,141 +989,141 @@ namespace NanoVG
             {
                 char txt[16];
                 snprintf(txt, sizeof(txt), "%d", gutter);
-                nvgFontSize(vg, 12.0f);
-                nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
+                NVG.FontSize(vg, 12.0f);
+                NVG.TextAlign(vg, Align.NVG_ALIGN_RIGHT | Align.NVG_ALIGN_MIDDLE);
 
-                nvgTextBounds(vg, gx, gy, txt, NULL, bounds);
+                NVG.TextBounds(vg, gx, gy, txt, 0, bounds);
 
-                nvgBeginPath(vg);
-                nvgFillColor(vg, nvgRGBA(255, 192, 0, 255));
-                nvgRoundedRect(vg, (int)bounds[0] - 4, (int)bounds[1] - 2, (int)(bounds[2] - bounds[0]) + 8, (int)(bounds[3] - bounds[1]) + 4, ((int)(bounds[3] - bounds[1]) + 4) / 2 - 1);
-                nvgFill(vg);
+                NVG.BeginPath(vg);
+                NVG.FillColor(vg, NVG.RGBA(255, 192, 0, 255));
+                NVG.RoundedRect(vg, (int)bounds[0] - 4, (int)bounds[1] - 2, (int)(bounds[2] - bounds[0]) + 8, (int)(bounds[3] - bounds[1]) + 4, ((int)(bounds[3] - bounds[1]) + 4) / 2 - 1);
+                NVG.Fill(vg);
 
-                nvgFillColor(vg, nvgRGBA(32, 32, 32, 255));
-                nvgText(vg, gx, gy, txt, NULL);
+                NVG.FillColor(vg, NVG.RGBA(32, 32, 32, 255));
+                NVG.Text(vg, gx, gy, txt, 0);
             }
 
             y += 20.0f;
 
-            nvgFontSize(vg, 11.0f);
-            nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-            nvgTextLineHeight(vg, 1.2f);
+            NVG.FontSize(vg, 11.0f);
+            NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_TOP);
+            NVG.TextLineHeight(vg, 1.2f);
 
-            nvgTextBoxBounds(vg, x, y, 150, hoverText, NULL, bounds);
+            NVG.TextBoxBounds(vg, x, y, 150, hoverText, 0, bounds);
 
             // Fade the tooltip out when close to it.
             gx = clampf(mx, bounds[0], bounds[2]) - mx;
             gy = clampf(my, bounds[1], bounds[3]) - my;
-            a = sqrtf(gx * gx + gy * gy) / 30.0f;
+            a = (float)Math.Sqrt(gx * gx + gy * gy) / 30.0f;
             a = clampf(a, 0, 1);
-            nvgGlobalAlpha(vg, a);
+            NVG.GlobalAlpha(vg, a);
 
-            nvgBeginPath(vg);
-            nvgFillColor(vg, nvgRGBA(220, 220, 220, 255));
-            nvgRoundedRect(vg, bounds[0] - 2, bounds[1] - 2, (int)(bounds[2] - bounds[0]) + 4, (int)(bounds[3] - bounds[1]) + 4, 3);
+            NVG.BeginPath(vg);
+            NVG.FillColor(vg, NVG.RGBA(220, 220, 220, 255));
+            NVG.RoundedRect(vg, bounds[0] - 2, bounds[1] - 2, (int)(bounds[2] - bounds[0]) + 4, (int)(bounds[3] - bounds[1]) + 4, 3);
             px = (int)((bounds[2] + bounds[0]) / 2);
-            nvgMoveTo(vg, px, bounds[1] - 10);
-            nvgLineTo(vg, px + 7, bounds[1] + 1);
-            nvgLineTo(vg, px - 7, bounds[1] + 1);
-            nvgFill(vg);
+            NVG.MoveTo(vg, px, bounds[1] - 10);
+            NVG.LineTo(vg, px + 7, bounds[1] + 1);
+            NVG.LineTo(vg, px - 7, bounds[1] + 1);
+            NVG.Fill(vg);
 
-            nvgFillColor(vg, nvgRGBA(0, 0, 0, 220));
-            nvgTextBox(vg, x, y, 150, hoverText, NULL);
+            NVG.FillColor(vg, NVG.RGBA(0, 0, 0, 220));
+            NVG.TextBox(vg, x, y, 150, hoverText, 0);
 
-            nvgRestore(vg);
+            NVG.Restore(vg);
         }
 
-        void drawWidths(NVGcontext* vg, float x, float y, float width)
+        static void drawWidths(Context vg, float x, float y, float width)
         {
             int i;
 
-            nvgSave(vg);
+            NVG.Save(vg);
 
-            nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 255));
+            NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 255));
 
             for (i = 0; i < 20; i++)
             {
                 float w = (i + 0.5f) * 0.1f;
-                nvgStrokeWidth(vg, w);
-                nvgBeginPath(vg);
-                nvgMoveTo(vg, x, y);
-                nvgLineTo(vg, x + width, y + width * 0.3f);
-                nvgStroke(vg);
+                NVG.StrokeWidth(vg, w);
+                NVG.BeginPath(vg);
+                NVG.MoveTo(vg, x, y);
+                NVG.LineTo(vg, x + width, y + width * 0.3f);
+                NVG.Stroke(vg);
                 y += 10;
             }
 
-            nvgRestore(vg);
+            NVG.Restore(vg);
         }
 
-        void drawCaps(NVGcontext* vg, float x, float y, float width)
+        static void drawCaps(Context vg, float x, float y, float width)
         {
             int i;
-            int caps[3] = { NVG_BUTT, NVG_ROUND, NVG_SQUARE };
+            int caps[3] = { nvgLineCap.NVG_BUTT, nvgLineCap.NVG_ROUND, nvgLineCap.NVG_SQUARE };
             float lineWidth = 8.0f;
 
-            nvgSave(vg);
+            NVG.Save(vg);
 
-            nvgBeginPath(vg);
-            nvgRect(vg, x - lineWidth / 2, y, width + lineWidth, 40);
-            nvgFillColor(vg, nvgRGBA(255, 255, 255, 32));
-            nvgFill(vg);
+            NVG.BeginPath(vg);
+            NVG.Rect(vg, x - lineWidth / 2, y, width + lineWidth, 40);
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 32));
+            NVG.Fill(vg);
 
-            nvgBeginPath(vg);
-            nvgRect(vg, x, y, width, 40);
-            nvgFillColor(vg, nvgRGBA(255, 255, 255, 32));
-            nvgFill(vg);
+            NVG.BeginPath(vg);
+            NVG.Rect(vg, x, y, width, 40);
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 32));
+            NVG.Fill(vg);
 
-            nvgStrokeWidth(vg, lineWidth);
+            NVG.StrokeWidth(vg, lineWidth);
             for (i = 0; i < 3; i++)
             {
-                nvgLineCap(vg, caps[i]);
-                nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 255));
-                nvgBeginPath(vg);
-                nvgMoveTo(vg, x, y + i * 10 + 5);
-                nvgLineTo(vg, x + width, y + i * 10 + 5);
-                nvgStroke(vg);
+                NVG.LineCap(vg, caps[i]);
+                NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 255));
+                NVG.BeginPath(vg);
+                NVG.MoveTo(vg, x, y + i * 10 + 5);
+                NVG.LineTo(vg, x + width, y + i * 10 + 5);
+                NVG.Stroke(vg);
             }
 
-            nvgRestore(vg);
+            NVG.Restore(vg);
         }
 
-        void drawScissor(NVGcontext* vg, float x, float y, float t)
+        static void drawScissor(Context vg, float x, float y, float t)
         {
-            nvgSave(vg);
+            NVG.Save(vg);
 
             // Draw first rect and set scissor to it's area.
-            nvgTranslate(vg, x, y);
-            nvgRotate(vg, nvgDegToRad(5));
-            nvgBeginPath(vg);
-            nvgRect(vg, -20, -20, 60, 40);
-            nvgFillColor(vg, nvgRGBA(255, 0, 0, 255));
-            nvgFill(vg);
-            nvgScissor(vg, -20, -20, 60, 40);
+            NVG.Translate(vg, x, y);
+            NVG.Rotate(vg, NVG.DegToRad(5));
+            NVG.BeginPath(vg);
+            NVG.Rect(vg, -20, -20, 60, 40);
+            NVG.FillColor(vg, NVG.RGBA(255, 0, 0, 255));
+            NVG.Fill(vg);
+            NVG.Scissor(vg, -20, -20, 60, 40);
 
             // Draw second rectangle with offset and rotation.
-            nvgTranslate(vg, 40, 0);
-            nvgRotate(vg, t);
+            NVG.Translate(vg, 40, 0);
+            NVG.Rotate(vg, t);
 
             // Draw the intended second rectangle without any scissoring.
-            nvgSave(vg);
-            nvgResetScissor(vg);
-            nvgBeginPath(vg);
-            nvgRect(vg, -20, -10, 60, 30);
-            nvgFillColor(vg, nvgRGBA(255, 128, 0, 64));
-            nvgFill(vg);
-            nvgRestore(vg);
+            NVG.Save(vg);
+            NVG.ResetScissor(vg);
+            NVG.BeginPath(vg);
+            NVG.Rect(vg, -20, -10, 60, 30);
+            NVG.FillColor(vg, NVG.RGBA(255, 128, 0, 64));
+            NVG.Fill(vg);
+            NVG.Restore(vg);
 
             // Draw second rectangle with combined scissoring.
-            nvgIntersectScissor(vg, -20, -10, 60, 30);
-            nvgBeginPath(vg);
-            nvgRect(vg, -20, -10, 60, 30);
-            nvgFillColor(vg, nvgRGBA(255, 128, 0, 255));
-            nvgFill(vg);
+            NVG.IntersectScissor(vg, -20, -10, 60, 30);
+            NVG.BeginPath(vg);
+            NVG.Rect(vg, -20, -10, 60, 30);
+            NVG.FillColor(vg, NVG.RGBA(255, 128, 0, 255));
+            NVG.Fill(vg);
 
-            nvgRestore(vg);
+            NVG.Restore(vg);
         }
 
-        void renderDemo(NVGcontext* vg, float mx, float my, float width, float height, float t, int blowup, DemoData* data)
+        static void renderDemo(Context vg, float mx, float my, float width, float height, float t, bool blowup, DemoData* data)
         {
             float x, y, popy;
 
@@ -1126,11 +1143,11 @@ namespace NanoVG
 
             drawScissor(vg, 50, height - 80, t);
 
-            nvgSave(vg);
+            NVG.Save(vg);
             if (blowup)
             {
-                nvgRotate(vg, sinf(t * 0.3f) * 5.0f / 180.0f * NVG_PI);
-                nvgScale(vg, 2.0f, 2.0f);
+                NVG.Rotate(vg, (float)Math.Sin(t * 0.3f) * 5.0f / 180.0f * (float)Math.PI);
+                NVG.Scale(vg, 2.0f, 2.0f);
             }
 
             // Widgets
@@ -1150,7 +1167,7 @@ namespace NanoVG
             drawEditBox(vg, "Password", x, y, 280, 28);
             y += 38;
             drawCheckBox(vg, "Remember me", x, y, 140, 28);
-            drawButton(vg, ICON_LOGIN, "Sign in", x + 138, y, 140, 28, nvgRGBA(0, 96, 128, 255));
+            drawButton(vg, ICON_LOGIN, "Sign in", x + 138, y, 140, 28, NVG.RGBA(0, 96, 128, 255));
             y += 45;
 
             // Slider
@@ -1160,25 +1177,25 @@ namespace NanoVG
             drawSlider(vg, 0.4f, x, y, 170, 28);
             y += 55;
 
-            drawButton(vg, ICON_TRASH, "Delete", x, y, 160, 28, nvgRGBA(128, 16, 8, 255));
-            drawButton(vg, 0, "Cancel", x + 170, y, 110, 28, nvgRGBA(0, 0, 0, 0));
+            drawButton(vg, ICON_TRASH, "Delete", x, y, 160, 28, NVG.RGBA(128, 16, 8, 255));
+            drawButton(vg, 0, "Cancel", x + 170, y, 110, 28, NVG.RGBA(0, 0, 0, 0));
 
             // Thumbnails box
             drawThumbnails(vg, 365, popy - 30, 160, 300, data->images, 12, t);
 
-            nvgRestore(vg);
+            NVG.Restore(vg);
         }
 
         static int mini(int a, int b) { return a < b ? a : b; }
 
-        static void unpremultiplyAlpha(unsignedchar* image, int w, int h, int stride)
+        static void unpremultiplyAlpha(byte[] image, int w, int h, int stride)
         {
             int x, y;
 
             // Unpremultiply
             for (y = 0; y < h; y++)
             {
-                unsigned char* row = &image[y * stride];
+                unsignedchar* row = &image[y * stride];
                 for (x = 0; x < w; x++)
                 {
                     int r = row[0], g = row[1], b = row[2], a = row[3];
@@ -1188,6 +1205,7 @@ namespace NanoVG
                         row[1] = (int)mini(g * 255 / a, 255);
                         row[2] = (int)mini(b * 255 / a, 255);
                     }
+
                     row += 4;
                 }
             }
@@ -1195,7 +1213,7 @@ namespace NanoVG
             // Defringe
             for (y = 0; y < h; y++)
             {
-                unsigned char* row = &image[y * stride];
+                unsignedchar* row = &image[y * stride];
                 for (x = 0; x < w; x++)
                 {
                     int r = 0, g = 0, b = 0, a = row[3], n = 0;
@@ -1236,19 +1254,22 @@ namespace NanoVG
                             row[2] = b / n;
                         }
                     }
+
                     row += 4;
                 }
             }
         }
 
-        static void setAlpha(unsignedchar* image, int w, int h, int stride, unsignedchar a)
+        static void setAlpha(byte[] image, int w, int h, int stride, byte a)
         {
             int x, y;
             for (y = 0; y < h; y++)
             {
-                unsigned char* row = &image[y * stride];
+                unsignedchar* row = &image[y * stride];
                 for (x = 0; x < w; x++)
+                {
                     row[x * 4 + 3] = a;
+                }
             }
         }
 
@@ -1257,11 +1278,11 @@ namespace NanoVG
             int i = 0, j = h - 1, k;
             while (i < j)
             {
-                unsigned char* ri = &image[i * stride];
-                unsigned char* rj = &image[j * stride];
+                unsignedchar* ri = &image[i * stride];
+                unsignedchar* rj = &image[j * stride];
                 for (k = 0; k < w * 4; k++)
                 {
-                    unsigned char t = ri[k];
+                    unsignedchar t = ri[k];
                     ri[k] = rj[k];
                     rj[k] = t;
                 }
@@ -1270,9 +1291,9 @@ namespace NanoVG
             }
         }
 
-        void saveScreenShot(int w, int h, int premult, constchar* name)
+        static void saveScreenShot(int w, int h, int premult, constchar* name)
         {
-            unsigned char* image = (unsigned char*)malloc(w * h * 4);
+            unsigned char* image = (unsignedchar*)malloc(w * h * 4);
             if (image == NULL)
                 return;
             glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, image);

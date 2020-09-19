@@ -182,7 +182,7 @@ namespace NanoVG
             public int cverts;
             public int nverts;
 
-            public byte[] uniforms;
+            public GLNVGfragUniforms[] uniforms;
             public int cuniforms;
             public int nuniforms;
 
@@ -348,50 +348,45 @@ namespace NanoVG
 
         static int glnvg__createShader(ref GLNVGshader shader, string name, string header, string opts, string vshader, string fshader)
         {
-            var str = new string[3];
-            str[0] = header;
-            str[1] = opts != null ? opts : string.Empty;
+            bool TryMakeShader(ShaderType type, string body, out int id)
+            {
+                id = GL.CreateShader(type);
+                GL.ShaderSource(id, header + opts ?? string.Empty + body);
+                GL.CompileShader(id);
+                GL.GetShader(id, ShaderParameter.CompileStatus, out var compileStatus);
+                if (compileStatus != 1/*GL_TRUE*/)
+                {
+                    glnvg__dumpShaderError(id, name, type.ToString());
+                    return false;
+                }
 
-            shader = new GLNVGshader();
+                return true;
+            }
+
+            if (!TryMakeShader(ShaderType.VertexShader, vshader, out var vert))
+            {
+                return 0;
+            }
+
+            if (!TryMakeShader(ShaderType.FragmentShader, fshader, out var frag))
+            {
+                return 0;
+            }
 
             var prog = GL.CreateProgram();
-            var vert = GL.CreateShader(ShaderType.VertexShader);
-            var frag = GL.CreateShader(ShaderType.FragmentShader);
-            str[2] = vshader;
-            GL.ShaderSource(vert, 3, str, 0);
-            str[2] = fshader;
-            GL.ShaderSource(frag, 3, str, 0);
-
-            GL.CompileShader(vert);
-            GL.GetShader(vert, ShaderParameter.CompileStatus, out var status);
-            if (status != 1/*GL_TRUE*/)
-            {
-                glnvg__dumpShaderError(vert, name, "vert");
-                return 0;
-            }
-
-            GL.CompileShader(frag);
-            GL.GetShader(frag, ShaderParameter.CompileStatus, out status);
-            if (status != 1/*GL_TRUE*/)
-            {
-                glnvg__dumpShaderError(frag, name, "frag");
-                return 0;
-            }
-
             GL.AttachShader(prog, vert);
             GL.AttachShader(prog, frag);
-
             GL.BindAttribLocation(prog, 0, "vertex");
             GL.BindAttribLocation(prog, 1, "tcoord");
-
             GL.LinkProgram(prog);
-            GL.GetProgram(prog, GetProgramParameterName.LinkStatus, out status);
-            if (status != 1/*GL_TRUE*/)
+            GL.GetProgram(prog, GetProgramParameterName.LinkStatus, out var linkStatus);
+            if (linkStatus != 1/*GL_TRUE*/)
             {
                 glnvg__dumpProgramError(prog, name);
                 return 0;
             }
 
+            shader = new GLNVGshader();
             shader.prog = prog;
             shader.vert = vert;
             shader.frag = frag;
@@ -629,7 +624,7 @@ namespace NanoVG
             GL.GenBuffers(1, out gl.fragBuf);
             GL.GetInteger(GetPName.UniformBufferOffsetAlignment, out align);
 #endif
-            gl.fragSize = sizeof(GLNVGfragUniforms) + align - sizeof(GLNVGfragUniforms) % align;
+            gl.fragSize = Marshal.SizeOf(typeof(GLNVGfragUniforms));
 
             glnvg__checkError(gl, "create done");
 
@@ -953,8 +948,8 @@ namespace NanoVG
                 target: BufferRangeTarget.UniformBuffer,
                 index: (int)GLNVGuniformBindings.GLNVG_FRAG_BINDING,
                 buffer: gl.fragBuf,
-                offset: uniformOffset,
-                size: sizeof(GLNVGfragUniforms));
+                offset: (IntPtr)uniformOffset,
+                size: Marshal.SizeOf(typeof(GLNVGfragUniforms)));
 #else
             GLNVGfragUniforms* frag = nvg__fragUniformPtr(gl, uniformOffset);
             GL.Uniform4fv(gl->shader.loc[GLNVG_LOC_FRAG], NANOVG_GL_UNIFORMARRAY_SIZE, &(frag->uniformArray[0][0]));

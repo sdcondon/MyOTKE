@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Views.Renderables.NanoGui\NanoVG.csproj" />
+    <ProjectReference Include="..\NanoVG\NanoVG.csproj" />
   </ItemGroup>
   
 </Project>

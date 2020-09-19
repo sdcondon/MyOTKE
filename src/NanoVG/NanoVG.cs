@@ -60,11 +60,6 @@ namespace NanoVG
         internal int fillTriCount;
         internal int strokeTriCount;
         internal int textTriCount;
-
-        public Context ShallowCopy()
-        {
-            return (Context)this.MemberwiseClone();
-        }
     }
 
     public struct Extent2D
@@ -131,17 +126,15 @@ namespace NanoVG
         /// </summary>
         NVG_CCW = 1,
 
+        NVG_SOLID = 1,
+
         /// <summary>
         /// Winding for holes
         /// </summary>
         NVG_CW = 2,
-    }
 
-    ////enum Solidity
-    ////{
-    ////    NVG_SOLID = 1, // CCW
-    ////    NVG_HOLE = 2, // CW
-    ////}
+        NVG_HOLE = 2
+    }
 
     public enum nvgLineCap
     {
@@ -155,7 +148,7 @@ namespace NanoVG
     /// <summary>
     /// Enumeration of text alignment flags.
     /// </summary>
-    enum Align
+    public enum Align
     {
         /// <summary>Default, align text horizontally to left.</summary>
         NVG_ALIGN_LEFT = 1 << 0,
@@ -266,7 +259,7 @@ namespace NanoVG
         private const int NVG_INIT_POINTS_SIZE = 128;
         private const int NVG_INIT_PATHS_SIZE = 16;
         private const int NVG_INIT_VERTS_SIZE = 256;
-        private const int NVG_MAX_STATES = 32;
+        private const int NVG_MAX_STATES = 32
 
         #region Frames
 
@@ -575,26 +568,22 @@ namespace NanoVG
                 return n1;
             }
 
-            float Clamp(float x, float min, float max) => Math.Max(0f, Math.Min(x, 1f));
-
-            float m1, m2;
-
             h %= 1;
             if (h < 0.0f)
             {
                 h += 1.0f;
             }
 
-            s = Clamp(s, 0.0f, 1.0f);
-            l = Clamp(l, 0.0f, 1.0f);
-            m2 = l <= 0.5f ? (l * (1 + s)) : (l + s - l * s);
-            m1 = 2 * l - m2;
+            s = nvg__clampf(s, 0.0f, 1.0f);
+            l = nvg__clampf(l, 0.0f, 1.0f);
+            float m2 = l <= 0.5f ? (l * (1 + s)) : (l + s - l * s);
+            float m1 = 2 * l - m2;
 
             return new Color
             {
-                R = Clamp(Hue(h + 1.0f / 3.0f, m1, m2), 0.0f, 1.0f),
-                G = Clamp(Hue(h, m1, m2), 0.0f, 1.0f),
-                B = Clamp(Hue(h - 1.0f / 3.0f, m1, m2), 0.0f, 1.0f),
+                R = nvg__clampf(Hue(h + 1.0f / 3.0f, m1, m2), 0.0f, 1.0f),
+                G = nvg__clampf(Hue(h, m1, m2), 0.0f, 1.0f),
+                B = nvg__clampf(Hue(h - 1.0f / 3.0f, m1, m2), 0.0f, 1.0f),
                 A = a / 255.0f,
             };
         }
@@ -673,7 +662,7 @@ namespace NanoVG
 
         #endregion
 
-        #region Render styles
+        #region Render style setters
 
         //// Fill and stroke render style can be either a solid color or a paint which is a gradient or a pattern.
         //// Solid color is simply defined as a color value, different kinds of paints can be created
@@ -1100,6 +1089,13 @@ namespace NanoVG
         /// <returns>The input value converted to degrees.</returns>
         public static float RadToDeg(float rad) => rad / (float)Math.PI * 180.0f;
 
+        private static float nvg__getAverageScale(Transform2D t)
+        {
+            float sx = (float)Math.Sqrt(t.R1C1 * t.R1C1 + t.R1C2 * t.R1C2);
+            float sy = (float)Math.Sqrt(t.R2C1 * t.R2C1 + t.R2C2 * t.R2C2);
+            return (sx + sy) * 0.5f;
+        }
+
         #endregion
 
         #region Images
@@ -1373,6 +1369,18 @@ namespace NanoVG
             p.innerColor = p.outerColor = RGBAf(1, 1, 1, alpha);
 
             return p;
+        }
+
+        private static void nvg__setPaintColor(ref Paint p, Color color)
+        {
+            p.extent.X = 0f;
+            p.extent.Y = 0f;
+            TransformIdentity(ref p.xform);
+            p.radius = 0.0f;
+            p.feather = 1.0f;
+            p.innerColor = color;
+            p.outerColor = color;
+            p.image = 0;
         }
 
         #endregion
@@ -2081,7 +2089,7 @@ namespace NanoVG
         }
 
         // Sets the text align of current text style, see NVGalign for options.
-        public static void TextAlign(Context ctx, int align)
+        public static void TextAlign(Context ctx, Align align)
         {
             throw new NotImplementedException();
             /*
@@ -4080,34 +4088,6 @@ namespace NanoVG
             return ctx.states[ctx.nstates - 1];
         }
 
-        private static float nvg__getAverageScale(Transform2D t)
-        {
-            float sx = (float)Math.Sqrt(t.R1C1 * t.R1C1 + t.R1C2 * t.R1C2);
-            float sy = (float)Math.Sqrt(t.R2C1 * t.R2C1 + t.R2C2 * t.R2C2);
-            return (sx + sy) * 0.5f;
-        }
-
-        private static void nvg__setPaintColor(ref Paint p, Color color)
-        {
-            p.extent.X = 0f;
-            p.extent.Y = 0f;
-            TransformIdentity(ref p.xform);
-            p.radius = 0.0f;
-            p.feather = 1.0f;
-            p.innerColor = color;
-            p.outerColor = color;
-            p.image = 0;
-        }
-
-        private enum NVGcommands
-        {
-            NVG_MOVETO = 0,
-            NVG_LINETO = 1,
-            NVG_BEZIERTO = 2,
-            NVG_CLOSE = 3,
-            NVG_WINDING = 4,
-        }
-
         private static void nvg__appendCommands(Context ctx, float[] vals, int nvals)
         {
             var state = nvg__getState(ctx);
@@ -4163,6 +4143,15 @@ namespace NanoVG
             // append commands to context
             Array.Copy(vals, 0, ctx.commands, ctx.ncommands, nvals);
             ctx.ncommands += nvals;
+        }
+
+        private enum NVGcommands
+        {
+            NVG_MOVETO = 0,
+            NVG_LINETO = 1,
+            NVG_BEZIERTO = 2,
+            NVG_CLOSE = 3,
+            NVG_WINDING = 4,
         }
 
         internal class NVGstate
