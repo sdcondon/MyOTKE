@@ -72,17 +72,17 @@ namespace NanoVG
             NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 32));
             NVG.Stroke(vg);
 
-            NVG.FontSize(vg, 15.0f);
-            NVG.FontFace(vg, "sans-bold");
-            NVG.TextAlign(vg, Align.NVG_ALIGN_CENTER | Align.NVG_ALIGN_MIDDLE);
-
-            NVG.FontBlur(vg, 2);
-            NVG.FillColor(vg, NVG.RGBA(0, 0, 0, 128));
-            NVG.Text(vg, x + w / 2, y + 16 + 1, title, 0);
-
-            NVG.FontBlur(vg, 0);
-            NVG.FillColor(vg, NVG.RGBA(220, 220, 220, 160));
-            NVG.Text(vg, x + w / 2, y + 16, title, 0);
+            ////NVG.FontSize(vg, 15.0f);
+            ////NVG.FontFace(vg, "sans-bold");
+            ////NVG.TextAlign(vg, Align.NVG_ALIGN_CENTER | Align.NVG_ALIGN_MIDDLE);
+            ////
+            ////NVG.FontBlur(vg, 2);
+            ////NVG.FillColor(vg, NVG.RGBA(0, 0, 0, 128));
+            ////NVG.Text(vg, x + w / 2, y + 16 + 1, title, 0);
+            ////
+            ////NVG.FontBlur(vg, 0);
+            ////NVG.FillColor(vg, NVG.RGBA(220, 220, 220, 160));
+            ////NVG.Text(vg, x + w / 2, y + 16, title, 0);
 
             NVG.Restore(vg);
         }
@@ -99,29 +99,30 @@ namespace NanoVG
             NVG.FillPaint(vg, bg);
             NVG.Fill(vg);
 
+            // commented out in source
             ////nvgBeginPath(vg);
             ////nvgRoundedRect(vg, x+0.5f,y+0.5f, w-1,h-1, cornerRadius-0.5f);
             ////nvgStrokeColor(vg, nvgRGBA(0,0,0,48));
             ////nvgStroke(vg);
 
-            NVG.FontSize(vg, h * 1.3f);
-            NVG.FontFace(vg, "icons");
-            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 64));
-            NVG.TextAlign(vg, Align.NVG_ALIGN_CENTER | Align.NVG_ALIGN_MIDDLE);
-            NVG.Text(vg, x + h * 0.55f, y + h * 0.55f, IconSearch, 0);
-
-            NVG.FontSize(vg, 17.0f);
-            NVG.FontFace(vg, "sans");
-            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 32));
-
-            NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
-            NVG.Text(vg, x + h * 1.05f, y + h * 0.5f, text, 0);
-
-            NVG.FontSize(vg, h * 1.3f);
-            NVG.FontFace(vg, "icons");
-            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 32));
-            NVG.TextAlign(vg, Align.NVG_ALIGN_CENTER | Align.NVG_ALIGN_MIDDLE);
-            NVG.Text(vg, x + w - h * 0.55f, y + h * 0.55f, IconCircledCross, 0);
+            ////NVG.FontSize(vg, h * 1.3f);
+            ////NVG.FontFace(vg, "icons");
+            ////NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 64));
+            ////NVG.TextAlign(vg, Align.NVG_ALIGN_CENTER | Align.NVG_ALIGN_MIDDLE);
+            ////NVG.Text(vg, x + h * 0.55f, y + h * 0.55f, IconSearch, 0);
+            ////
+            ////NVG.FontSize(vg, 17.0f);
+            ////NVG.FontFace(vg, "sans");
+            ////NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 32));
+            ////
+            ////NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
+            ////NVG.Text(vg, x + h * 1.05f, y + h * 0.5f, text, 0);
+            ////
+            ////NVG.FontSize(vg, h * 1.3f);
+            ////NVG.FontFace(vg, "icons");
+            ////NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 32));
+            ////NVG.TextAlign(vg, Align.NVG_ALIGN_CENTER | Align.NVG_ALIGN_MIDDLE);
+            ////NVG.Text(vg, x + w - h * 0.55f, y + h * 0.55f, IconCircledCross, 0);
         }
 
         private static void DrawDropDown(Context vg, string text, float x, float y, float w, float h)
@@ -140,29 +141,29 @@ namespace NanoVG
             NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 48));
             NVG.Stroke(vg);
 
-            NVG.FontSize(vg, 17.0f);
-            NVG.FontFace(vg, "sans");
-            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 160));
-            NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
-            NVG.Text(vg, x + h * 0.3f, y + h * 0.5f, text, 0);
-
-            NVG.FontSize(vg, h * 1.3f);
-            NVG.FontFace(vg, "icons");
-            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 64));
-            NVG.TextAlign(vg, Align.NVG_ALIGN_CENTER | Align.NVG_ALIGN_MIDDLE);
-            NVG.Text(vg, x + w - h * 0.5f, y + h * 0.5f, IconChevronRight, 0);
+            ////NVG.FontSize(vg, 17.0f);
+            ////NVG.FontFace(vg, "sans");
+            ////NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 160));
+            ////NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
+            ////NVG.Text(vg, x + h * 0.3f, y + h * 0.5f, text, 0);
+            ////
+            ////NVG.FontSize(vg, h * 1.3f);
+            ////NVG.FontFace(vg, "icons");
+            ////NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 64));
+            ////NVG.TextAlign(vg, Align.NVG_ALIGN_CENTER | Align.NVG_ALIGN_MIDDLE);
+            ////NVG.Text(vg, x + w - h * 0.5f, y + h * 0.5f, IconChevronRight, 0);
         }
 
         private static void DrawLabel(Context vg, string text, float x, float y, float w, float h)
         {
             ////NVG_NOTUSED(w);
 
-            NVG.FontSize(vg, 15.0f);
-            NVG.FontFace(vg, "sans");
-            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 128));
-
-            NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
-            NVG.Text(vg, x, y + h * 0.5f, text, 0);
+            ////NVG.FontSize(vg, 15.0f);
+            ////NVG.FontFace(vg, "sans");
+            ////NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 128));
+            ////
+            ////NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
+            ////NVG.Text(vg, x, y + h * 0.5f, text, 0);
         }
 
         private static void DrawEditBoxBase(Context vg, float x, float y, float w, float h)
@@ -184,11 +185,11 @@ namespace NanoVG
         {
             DrawEditBoxBase(vg, x, y, w, h);
 
-            NVG.FontSize(vg, 17.0f);
-            NVG.FontFace(vg, "sans");
-            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 64));
-            NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
-            NVG.Text(vg, x + h * 0.3f, y + h * 0.5f, text, 0);
+            ////NVG.FontSize(vg, 17.0f);
+            ////NVG.FontFace(vg, "sans");
+            ////NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 64));
+            ////NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
+            ////NVG.Text(vg, x + h * 0.3f, y + h * 0.5f, text, 0);
         }
 
         private static void DrawEditBoxNum(Context vg, string text, string units, float x, float y, float w, float h)
@@ -197,19 +198,19 @@ namespace NanoVG
 
             DrawEditBoxBase(vg, x, y, w, h);
 
-            uw = NVG.TextBounds(vg, 0, 0, units, 0, null);
-
-            NVG.FontSize(vg, 15.0f);
-            NVG.FontFace(vg, "sans");
-            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 64));
-            NVG.TextAlign(vg, Align.NVG_ALIGN_RIGHT | Align.NVG_ALIGN_MIDDLE);
-            NVG.Text(vg, x + w - h * 0.3f, y + h * 0.5f, units, 0);
-
-            NVG.FontSize(vg, 17.0f);
-            NVG.FontFace(vg, "sans");
-            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 128));
-            NVG.TextAlign(vg, Align.NVG_ALIGN_RIGHT | Align.NVG_ALIGN_MIDDLE);
-            NVG.Text(vg, x + w - uw - h * 0.5f, y + h * 0.5f, text, 0);
+            ////uw = NVG.TextBounds(vg, 0, 0, units, 0, null);
+            ////
+            ////NVG.FontSize(vg, 15.0f);
+            ////NVG.FontFace(vg, "sans");
+            ////NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 64));
+            ////NVG.TextAlign(vg, Align.NVG_ALIGN_RIGHT | Align.NVG_ALIGN_MIDDLE);
+            ////NVG.Text(vg, x + w - h * 0.3f, y + h * 0.5f, units, 0);
+            ////
+            ////NVG.FontSize(vg, 17.0f);
+            ////NVG.FontFace(vg, "sans");
+            ////NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 128));
+            ////NVG.TextAlign(vg, Align.NVG_ALIGN_RIGHT | Align.NVG_ALIGN_MIDDLE);
+            ////NVG.Text(vg, x + w - uw - h * 0.5f, y + h * 0.5f, text, 0);
         }
 
         private static void DrawCheckBox(Context vg, string text, float x, float y, float w, float h)
@@ -217,12 +218,12 @@ namespace NanoVG
             Paint bg;
             ////NVG_NOTUSED(w);
 
-            NVG.FontSize(vg, 15.0f);
-            NVG.FontFace(vg, "sans");
-            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 160));
-
-            NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
-            NVG.Text(vg, x + 28, y + h * 0.5f, text, 0);
+            ////NVG.FontSize(vg, 15.0f);
+            ////NVG.FontFace(vg, "sans");
+            ////NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 160));
+            ////
+            ////NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
+            ////NVG.Text(vg, x + 28, y + h * 0.5f, text, 0);
 
             bg = NVG.BoxGradient(vg, x + 1, y + (int)(h * 0.5f) - 9 + 1, 18, 18, 3, 3, NVG.RGBA(0, 0, 0, 32), NVG.RGBA(0, 0, 0, 92));
             NVG.BeginPath(vg);
@@ -230,11 +231,11 @@ namespace NanoVG
             NVG.FillPaint(vg, bg);
             NVG.Fill(vg);
 
-            NVG.FontSize(vg, 33);
-            NVG.FontFace(vg, "icons");
-            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 128));
-            NVG.TextAlign(vg, Align.NVG_ALIGN_CENTER | Align.NVG_ALIGN_MIDDLE);
-            NVG.Text(vg, x + 9 + 2, y + h * 0.5f, IconCheck, 0);
+            ////NVG.FontSize(vg, 33);
+            ////NVG.FontFace(vg, "icons");
+            ////NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 128));
+            ////NVG.TextAlign(vg, Align.NVG_ALIGN_CENTER | Align.NVG_ALIGN_MIDDLE);
+            ////NVG.Text(vg, x + 9 + 2, y + h * 0.5f, IconCheck, 0);
         }
 
         private static void DrawButton(Context vg, string preicon, string text, float x, float y, float w, float h, Color col)
@@ -260,33 +261,33 @@ namespace NanoVG
             NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 48));
             NVG.Stroke(vg);
 
-            NVG.FontSize(vg, 17.0f);
-            NVG.FontFace(vg, "sans-bold");
-            tw = NVG.TextBounds(vg, 0, 0, text, 0, null);
-            if (!string.IsNullOrEmpty(preicon))
-            {
-                NVG.FontSize(vg, h * 1.3f);
-                NVG.FontFace(vg, "icons");
-                iw = NVG.TextBounds(vg, 0, 0, preicon, 0, null);
-                iw += h * 0.15f;
-            }
-
-            if (!string.IsNullOrEmpty(preicon))
-            {
-                NVG.FontSize(vg, h * 1.3f);
-                NVG.FontFace(vg, "icons");
-                NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 96));
-                NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
-                NVG.Text(vg, x + w * 0.5f - tw * 0.5f - iw * 0.75f, y + h * 0.5f, preicon, 0);
-            }
-
-            NVG.FontSize(vg, 17.0f);
-            NVG.FontFace(vg, "sans-bold");
-            NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
-            NVG.FillColor(vg, NVG.RGBA(0, 0, 0, 160));
-            NVG.Text(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f - 1, text, 0);
-            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 160));
-            NVG.Text(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f, text, 0);
+            ////NVG.FontSize(vg, 17.0f);
+            ////NVG.FontFace(vg, "sans-bold");
+            ////tw = NVG.TextBounds(vg, 0, 0, text, 0, null);
+            ////if (!string.IsNullOrEmpty(preicon))
+            ////{
+            ////    NVG.FontSize(vg, h * 1.3f);
+            ////    NVG.FontFace(vg, "icons");
+            ////    iw = NVG.TextBounds(vg, 0, 0, preicon, 0, null);
+            ////    iw += h * 0.15f;
+            ////}
+            ////
+            ////if (!string.IsNullOrEmpty(preicon))
+            ////{
+            ////    NVG.FontSize(vg, h * 1.3f);
+            ////    NVG.FontFace(vg, "icons");
+            ////    NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 96));
+            ////    NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
+            ////    NVG.Text(vg, x + w * 0.5f - tw * 0.5f - iw * 0.75f, y + h * 0.5f, preicon, 0);
+            ////}
+            ////
+            ////NVG.FontSize(vg, 17.0f);
+            ////NVG.FontFace(vg, "sans-bold");
+            ////NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
+            ////NVG.FillColor(vg, NVG.RGBA(0, 0, 0, 160));
+            ////NVG.Text(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f - 1, text, 0);
+            ////NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 160));
+            ////NVG.Text(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f, text, 0);
         }
 
         private static void DrawSlider(Context vg, float pos, float x, float y, float w, float h)

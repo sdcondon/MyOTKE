@@ -78,6 +78,39 @@ namespace NanoVG
             GLNVG_FRAG_BINDING = 0,
         }
 #endif
+
+        struct Mat3x4
+        {
+            public float R1C1;
+            public float R2C1;
+            public float R3C1;
+            public float R4C1;
+            public float R1C2;
+            public float R2C2;
+            public float R3C2;
+            public float R4C2;
+            public float R1C3;
+            public float R2C3;
+            public float R3C3;
+            public float R4C3;
+
+            public void Clear()
+            {
+                R1C1
+                    = R2C1
+                    = R3C1
+                    = R4C1
+                    = R1C2
+                    = R2C2
+                    = R3C2
+                    = R4C2
+                    = R1C3
+                    = R2C3
+                    = R3C3
+                    = R4C3 = 0;
+            }
+        }
+
         struct GLNVGshader
         {
             public int prog;
@@ -135,8 +168,8 @@ namespace NanoVG
 
         struct GLNVGfragUniforms
         {
-            public float[] scissorMat;//TODO [12]; // matrices are actually 3 vec4s
-            public float[] paintMat;//TODO [12];
+            public Mat3x4 scissorMat;
+            public Mat3x4 paintMat;
             public Color innerCol;
             public Color outerCol;
             public Extent2D scissorExt;
@@ -620,7 +653,10 @@ namespace NanoVG
 
 #if NANOVG_GL_USE_UNIFORMBUFFER
             // Create UBOs
-            GL.UniformBlockBinding(gl.shader.prog, gl.shader.loc[(int)GLNVGuniformLoc.GLNVG_LOC_FRAG], (int)GLNVGuniformBindings.GLNVG_FRAG_BINDING);
+            GL.UniformBlockBinding(
+                gl.shader.prog,
+                gl.shader.loc[(int)GLNVGuniformLoc.GLNVG_LOC_FRAG],
+                (int)GLNVGuniformBindings.GLNVG_FRAG_BINDING);
             GL.GenBuffers(1, out gl.fragBuf);
             GL.GetInteger(GetPName.UniformBufferOffsetAlignment, out align);
 #endif
@@ -827,20 +863,20 @@ namespace NanoVG
             return 1;
         }
 
-        static void glnvg__xformToMat3x4(float[] m3, Transform2D t)
+        static void glnvg__xformToMat3x4(ref Mat3x4 m3, Transform2D t)
         {
-            m3[0] = t.R1C1;
-            m3[1] = t.R2C1;
-            m3[2] = 0.0f;
-            m3[3] = 0.0f;
-            m3[4] = t.R1C2;
-            m3[5] = t.R2C2;
-            m3[6] = 0.0f;
-            m3[7] = 0.0f;
-            m3[8] = t.R1C3;
-            m3[9] = t.R2C3;
-            m3[10] = 1.0f;
-            m3[11] = 0.0f;
+            m3.R1C1 = t.R1C1;
+            m3.R2C1 = t.R2C1;
+            m3.R3C1 = 0.0f;
+            m3.R4C1 = 0.0f;
+            m3.R1C2 = t.R1C2;
+            m3.R2C2 = t.R2C2;
+            m3.R3C2 = 0.0f;
+            m3.R4C2 = 0.0f;
+            m3.R1C3 = t.R1C3;
+            m3.R2C3 = t.R2C3;
+            m3.R3C3 = 1.0f;
+            m3.R4C3 = 0.0f;
         }
 
         static Color glnvg__premulColor(Color c)
@@ -869,7 +905,7 @@ namespace NanoVG
 
             if (scissor.extent.X < -0.5f || scissor.extent.Y < -0.5f)
             {
-                Array.Clear(frag.scissorMat, 0, frag.scissorMat.Length);
+                frag.scissorMat.Clear();
                 frag.scissorExt.X = 1.0f;
                 frag.scissorExt.Y = 1.0f;
                 frag.scissorScale.X = 1.0f;
@@ -878,7 +914,7 @@ namespace NanoVG
             else
             {
                 TransformInverse(ref invxform, scissor.xform);
-                glnvg__xformToMat3x4(frag.scissorMat, invxform);
+                glnvg__xformToMat3x4(ref frag.scissorMat, invxform);
                 frag.scissorExt = scissor.extent;
                 frag.scissorScale.X = (float)Math.Sqrt(scissor.xform.R1C1 * scissor.xform.R1C1 + scissor.xform.R1C2 * scissor.xform.R1C2) / fringe;
                 frag.scissorScale.Y = (float)Math.Sqrt(scissor.xform.R2C1 * scissor.xform.R2C1 + scissor.xform.R2C2 * scissor.xform.R2C2) / fringe;
@@ -936,7 +972,7 @@ namespace NanoVG
                 TransformInverse(ref invxform, paint.xform);
             }
 
-            glnvg__xformToMat3x4(frag.paintMat, invxform);
+            glnvg__xformToMat3x4(ref frag.paintMat, invxform);
 
             return 1;
         }
