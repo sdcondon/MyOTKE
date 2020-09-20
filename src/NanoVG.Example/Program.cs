@@ -120,7 +120,7 @@ namespace NanoVG
                 return -1;
             }
 
-            if (Demo.loadDemoData(vg, &data) == -1)
+            if (Demo.LoadDemoData(vg, &data) == -1)
             {
                 return -1;
             }
@@ -194,7 +194,7 @@ namespace NanoVG
                 glfwPollEvents();
             }
 
-            Demo.freeDemoData(vg, &data);
+            Demo.FreeDemoData(vg, &data);
 
             nvgDeleteGL3(vg);
 

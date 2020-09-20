@@ -1,71 +1,38 @@
-﻿/*
-#include "demo.h"
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-#ifdef NANOVG_GLEW
-#  include <GL/glew.h>
-#endif
-#include <GLFW/glfw3.h>
-#include "nanovg.h"
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
-
-
-#ifdef _MSC_VER
-#define snprintf _snprintf
-#elif !defined(__MINGW32__)
-#include <iconv.h>
-#endif
- */
-
+﻿using OpenTK.Graphics.OpenGL;
 using System;
 
 namespace NanoVG
 {
+    public class DemoData
+    {
+        public int fontNormal;
+        public int fontBold;
+        public int fontIcons;
+        public int fontEmoji;
+        public int[] images = new int[12];
+    }
+
     /// <summary>
     /// The main entry point for the application.
     /// </summary>
     public static class Demo
     {
-        ////#define ICON_SEARCH 0x1F50D
-        ////#define ICON_CIRCLED_CROSS 0x2716
-        ////#define ICON_CHEVRON_RIGHT 0xE75E
-        ////#define ICON_CHECK 0x2713
-        ////#define ICON_LOGIN 0xE740
-        ////#define ICON_TRASH 0xE729
+        private const string IconSearch = "\u1F50D";
+        private const string IconCircledCross = "\u2716";
+        private const string IconChevronRight = "\uE75E";
+        private const string IconCheck = "\u2713";
+        private const string IconLogin = "\uE740";
+        private const string IconTrash = "\uE729";
 
         ////static float minf(float a, float b) { return a < b ? a : b; }
         ////static float maxf(float a, float b) { return a > b ? a : b; }
         ////static float absf(float a) { return a >= 0.0f ? a : -a; }
-        private static float clampf(float a, float mn, float mx) { return a < mn ? mn : (a > mx ? mx : a); }
+        private static float Clampf(float a, float mn, float mx) => a < mn ? mn : (a > mx ? mx : a);
 
         // Returns 1 if col.rgba is 0.0f,0.0f,0.0f,0.0f, 0 otherwise
         private static bool IsBlack(Color col)
         {
             return col.R == 0.0f && col.G == 0.0f && col.B == 0.0f && col.A == 0.0f;
-        }
-
-        private static char* cpToUTF8(int cp, char* str)
-        {
-            int n = 0;
-            if (cp < 0x80) n = 1;
-            else if (cp < 0x800) n = 2;
-            else if (cp < 0x10000) n = 3;
-            else if (cp < 0x200000) n = 4;
-            else if (cp < 0x4000000) n = 5;
-            else if (cp <= 0x7fffffff) n = 6;
-            str[n] = '\0';
-            switch (n)
-            {
-                case 6: str[5] = 0x80 | (cp & 0x3f); cp = cp >> 6; cp |= 0x4000000;
-                case 5: str[4] = 0x80 | (cp & 0x3f); cp = cp >> 6; cp |= 0x200000;
-                case 4: str[3] = 0x80 | (cp & 0x3f); cp = cp >> 6; cp |= 0x10000;
-                case 3: str[2] = 0x80 | (cp & 0x3f); cp = cp >> 6; cp |= 0x800;
-                case 2: str[1] = 0x80 | (cp & 0x3f); cp = cp >> 6; cp |= 0xc0;
-                case 1: str[0] = cp;
-            }
-            return str;
         }
 
         private static void DrawWindow(Context vg, string title, float x, float y, float w, float h)
@@ -75,13 +42,13 @@ namespace NanoVG
             Paint headerPaint;
 
             NVG.Save(vg);
-            //	nvgClearState(vg);
+            ////nvgClearState(vg);
 
             // Window
             NVG.BeginPath(vg);
             NVG.RoundedRect(vg, x, y, w, h, cornerRadius);
             NVG.FillColor(vg, NVG.RGBA(28, 30, 34, 192));
-            //	nvgFillColor(vg, nvgRGBA(0,0,0,128));
+            ////nvgFillColor(vg, nvgRGBA(0,0,0,128));
             NVG.Fill(vg);
 
             // Drop shadow
@@ -120,10 +87,9 @@ namespace NanoVG
             NVG.Restore(vg);
         }
 
-        private static void drawSearchBox(Context vg, string text, float x, float y, float w, float h)
+        private static void DrawSearchBox(Context vg, string text, float x, float y, float w, float h)
         {
             Paint bg;
-            char icon[8];
             float cornerRadius = h / 2 - 1;
 
             // Edit
@@ -133,16 +99,16 @@ namespace NanoVG
             NVG.FillPaint(vg, bg);
             NVG.Fill(vg);
 
-            /*	nvgBeginPath(vg);
-                nvgRoundedRect(vg, x+0.5f,y+0.5f, w-1,h-1, cornerRadius-0.5f);
-                nvgStrokeColor(vg, nvgRGBA(0,0,0,48));
-                nvgStroke(vg);*/
+            ////nvgBeginPath(vg);
+            ////nvgRoundedRect(vg, x+0.5f,y+0.5f, w-1,h-1, cornerRadius-0.5f);
+            ////nvgStrokeColor(vg, nvgRGBA(0,0,0,48));
+            ////nvgStroke(vg);
 
             NVG.FontSize(vg, h * 1.3f);
             NVG.FontFace(vg, "icons");
             NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 64));
             NVG.TextAlign(vg, Align.NVG_ALIGN_CENTER | Align.NVG_ALIGN_MIDDLE);
-            NVG.Text(vg, x + h * 0.55f, y + h * 0.55f, cpToUTF8(ICON_SEARCH, icon), 0);
+            NVG.Text(vg, x + h * 0.55f, y + h * 0.55f, IconSearch, 0);
 
             NVG.FontSize(vg, 17.0f);
             NVG.FontFace(vg, "sans");
@@ -155,13 +121,12 @@ namespace NanoVG
             NVG.FontFace(vg, "icons");
             NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 32));
             NVG.TextAlign(vg, Align.NVG_ALIGN_CENTER | Align.NVG_ALIGN_MIDDLE);
-            NVG.Text(vg, x + w - h * 0.55f, y + h * 0.55f, cpToUTF8(ICON_CIRCLED_CROSS, icon), 0);
+            NVG.Text(vg, x + w - h * 0.55f, y + h * 0.55f, IconCircledCross, 0);
         }
 
-        private static void drawDropDown(Context vg, string text, float x, float y, float w, float h)
+        private static void DrawDropDown(Context vg, string text, float x, float y, float w, float h)
         {
             Paint bg;
-            char icon[8];
             float cornerRadius = 4.0f;
 
             bg = NVG.LinearGradient(vg, x, y, x, y + h, NVG.RGBA(255, 255, 255, 16), NVG.RGBA(0, 0, 0, 16));
@@ -185,10 +150,10 @@ namespace NanoVG
             NVG.FontFace(vg, "icons");
             NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 64));
             NVG.TextAlign(vg, Align.NVG_ALIGN_CENTER | Align.NVG_ALIGN_MIDDLE);
-            NVG.Text(vg, x + w - h * 0.5f, y + h * 0.5f, cpToUTF8(ICON_CHEVRON_RIGHT, icon), 0);
+            NVG.Text(vg, x + w - h * 0.5f, y + h * 0.5f, IconChevronRight, 0);
         }
 
-        private static void drawLabel(Context vg, string text, float x, float y, float w, float h)
+        private static void DrawLabel(Context vg, string text, float x, float y, float w, float h)
         {
             ////NVG_NOTUSED(w);
 
@@ -200,7 +165,7 @@ namespace NanoVG
             NVG.Text(vg, x, y + h * 0.5f, text, 0);
         }
 
-        private static void drawEditBoxBase(Context vg, float x, float y, float w, float h)
+        private static void DrawEditBoxBase(Context vg, float x, float y, float w, float h)
         {
             // Edit
             var bg = NVG.BoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, NVG.RGBA(255, 255, 255, 32), NVG.RGBA(32, 32, 32, 32));
@@ -215,9 +180,9 @@ namespace NanoVG
             NVG.Stroke(vg);
         }
 
-        private static void drawEditBox(Context vg, string text, float x, float y, float w, float h)
+        private static void DrawEditBox(Context vg, string text, float x, float y, float w, float h)
         {
-            drawEditBoxBase(vg, x, y, w, h);
+            DrawEditBoxBase(vg, x, y, w, h);
 
             NVG.FontSize(vg, 17.0f);
             NVG.FontFace(vg, "sans");
@@ -226,11 +191,11 @@ namespace NanoVG
             NVG.Text(vg, x + h * 0.3f, y + h * 0.5f, text, 0);
         }
 
-        private static void drawEditBoxNum(Context vg, string text, string units, float x, float y, float w, float h)
+        private static void DrawEditBoxNum(Context vg, string text, string units, float x, float y, float w, float h)
         {
             float uw;
 
-            drawEditBoxBase(vg, x, y, w, h);
+            DrawEditBoxBase(vg, x, y, w, h);
 
             uw = NVG.TextBounds(vg, 0, 0, units, 0, null);
 
@@ -247,11 +212,10 @@ namespace NanoVG
             NVG.Text(vg, x + w - uw - h * 0.5f, y + h * 0.5f, text, 0);
         }
 
-        private static void drawCheckBox(Context vg, string text, float x, float y, float w, float h)
+        private static void DrawCheckBox(Context vg, string text, float x, float y, float w, float h)
         {
             Paint bg;
-            char icon[8];
-            //NVG_NOTUSED(w);
+            ////NVG_NOTUSED(w);
 
             NVG.FontSize(vg, 15.0f);
             NVG.FontFace(vg, "sans");
@@ -270,13 +234,12 @@ namespace NanoVG
             NVG.FontFace(vg, "icons");
             NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 128));
             NVG.TextAlign(vg, Align.NVG_ALIGN_CENTER | Align.NVG_ALIGN_MIDDLE);
-            NVG.Text(vg, x + 9 + 2, y + h * 0.5f, cpToUTF8(ICON_CHECK, icon), 0);
+            NVG.Text(vg, x + 9 + 2, y + h * 0.5f, IconCheck, 0);
         }
 
-        private static void drawButton(Context vg, int preicon, string text, float x, float y, float w, float h, Color col)
+        private static void DrawButton(Context vg, string preicon, string text, float x, float y, float w, float h, Color col)
         {
             Paint bg;
-            char icon[8];
             float cornerRadius = 4.0f;
             float tw = 0, iw = 0;
 
@@ -300,21 +263,21 @@ namespace NanoVG
             NVG.FontSize(vg, 17.0f);
             NVG.FontFace(vg, "sans-bold");
             tw = NVG.TextBounds(vg, 0, 0, text, 0, null);
-            if (preicon != 0)
+            if (!string.IsNullOrEmpty(preicon))
             {
                 NVG.FontSize(vg, h * 1.3f);
                 NVG.FontFace(vg, "icons");
-                iw = NVG.TextBounds(vg, 0, 0, cpToUTF8(preicon, icon), 0, null);
+                iw = NVG.TextBounds(vg, 0, 0, preicon, 0, null);
                 iw += h * 0.15f;
             }
 
-            if (preicon != 0)
+            if (!string.IsNullOrEmpty(preicon))
             {
                 NVG.FontSize(vg, h * 1.3f);
                 NVG.FontFace(vg, "icons");
                 NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 96));
                 NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
-                NVG.Text(vg, x + w * 0.5f - tw * 0.5f - iw * 0.75f, y + h * 0.5f, cpToUTF8(preicon, icon), 0);
+                NVG.Text(vg, x + w * 0.5f - tw * 0.5f - iw * 0.75f, y + h * 0.5f, preicon, 0);
             }
 
             NVG.FontSize(vg, 17.0f);
@@ -326,14 +289,14 @@ namespace NanoVG
             NVG.Text(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f, text, 0);
         }
 
-        private static void drawSlider(Context vg, float pos, float x, float y, float w, float h)
+        private static void DrawSlider(Context vg, float pos, float x, float y, float w, float h)
         {
             Paint bg, knob;
             float cy = y + (int)(h * 0.5f);
             float kr = (int)(h * 0.25f);
 
             NVG.Save(vg);
-            //	nvgClearState(vg);
+            ////nvgClearState(vg);
 
             // Slot
             bg = NVG.BoxGradient(vg, x, cy - 2 + 1, w, 4, 2, 2, NVG.RGBA(0, 0, 0, 32), NVG.RGBA(0, 0, 0, 128));
@@ -368,7 +331,7 @@ namespace NanoVG
             NVG.Restore(vg);
         }
 
-        private static void drawEyes(Context vg, float x, float y, float w, float h, float mx, float my, float t)
+        private static void DrawEyes(Context vg, float x, float y, float w, float h, float mx, float my, float t)
         {
             Paint gloss, bg;
             float ex = w * 0.23f;
@@ -440,7 +403,7 @@ namespace NanoVG
             NVG.Fill(vg);
         }
 
-        private static void drawGraph(Context vg, float x, float y, float w, float h, float t)
+        private static void DrawGraph(Context vg, float x, float y, float w, float h, float t)
         {
             Paint bg;
             float[] samples = new float[]
@@ -530,7 +493,7 @@ namespace NanoVG
             NVG.StrokeWidth(vg, 1.0f);
         }
 
-        private static void drawSpinner(Context vg, float cx, float cy, float r, float t)
+        private static void DrawSpinner(Context vg, float cx, float cy, float r, float t)
         {
             float a0 = 0.0f + t * 6;
             float a1 = (float)Math.PI + t * 6;
@@ -556,7 +519,7 @@ namespace NanoVG
             NVG.Restore(vg);
         }
 
-        private static void drawThumbnails(Context vg, float x, float y, float w, float h, int[] images, float t)
+        private static void DrawThumbnails(Context vg, float x, float y, float w, float h, int[] images, float t)
         {
             float cornerRadius = 3.0f;
             Paint shadowPaint, imgPaint, fadePaint;
@@ -570,7 +533,7 @@ namespace NanoVG
             float scrollh, dv;
 
             NVG.Save(vg);
-            //	nvgClearState(vg);
+            ////nvgClearState(vg);
 
             // Drop shadow
             shadowPaint = NVG.BoxGradient(vg, x, y + 4, w, h, cornerRadius * 2, 20, NVG.RGBA(0, 0, 0, 128), NVG.RGBA(0, 0, 0, 0));
@@ -620,10 +583,12 @@ namespace NanoVG
                 }
 
                 v = i * dv;
-                a = clampf((u2 - v) / dv, 0, 1);
+                a = Clampf((u2 - v) / dv, 0, 1);
 
                 if (a < 1.0f)
-                    drawSpinner(vg, tx + thumb / 2, ty + thumb / 2, thumb * 0.25f, t);
+                {
+                    DrawSpinner(vg, tx + thumb / 2, ty + thumb / 2, thumb * 0.25f, t);
+                }
 
                 imgPaint = NVG.ImagePattern(vg, tx + ix, ty + iy, iw, ih, 0.0f / 180.0f * (float)Math.PI, images[i], a);
                 NVG.BeginPath(vg);
@@ -666,7 +631,7 @@ namespace NanoVG
             NVG.BeginPath(vg);
             NVG.RoundedRect(vg, x + w - 12, y + 4, 8, h - 8, 3);
             NVG.FillPaint(vg, shadowPaint);
-            //	nvgFillColor(vg, nvgRGBA(255,0,0,128));
+            ////nvgFillColor(vg, nvgRGBA(255,0,0,128));
             NVG.Fill(vg);
 
             scrollh = (h / stackh) * (h - 8);
@@ -674,13 +639,13 @@ namespace NanoVG
             NVG.BeginPath(vg);
             NVG.RoundedRect(vg, x + w - 12 + 1, y + 4 + 1 + (h - 8 - scrollh) * u, 8 - 2, scrollh - 2, 2);
             NVG.FillPaint(vg, shadowPaint);
-            //	nvgFillColor(vg, nvgRGBA(0,0,0,128));
+            ////nvgFillColor(vg, nvgRGBA(0,0,0,128));
             NVG.Fill(vg);
 
             NVG.Restore(vg);
         }
 
-        private static void drawColorwheel(Context vg, float x, float y, float w, float h, float t)
+        private static void DrawColorwheel(Context vg, float x, float y, float w, float h, float t)
         {
             int i;
             float r0, r1, ax, ay, bx, by, cx, cy, aeps, r;
@@ -689,10 +654,10 @@ namespace NanoVG
 
             NVG.Save(vg);
 
-            /*	nvgBeginPath(vg);
-                nvgRect(vg, x,y,w,h);
-                nvgFillColor(vg, nvgRGBA(255,0,0,128));
-                nvgFill(vg);*/
+            ////nvgBeginPath(vg);
+            ////nvgRect(vg, x,y,w,h);
+            ////nvgFillColor(vg, nvgRGBA(255,0,0,128));
+            ////nvgFill(vg);
 
             cx = x + w * 0.5f;
             cy = y + h * 0.5f;
@@ -786,7 +751,7 @@ namespace NanoVG
             NVG.Restore(vg);
         }
 
-        private static void drawLines(Context vg, float x, float y, float w, float h, float t)
+        private static void DrawLines(Context vg, float x, float y, float w, float h, float t)
         {
             int i, j;
             float pad = 5.0f, s = w / 9.0f - pad * 2;
@@ -794,7 +759,7 @@ namespace NanoVG
             float fx, fy;
             var joins = new nvgLineCap[] { nvgLineCap.NVG_MITER, nvgLineCap.NVG_ROUND, nvgLineCap.NVG_BEVEL };
             var caps = new nvgLineCap[] { nvgLineCap.NVG_BUTT, nvgLineCap.NVG_ROUND, nvgLineCap.NVG_SQUARE };
-            //NVG_NOTUSED(h);
+            ////NVG_NOTUSED(h);
 
             NVG.Save(vg);
             pts[0] = -s * 0.25f + (float)Math.Cos(t * 0.3f) * s * 0.5f;
@@ -842,67 +807,67 @@ namespace NanoVG
             NVG.Restore(vg);
         }
 
-        public static int loadDemoData(Context vg, DemoData* data)
+        public static void LoadDemoData(Context vg, out DemoData data)
         {
-            int i;
-
             if (vg == null)
-                return -1;
-
-            for (i = 0; i < 12; i++)
             {
-                char file[128];
-                snprintf(file, 128, "../example/images/image%d.jpg", i + 1);
-                data->images[i] = NVG.CreateImage(vg, file, 0);
-                if (data->images[i] == 0)
+                throw new ArgumentNullException(nameof(vg));
+            }
+
+            data = new DemoData();
+
+            for (int i = 0; i < 12; i++)
+            {
+                string file = $"../example/images/image{i + 1}.jpg";
+                data.images[i] = NVG.CreateImage(vg, file, 0);
+                if (data.images[i] == 0)
                 {
-                    printf("Could not load %s.\n", file);
-                    return -1;
+                    throw new Exception($"Could not load {file}");
                 }
             }
 
-            data->fontIcons = NVG.CreateFont(vg, "icons", "../example/entypo.ttf");
-            if (data->fontIcons == -1)
+            data.fontIcons = NVG.CreateFont(vg, "icons", "../example/entypo.ttf");
+            if (data.fontIcons == -1)
             {
-                printf("Could not add font icons.\n");
-                return -1;
+                throw new Exception("Could not add font icons.");
             }
-            data->fontNormal = NVG.CreateFont(vg, "sans", "../example/Roboto-Regular.ttf");
-            if (data->fontNormal == -1)
-            {
-                printf("Could not add font italic.\n");
-                return -1;
-            }
-            data->fontBold = NVG.CreateFont(vg, "sans-bold", "../example/Roboto-Bold.ttf");
-            if (data->fontBold == -1)
-            {
-                printf("Could not add font bold.\n");
-                return -1;
-            }
-            data->fontEmoji = NVG.CreateFont(vg, "emoji", "../example/NotoEmoji-Regular.ttf");
-            if (data->fontEmoji == -1)
-            {
-                printf("Could not add font emoji.\n");
-                return -1;
-            }
-            NVG.AddFallbackFontId(vg, data->fontNormal, data->fontEmoji);
-            NVG.AddFallbackFontId(vg, data->fontBold, data->fontEmoji);
 
-            return 0;
+            data.fontNormal = NVG.CreateFont(vg, "sans", "../example/Roboto-Regular.ttf");
+            if (data.fontNormal == -1)
+            {
+                throw new Exception("Could not add font italic.");
+            }
+
+            data.fontBold = NVG.CreateFont(vg, "sans-bold", "../example/Roboto-Bold.ttf");
+            if (data.fontBold == -1)
+            {
+                throw new Exception("Could not add font bold.");
+            }
+
+            data.fontEmoji = NVG.CreateFont(vg, "emoji", "../example/NotoEmoji-Regular.ttf");
+            if (data.fontEmoji == -1)
+            {
+                throw new Exception("Could not add font emoji.");
+            }
+
+            NVG.AddFallbackFontId(vg, data.fontNormal, data.fontEmoji);
+            NVG.AddFallbackFontId(vg, data.fontBold, data.fontEmoji);
         }
 
-        public static void freeDemoData(Context vg, DemoData* data)
+        public static void FreeDemoData(Context vg, DemoData data)
         {
-            int i;
-
             if (vg == null)
+            {
                 return;
+            }
 
-            for (i = 0; i < 12; i++)
-                NVG.DeleteImage(vg, data->images[i]);
+            for (int i = 0; i < 12; i++)
+            {
+                NVG.DeleteImage(vg, data.images[i]);
+            }
         }
 
-        private static void drawParagraph(Context vg, float x, float y, float width, float height, float mx, float my)
+        private static void DrawParagraph(Context vg, float x, float y, float width, float height, float mx, float my)
         {
             NVGtextRow rows[3];
             NVGglyphPosition glyphs[100];
@@ -918,7 +883,7 @@ namespace NanoVG
             float gx, gy;
             int gutter = 0;
             const char* boxText = "Testing\nsome multiline\ntext.";
-            //NVG_NOTUSED(height);
+            ////NVG_NOTUSED(height);
 
             NVG.Save(vg);
 
@@ -932,7 +897,7 @@ namespace NanoVG
             // The "next" variable of the last returned item tells where to continue.
             start = text;
             end = text + strlen(text);
-            while ((nrows = NVG.TextBreakLines(vg, start, end, width, rows, 3)))
+            while (nrows = NVG.TextBreakLines(vg, start, end, width, rows, 3))
             {
                 for (i = 0; i < nrows; i++)
                 {
@@ -1010,10 +975,10 @@ namespace NanoVG
             NVG.TextBoxBounds(vg, x, y, 150, hoverText, 0, bounds);
 
             // Fade the tooltip out when close to it.
-            gx = clampf(mx, bounds[0], bounds[2]) - mx;
-            gy = clampf(my, bounds[1], bounds[3]) - my;
+            gx = Clampf(mx, bounds[0], bounds[2]) - mx;
+            gy = Clampf(my, bounds[1], bounds[3]) - my;
             a = (float)Math.Sqrt(gx * gx + gy * gy) / 30.0f;
-            a = clampf(a, 0, 1);
+            a = Clampf(a, 0, 1);
             NVG.GlobalAlpha(vg, a);
 
             NVG.BeginPath(vg);
@@ -1031,7 +996,7 @@ namespace NanoVG
             NVG.Restore(vg);
         }
 
-        private static void drawWidths(Context vg, float x, float y, float width)
+        private static void DrawWidths(Context vg, float x, float y, float width)
         {
             NVG.Save(vg);
             NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 255));
@@ -1050,7 +1015,7 @@ namespace NanoVG
             NVG.Restore(vg);
         }
 
-        private static void drawCaps(Context vg, float x, float y, float width)
+        private static void DrawCaps(Context vg, float x, float y, float width)
         {
             int i;
             var caps = new nvgLineCap[] { nvgLineCap.NVG_BUTT, nvgLineCap.NVG_ROUND, nvgLineCap.NVG_SQUARE };
@@ -1082,7 +1047,7 @@ namespace NanoVG
             NVG.Restore(vg);
         }
 
-        private static void drawScissor(Context vg, float x, float y, float t)
+        private static void DrawScissor(Context vg, float x, float y, float t)
         {
             NVG.Save(vg);
 
@@ -1118,25 +1083,25 @@ namespace NanoVG
             NVG.Restore(vg);
         }
 
-        public static void renderDemo(Context vg, float mx, float my, float width, float height, float t, bool blowup, DemoData* data)
+        public static void RenderDemo(Context vg, float mx, float my, float width, float height, float t, bool blowup, DemoData data)
         {
             float x, y, popy;
 
-            drawEyes(vg, width - 250, 50, 150, 100, mx, my, t);
-            drawParagraph(vg, width - 450, 50, 150, 100, mx, my);
-            drawGraph(vg, 0, height / 2, width, height / 2, t);
-            drawColorwheel(vg, width - 300, height - 300, 250.0f, 250.0f, t);
+            DrawEyes(vg, width - 250, 50, 150, 100, mx, my, t);
+            DrawParagraph(vg, width - 450, 50, 150, 100, mx, my);
+            DrawGraph(vg, 0, height / 2, width, height / 2, t);
+            DrawColorwheel(vg, width - 300, height - 300, 250.0f, 250.0f, t);
 
             // Line joints
-            drawLines(vg, 120, height - 50, 600, 50, t);
+            DrawLines(vg, 120, height - 50, 600, 50, t);
 
             // Line caps
-            drawWidths(vg, 10, 50, 30);
+            DrawWidths(vg, 10, 50, 30);
 
             // Line caps
-            drawCaps(vg, 10, 300, 30);
+            DrawCaps(vg, 10, 300, 30);
 
-            drawScissor(vg, 50, height - 80, t);
+            DrawScissor(vg, 50, height - 80, t);
 
             NVG.Save(vg);
             if (blowup)
@@ -1149,42 +1114,40 @@ namespace NanoVG
             DrawWindow(vg, "Widgets `n Stuff", 50, 50, 300, 400);
             x = 60;
             y = 95;
-            drawSearchBox(vg, "Search", x, y, 280, 25);
+            DrawSearchBox(vg, "Search", x, y, 280, 25);
             y += 40;
-            drawDropDown(vg, "Effects", x, y, 280, 28);
+            DrawDropDown(vg, "Effects", x, y, 280, 28);
             popy = y + 14;
             y += 45;
 
             // Form
-            drawLabel(vg, "Login", x, y, 280, 20);
+            DrawLabel(vg, "Login", x, y, 280, 20);
             y += 25;
-            drawEditBox(vg, "Email", x, y, 280, 28);
+            DrawEditBox(vg, "Email", x, y, 280, 28);
             y += 35;
-            drawEditBox(vg, "Password", x, y, 280, 28);
+            DrawEditBox(vg, "Password", x, y, 280, 28);
             y += 38;
-            drawCheckBox(vg, "Remember me", x, y, 140, 28);
-            drawButton(vg, ICON_LOGIN, "Sign in", x + 138, y, 140, 28, NVG.RGBA(0, 96, 128, 255));
+            DrawCheckBox(vg, "Remember me", x, y, 140, 28);
+            DrawButton(vg, IconLogin, "Sign in", x + 138, y, 140, 28, NVG.RGBA(0, 96, 128, 255));
             y += 45;
 
             // Slider
-            drawLabel(vg, "Diameter", x, y, 280, 20);
+            DrawLabel(vg, "Diameter", x, y, 280, 20);
             y += 25;
-            drawEditBoxNum(vg, "123.00", "px", x + 180, y, 100, 28);
-            drawSlider(vg, 0.4f, x, y, 170, 28);
+            DrawEditBoxNum(vg, "123.00", "px", x + 180, y, 100, 28);
+            DrawSlider(vg, 0.4f, x, y, 170, 28);
             y += 55;
 
-            drawButton(vg, ICON_TRASH, "Delete", x, y, 160, 28, NVG.RGBA(128, 16, 8, 255));
-            drawButton(vg, 0, "Cancel", x + 170, y, 110, 28, NVG.RGBA(0, 0, 0, 0));
+            DrawButton(vg, IconTrash, "Delete", x, y, 160, 28, NVG.RGBA(128, 16, 8, 255));
+            DrawButton(vg, null, "Cancel", x + 170, y, 110, 28, NVG.RGBA(0, 0, 0, 0));
 
             // Thumbnails box
-            drawThumbnails(vg, 365, popy - 30, 160, 300, data->images, 12, t);
+            DrawThumbnails(vg, 365, popy - 30, 160, 300, data.images, t);
 
             NVG.Restore(vg);
         }
 
-        private static int mini(int a, int b) { return a < b ? a : b; }
-
-        private static void unpremultiplyAlpha(byte[] image, int w, int h, int stride)
+        private static void UnpremultiplyAlpha(byte[] image, int w, int h, int stride)
         {
             // Unpremultiply
             for (int y = 0; y < h; y++)
@@ -1192,7 +1155,7 @@ namespace NanoVG
                 int i = y * stride;
                 for (int x = 0; x < w; x++)
                 {
-                    int r = image[i], g = image[i+1], b = image[i+2], a = image[i+3];
+                    int r = image[i], g = image[i + 1], b = image[i + 2], a = image[i + 3];
                     if (a != 0)
                     {
                         image[i + 0] = (byte)Math.Min(r * 255 / a, 255);
@@ -1207,54 +1170,58 @@ namespace NanoVG
             // Defringe
             for (int y = 0; y < h; y++)
             {
-                unsignedchar* row = &image[y * stride];
+                int i = y * stride;
                 for (int x = 0; x < w; x++)
                 {
-                    int r = 0, g = 0, b = 0, a = row[3], n = 0;
+                    int r = 0, g = 0, b = 0, a = image[i + 3], n = 0;
                     if (a == 0)
                     {
-                        if (x - 1 > 0 && row[-1] != 0)
+                        if (x - 1 > 0 && image[i - 1] != 0)
                         {
-                            r += row[-4];
-                            g += row[-3];
-                            b += row[-2];
+                            r += image[i - 4];
+                            g += image[i - 3];
+                            b += image[i - 2];
                             n++;
                         }
-                        if (x + 1 < w && row[7] != 0)
+
+                        if (x + 1 < w && image[i + 7] != 0)
                         {
-                            r += row[4];
-                            g += row[5];
-                            b += row[6];
+                            r += image[i + 4];
+                            g += image[i + 5];
+                            b += image[i + 6];
                             n++;
                         }
-                        if (y - 1 > 0 && row[-stride + 3] != 0)
+
+                        if (y - 1 > 0 && image[i - stride + 3] != 0)
                         {
-                            r += row[-stride];
-                            g += row[-stride + 1];
-                            b += row[-stride + 2];
+                            r += image[i - stride];
+                            g += image[i - stride + 1];
+                            b += image[i - stride + 2];
                             n++;
                         }
-                        if (y + 1 < h && row[stride + 3] != 0)
+
+                        if (y + 1 < h && image[i + stride + 3] != 0)
                         {
-                            r += row[stride];
-                            g += row[stride + 1];
-                            b += row[stride + 2];
+                            r += image[i + stride];
+                            g += image[i + stride + 1];
+                            b += image[i + stride + 2];
                             n++;
                         }
+
                         if (n > 0)
                         {
-                            row[0] = r / n;
-                            row[1] = g / n;
-                            row[2] = b / n;
+                            image[i + 0] = (byte)(r / n);
+                            image[i + 1] = (byte)(g / n);
+                            image[i + 2] = (byte)(b / n);
                         }
                     }
 
-                    row += 4;
+                    i += 4;
                 }
             }
         }
 
-        private static void setAlpha(byte[] image, int w, int h, int stride, byte a)
+        private static void SetAlpha(byte[] image, int w, int h, int stride, byte a)
         {
             for (int y = 0; y < h; y++)
             {
@@ -1265,18 +1232,18 @@ namespace NanoVG
             }
         }
 
-        private static void flipHorizontal(byte[] image, int w, int h, int stride)
+        private static void FlipHorizontal(byte[] image, int w, int h, int stride)
         {
             int i = 0, j = h - 1, k;
             while (i < j)
             {
-                unsignedchar* ri = &image[i * stride];
-                unsignedchar* rj = &image[j * stride];
+                int ri = i * stride;
+                int rj = j * stride;
                 for (k = 0; k < w * 4; k++)
                 {
-                    unsignedchar t = ri[k];
-                    ri[k] = rj[k];
-                    rj[k] = t;
+                    byte t = image[ri + k];
+                    image[ri + k] = image[rj + k];
+                    image[rj + k] = t;
                 }
 
                 i++;
@@ -1284,19 +1251,21 @@ namespace NanoVG
             }
         }
 
-        public static void saveScreenShot(int w, int h, int premult, constchar* name)
+        public static void SaveScreenShot(int w, int h, bool premult, string name)
         {
-            unsignedchar* image = (unsignedchar*)malloc(w * h * 4);
-            if (image == NULL)
-                return;
-            GL.ReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, image);
+            byte[] image = new byte[w * h * 4];
+            GL.ReadPixels(0, 0, w, h, PixelFormat.Rgba, PixelType.UnsignedByte, image);
             if (premult)
-                unpremultiplyAlpha(image, w, h, w * 4);
+            {
+                UnpremultiplyAlpha(image, w, h, w * 4);
+            }
             else
-                setAlpha(image, w, h, w * 4, 255);
-            flipHorizontal(image, w, h, w * 4);
-            stbi_write_png(name, w, h, 4, image, w * 4);
-            free(image);
+            {
+                SetAlpha(image, w, h, w * 4, 255);
+            }
+
+            FlipHorizontal(image, w, h, w * 4);
+            ////stbi_write_png(name, w, h, 4, image, w * 4);
         }
     }
 }
