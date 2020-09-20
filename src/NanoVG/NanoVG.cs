@@ -259,7 +259,7 @@ namespace NanoVG
         private const int NVG_INIT_POINTS_SIZE = 128;
         private const int NVG_INIT_PATHS_SIZE = 16;
         private const int NVG_INIT_VERTS_SIZE = 256;
-        private const int NVG_MAX_STATES = 32
+        private const int NVG_MAX_STATES = 32;
 
         #region Frames
 

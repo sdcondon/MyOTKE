@@ -35,11 +35,11 @@ using static NanoVG.NVG;
 
 namespace NanoVG
 {
-    public class NanoVGGL
+    public static class NanoVGGL
     {
         //// Create flags
         [Flags]
-        enum CreateFlags
+        public enum CreateFlags
         {
             // Flag indicating if geometry based anti-aliasing is used (may not be needed when using MSAA).
             NVG_ANTIALIAS = 1 << 0,
@@ -1582,13 +1582,13 @@ namespace NanoVG
         // Flags should be combination of the create flags above.
 
 #if NANOVG_GL2
-        Context nvgCreateGL2(CreateFlags flags)
+        public static Context nvgCreateGL2(CreateFlags flags)
 #elif NANOVG_GL3
-        Context nvgCreateGL3(CreateFlags flags)
+        public static Context nvgCreateGL3(CreateFlags flags)
 #elif NANOVG_GLES2
-        Context nvgCreateGLES2(CreateFlags flags)
+        public static Context nvgCreateGLES2(CreateFlags flags)
 #elif NANOVG_GLES3
-        Context nvgCreateGLES3(CreateFlags flags)
+        public static Context nvgCreateGLES3(CreateFlags flags)
 #endif
         {
             NVG.Params @params;
@@ -1619,22 +1619,22 @@ namespace NanoVG
         }
 
 #if NANOVG_GL2
-        void nvgDeleteGL2(Context ctx)
+       public static void nvgDeleteGL2(Context ctx)
 #elif NANOVG_GL3
-        void nvgDeleteGL3(Context ctx)
+        public static void nvgDeleteGL3(Context ctx)
 #elif NANOVG_GLES2
-        void nvgDeleteGLES2(Context ctx)
+        public static void nvgDeleteGLES2(Context ctx)
 #elif NANOVG_GLES3
-        void nvgDeleteGLES3(Context ctx)
+        public static void nvgDeleteGLES3(Context ctx)
 #endif
         {
             NVG.DeleteInternal(ctx);
         }
 
 #if NANOVG_GL2
-        int nvglCreateImageFromHandleGL2(Context ctx, uint textureId, int w, int h, NVGimageFlagsGL imageFlags)
+        static int nvglCreateImageFromHandleGL2(Context ctx, uint textureId, int w, int h, NVGimageFlagsGL imageFlags)
 #elif NANOVG_GL3
-        int nvglCreateImageFromHandleGL3(Context ctx, uint textureId, int w, int h, NVGimageFlags imageFlags)
+        static int nvglCreateImageFromHandleGL3(Context ctx, uint textureId, int w, int h, NVGimageFlags imageFlags)
 #elif NANOVG_GLES2
         int nvglCreateImageFromHandleGLES2(Context ctx, uint textureId, int w, int h, NVGimageFlagsGL imageFlags)
 #elif NANOVG_GLES3
@@ -1654,9 +1654,9 @@ namespace NanoVG
         }
 
 #if NANOVG_GL2
-        uint nvglImageHandleGL2(Context ctx, int image)
+        static uint nvglImageHandleGL2(Context ctx, int image)
 #elif NANOVG_GL3
-        uint nvglImageHandleGL3(Context ctx, int image)
+        static uint nvglImageHandleGL3(Context ctx, int image)
 #elif NANOVG_GLES2
         uint nvglImageHandleGLES2(Context ctx, int image)
 #elif NANOVG_GLES3
