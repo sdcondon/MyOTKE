@@ -816,42 +816,42 @@ namespace NanoVG
 
             data = new DemoData();
 
-            for (int i = 0; i < 12; i++)
-            {
-                string file = $"../example/images/image{i + 1}.jpg";
-                data.images[i] = NVG.CreateImage(vg, file, 0);
-                if (data.images[i] == 0)
-                {
-                    throw new Exception($"Could not load {file}");
-                }
-            }
+            ////for (int i = 0; i < 12; i++)
+            ////{
+            ////    string file = $"../example/images/image{i + 1}.jpg";
+            ////    data.images[i] = NVG.CreateImage(vg, file, 0);
+            ////    if (data.images[i] == 0)
+            ////    {
+            ////        throw new Exception($"Could not load {file}");
+            ////    }
+            ////}
 
-            data.fontIcons = NVG.CreateFont(vg, "icons", "../example/entypo.ttf");
-            if (data.fontIcons == -1)
-            {
-                throw new Exception("Could not add font icons.");
-            }
+            ////data.fontIcons = NVG.CreateFont(vg, "icons", "../example/entypo.ttf");
+            ////if (data.fontIcons == -1)
+            ////{
+            ////    throw new Exception("Could not add font icons.");
+            ////}
 
-            data.fontNormal = NVG.CreateFont(vg, "sans", "../example/Roboto-Regular.ttf");
-            if (data.fontNormal == -1)
-            {
-                throw new Exception("Could not add font italic.");
-            }
+            ////data.fontNormal = NVG.CreateFont(vg, "sans", "../example/Roboto-Regular.ttf");
+            ////if (data.fontNormal == -1)
+            ////{
+            ////    throw new Exception("Could not add font italic.");
+            ////}
 
-            data.fontBold = NVG.CreateFont(vg, "sans-bold", "../example/Roboto-Bold.ttf");
-            if (data.fontBold == -1)
-            {
-                throw new Exception("Could not add font bold.");
-            }
+            ////data.fontBold = NVG.CreateFont(vg, "sans-bold", "../example/Roboto-Bold.ttf");
+            ////if (data.fontBold == -1)
+            ////{
+            ////    throw new Exception("Could not add font bold.");
+            ////}
 
-            data.fontEmoji = NVG.CreateFont(vg, "emoji", "../example/NotoEmoji-Regular.ttf");
-            if (data.fontEmoji == -1)
-            {
-                throw new Exception("Could not add font emoji.");
-            }
+            ////data.fontEmoji = NVG.CreateFont(vg, "emoji", "../example/NotoEmoji-Regular.ttf");
+            ////if (data.fontEmoji == -1)
+            ////{
+            ////    throw new Exception("Could not add font emoji.");
+            ////}
 
-            NVG.AddFallbackFontId(vg, data.fontNormal, data.fontEmoji);
-            NVG.AddFallbackFontId(vg, data.fontBold, data.fontEmoji);
+            ////NVG.AddFallbackFontId(vg, data.fontNormal, data.fontEmoji);
+            ////NVG.AddFallbackFontId(vg, data.fontBold, data.fontEmoji);
         }
 
         public static void FreeDemoData(Context vg, DemoData data)
@@ -869,131 +869,130 @@ namespace NanoVG
 
         private static void DrawParagraph(Context vg, float x, float y, float width, float height, float mx, float my)
         {
-            NVGtextRow rows[3];
-            NVGglyphPosition glyphs[100];
-            const char* text = "This is longer chunk of text.\n  \n  Would have used lorem ipsum but she    was busy jumping over the lazy dog with the fox and all the men who came to the aid of the party.🎉";
-            const char* start;
-            const char* end;
-            int nrows, i, nglyphs, j, lnum = 0;
-            float lineh;
-            float caretx, px;
-            float bounds[4];
-            float a;
-            const char* hoverText = "Hover your mouse over the text to see calculated caret position.";
-            float gx, gy;
-            int gutter = 0;
-            const char* boxText = "Testing\nsome multiline\ntext.";
-            ////NVG_NOTUSED(height);
+            ////TextRow rows[3];
+            ////GlyphPosition glyphs[100];
+            ////const char* text = "This is longer chunk of text.\n  \n  Would have used lorem ipsum but she    was busy jumping over the lazy dog with the fox and all the men who came to the aid of the party.🎉";
+            ////const char* start;
+            ////const char* end;
+            ////int nrows, i, nglyphs, j, lnum = 0;
+            ////float caretx, px;
+            ////float bounds[4];
+            ////float a;
+            ////const char* hoverText = "Hover your mouse over the text to see calculated caret position.";
+            ////float gx, gy;
+            ////int gutter = 0;
+            ////const char* boxText = "Testing\nsome multiline\ntext.";
+            ////////NVG_NOTUSED(height);
 
-            NVG.Save(vg);
+            ////NVG.Save(vg);
 
-            NVG.FontSize(vg, 15.0f);
-            NVG.FontFace(vg, "sans");
-            NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_TOP);
-            NVG.TextMetrics(vg, NULL, NULL, &lineh);
+            ////NVG.FontSize(vg, 15.0f);
+            ////NVG.FontFace(vg, "sans");
+            ////NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_TOP);
+            ////NVG.TextMetrics(vg, out var ascender, out var descender, out var lineh);
 
-            // The text break API can be used to fill a large buffer of rows,
-            // or to iterate over the text just few lines (or just one) at a time.
-            // The "next" variable of the last returned item tells where to continue.
-            start = text;
-            end = text + strlen(text);
-            while (nrows = NVG.TextBreakLines(vg, start, end, width, rows, 3))
-            {
-                for (i = 0; i < nrows; i++)
-                {
-                    NVGtextRow* row = &rows[i];
-                    int hit = mx > x && mx < (x + width) && my >= y && my < (y + lineh);
+            ////// The text break API can be used to fill a large buffer of rows,
+            ////// or to iterate over the text just few lines (or just one) at a time.
+            ////// The "next" variable of the last returned item tells where to continue.
+            ////start = text;
+            ////end = text + strlen(text);
+            ////while (nrows = NVG.TextBreakLines(vg, start, end, width, rows, 3))
+            ////{
+            ////    for (i = 0; i < nrows; i++)
+            ////    {
+            ////        NVGtextRow* row = &rows[i];
+            ////        bool hit = mx > x && mx < (x + width) && my >= y && my < (y + lineh);
 
-                    NVG.BeginPath(vg);
-                    NVG.FillColor(vg, NVG.RGBA(255, 255, 255, hit ? 64 : 16));
-                    NVG.Rect(vg, x + row->minx, y, row->maxx - row->minx, lineh);
-                    NVG.Fill(vg);
+            ////        NVG.BeginPath(vg);
+            ////        NVG.FillColor(vg, NVG.RGBA(255, 255, 255, hit ? (byte)64 : (byte)16));
+            ////        NVG.Rect(vg, x + row->minx, y, row->maxx - row->minx, lineh);
+            ////        NVG.Fill(vg);
 
-                    NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 255));
-                    NVG.Text(vg, x, y, row->start, row->end);
+            ////        NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 255));
+            ////        NVG.Text(vg, x, y, row->start, row->end);
 
-                    if (hit)
-                    {
-                        caretx = (mx < x + row->width / 2) ? x : x + row->width;
-                        px = x;
-                        nglyphs = NVG.TextGlyphPositions(vg, x, y, row->start, row->end, glyphs, 100);
-                        for (j = 0; j < nglyphs; j++)
-                        {
-                            float x0 = glyphs[j].x;
-                            float x1 = (j + 1 < nglyphs) ? glyphs[j + 1].x : x + row->width;
-                            float gx = x0 * 0.3f + x1 * 0.7f;
-                            if (mx >= px && mx < gx)
-                            {
-                                caretx = glyphs[j].x;
-                            }
+            ////        if (hit)
+            ////        {
+            ////            caretx = (mx < x + row->width / 2) ? x : x + row->width;
+            ////            px = x;
+            ////            nglyphs = NVG.TextGlyphPositions(vg, x, y, row->start, row->end, glyphs, 100);
+            ////            for (j = 0; j < nglyphs; j++)
+            ////            {
+            ////                float x0 = glyphs[j].x;
+            ////                float x1 = (j + 1 < nglyphs) ? glyphs[j + 1].x : x + row->width;
+            ////                float gx = x0 * 0.3f + x1 * 0.7f;
+            ////                if (mx >= px && mx < gx)
+            ////                {
+            ////                    caretx = glyphs[j].x;
+            ////                }
 
-                            px = gx;
-                        }
+            ////                px = gx;
+            ////            }
 
-                        NVG.BeginPath(vg);
-                        NVG.FillColor(vg, NVG.RGBA(255, 192, 0, 255));
-                        NVG.Rect(vg, caretx, y, 1, lineh);
-                        NVG.Fill(vg);
+            ////            NVG.BeginPath(vg);
+            ////            NVG.FillColor(vg, NVG.RGBA(255, 192, 0, 255));
+            ////            NVG.Rect(vg, caretx, y, 1, lineh);
+            ////            NVG.Fill(vg);
 
-                        gutter = lnum + 1;
-                        gx = x - 10;
-                        gy = y + lineh / 2;
-                    }
+            ////            gutter = lnum + 1;
+            ////            gx = x - 10;
+            ////            gy = y + lineh / 2;
+            ////        }
 
-                    lnum++;
-                    y += lineh;
-                }
+            ////        lnum++;
+            ////        y += lineh;
+            ////    }
 
-                // Keep going...
-                start = rows[nrows - 1].next;
-            }
+            ////    // Keep going...
+            ////    start = rows[nrows - 1].next;
+            ////}
 
-            if (gutter)
-            {
-                char txt[16];
-                snprintf(txt, sizeof(txt), "%d", gutter);
-                NVG.FontSize(vg, 12.0f);
-                NVG.TextAlign(vg, Align.NVG_ALIGN_RIGHT | Align.NVG_ALIGN_MIDDLE);
+            ////if (gutter)
+            ////{
+            ////    char txt[16];
+            ////    snprintf(txt, sizeof(txt), "%d", gutter);
+            ////    NVG.FontSize(vg, 12.0f);
+            ////    NVG.TextAlign(vg, Align.NVG_ALIGN_RIGHT | Align.NVG_ALIGN_MIDDLE);
 
-                NVG.TextBounds(vg, gx, gy, txt, 0, bounds);
+            ////    NVG.TextBounds(vg, gx, gy, txt, 0, bounds);
 
-                NVG.BeginPath(vg);
-                NVG.FillColor(vg, NVG.RGBA(255, 192, 0, 255));
-                NVG.RoundedRect(vg, (int)bounds[0] - 4, (int)bounds[1] - 2, (int)(bounds[2] - bounds[0]) + 8, (int)(bounds[3] - bounds[1]) + 4, ((int)(bounds[3] - bounds[1]) + 4) / 2 - 1);
-                NVG.Fill(vg);
+            ////    NVG.BeginPath(vg);
+            ////    NVG.FillColor(vg, NVG.RGBA(255, 192, 0, 255));
+            ////    NVG.RoundedRect(vg, (int)bounds[0] - 4, (int)bounds[1] - 2, (int)(bounds[2] - bounds[0]) + 8, (int)(bounds[3] - bounds[1]) + 4, ((int)(bounds[3] - bounds[1]) + 4) / 2 - 1);
+            ////    NVG.Fill(vg);
 
-                NVG.FillColor(vg, NVG.RGBA(32, 32, 32, 255));
-                NVG.Text(vg, gx, gy, txt, 0);
-            }
+            ////    NVG.FillColor(vg, NVG.RGBA(32, 32, 32, 255));
+            ////    NVG.Text(vg, gx, gy, txt, 0);
+            ////}
 
-            y += 20.0f;
+            ////y += 20.0f;
 
-            NVG.FontSize(vg, 11.0f);
-            NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_TOP);
-            NVG.TextLineHeight(vg, 1.2f);
+            ////NVG.FontSize(vg, 11.0f);
+            ////NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_TOP);
+            ////NVG.TextLineHeight(vg, 1.2f);
 
-            NVG.TextBoxBounds(vg, x, y, 150, hoverText, 0, bounds);
+            ////NVG.TextBoxBounds(vg, x, y, 150, hoverText, 0, bounds);
 
-            // Fade the tooltip out when close to it.
-            gx = Clampf(mx, bounds[0], bounds[2]) - mx;
-            gy = Clampf(my, bounds[1], bounds[3]) - my;
-            a = (float)Math.Sqrt(gx * gx + gy * gy) / 30.0f;
-            a = Clampf(a, 0, 1);
-            NVG.GlobalAlpha(vg, a);
+            ////// Fade the tooltip out when close to it.
+            ////gx = Clampf(mx, bounds[0], bounds[2]) - mx;
+            ////gy = Clampf(my, bounds[1], bounds[3]) - my;
+            ////a = (float)Math.Sqrt(gx * gx + gy * gy) / 30.0f;
+            ////a = Clampf(a, 0, 1);
+            ////NVG.GlobalAlpha(vg, a);
 
-            NVG.BeginPath(vg);
-            NVG.FillColor(vg, NVG.RGBA(220, 220, 220, 255));
-            NVG.RoundedRect(vg, bounds[0] - 2, bounds[1] - 2, (int)(bounds[2] - bounds[0]) + 4, (int)(bounds[3] - bounds[1]) + 4, 3);
-            px = (int)((bounds[2] + bounds[0]) / 2);
-            NVG.MoveTo(vg, px, bounds[1] - 10);
-            NVG.LineTo(vg, px + 7, bounds[1] + 1);
-            NVG.LineTo(vg, px - 7, bounds[1] + 1);
-            NVG.Fill(vg);
+            ////NVG.BeginPath(vg);
+            ////NVG.FillColor(vg, NVG.RGBA(220, 220, 220, 255));
+            ////NVG.RoundedRect(vg, bounds[0] - 2, bounds[1] - 2, (int)(bounds[2] - bounds[0]) + 4, (int)(bounds[3] - bounds[1]) + 4, 3);
+            ////px = (int)((bounds[2] + bounds[0]) / 2);
+            ////NVG.MoveTo(vg, px, bounds[1] - 10);
+            ////NVG.LineTo(vg, px + 7, bounds[1] + 1);
+            ////NVG.LineTo(vg, px - 7, bounds[1] + 1);
+            ////NVG.Fill(vg);
 
-            NVG.FillColor(vg, NVG.RGBA(0, 0, 0, 220));
-            NVG.TextBox(vg, x, y, 150, hoverText, 0);
+            ////NVG.FillColor(vg, NVG.RGBA(0, 0, 0, 220));
+            ////NVG.TextBox(vg, x, y, 150, hoverText, 0);
 
-            NVG.Restore(vg);
+            ////NVG.Restore(vg);
         }
 
         private static void DrawWidths(Context vg, float x, float y, float width)
@@ -1142,7 +1141,7 @@ namespace NanoVG
             DrawButton(vg, null, "Cancel", x + 170, y, 110, 28, NVG.RGBA(0, 0, 0, 0));
 
             // Thumbnails box
-            DrawThumbnails(vg, 365, popy - 30, 160, 300, data.images, t);
+            ////DrawThumbnails(vg, 365, popy - 30, 160, 300, data.images, t);
 
             NVG.Restore(vg);
         }
@@ -1265,7 +1264,7 @@ namespace NanoVG
             }
 
             FlipHorizontal(image, w, h, w * 4);
-            ////stbi_write_png(name, w, h, 4, image, w * 4);
+            ////stbi_write_png(name, w, h, 4, image, w * 4); TODO
         }
     }
 }

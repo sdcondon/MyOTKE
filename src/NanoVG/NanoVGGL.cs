@@ -153,7 +153,7 @@ namespace NanoVG
         class GLNVGcontext
         {
             public GLNVGshader shader;
-            public float[] view; //TODO [2];
+            public Extent2D view;
 
             public GLNVGtexture[] textures;
             public int ntextures;
@@ -690,7 +690,7 @@ namespace NanoVG
 #elif NANOVG_GLES3
                 GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.R8, w, h, 0, PixelFormat.Red, PixelType.UnsignedByte, data);
 #else
-                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Red, w, h, 0, PixelFormat.Red, PixelType.UnsignedByte, data);
+                GL.TexImage2D(TextureTarget.Texture2D, 0, /*PixelInternalFormat.Red*/PixelInternalFormat.R8, w, h, 0, PixelFormat.Red, PixelType.UnsignedByte, data);
 #endif
             }
 
@@ -971,8 +971,8 @@ namespace NanoVG
         {
             GLNVGcontext gl = (GLNVGcontext)cxt;
             //NVG_NOTUSED(devicePixelRatio);
-            gl.view[0] = width;
-            gl.view[1] = height;
+            gl.view.X = width;
+            gl.view.Y = height;
         }
 
         static void glnvg__fill(GLNVGcontext gl, ref GLNVGcall call)
@@ -1248,7 +1248,7 @@ namespace NanoVG
 
                 // Set view and texture just once per frame.
                 GL.Uniform1(gl.shader.loc[(int)GLNVGuniformLoc.GLNVG_LOC_TEX], 0);
-                GL.Uniform2(gl.shader.loc[(int)GLNVGuniformLoc.GLNVG_LOC_VIEWSIZE], 1, gl.view);
+                GL.Uniform2(gl.shader.loc[(int)GLNVGuniformLoc.GLNVG_LOC_VIEWSIZE], gl.view.X, gl.view.Y);
 
 #if NANOVG_GL_USE_UNIFORMBUFFER
                 GL.BindBuffer(BufferTarget.UniformBuffer, gl.fragBuf);
@@ -1355,16 +1355,16 @@ namespace NanoVG
         static int glnvg__allocFragUniforms(GLNVGcontext gl, int n)
         {
             int ret = 0;
-            int structSize = gl.fragSize;
+            //int structSize = gl.fragSize;
 
             if (gl.nuniforms + n > gl.cuniforms)
             {
                 int cuniforms = Math.Max(gl.nuniforms + n, 128) + gl.cuniforms / 2; // 1.5x Overallocate
-                Array.Resize(ref gl.uniforms, structSize * cuniforms);
+                Array.Resize(ref gl.uniforms, cuniforms);
                 gl.cuniforms = cuniforms;
             }
 
-            ret = gl.nuniforms * structSize;
+            ret = gl.nuniforms;
             gl.nuniforms += n;
             return ret;
         }
@@ -1591,11 +1591,10 @@ namespace NanoVG
         public static Context nvgCreateGLES3(CreateFlags flags)
 #endif
         {
-            NVG.Params @params;
-            Context ctx = null;
             GLNVGcontext gl = new GLNVGcontext();
+            gl.flags = flags;
 
-            @params = new NVG.Params();
+            var @params = new NVG.Params();
             @params.renderCreate = glnvg__renderCreate;
             @params.renderCreateTexture = glnvg__renderCreateTexture;
             @params.renderDeleteTexture = glnvg__renderDeleteTexture;
@@ -1611,11 +1610,7 @@ namespace NanoVG
             @params.userPtr = gl;
             @params.edgeAntiAlias = flags.HasFlag(CreateFlags.NVG_ANTIALIAS) ? 1 : 0;
 
-            gl.flags = flags;
-
-            ctx = NVG.CreateInternal(@params);
-
-            return ctx;
+            return NVG.CreateInternal(@params);
         }
 
 #if NANOVG_GL2

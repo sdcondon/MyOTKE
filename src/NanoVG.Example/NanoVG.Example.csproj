@@ -14,5 +14,9 @@
   <ItemGroup>
     <ProjectReference Include="..\NanoVG\NanoVG.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\" />
+  </ItemGroup>
   
 </Project>

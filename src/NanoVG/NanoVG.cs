@@ -21,6 +21,7 @@
 //
 using System;
 using System.Diagnostics;
+using System.Threading;
 
 namespace NanoVG
 {
@@ -43,7 +44,7 @@ namespace NanoVG
         internal float commandx;
         internal float commandy;
 
-        internal NVG.NVGstate[] states;//[NVG_MAX_STATES]; // TODO
+        internal NVG.NVGstate[] states = new NVG.NVGstate[NVG.NVG_MAX_STATES];
         internal int nstates;
 
         internal NVG.NVGpathCache cache;
@@ -53,7 +54,7 @@ namespace NanoVG
         internal float fringeWidth;
         internal float devicePxRatio;
         internal FontStash.FONScontext fs;
-        internal int[] fontImages;//[NVG_MAX_FONTIMAGES]; // TODO
+        internal int[] fontImages = new int[NVG.NVG_MAX_FONTIMAGES];
         internal int fontImageIdx;
 
         internal int drawCallCount;
@@ -253,13 +254,13 @@ namespace NanoVG
 
         private const int NVG_INIT_FONTIMAGE_SIZE = 512;
         private const int NVG_MAX_FONTIMAGE_SIZE = 2048;
-        private const int NVG_MAX_FONTIMAGES = 4;
+        internal const int NVG_MAX_FONTIMAGES = 4;
 
         private const int NVG_INIT_COMMANDS_SIZE = 256;
         private const int NVG_INIT_POINTS_SIZE = 128;
         private const int NVG_INIT_PATHS_SIZE = 16;
         private const int NVG_INIT_VERTS_SIZE = 256;
-        private const int NVG_MAX_STATES = 32;
+        internal const int NVG_MAX_STATES = 32;
 
         #region Frames
 
@@ -611,6 +612,10 @@ namespace NanoVG
             if (ctx.nstates > 0)
             {
                 ctx.states[ctx.nstates] = ctx.states[ctx.nstates - 1].Clone();
+            }
+            else
+            {
+                ctx.states[0] = new NVGstate();
             }
 
             ctx.nstates++;
@@ -2715,6 +2720,7 @@ namespace NanoVG
             ctx.ncommands = 0;
 
             ctx.cache = nvg__allocPathCache();
+
 
             Save(ctx);
             Reset(ctx);
