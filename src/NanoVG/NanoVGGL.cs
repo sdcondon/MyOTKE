@@ -56,14 +56,6 @@ namespace NanoVG
             NVG_IMAGE_NODELETE = 1 << 16,   // Do not delete GL texture handle.
         }
 
-        enum GLNVGuniformLoc
-        {
-            GLNVG_LOC_VIEWSIZE,
-            GLNVG_LOC_TEX,
-            GLNVG_LOC_FRAG,
-            GLNVG_MAX_LOCS,
-        }
-
         enum GLNVGshaderType
         {
             NSVG_SHADER_FILLGRAD,
@@ -116,7 +108,9 @@ namespace NanoVG
             public int prog;
             public int frag;
             public int vert;
-            public int[] loc; // TODO [(int)GLNVGuniformLoc.GLNVG_MAX_LOCS];
+            public int locViewSize;
+            public int locTex;
+            public int locFrag;
         }
 
         struct GLNVGtexture
@@ -387,7 +381,7 @@ namespace NanoVG
                 GL.ShaderSource(id, header + opts ?? string.Empty + body);
                 GL.CompileShader(id);
                 GL.GetShader(id, ShaderParameter.CompileStatus, out var compileStatus);
-                if (compileStatus != 1/*GL_TRUE*/)
+                if (compileStatus != (int)OpenTK.Graphics.OpenGL.Boolean.True)
                 {
                     glnvg__dumpShaderError(id, name, type.ToString());
                     return false;
@@ -413,7 +407,7 @@ namespace NanoVG
             GL.BindAttribLocation(prog, 1, "tcoord");
             GL.LinkProgram(prog);
             GL.GetProgram(prog, GetProgramParameterName.LinkStatus, out var linkStatus);
-            if (linkStatus != 1/*GL_TRUE*/)
+            if (linkStatus != (int)OpenTK.Graphics.OpenGL.Boolean.True)
             {
                 glnvg__dumpProgramError(prog, name);
                 return 0;
@@ -447,9 +441,9 @@ namespace NanoVG
 
         static void glnvg__getUniforms(ref GLNVGshader shader)
         {
-            shader.loc[(int)GLNVGuniformLoc.GLNVG_LOC_VIEWSIZE] = GL.GetUniformLocation(shader.prog, "viewSize");
-            shader.loc[(int)GLNVGuniformLoc.GLNVG_LOC_TEX] = GL.GetUniformLocation(shader.prog, "tex");
-            shader.loc[(int)GLNVGuniformLoc.GLNVG_LOC_FRAG] = GL.GetUniformBlockIndex(shader.prog, "frag");
+            shader.locViewSize = GL.GetUniformLocation(shader.prog, "viewSize");
+            shader.locTex = GL.GetUniformLocation(shader.prog, "tex");
+            shader.locFrag = GL.GetUniformBlockIndex(shader.prog, "frag");
         }
 
         static int glnvg__renderCreate(object uptr)
@@ -655,7 +649,7 @@ namespace NanoVG
             // Create UBOs
             GL.UniformBlockBinding(
                 gl.shader.prog,
-                gl.shader.loc[(int)GLNVGuniformLoc.GLNVG_LOC_FRAG],
+                gl.shader.locFrag,
                 (int)GLNVGuniformBindings.GLNVG_FRAG_BINDING);
             GL.GenBuffers(1, out gl.fragBuf);
             GL.GetInteger(GetPName.UniformBufferOffsetAlignment, out align);
@@ -1283,8 +1277,8 @@ namespace NanoVG
                 GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, Marshal.SizeOf<Vertex>(), Marshal.OffsetOf<Vertex>(nameof(Vertex.u)));
 
                 // Set view and texture just once per frame.
-                GL.Uniform1(gl.shader.loc[(int)GLNVGuniformLoc.GLNVG_LOC_TEX], 0);
-                GL.Uniform2(gl.shader.loc[(int)GLNVGuniformLoc.GLNVG_LOC_VIEWSIZE], gl.view.X, gl.view.Y);
+                GL.Uniform1(gl.shader.locTex, 0);
+                GL.Uniform2(gl.shader.locViewSize, gl.view.X, gl.view.Y);
 
 #if NANOVG_GL_USE_UNIFORMBUFFER
                 GL.BindBuffer(BufferTarget.UniformBuffer, gl.fragBuf);

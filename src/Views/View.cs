@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace MyOTKE.Views
 {
@@ -349,7 +350,8 @@ namespace MyOTKE.Views
             IntPtr message,
             IntPtr userParam)
         {
-            Debug.WriteLine($"{id} {source} {type} {severity}", "OPENGL");
+            Marshal.PtrToStringAuto(message, length);
+            Debug.WriteLine($"[{id}] {source} {type} {severity}: {message}", "OPENGL");
         }
 
         ////private void KhronosApi_Log(object sender, KhronosLogEventArgs e)

@@ -20,6 +20,8 @@ using OpenTK.Graphics.OpenGL;
 using System;
 using OpenTK;
 using OpenTK.Graphics;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace NanoVG
 {
@@ -200,6 +202,15 @@ namespace NanoVG
 
         protected override void OnLoad(EventArgs e)
         {
+            GL.Enable(EnableCap.DebugOutput);
+            GL.DebugMessageCallback(
+                (source, type, id, severity, length, message, userParam) =>
+                {
+                    var marshalledMessage = Marshal.PtrToStringAnsi(message, length);
+                    Debug.WriteLine($"[{id}] {source} {type} {severity}: {marshalledMessage}", "OPENGL");
+                },
+                IntPtr.Zero);
+
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
 #if DEMO_MSAA
