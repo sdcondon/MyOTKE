@@ -2,7 +2,6 @@
 using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 
@@ -41,10 +40,10 @@ namespace MyOTKE.Core
                 GL.CompileShader(shaderId);
 
                 // Check shader
-                GL.GetShader(shaderId, ShaderParameter.InfoLogLength, out var shaderInfoLogLength);
-                if (shaderInfoLogLength > 0)
+                GL.GetShader(shaderId, ShaderParameter.CompileStatus, out var compileStatus);
+                if (compileStatus != (int)OpenTK.Graphics.OpenGL.Boolean.True)
                 {
-                    Trace.WriteLine(GL.GetShaderInfoLog(shaderId));
+                    throw new ArgumentException("Shader compilation failed: " + GL.GetShaderInfoLog(shaderId), nameof(shaderSpecs));
                 }
 
                 GL.AttachShader(this.id, shaderId);
@@ -54,10 +53,10 @@ namespace MyOTKE.Core
             // Link & check program
             DebugEx.WriteLine("Linking program");
             GL.LinkProgram(this.id);
-            GL.GetProgram(this.id, GetProgramParameterName.InfoLogLength, out var programInfoLogLength);
-            if (programInfoLogLength > 0)
+            GL.GetProgram(this.id, GetProgramParameterName.LinkStatus, out var linkStatus);
+            if (linkStatus != (int)OpenTK.Graphics.OpenGL.Boolean.True)
             {
-                Trace.TraceError(GL.GetProgramInfoLog(this.id));
+                throw new ArgumentException("Program linking failed: " + GL.GetProgramInfoLog(this.id), nameof(shaderSpecs));
             }
 
             // Detach and delete shaders
