@@ -23,7 +23,7 @@ namespace MyOTKE.Core
         /// <param name="uniforms">The names of the unifoms used by the shaders.</param>
         internal GlProgram(IEnumerable<(ShaderType Type, string Source)> shaderSpecs, string[] uniforms)
         {
-            GlExt.ThrowIfNoCurrentContext();
+            GlEx.ThrowIfNoCurrentContext();
 
             // Create program
             this.id = GL.CreateProgram();
@@ -36,7 +36,7 @@ namespace MyOTKE.Core
                 var shaderId = GL.CreateShader(shaderSpec.Type);
 
                 // Compile shader
-                GlExt.DebugWriteLine("Compiling shader");
+                DebugEx.WriteLine("Compiling shader");
                 GL.ShaderSource(shaderId, shaderSpec.Source);
                 GL.CompileShader(shaderId);
 
@@ -52,7 +52,7 @@ namespace MyOTKE.Core
             }
 
             // Link & check program
-            GlExt.DebugWriteLine("Linking program");
+            DebugEx.WriteLine("Linking program");
             GL.LinkProgram(this.id);
             GL.GetProgram(this.id, GetProgramParameterName.InfoLogLength, out var programInfoLogLength);
             if (programInfoLogLength > 0)

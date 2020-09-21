@@ -28,7 +28,7 @@ namespace MyOTKE.Core
             (BufferUsageHint usage, int capacity, T1[] data) attributeBufferSpec1,
             (int capacity, uint[] data) indexSpec)
         {
-            GlExt.ThrowIfNoCurrentContext();
+            GlEx.ThrowIfNoCurrentContext();
 
             // Record primitive type for use in draw calls, create and bind the VAO
             this.primitiveType = primitiveType;
@@ -171,7 +171,7 @@ namespace MyOTKE.Core
             (BufferUsageHint usage, int capacity, T2[] data) attributeBufferSpec2,
             (int capacity, uint[] data) indexSpec)
         {
-            GlExt.ThrowIfNoCurrentContext();
+            GlEx.ThrowIfNoCurrentContext();
 
             // Record primitive type for use in draw calls, create and bind the VAO
             this.primitiveType = primitiveType;
@@ -324,7 +324,7 @@ namespace MyOTKE.Core
             (BufferUsageHint usage, int capacity, T3[] data) attributeBufferSpec3,
             (int capacity, uint[] data) indexSpec)
         {
-            GlExt.ThrowIfNoCurrentContext();
+            GlEx.ThrowIfNoCurrentContext();
 
             // Record primitive type for use in draw calls, create and bind the VAO
             this.primitiveType = primitiveType;

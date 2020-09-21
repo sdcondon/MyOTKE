@@ -38,7 +38,7 @@ namespace MyOTKE.Core
         /// <returns>The updated builder.</returns>
         public GlProgramBuilder WithShaderFromFile(ShaderType shaderType, string filePath)
         {
-            GlExt.DebugWriteLine($"Loading {shaderType} shader from file path '{filePath}'");
+            DebugEx.WriteLine($"Loading {shaderType} shader from file path '{filePath}'");
             using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
                 return WithShaderFromStream(shaderType, stream);
@@ -54,7 +54,7 @@ namespace MyOTKE.Core
         public GlProgramBuilder WithShaderFromEmbeddedResource(ShaderType shaderType, string resourceName)
         {
             var assembly = Assembly.GetCallingAssembly();
-            GlExt.DebugWriteLine($"Loading {shaderType} shader from resource '{resourceName}' embedded in assembly '{assembly.GetName().Name}'");
+            DebugEx.WriteLine($"Loading {shaderType} shader from resource '{resourceName}' embedded in assembly '{assembly.GetName().Name}'");
             using (var stream = assembly.GetManifestResourceStream(resourceName))
             {
                 if (stream == null)
