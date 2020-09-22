@@ -1,5 +1,6 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using System;
+using static NanoVG.Color;
 
 namespace NanoVG
 {
@@ -47,21 +48,21 @@ namespace NanoVG
             // Window
             NVG.BeginPath(vg);
             NVG.RoundedRect(vg, x, y, w, h, cornerRadius);
-            NVG.FillColor(vg, NVG.RGBA(28, 30, 34, 192));
+            NVG.FillColor(vg, RGBA(28, 30, 34, 192));
             ////nvgFillColor(vg, nvgRGBA(0,0,0,128));
             NVG.Fill(vg);
 
             // Drop shadow
-            shadowPaint = NVG.BoxGradient(vg, x, y + 2, w, h, cornerRadius * 2, 10, NVG.RGBA(0, 0, 0, 128), NVG.RGBA(0, 0, 0, 0));
+            shadowPaint = Paint.BoxGradient(x, y + 2, w, h, cornerRadius * 2, 10, RGBA(0, 0, 0, 128), RGBA(0, 0, 0, 0));
             NVG.BeginPath(vg);
             NVG.Rect(vg, x - 10, y - 10, w + 20, h + 30);
             NVG.RoundedRect(vg, x, y, w, h, cornerRadius);
-            NVG.PathWinding(vg, Winding.NVG_HOLE);
+            NVG.PathWinding(vg, Winding.HOLE);
             NVG.FillPaint(vg, shadowPaint);
             NVG.Fill(vg);
 
             // Header
-            headerPaint = NVG.LinearGradient(vg, x, y, x, y + 15, NVG.RGBA(255, 255, 255, 8), NVG.RGBA(0, 0, 0, 16));
+            headerPaint = Paint.LinearGradient(x, y, x, y + 15, RGBA(255, 255, 255, 8), RGBA(0, 0, 0, 16));
             NVG.BeginPath(vg);
             NVG.RoundedRect(vg, x + 1, y + 1, w - 2, 30, cornerRadius - 1);
             NVG.FillPaint(vg, headerPaint);
@@ -69,7 +70,7 @@ namespace NanoVG
             NVG.BeginPath(vg);
             NVG.MoveTo(vg, x + 0.5f, y + 0.5f + 30);
             NVG.LineTo(vg, x + 0.5f + w - 1, y + 0.5f + 30);
-            NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 32));
+            NVG.StrokeColor(vg, RGBA(0, 0, 0, 32));
             NVG.Stroke(vg);
 
             ////NVG.FontSize(vg, 15.0f);
@@ -93,7 +94,7 @@ namespace NanoVG
             float cornerRadius = h / 2 - 1;
 
             // Edit
-            bg = NVG.BoxGradient(vg, x, y + 1.5f, w, h, h / 2, 5, NVG.RGBA(0, 0, 0, 16), NVG.RGBA(0, 0, 0, 92));
+            bg = Paint.BoxGradient(x, y + 1.5f, w, h, h / 2, 5, RGBA(0, 0, 0, 16), RGBA(0, 0, 0, 92));
             NVG.BeginPath(vg);
             NVG.RoundedRect(vg, x, y, w, h, cornerRadius);
             NVG.FillPaint(vg, bg);
@@ -130,7 +131,7 @@ namespace NanoVG
             Paint bg;
             float cornerRadius = 4.0f;
 
-            bg = NVG.LinearGradient(vg, x, y, x, y + h, NVG.RGBA(255, 255, 255, 16), NVG.RGBA(0, 0, 0, 16));
+            bg = Paint.LinearGradient(x, y, x, y + h, RGBA(255, 255, 255, 16), RGBA(0, 0, 0, 16));
             NVG.BeginPath(vg);
             NVG.RoundedRect(vg, x + 1, y + 1, w - 2, h - 2, cornerRadius - 1);
             NVG.FillPaint(vg, bg);
@@ -138,7 +139,7 @@ namespace NanoVG
 
             NVG.BeginPath(vg);
             NVG.RoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, cornerRadius - 0.5f);
-            NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 48));
+            NVG.StrokeColor(vg, RGBA(0, 0, 0, 48));
             NVG.Stroke(vg);
 
             ////NVG.FontSize(vg, 17.0f);
@@ -169,7 +170,7 @@ namespace NanoVG
         private static void DrawEditBoxBase(Context vg, float x, float y, float w, float h)
         {
             // Edit
-            var bg = NVG.BoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, NVG.RGBA(255, 255, 255, 32), NVG.RGBA(32, 32, 32, 32));
+            var bg = Paint.BoxGradient(x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, RGBA(255, 255, 255, 32), RGBA(32, 32, 32, 32));
             NVG.BeginPath(vg);
             NVG.RoundedRect(vg, x + 1, y + 1, w - 2, h - 2, 4 - 1);
             NVG.FillPaint(vg, bg);
@@ -177,7 +178,7 @@ namespace NanoVG
 
             NVG.BeginPath(vg);
             NVG.RoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, 4 - 0.5f);
-            NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 48));
+            NVG.StrokeColor(vg, RGBA(0, 0, 0, 48));
             NVG.Stroke(vg);
         }
 
@@ -225,7 +226,7 @@ namespace NanoVG
             ////NVG.TextAlign(vg, Align.NVG_ALIGN_LEFT | Align.NVG_ALIGN_MIDDLE);
             ////NVG.Text(vg, x + 28, y + h * 0.5f, text, 0);
 
-            bg = NVG.BoxGradient(vg, x + 1, y + (int)(h * 0.5f) - 9 + 1, 18, 18, 3, 3, NVG.RGBA(0, 0, 0, 32), NVG.RGBA(0, 0, 0, 92));
+            bg = Paint.BoxGradient(x + 1, y + (int)(h * 0.5f) - 9 + 1, 18, 18, 3, 3, RGBA(0, 0, 0, 32), RGBA(0, 0, 0, 92));
             NVG.BeginPath(vg);
             NVG.RoundedRect(vg, x + 1, y + (int)(h * 0.5f) - 9, 18, 18, 3);
             NVG.FillPaint(vg, bg);
@@ -244,7 +245,7 @@ namespace NanoVG
             float cornerRadius = 4.0f;
             float tw = 0, iw = 0;
 
-            bg = NVG.LinearGradient(vg, x, y, x, y + h, NVG.RGBA(255, 255, 255, IsBlack(col) ? (byte)16 : (byte)32), NVG.RGBA(0, 0, 0, IsBlack(col) ? (byte)16 : (byte)32));
+            bg = Paint.LinearGradient(x, y, x, y + h, RGBA(255, 255, 255, IsBlack(col) ? (byte)16 : (byte)32), RGBA(0, 0, 0, IsBlack(col) ? (byte)16 : (byte)32));
             NVG.BeginPath(vg);
             NVG.RoundedRect(vg, x + 1, y + 1, w - 2, h - 2, cornerRadius - 1);
             if (!IsBlack(col))
@@ -258,7 +259,7 @@ namespace NanoVG
 
             NVG.BeginPath(vg);
             NVG.RoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, cornerRadius - 0.5f);
-            NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 48));
+            NVG.StrokeColor(vg, RGBA(0, 0, 0, 48));
             NVG.Stroke(vg);
 
             ////NVG.FontSize(vg, 17.0f);
@@ -300,33 +301,33 @@ namespace NanoVG
             ////nvgClearState(vg);
 
             // Slot
-            bg = NVG.BoxGradient(vg, x, cy - 2 + 1, w, 4, 2, 2, NVG.RGBA(0, 0, 0, 32), NVG.RGBA(0, 0, 0, 128));
+            bg = Paint.BoxGradient(x, cy - 2 + 1, w, 4, 2, 2, RGBA(0, 0, 0, 32), RGBA(0, 0, 0, 128));
             NVG.BeginPath(vg);
             NVG.RoundedRect(vg, x, cy - 2, w, 4, 2);
             NVG.FillPaint(vg, bg);
             NVG.Fill(vg);
 
             // Knob Shadow
-            bg = NVG.RadialGradient(vg, x + (int)(pos * w), cy + 1, kr - 3, kr + 3, NVG.RGBA(0, 0, 0, 64), NVG.RGBA(0, 0, 0, 0));
+            bg = Paint.RadialGradient(x + (int)(pos * w), cy + 1, kr - 3, kr + 3, RGBA(0, 0, 0, 64), RGBA(0, 0, 0, 0));
             NVG.BeginPath(vg);
             NVG.Rect(vg, x + (int)(pos * w) - kr - 5, cy - kr - 5, kr * 2 + 5 + 5, kr * 2 + 5 + 5 + 3);
             NVG.Circle(vg, x + (int)(pos * w), cy, kr);
-            NVG.PathWinding(vg, Winding.NVG_HOLE);
+            NVG.PathWinding(vg, Winding.HOLE);
             NVG.FillPaint(vg, bg);
             NVG.Fill(vg);
 
             // Knob
-            knob = NVG.LinearGradient(vg, x, cy - kr, x, cy + kr, NVG.RGBA(255, 255, 255, 16), NVG.RGBA(0, 0, 0, 16));
+            knob = Paint.LinearGradient(x, cy - kr, x, cy + kr, RGBA(255, 255, 255, 16), RGBA(0, 0, 0, 16));
             NVG.BeginPath(vg);
             NVG.Circle(vg, x + (int)(pos * w), cy, kr - 1);
-            NVG.FillColor(vg, NVG.RGBA(40, 43, 48, 255));
+            NVG.FillColor(vg, RGBA(40, 43, 48, 255));
             NVG.Fill(vg);
             NVG.FillPaint(vg, knob);
             NVG.Fill(vg);
 
             NVG.BeginPath(vg);
             NVG.Circle(vg, x + (int)(pos * w), cy, kr - 0.5f);
-            NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 92));
+            NVG.StrokeColor(vg, RGBA(0, 0, 0, 92));
             NVG.Stroke(vg);
 
             NVG.Restore(vg);
@@ -345,14 +346,14 @@ namespace NanoVG
             float br = (ex < ey ? ex : ey) * 0.5f;
             float blink = 1 - (float)Math.Pow(Math.Sin(t * 0.5f), 200) * 0.8f;
 
-            bg = NVG.LinearGradient(vg, x, y + h * 0.5f, x + w * 0.1f, y + h, NVG.RGBA(0, 0, 0, 32), NVG.RGBA(0, 0, 0, 16));
+            bg = Paint.LinearGradient(x, y + h * 0.5f, x + w * 0.1f, y + h, RGBA(0, 0, 0, 32), RGBA(0, 0, 0, 16));
             NVG.BeginPath(vg);
             NVG.Ellipse(vg, lx + 3.0f, ly + 16.0f, ex, ey);
             NVG.Ellipse(vg, rx + 3.0f, ry + 16.0f, ex, ey);
             NVG.FillPaint(vg, bg);
             NVG.Fill(vg);
 
-            bg = NVG.LinearGradient(vg, x, y + h * 0.25f, x + w * 0.1f, y + h, NVG.RGBA(220, 220, 220, 255), NVG.RGBA(128, 128, 128, 255));
+            bg = Paint.LinearGradient(x, y + h * 0.25f, x + w * 0.1f, y + h, RGBA(220, 220, 220, 255), RGBA(128, 128, 128, 255));
             NVG.BeginPath(vg);
             NVG.Ellipse(vg, lx, ly, ex, ey);
             NVG.Ellipse(vg, rx, ry, ex, ey);
@@ -372,7 +373,7 @@ namespace NanoVG
             dy *= ey * 0.5f;
             NVG.BeginPath(vg);
             NVG.Ellipse(vg, lx + dx, ly + dy + ey * 0.25f * (1 - blink), br, br * blink);
-            NVG.FillColor(vg, NVG.RGBA(32, 32, 32, 255));
+            NVG.FillColor(vg, RGBA(32, 32, 32, 255));
             NVG.Fill(vg);
 
             dx = (mx - rx) / (ex * 10);
@@ -388,16 +389,16 @@ namespace NanoVG
             dy *= ey * 0.5f;
             NVG.BeginPath(vg);
             NVG.Ellipse(vg, rx + dx, ry + dy + ey * 0.25f * (1 - blink), br, br * blink);
-            NVG.FillColor(vg, NVG.RGBA(32, 32, 32, 255));
+            NVG.FillColor(vg, RGBA(32, 32, 32, 255));
             NVG.Fill(vg);
 
-            gloss = NVG.RadialGradient(vg, lx - ex * 0.25f, ly - ey * 0.5f, ex * 0.1f, ex * 0.75f, NVG.RGBA(255, 255, 255, 128), NVG.RGBA(255, 255, 255, 0));
+            gloss = Paint.RadialGradient(lx - ex * 0.25f, ly - ey * 0.5f, ex * 0.1f, ex * 0.75f, RGBA(255, 255, 255, 128), RGBA(255, 255, 255, 0));
             NVG.BeginPath(vg);
             NVG.Ellipse(vg, lx, ly, ex, ey);
             NVG.FillPaint(vg, gloss);
             NVG.Fill(vg);
 
-            gloss = NVG.RadialGradient(vg, rx - ex * 0.25f, ry - ey * 0.5f, ex * 0.1f, ex * 0.75f, NVG.RGBA(255, 255, 255, 128), NVG.RGBA(255, 255, 255, 0));
+            gloss = Paint.RadialGradient(rx - ex * 0.25f, ry - ey * 0.5f, ex * 0.1f, ex * 0.75f, RGBA(255, 255, 255, 128), RGBA(255, 255, 255, 0));
             NVG.BeginPath(vg);
             NVG.Ellipse(vg, rx, ry, ex, ey);
             NVG.FillPaint(vg, gloss);
@@ -428,7 +429,7 @@ namespace NanoVG
             }
 
             // Graph background
-            bg = NVG.LinearGradient(vg, x, y, x, y + h, NVG.RGBA(0, 160, 192, 0), NVG.RGBA(0, 160, 192, 64));
+            bg = Paint.LinearGradient(x, y, x, y + h, RGBA(0, 160, 192, 0), RGBA(0, 160, 192, 64));
             NVG.BeginPath(vg);
             NVG.MoveTo(vg, sx[0], sy[0]);
             for (i = 1; i < 6; i++)
@@ -449,7 +450,7 @@ namespace NanoVG
                 NVG.BezierTo(vg, sx[i - 1] + dx * 0.5f, sy[i - 1] + 2, sx[i] - dx * 0.5f, sy[i] + 2, sx[i], sy[i] + 2);
             }
 
-            NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 32));
+            NVG.StrokeColor(vg, RGBA(0, 0, 0, 32));
             NVG.StrokeWidth(vg, 3.0f);
             NVG.Stroke(vg);
 
@@ -460,14 +461,14 @@ namespace NanoVG
                 NVG.BezierTo(vg, sx[i - 1] + dx * 0.5f, sy[i - 1], sx[i] - dx * 0.5f, sy[i], sx[i], sy[i]);
             }
 
-            NVG.StrokeColor(vg, NVG.RGBA(0, 160, 192, 255));
+            NVG.StrokeColor(vg, RGBA(0, 160, 192, 255));
             NVG.StrokeWidth(vg, 3.0f);
             NVG.Stroke(vg);
 
             // Graph sample pos
             for (i = 0; i < 6; i++)
             {
-                bg = NVG.RadialGradient(vg, sx[i], sy[i] + 2, 3.0f, 8.0f, NVG.RGBA(0, 0, 0, 32), NVG.RGBA(0, 0, 0, 0));
+                bg = Paint.RadialGradient(sx[i], sy[i] + 2, 3.0f, 8.0f, RGBA(0, 0, 0, 32), RGBA(0, 0, 0, 0));
                 NVG.BeginPath(vg);
                 NVG.Rect(vg, sx[i] - 10, sy[i] - 10 + 2, 20, 20);
                 NVG.FillPaint(vg, bg);
@@ -480,7 +481,7 @@ namespace NanoVG
                 NVG.Circle(vg, sx[i], sy[i], 4.0f);
             }
 
-            NVG.FillColor(vg, NVG.RGBA(0, 160, 192, 255));
+            NVG.FillColor(vg, RGBA(0, 160, 192, 255));
             NVG.Fill(vg);
             NVG.BeginPath(vg);
             for (i = 0; i < 6; i++)
@@ -488,7 +489,7 @@ namespace NanoVG
                 NVG.Circle(vg, sx[i], sy[i], 2.0f);
             }
 
-            NVG.FillColor(vg, NVG.RGBA(220, 220, 220, 255));
+            NVG.FillColor(vg, RGBA(220, 220, 220, 255));
             NVG.Fill(vg);
 
             NVG.StrokeWidth(vg, 1.0f);
@@ -506,14 +507,14 @@ namespace NanoVG
             NVG.Save(vg);
 
             NVG.BeginPath(vg);
-            NVG.Arc(vg, cx, cy, r0, a0, a1, Winding.NVG_CW);
-            NVG.Arc(vg, cx, cy, r1, a1, a0, Winding.NVG_CCW);
+            NVG.Arc(vg, cx, cy, r0, a0, a1, Winding.CW);
+            NVG.Arc(vg, cx, cy, r1, a1, a0, Winding.CCW);
             NVG.ClosePath(vg);
             ax = cx + (float)Math.Cos(a0) * (r0 + r1) * 0.5f;
             ay = cy + (float)Math.Sin(a0) * (r0 + r1) * 0.5f;
             bx = cx + (float)Math.Cos(a1) * (r0 + r1) * 0.5f;
             by = cy + (float)Math.Sin(a1) * (r0 + r1) * 0.5f;
-            paint = NVG.LinearGradient(vg, ax, ay, bx, by, NVG.RGBA(0, 0, 0, 0), NVG.RGBA(0, 0, 0, 128));
+            paint = Paint.LinearGradient(ax, ay, bx, by, RGBA(0, 0, 0, 0), RGBA(0, 0, 0, 128));
             NVG.FillPaint(vg, paint);
             NVG.Fill(vg);
 
@@ -537,11 +538,11 @@ namespace NanoVG
             ////nvgClearState(vg);
 
             // Drop shadow
-            shadowPaint = NVG.BoxGradient(vg, x, y + 4, w, h, cornerRadius * 2, 20, NVG.RGBA(0, 0, 0, 128), NVG.RGBA(0, 0, 0, 0));
+            shadowPaint = Paint.BoxGradient(x, y + 4, w, h, cornerRadius * 2, 20, RGBA(0, 0, 0, 128), RGBA(0, 0, 0, 0));
             NVG.BeginPath(vg);
             NVG.Rect(vg, x - 10, y - 10, w + 20, h + 30);
             NVG.RoundedRect(vg, x, y, w, h, cornerRadius);
-            NVG.PathWinding(vg, Winding.NVG_HOLE);
+            NVG.PathWinding(vg, Winding.HOLE);
             NVG.FillPaint(vg, shadowPaint);
             NVG.Fill(vg);
 
@@ -551,7 +552,7 @@ namespace NanoVG
             NVG.MoveTo(vg, x - 10, y + arry);
             NVG.LineTo(vg, x + 1, y + arry - 11);
             NVG.LineTo(vg, x + 1, y + arry + 11);
-            NVG.FillColor(vg, NVG.RGBA(200, 200, 200, 255));
+            NVG.FillColor(vg, RGBA(200, 200, 200, 255));
             NVG.Fill(vg);
 
             NVG.Save(vg);
@@ -591,44 +592,44 @@ namespace NanoVG
                     DrawSpinner(vg, tx + thumb / 2, ty + thumb / 2, thumb * 0.25f, t);
                 }
 
-                imgPaint = NVG.ImagePattern(vg, tx + ix, ty + iy, iw, ih, 0.0f / 180.0f * (float)Math.PI, images[i], a);
+                imgPaint = Paint.ImagePattern(tx + ix, ty + iy, iw, ih, 0.0f / 180.0f * (float)Math.PI, images[i], a);
                 NVG.BeginPath(vg);
                 NVG.RoundedRect(vg, tx, ty, thumb, thumb, 5);
                 NVG.FillPaint(vg, imgPaint);
                 NVG.Fill(vg);
 
-                shadowPaint = NVG.BoxGradient(vg, tx - 1, ty, thumb + 2, thumb + 2, 5, 3, NVG.RGBA(0, 0, 0, 128), NVG.RGBA(0, 0, 0, 0));
+                shadowPaint = Paint.BoxGradient(tx - 1, ty, thumb + 2, thumb + 2, 5, 3, RGBA(0, 0, 0, 128), RGBA(0, 0, 0, 0));
                 NVG.BeginPath(vg);
                 NVG.Rect(vg, tx - 5, ty - 5, thumb + 10, thumb + 10);
                 NVG.RoundedRect(vg, tx, ty, thumb, thumb, 6);
-                NVG.PathWinding(vg, Winding.NVG_HOLE);
+                NVG.PathWinding(vg, Winding.HOLE);
                 NVG.FillPaint(vg, shadowPaint);
                 NVG.Fill(vg);
 
                 NVG.BeginPath(vg);
                 NVG.RoundedRect(vg, tx + 0.5f, ty + 0.5f, thumb - 1, thumb - 1, 4 - 0.5f);
                 NVG.StrokeWidth(vg, 1.0f);
-                NVG.StrokeColor(vg, NVG.RGBA(255, 255, 255, 192));
+                NVG.StrokeColor(vg, RGBA(255, 255, 255, 192));
                 NVG.Stroke(vg);
             }
 
             NVG.Restore(vg);
 
             // Hide fades
-            fadePaint = NVG.LinearGradient(vg, x, y, x, y + 6, NVG.RGBA(200, 200, 200, 255), NVG.RGBA(200, 200, 200, 0));
+            fadePaint = Paint.LinearGradient(x, y, x, y + 6, RGBA(200, 200, 200, 255), RGBA(200, 200, 200, 0));
             NVG.BeginPath(vg);
             NVG.Rect(vg, x + 4, y, w - 8, 6);
             NVG.FillPaint(vg, fadePaint);
             NVG.Fill(vg);
 
-            fadePaint = NVG.LinearGradient(vg, x, y + h, x, y + h - 6, NVG.RGBA(200, 200, 200, 255), NVG.RGBA(200, 200, 200, 0));
+            fadePaint = Paint.LinearGradient(x, y + h, x, y + h - 6, RGBA(200, 200, 200, 255), RGBA(200, 200, 200, 0));
             NVG.BeginPath(vg);
             NVG.Rect(vg, x + 4, y + h - 6, w - 8, 6);
             NVG.FillPaint(vg, fadePaint);
             NVG.Fill(vg);
 
             // Scroll bar
-            shadowPaint = NVG.BoxGradient(vg, x + w - 12 + 1, y + 4 + 1, 8, h - 8, 3, 4, NVG.RGBA(0, 0, 0, 32), NVG.RGBA(0, 0, 0, 92));
+            shadowPaint = Paint.BoxGradient(x + w - 12 + 1, y + 4 + 1, 8, h - 8, 3, 4, RGBA(0, 0, 0, 32), RGBA(0, 0, 0, 92));
             NVG.BeginPath(vg);
             NVG.RoundedRect(vg, x + w - 12, y + 4, 8, h - 8, 3);
             NVG.FillPaint(vg, shadowPaint);
@@ -636,7 +637,7 @@ namespace NanoVG
             NVG.Fill(vg);
 
             scrollh = (h / stackh) * (h - 8);
-            shadowPaint = NVG.BoxGradient(vg, x + w - 12 - 1, y + 4 + (h - 8 - scrollh) * u - 1, 8, scrollh, 3, 4, NVG.RGBA(220, 220, 220, 255), NVG.RGBA(128, 128, 128, 255));
+            shadowPaint = Paint.BoxGradient(x + w - 12 - 1, y + 4 + (h - 8 - scrollh) * u - 1, 8, scrollh, 3, 4, RGBA(220, 220, 220, 255), RGBA(128, 128, 128, 255));
             NVG.BeginPath(vg);
             NVG.RoundedRect(vg, x + w - 12 + 1, y + 4 + 1 + (h - 8 - scrollh) * u, 8 - 2, scrollh - 2, 2);
             NVG.FillPaint(vg, shadowPaint);
@@ -671,14 +672,14 @@ namespace NanoVG
                 float a0 = (float)i / 6.0f * (float)Math.PI * 2.0f - aeps;
                 float a1 = (float)(i + 1.0f) / 6.0f * (float)Math.PI * 2.0f + aeps;
                 NVG.BeginPath(vg);
-                NVG.Arc(vg, cx, cy, r0, a0, a1, Winding.NVG_CW);
-                NVG.Arc(vg, cx, cy, r1, a1, a0, Winding.NVG_CCW);
+                NVG.Arc(vg, cx, cy, r0, a0, a1, Winding.CW);
+                NVG.Arc(vg, cx, cy, r1, a1, a0, Winding.CCW);
                 NVG.ClosePath(vg);
                 ax = cx + (float)Math.Cos(a0) * (r0 + r1) * 0.5f;
                 ay = cy + (float)Math.Sin(a0) * (r0 + r1) * 0.5f;
                 bx = cx + (float)Math.Cos(a1) * (r0 + r1) * 0.5f;
                 by = cy + (float)Math.Sin(a1) * (r0 + r1) * 0.5f;
-                paint = NVG.LinearGradient(vg, ax, ay, bx, by, NVG.HSLA(a0 / ((float)Math.PI * 2), 1.0f, 0.55f, 255), NVG.HSLA(a1 / ((float)Math.PI * 2), 1.0f, 0.55f, 255));
+                paint = Paint.LinearGradient(ax, ay, bx, by, HSLA(a0 / ((float)Math.PI * 2), 1.0f, 0.55f, 255), HSLA(a1 / ((float)Math.PI * 2), 1.0f, 0.55f, 255));
                 NVG.FillPaint(vg, paint);
                 NVG.Fill(vg);
             }
@@ -686,7 +687,7 @@ namespace NanoVG
             NVG.BeginPath(vg);
             NVG.Circle(vg, cx, cy, r0 - 0.5f);
             NVG.Circle(vg, cx, cy, r1 + 0.5f);
-            NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 64));
+            NVG.StrokeColor(vg, RGBA(0, 0, 0, 64));
             NVG.StrokeWidth(vg, 1.0f);
             NVG.Stroke(vg);
 
@@ -699,14 +700,14 @@ namespace NanoVG
             NVG.StrokeWidth(vg, 2.0f);
             NVG.BeginPath(vg);
             NVG.Rect(vg, r0 - 1, -3, r1 - r0 + 2, 6);
-            NVG.StrokeColor(vg, NVG.RGBA(255, 255, 255, 192));
+            NVG.StrokeColor(vg, RGBA(255, 255, 255, 192));
             NVG.Stroke(vg);
 
-            paint = NVG.BoxGradient(vg, r0 - 3, -5, r1 - r0 + 6, 10, 2, 4, NVG.RGBA(0, 0, 0, 128), NVG.RGBA(0, 0, 0, 0));
+            paint = Paint.BoxGradient(r0 - 3, -5, r1 - r0 + 6, 10, 2, 4, RGBA(0, 0, 0, 128), RGBA(0, 0, 0, 0));
             NVG.BeginPath(vg);
             NVG.Rect(vg, r0 - 2 - 10, -4 - 10, r1 - r0 + 4 + 20, 8 + 20);
             NVG.Rect(vg, r0 - 2, -4, r1 - r0 + 4, 8);
-            NVG.PathWinding(vg, Winding.NVG_HOLE);
+            NVG.PathWinding(vg, Winding.HOLE);
             NVG.FillPaint(vg, paint);
             NVG.Fill(vg);
 
@@ -721,13 +722,13 @@ namespace NanoVG
             NVG.LineTo(vg, ax, ay);
             NVG.LineTo(vg, bx, by);
             NVG.ClosePath(vg);
-            paint = NVG.LinearGradient(vg, r, 0, ax, ay, NVG.HSLA(hue, 1.0f, 0.5f, 255), NVG.RGBA(255, 255, 255, 255));
+            paint = Paint.LinearGradient(r, 0, ax, ay, HSLA(hue, 1.0f, 0.5f, 255), RGBA(255, 255, 255, 255));
             NVG.FillPaint(vg, paint);
             NVG.Fill(vg);
-            paint = NVG.LinearGradient(vg, (r + ax) * 0.5f, (0 + ay) * 0.5f, bx, by, NVG.RGBA(0, 0, 0, 0), NVG.RGBA(0, 0, 0, 255));
+            paint = Paint.LinearGradient((r + ax) * 0.5f, (0 + ay) * 0.5f, bx, by, RGBA(0, 0, 0, 0), RGBA(0, 0, 0, 255));
             NVG.FillPaint(vg, paint);
             NVG.Fill(vg);
-            NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 64));
+            NVG.StrokeColor(vg, RGBA(0, 0, 0, 64));
             NVG.Stroke(vg);
 
             // Select circle on triangle
@@ -736,14 +737,14 @@ namespace NanoVG
             NVG.StrokeWidth(vg, 2.0f);
             NVG.BeginPath(vg);
             NVG.Circle(vg, ax, ay, 5);
-            NVG.StrokeColor(vg, NVG.RGBA(255, 255, 255, 192));
+            NVG.StrokeColor(vg, RGBA(255, 255, 255, 192));
             NVG.Stroke(vg);
 
-            paint = NVG.RadialGradient(vg, ax, ay, 7, 9, NVG.RGBA(0, 0, 0, 64), NVG.RGBA(0, 0, 0, 0));
+            paint = Paint.RadialGradient(ax, ay, 7, 9, RGBA(0, 0, 0, 64), RGBA(0, 0, 0, 0));
             NVG.BeginPath(vg);
             NVG.Rect(vg, ax - 20, ay - 20, 40, 40);
             NVG.Circle(vg, ax, ay, 7);
-            NVG.PathWinding(vg, Winding.NVG_HOLE);
+            NVG.PathWinding(vg, Winding.HOLE);
             NVG.FillPaint(vg, paint);
             NVG.Fill(vg);
 
@@ -758,8 +759,8 @@ namespace NanoVG
             float pad = 5.0f, s = w / 9.0f - pad * 2;
             float[] pts = new float[4 * 2];
             float fx, fy;
-            var joins = new nvgLineCap[] { nvgLineCap.NVG_MITER, nvgLineCap.NVG_ROUND, nvgLineCap.NVG_BEVEL };
-            var caps = new nvgLineCap[] { nvgLineCap.NVG_BUTT, nvgLineCap.NVG_ROUND, nvgLineCap.NVG_SQUARE };
+            var joins = new LineCap[] { LineCap.MITER, LineCap.ROUND, LineCap.BEVEL };
+            var caps = new LineCap[] { LineCap.BUTT, LineCap.ROUND, LineCap.SQUARE };
             ////NVG_NOTUSED(h);
 
             NVG.Save(vg);
@@ -783,7 +784,7 @@ namespace NanoVG
                     NVG.LineJoin(vg, joins[j]);
 
                     NVG.StrokeWidth(vg, s * 0.3f);
-                    NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 160));
+                    NVG.StrokeColor(vg, RGBA(0, 0, 0, 160));
                     NVG.BeginPath(vg);
                     NVG.MoveTo(vg, fx + pts[0], fy + pts[1]);
                     NVG.LineTo(vg, fx + pts[2], fy + pts[3]);
@@ -791,11 +792,11 @@ namespace NanoVG
                     NVG.LineTo(vg, fx + pts[6], fy + pts[7]);
                     NVG.Stroke(vg);
 
-                    NVG.LineCap(vg, nvgLineCap.NVG_BUTT);
-                    NVG.LineJoin(vg, nvgLineCap.NVG_BEVEL);
+                    NVG.LineCap(vg, LineCap.BUTT);
+                    NVG.LineJoin(vg, LineCap.BEVEL);
 
                     NVG.StrokeWidth(vg, 1.0f);
-                    NVG.StrokeColor(vg, NVG.RGBA(0, 192, 255, 255));
+                    NVG.StrokeColor(vg, RGBA(0, 192, 255, 255));
                     NVG.BeginPath(vg);
                     NVG.MoveTo(vg, fx + pts[0], fy + pts[1]);
                     NVG.LineTo(vg, fx + pts[2], fy + pts[3]);
@@ -999,7 +1000,7 @@ namespace NanoVG
         private static void DrawWidths(Context vg, float x, float y, float width)
         {
             NVG.Save(vg);
-            NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 255));
+            NVG.StrokeColor(vg, RGBA(0, 0, 0, 255));
 
             for (int i = 0; i < 20; i++)
             {
@@ -1018,26 +1019,26 @@ namespace NanoVG
         private static void DrawCaps(Context vg, float x, float y, float width)
         {
             int i;
-            var caps = new nvgLineCap[] { nvgLineCap.NVG_BUTT, nvgLineCap.NVG_ROUND, nvgLineCap.NVG_SQUARE };
+            var caps = new LineCap[] { LineCap.BUTT, LineCap.ROUND, LineCap.SQUARE };
             float lineWidth = 8.0f;
 
             NVG.Save(vg);
 
             NVG.BeginPath(vg);
             NVG.Rect(vg, x - lineWidth / 2, y, width + lineWidth, 40);
-            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 32));
+            NVG.FillColor(vg, RGBA(255, 255, 255, 32));
             NVG.Fill(vg);
 
             NVG.BeginPath(vg);
             NVG.Rect(vg, x, y, width, 40);
-            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 32));
+            NVG.FillColor(vg, RGBA(255, 255, 255, 32));
             NVG.Fill(vg);
 
             NVG.StrokeWidth(vg, lineWidth);
             for (i = 0; i < 3; i++)
             {
                 NVG.LineCap(vg, caps[i]);
-                NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 255));
+                NVG.StrokeColor(vg, RGBA(0, 0, 0, 255));
                 NVG.BeginPath(vg);
                 NVG.MoveTo(vg, x, y + i * 10 + 5);
                 NVG.LineTo(vg, x + width, y + i * 10 + 5);
@@ -1056,7 +1057,7 @@ namespace NanoVG
             NVG.Rotate(vg, NVG.DegToRad(5));
             NVG.BeginPath(vg);
             NVG.Rect(vg, -20, -20, 60, 40);
-            NVG.FillColor(vg, NVG.RGBA(255, 0, 0, 255));
+            NVG.FillColor(vg, RGBA(255, 0, 0, 255));
             NVG.Fill(vg);
             NVG.Scissor(vg, -20, -20, 60, 40);
 
@@ -1069,7 +1070,7 @@ namespace NanoVG
             NVG.ResetScissor(vg);
             NVG.BeginPath(vg);
             NVG.Rect(vg, -20, -10, 60, 30);
-            NVG.FillColor(vg, NVG.RGBA(255, 128, 0, 64));
+            NVG.FillColor(vg, RGBA(255, 128, 0, 64));
             NVG.Fill(vg);
             NVG.Restore(vg);
 
@@ -1077,7 +1078,7 @@ namespace NanoVG
             NVG.IntersectScissor(vg, -20, -10, 60, 30);
             NVG.BeginPath(vg);
             NVG.Rect(vg, -20, -10, 60, 30);
-            NVG.FillColor(vg, NVG.RGBA(255, 128, 0, 255));
+            NVG.FillColor(vg, RGBA(255, 128, 0, 255));
             NVG.Fill(vg);
 
             NVG.Restore(vg);
@@ -1128,7 +1129,7 @@ namespace NanoVG
             DrawEditBox(vg, "Password", x, y, 280, 28);
             y += 38;
             DrawCheckBox(vg, "Remember me", x, y, 140, 28);
-            DrawButton(vg, IconLogin, "Sign in", x + 138, y, 140, 28, NVG.RGBA(0, 96, 128, 255));
+            DrawButton(vg, IconLogin, "Sign in", x + 138, y, 140, 28, RGBA(0, 96, 128, 255));
             y += 45;
 
             // Slider
@@ -1138,8 +1139,8 @@ namespace NanoVG
             DrawSlider(vg, 0.4f, x, y, 170, 28);
             y += 55;
 
-            DrawButton(vg, IconTrash, "Delete", x, y, 160, 28, NVG.RGBA(128, 16, 8, 255));
-            DrawButton(vg, null, "Cancel", x + 170, y, 110, 28, NVG.RGBA(0, 0, 0, 0));
+            DrawButton(vg, IconTrash, "Delete", x, y, 160, 28, RGBA(128, 16, 8, 255));
+            DrawButton(vg, null, "Cancel", x + 170, y, 110, 28, RGBA(0, 0, 0, 0));
 
             // Thumbnails box
             ////DrawThumbnails(vg, 365, popy - 30, 160, 300, data.images, t);

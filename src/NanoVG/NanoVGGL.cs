@@ -51,7 +51,7 @@ namespace NanoVG
         }
 
         // These are additional flags on top of NVGimageFlags.
-        enum NVGimageFlagsGL
+        enum ImageFlagsGL
         {
             NVG_IMAGE_NODELETE = 1 << 16,   // Do not delete GL texture handle.
         }
@@ -120,7 +120,7 @@ namespace NanoVG
             public int width;
             public int height;
             public NVG.Texture type;
-            public NVGimageFlags flags;
+            public ImageFlags flags;
         }
 
         struct GLNVGblend
@@ -333,7 +333,7 @@ namespace NanoVG
             {
                 if (gl.textures[i].id == id)
                 {
-                    if (gl.textures[i].tex != 0 && !gl.textures[i].flags.HasFlag(NVGimageFlagsGL.NVG_IMAGE_NODELETE))
+                    if (gl.textures[i].tex != 0 && !gl.textures[i].flags.HasFlag(ImageFlagsGL.NVG_IMAGE_NODELETE))
                     {
                         GL.DeleteTextures(1, ref gl.textures[i].tex);
                     }
@@ -344,12 +344,6 @@ namespace NanoVG
             }
 
             return 0; // todo: return bool
-        }
-
-        static void glnvg__dumpShaderError(int shader, string name, string type)
-        {
-            var str = GL.GetShaderInfoLog(shader);
-            Debug.WriteLine($"Shader {name}/{type} error: {str}");
         }
 
         static void glnvg__dumpProgramError(int prog, string name)
@@ -378,12 +372,12 @@ namespace NanoVG
             bool TryMakeShader(ShaderType type, string body, out int id)
             {
                 id = GL.CreateShader(type);
-                GL.ShaderSource(id, header + opts ?? string.Empty + body);
+                GL.ShaderSource(id, header + (opts ?? string.Empty) + body);
                 GL.CompileShader(id);
                 GL.GetShader(id, ShaderParameter.CompileStatus, out var compileStatus);
                 if (compileStatus != (int)OpenTK.Graphics.OpenGL.Boolean.True)
                 {
-                    glnvg__dumpShaderError(id, name, type.ToString());
+                    Debug.WriteLine($"{name} {type} compile error: {GL.GetShaderInfoLog(id)}");
                     return false;
                 }
 
@@ -663,7 +657,7 @@ namespace NanoVG
             return 1;
         }
 
-        static int glnvg__renderCreateTexture(object cxt, NVG.Texture type, int w, int h, NVGimageFlags imageFlags, byte[] data)
+        static int glnvg__renderCreateTexture(object cxt, NVG.Texture type, int w, int h, ImageFlags imageFlags, byte[] data)
         {
             GLNVGcontext gl = (GLNVGcontext)cxt;
             ref GLNVGtexture tex = ref glnvg__allocTexture(gl);
@@ -724,9 +718,9 @@ namespace NanoVG
 #endif
             }
 
-            if (imageFlags.HasFlag(NVGimageFlags.NVG_IMAGE_GENERATE_MIPMAPS))
+            if (imageFlags.HasFlag(ImageFlags.IMAGE_GENERATE_MIPMAPS))
             {
-                if (imageFlags.HasFlag(NVGimageFlags.NVG_IMAGE_NEAREST))
+                if (imageFlags.HasFlag(ImageFlags.IMAGE_NEAREST))
                 {
                     GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.NearestMipmapNearest);
                 }
@@ -737,7 +731,7 @@ namespace NanoVG
             }
             else
             {
-                if (imageFlags.HasFlag(NVGimageFlags.NVG_IMAGE_NEAREST))
+                if (imageFlags.HasFlag(ImageFlags.IMAGE_NEAREST))
                 {
                     GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
                 }
@@ -747,7 +741,7 @@ namespace NanoVG
                 }
             }
 
-            if (imageFlags.HasFlag(NVGimageFlags.NVG_IMAGE_NEAREST))
+            if (imageFlags.HasFlag(ImageFlags.IMAGE_NEAREST))
             {
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
             }
@@ -756,7 +750,7 @@ namespace NanoVG
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
             }
 
-            if (imageFlags.HasFlag(NVGimageFlags.NVG_IMAGE_REPEATX))
+            if (imageFlags.HasFlag(ImageFlags.IMAGE_REPEATX))
             {
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
             }
@@ -765,7 +759,7 @@ namespace NanoVG
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
             }
 
-            var textureWrapModeT = imageFlags.HasFlag(NVGimageFlags.NVG_IMAGE_REPEATY) ? (int)TextureWrapMode.Repeat : (int)TextureWrapMode.ClampToEdge;
+            var textureWrapModeT = imageFlags.HasFlag(ImageFlags.IMAGE_REPEATY) ? (int)TextureWrapMode.Repeat : (int)TextureWrapMode.ClampToEdge;
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, textureWrapModeT);
 
             GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
@@ -777,7 +771,7 @@ namespace NanoVG
 
             // The new way to build mipmaps on GLES and GL3
 #if !NANOVG_GL2
-            if (imageFlags.HasFlag(NVGimageFlags.NVG_IMAGE_GENERATE_MIPMAPS))
+            if (imageFlags.HasFlag(ImageFlags.IMAGE_GENERATE_MIPMAPS))
             {
                 GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
             }
@@ -907,7 +901,7 @@ namespace NanoVG
             }
             else
             {
-                TransformInverse(ref invxform, scissor.xform);
+                scissor.xform.Inverse(out invxform);
                 glnvg__xformToMat3x4(ref frag.scissorMat, invxform);
                 frag.scissorExt = scissor.extent;
                 frag.scissorScale.X = (float)Math.Sqrt(scissor.xform.R1C1 * scissor.xform.R1C1 + scissor.xform.R1C2 * scissor.xform.R1C2) / fringe;
@@ -922,21 +916,19 @@ namespace NanoVG
             {
                 if (!glnvg__findTexture(gl, paint.image, out var tex)) return 0;
 
-                if (tex.flags.HasFlag(NVGimageFlags.NVG_IMAGE_FLIPY))
+                if (tex.flags.HasFlag(ImageFlags.IMAGE_FLIPY))
                 {
-                    Transform2D m1 = new Transform2D();
-                    Transform2D m2 = new Transform2D();
-                    TransformTranslate(ref m1, 0.0f, frag.extent.Y * 0.5f);
-                    TransformMultiply(ref m1, paint.xform);
-                    TransformScale(ref m2, 1.0f, -1.0f);
-                    TransformMultiply(ref m2, m1);
-                    TransformTranslate(ref m1, 0.0f, -frag.extent.Y * 0.5f);
-                    TransformMultiply(ref m1, m2);
-                    TransformInverse(ref invxform, m1);
+                    var m1 = Transform2D.Translate(0.0f, frag.extent.Y * 0.5f);
+                    Transform2D.Multiply(ref m1, paint.xform);
+                    var m2 = Transform2D.Scale(1.0f, -1.0f);
+                    Transform2D.Multiply(ref m2, m1);
+                    m1 = Transform2D.Translate(0.0f, -frag.extent.Y * 0.5f);
+                    Transform2D.Multiply(ref m1, m2);
+                    m1.Inverse(out invxform);
                 }
                 else
                 {
-                    TransformInverse(ref invxform, paint.xform);
+                    paint.xform.Inverse(out invxform);
                 }
 
                 frag.type = GLNVGshaderType.NSVG_SHADER_FILLIMG;
@@ -944,7 +936,7 @@ namespace NanoVG
 #if NANOVG_GL_USE_UNIFORMBUFFER
                 if (tex.type == Texture.NVG_TEXTURE_RGBA)
                 {
-                    frag.texType = tex.flags.HasFlag(NVGimageFlags.NVG_IMAGE_PREMULTIPLIED) ? 0 : 1;
+                    frag.texType = tex.flags.HasFlag(ImageFlags.IMAGE_PREMULTIPLIED) ? 0 : 1;
                 }
                 else
                 {
@@ -963,7 +955,7 @@ namespace NanoVG
                 frag.type = GLNVGshaderType.NSVG_SHADER_FILLGRAD;
                 frag.radius = paint.radius;
                 frag.feather = paint.feather;
-                TransformInverse(ref invxform, paint.xform);
+                paint.xform.Inverse(out invxform);
             }
 
             glnvg__xformToMat3x4(ref frag.paintMat, invxform);
@@ -1151,27 +1143,27 @@ namespace NanoVG
 
         static BlendingFactorSrc glnvg_convertBlendFuncFactorSrc(BlendFactor factor)
         {
-            if (factor == BlendFactor.NVG_ZERO)
+            if (factor == BlendFactor.ZERO)
                 return BlendingFactorSrc.Zero;
-            if (factor == BlendFactor.NVG_ONE)
+            if (factor == BlendFactor.ONE)
                 return BlendingFactorSrc.One;
-            if (factor == BlendFactor.NVG_SRC_COLOR)
+            if (factor == BlendFactor.SRC_COLOR)
                 return BlendingFactorSrc.SrcColor;
-            if (factor == BlendFactor.NVG_ONE_MINUS_SRC_COLOR)
+            if (factor == BlendFactor.ONE_MINUS_SRC_COLOR)
                 return BlendingFactorSrc.OneMinusSrcColor;
-            if (factor == BlendFactor.NVG_DST_COLOR)
+            if (factor == BlendFactor.DST_COLOR)
                 return BlendingFactorSrc.DstColor;
-            if (factor == BlendFactor.NVG_ONE_MINUS_DST_COLOR)
+            if (factor == BlendFactor.ONE_MINUS_DST_COLOR)
                 return BlendingFactorSrc.OneMinusDstColor;
-            if (factor == BlendFactor.NVG_SRC_ALPHA)
+            if (factor == BlendFactor.SRC_ALPHA)
                 return BlendingFactorSrc.SrcAlpha;
-            if (factor == BlendFactor.NVG_ONE_MINUS_SRC_ALPHA)
+            if (factor == BlendFactor.ONE_MINUS_SRC_ALPHA)
                 return BlendingFactorSrc.OneMinusSrcAlpha;
-            if (factor == BlendFactor.NVG_DST_ALPHA)
+            if (factor == BlendFactor.DST_ALPHA)
                 return BlendingFactorSrc.DstAlpha;
-            if (factor == BlendFactor.NVG_ONE_MINUS_DST_ALPHA)
+            if (factor == BlendFactor.ONE_MINUS_DST_ALPHA)
                 return BlendingFactorSrc.OneMinusDstAlpha;
-            if (factor == BlendFactor.NVG_SRC_ALPHA_SATURATE)
+            if (factor == BlendFactor.SRC_ALPHA_SATURATE)
                 return BlendingFactorSrc.SrcAlphaSaturate;
             throw new ArgumentException(nameof(factor));
             //return BlendingFactor.GL_INVALID_ENUM;
@@ -1179,27 +1171,27 @@ namespace NanoVG
 
         static BlendingFactorDest glnvg_convertBlendFuncFactorDest(BlendFactor factor)
         {
-            if (factor == BlendFactor.NVG_ZERO)
+            if (factor == BlendFactor.ZERO)
                 return BlendingFactorDest.Zero;
-            if (factor == BlendFactor.NVG_ONE)
+            if (factor == BlendFactor.ONE)
                 return BlendingFactorDest.One;
-            if (factor == BlendFactor.NVG_SRC_COLOR)
+            if (factor == BlendFactor.SRC_COLOR)
                 return BlendingFactorDest.SrcColor;
-            if (factor == BlendFactor.NVG_ONE_MINUS_SRC_COLOR)
+            if (factor == BlendFactor.ONE_MINUS_SRC_COLOR)
                 return BlendingFactorDest.OneMinusSrcColor;
-            if (factor == BlendFactor.NVG_DST_COLOR)
+            if (factor == BlendFactor.DST_COLOR)
                 return BlendingFactorDest.DstColor;
-            if (factor == BlendFactor.NVG_ONE_MINUS_DST_COLOR)
+            if (factor == BlendFactor.ONE_MINUS_DST_COLOR)
                 return BlendingFactorDest.OneMinusDstColor;
-            if (factor == BlendFactor.NVG_SRC_ALPHA)
+            if (factor == BlendFactor.SRC_ALPHA)
                 return BlendingFactorDest.SrcAlpha;
-            if (factor == BlendFactor.NVG_ONE_MINUS_SRC_ALPHA)
+            if (factor == BlendFactor.ONE_MINUS_SRC_ALPHA)
                 return BlendingFactorDest.OneMinusSrcAlpha;
-            if (factor == BlendFactor.NVG_DST_ALPHA)
+            if (factor == BlendFactor.DST_ALPHA)
                 return BlendingFactorDest.DstAlpha;
-            if (factor == BlendFactor.NVG_ONE_MINUS_DST_ALPHA)
+            if (factor == BlendFactor.ONE_MINUS_DST_ALPHA)
                 return BlendingFactorDest.OneMinusDstAlpha;
-            if (factor == BlendFactor.NVG_SRC_ALPHA_SATURATE)
+            if (factor == BlendFactor.SRC_ALPHA_SATURATE)
                 return BlendingFactorDest.SrcAlphaSaturate;
             throw new ArgumentException(nameof(factor));
             //return BlendingFactor.GL_INVALID_ENUM;
@@ -1404,14 +1396,6 @@ namespace NanoVG
             return ref gl.uniforms[i];
         }
 
-        static void glnvg__vset(ref Vertex vtx, float x, float y, float u, float v)
-        {
-            vtx.x = x;
-            vtx.y = y;
-            vtx.u = u;
-            vtx.v = v;
-        }
-
         static void glnvg__renderFill(
             object cxt,
             ref Paint paint,
@@ -1470,10 +1454,10 @@ namespace NanoVG
                 // Quad
                 call.triangleOffset = offset;
                 var quad = new Span<Vertex>(gl.verts, call.triangleOffset, 4);
-                glnvg__vset(ref quad[0], bounds.MaxX, bounds.MaxY, 0.5f, 1.0f);
-                glnvg__vset(ref quad[1], bounds.MaxX, bounds.MinY, 0.5f, 1.0f);
-                glnvg__vset(ref quad[2], bounds.MinX, bounds.MaxY, 0.5f, 1.0f);
-                glnvg__vset(ref quad[3], bounds.MinX, bounds.MinY, 0.5f, 1.0f);
+                quad[0] = new Vertex(bounds.MaxX, bounds.MaxY, 0.5f, 1.0f);
+                quad[1] = new Vertex(bounds.MaxX, bounds.MinY, 0.5f, 1.0f);
+                quad[2] = new Vertex(bounds.MinX, bounds.MaxY, 0.5f, 1.0f);
+                quad[3] = new Vertex(bounds.MinX, bounds.MinY, 0.5f, 1.0f);
 
                 call.uniformOffset = glnvg__allocFragUniforms(gl, 2);
 
@@ -1484,7 +1468,7 @@ namespace NanoVG
                 frag.type = GLNVGshaderType.NSVG_SHADER_SIMPLE;
 
                 // Fill shader
-                glnvg__convertPaint(gl, ref nvg__fragUniformPtr(gl, call.uniformOffset + gl.fragSize), ref paint, ref scissor, fringe, fringe, -1.0f);
+                glnvg__convertPaint(gl, ref nvg__fragUniformPtr(gl, call.uniformOffset), ref paint, ref scissor, fringe, fringe, -1.0f);
             }
             else
             {
@@ -1537,7 +1521,7 @@ namespace NanoVG
                 // Fill shader
                 call.uniformOffset = glnvg__allocFragUniforms(gl, 2);
                 glnvg__convertPaint(gl, ref nvg__fragUniformPtr(gl, call.uniformOffset), ref paint, ref scissor, strokeWidth, fringe, -1.0f);
-                glnvg__convertPaint(gl, ref nvg__fragUniformPtr(gl, call.uniformOffset + gl.fragSize), ref paint, ref scissor, strokeWidth, fringe, 1.0f - 0.5f / 255.0f);
+                glnvg__convertPaint(gl, ref nvg__fragUniformPtr(gl, call.uniformOffset), ref paint, ref scissor, strokeWidth, fringe, 1.0f - 0.5f / 255.0f);
             }
             else
             {
@@ -1595,7 +1579,7 @@ namespace NanoVG
 
             for (int i = 0; i < gl.ntextures; i++)
             {
-                if (gl.textures[i].tex != 0 && !gl.textures[i].flags.HasFlag(NVGimageFlagsGL.NVG_IMAGE_NODELETE))
+                if (gl.textures[i].tex != 0 && !gl.textures[i].flags.HasFlag(ImageFlagsGL.NVG_IMAGE_NODELETE))
                     GL.DeleteTextures(1, ref gl.textures[i].tex);
             }
 
@@ -1659,7 +1643,7 @@ namespace NanoVG
 #if NANOVG_GL2
         static int nvglCreateImageFromHandleGL2(Context ctx, uint textureId, int w, int h, NVGimageFlagsGL imageFlags)
 #elif NANOVG_GL3
-        static int nvglCreateImageFromHandleGL3(Context ctx, uint textureId, int w, int h, NVGimageFlags imageFlags)
+        static int nvglCreateImageFromHandleGL3(Context ctx, uint textureId, int w, int h, ImageFlags imageFlags)
 #elif NANOVG_GLES2
         int nvglCreateImageFromHandleGLES2(Context ctx, uint textureId, int w, int h, NVGimageFlagsGL imageFlags)
 #elif NANOVG_GLES3
