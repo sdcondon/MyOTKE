@@ -21,11 +21,10 @@
 //
 using System;
 using System.Diagnostics;
-using System.Threading;
 
 namespace NanoVG
 {
-    public class Context : IDisposable
+    public class NVG : IDisposable
     {
         private const float NVG_KAPPA90 = 0.5522847493f; // Length proportional to radius of a cubic bezier handle for 90deg arcs.
 
@@ -48,10 +47,10 @@ namespace NanoVG
         private float commandx;
         private float commandy;
 
-        private NVGstate[] states = new NVGstate[NVG_MAX_STATES];
+        private State[] states = new State[NVG_MAX_STATES];
         private int nstates;
 
-        private NVGpathCache cache;
+        private PathCache cache;
 
         private float tessTol;
         private float distTol;
@@ -66,16 +65,14 @@ namespace NanoVG
         private int strokeTriCount;
         private int textTriCount;
 
-        private NVGstate CurrentState => states[nstates - 1];
-
-        public Context(CreateFlags flags)
-            : this(flags, new GLNVGcontext(flags))
+        public NVG(NVGFlags flags)
+            : this(flags, new GlRenderer(flags))
         {
         }
 
-        internal Context(CreateFlags flags, IRenderer renderer)
+        internal NVG(NVGFlags flags, IRenderer renderer)
         {
-            this.edgeAntiAlias = flags.HasFlag(CreateFlags.NVG_ANTIALIAS) ? 1 : 0;
+            this.edgeAntiAlias = flags.HasFlag(NVGFlags.AntiAlias) ? 1 : 0;
             this.renderer = renderer;
 
             for (int i = 0; i < NVG_MAX_FONTIMAGES; i++)
@@ -87,9 +84,9 @@ namespace NanoVG
             ccommands = NVG_INIT_COMMANDS_SIZE;
             ncommands = 0;
 
-            cache = new NVGpathCache()
+            cache = new PathCache()
             {
-                points = new NVGpoint[NVG_INIT_POINTS_SIZE],
+                points = new Point[NVG_INIT_POINTS_SIZE],
                 npoints = 0,
                 cpoints = NVG_INIT_POINTS_SIZE,
                 paths = new Path[NVG_INIT_PATHS_SIZE],
@@ -121,9 +118,11 @@ namespace NanoVG
             fs = FontStash.fonsCreateInternal(ref fontParams);
 
             // Create font texture
-            fontImages[0] = renderer.RenderCreateTexture(Texture.NVG_TEXTURE_ALPHA, fontParams.width, fontParams.height, 0, null);
+            fontImages[0] = renderer.RenderCreateTexture(Texture.ALPHA, fontParams.width, fontParams.height, 0, null);
             fontImageIdx = 0;
         }
+
+        private State CurrentState => states[nstates - 1];
 
         #region Public - Frames
 
@@ -293,7 +292,7 @@ namespace NanoVG
             }
             else
             {
-                states[0] = new NVGstate();
+                states[0] = new State();
             }
 
             nstates++;
@@ -506,7 +505,7 @@ namespace NanoVG
         /// <param name="y">The y-offset of the translation.</param>
         public void Translate(float x, float y)
         {
-            var t = Transform2D.Translate(x, y);
+            var t = Transform2D.Translation(x, y);
             Transform2D.Premultiply(ref CurrentState.xform, t);
         }
 
@@ -516,7 +515,7 @@ namespace NanoVG
         /// <param name="angle">The angle (in radians) of the rotation.</param>
         public void Rotate(float angle)
         {
-            var t = Transform2D.Rotate(angle);
+            var t = Transform2D.Rotation(angle);
             Transform2D.Premultiply(ref CurrentState.xform, t);
         }
 
@@ -547,7 +546,7 @@ namespace NanoVG
         /// <param name="y">The scale in the y-direction.</param>
         public void Scale(float x, float y)
         {
-            var t = Transform2D.Scale(x, y);
+            var t = Transform2D.Scaling(x, y);
             Transform2D.Premultiply(ref CurrentState.xform, t);
         }
 
@@ -770,7 +769,7 @@ namespace NanoVG
         /// <param name="y">The y-ordinate of the first point.</param>
         public void MoveTo(float x, float y)
         {
-            float[] vals = { (float)NVGcommands.NVG_MOVETO, x, y };
+            float[] vals = { (float)CommandTypes.MOVETO, x, y };
             nvg__appendCommands(vals, vals.Length);
         }
 
@@ -781,7 +780,7 @@ namespace NanoVG
         /// <param name="y">The y-ordinate of the new point.</param>
         public void LineTo(float x, float y)
         {
-            float[] vals = { (float)NVGcommands.NVG_LINETO, x, y };
+            float[] vals = { (float)CommandTypes.LINETO, x, y };
             nvg__appendCommands(vals, vals.Length);
         }
 
@@ -796,7 +795,7 @@ namespace NanoVG
         /// <param name="y">The y-ordinate of the end point.</param>
         public void BezierTo(float c1x, float c1y, float c2x, float c2y, float x, float y)
         {
-            float[] vals = { (float)NVGcommands.NVG_BEZIERTO, c1x, c1y, c2x, c2y, x, y };
+            float[] vals = { (float)CommandTypes.BEZIERTO, c1x, c1y, c2x, c2y, x, y };
             nvg__appendCommands(vals, vals.Length);
         }
 
@@ -813,7 +812,7 @@ namespace NanoVG
             float y0 = commandy;
             float[] vals =
             {
-                (float)NVGcommands.NVG_BEZIERTO,
+                (float)CommandTypes.BEZIERTO,
                 x0 + 2.0f / 3.0f * (cx - x0), y0 + 2.0f / 3.0f * (cy - y0),
                 x + 2.0f / 3.0f * (cx - x), y + 2.0f / 3.0f * (cy - y),
                 x, y,
@@ -896,7 +895,7 @@ namespace NanoVG
         /// </summary>
         public void ClosePath()
         {
-            float[] vals = { (float)NVGcommands.NVG_CLOSE };
+            float[] vals = { (float)CommandTypes.CLOSE };
             nvg__appendCommands(vals, vals.Length);
         }
 
@@ -906,7 +905,7 @@ namespace NanoVG
         /// <param name="dir">The winding direction to use.</param>
         public void PathWinding(Winding dir)
         {
-            float[] vals = { (float)NVGcommands.NVG_WINDING, (float)dir };
+            float[] vals = { (float)CommandTypes.WINDING, (float)dir };
             nvg__appendCommands(vals, vals.Length);
         }
 
@@ -922,7 +921,7 @@ namespace NanoVG
         public void Arc(float cx, float cy, float r, float a0, float a1, Winding dir)
         {
             float[] vals = new float[3 + 5 * 7 + 100]; // todo: stackalloc?
-            NVGcommands move = ncommands > 0 ? NVGcommands.NVG_LINETO : NVGcommands.NVG_MOVETO;
+            CommandTypes move = ncommands > 0 ? CommandTypes.LINETO : CommandTypes.MOVETO;
 
             // Clamp angles
             float da = a1 - a0;
@@ -985,7 +984,7 @@ namespace NanoVG
                 }
                 else
                 {
-                    vals[nvals++] = (float)NVGcommands.NVG_BEZIERTO;
+                    vals[nvals++] = (float)CommandTypes.BEZIERTO;
                     vals[nvals++] = px + ptanx;
                     vals[nvals++] = py + ptany;
                     vals[nvals++] = x - tanx;
@@ -1014,11 +1013,11 @@ namespace NanoVG
         {
             float[] vals =
             {
-                (float)NVGcommands.NVG_MOVETO, x, y,
-                (float)NVGcommands.NVG_LINETO, x, y + h,
-                (float)NVGcommands.NVG_LINETO, x + w, y + h,
-                (float)NVGcommands.NVG_LINETO, x + w, y,
-                (float)NVGcommands.NVG_CLOSE,
+                (float)CommandTypes.MOVETO, x, y,
+                (float)CommandTypes.LINETO, x, y + h,
+                (float)CommandTypes.LINETO, x + w, y + h,
+                (float)CommandTypes.LINETO, x + w, y,
+                (float)CommandTypes.CLOSE,
             };
 
             nvg__appendCommands(vals, vals.Length);
@@ -1069,16 +1068,16 @@ namespace NanoVG
                 float ryTL = Math.Min(radTopLeft, halfh) * Math.Sign(h);
                 float[] vals =
                 {
-                    (float)NVGcommands.NVG_MOVETO, x, y + ryTL,
-                    (float)NVGcommands.NVG_LINETO, x, y + h - ryBL,
-                    (float)NVGcommands.NVG_BEZIERTO, x, y + h - ryBL * (1 - NVG_KAPPA90), x + rxBL * (1 - NVG_KAPPA90), y + h, x + rxBL, y + h,
-                    (float)NVGcommands.NVG_LINETO, x + w - rxBR, y + h,
-                    (float)NVGcommands.NVG_BEZIERTO, x + w - rxBR * (1 - NVG_KAPPA90), y + h, x + w, y + h - ryBR * (1 - NVG_KAPPA90), x + w, y + h - ryBR,
-                    (float)NVGcommands.NVG_LINETO, x + w, y + ryTR,
-                    (float)NVGcommands.NVG_BEZIERTO, x + w, y + ryTR * (1 - NVG_KAPPA90), x + w - rxTR * (1 - NVG_KAPPA90), y, x + w - rxTR, y,
-                    (float)NVGcommands.NVG_LINETO, x + rxTL, y,
-                    (float)NVGcommands.NVG_BEZIERTO, x + rxTL * (1 - NVG_KAPPA90), y, x, y + ryTL * (1 - NVG_KAPPA90), x, y + ryTL,
-                    (float)NVGcommands.NVG_CLOSE,
+                    (float)CommandTypes.MOVETO, x, y + ryTL,
+                    (float)CommandTypes.LINETO, x, y + h - ryBL,
+                    (float)CommandTypes.BEZIERTO, x, y + h - ryBL * (1 - NVG_KAPPA90), x + rxBL * (1 - NVG_KAPPA90), y + h, x + rxBL, y + h,
+                    (float)CommandTypes.LINETO, x + w - rxBR, y + h,
+                    (float)CommandTypes.BEZIERTO, x + w - rxBR * (1 - NVG_KAPPA90), y + h, x + w, y + h - ryBR * (1 - NVG_KAPPA90), x + w, y + h - ryBR,
+                    (float)CommandTypes.LINETO, x + w, y + ryTR,
+                    (float)CommandTypes.BEZIERTO, x + w, y + ryTR * (1 - NVG_KAPPA90), x + w - rxTR * (1 - NVG_KAPPA90), y, x + w - rxTR, y,
+                    (float)CommandTypes.LINETO, x + rxTL, y,
+                    (float)CommandTypes.BEZIERTO, x + rxTL * (1 - NVG_KAPPA90), y, x, y + ryTL * (1 - NVG_KAPPA90), x, y + ryTL,
+                    (float)CommandTypes.CLOSE,
                 };
                 nvg__appendCommands(vals, vals.Length);
             }
@@ -1095,12 +1094,12 @@ namespace NanoVG
         {
             float[] vals =
             {
-                (float)NVGcommands.NVG_MOVETO, cx - rx, cy,
-                (float)NVGcommands.NVG_BEZIERTO, cx - rx, cy + ry * NVG_KAPPA90, cx - rx * NVG_KAPPA90, cy + ry, cx, cy + ry,
-                (float)NVGcommands.NVG_BEZIERTO, cx + rx * NVG_KAPPA90, cy + ry, cx + rx, cy + ry * NVG_KAPPA90, cx + rx, cy,
-                (float)NVGcommands.NVG_BEZIERTO, cx + rx, cy - ry * NVG_KAPPA90, cx + rx * NVG_KAPPA90, cy - ry, cx, cy - ry,
-                (float)NVGcommands.NVG_BEZIERTO, cx - rx * NVG_KAPPA90, cy - ry, cx - rx, cy - ry * NVG_KAPPA90, cx - rx, cy,
-                (float)NVGcommands.NVG_CLOSE,
+                (float)CommandTypes.MOVETO, cx - rx, cy,
+                (float)CommandTypes.BEZIERTO, cx - rx, cy + ry * NVG_KAPPA90, cx - rx * NVG_KAPPA90, cy + ry, cx, cy + ry,
+                (float)CommandTypes.BEZIERTO, cx + rx * NVG_KAPPA90, cy + ry, cx + rx, cy + ry * NVG_KAPPA90, cx + rx, cy,
+                (float)CommandTypes.BEZIERTO, cx + rx, cy - ry * NVG_KAPPA90, cx + rx * NVG_KAPPA90, cy - ry, cx, cy - ry,
+                (float)CommandTypes.BEZIERTO, cx - rx * NVG_KAPPA90, cy - ry, cx - rx, cy - ry * NVG_KAPPA90, cx - rx, cy,
+                (float)CommandTypes.CLOSE,
             };
 
             nvg__appendCommands(vals, vals.Length);
@@ -1164,7 +1163,7 @@ namespace NanoVG
         /// </summary>
         public void Stroke()
         {
-            NVGstate state = CurrentState;
+            State state = CurrentState;
             float scale = state.xform.GetAverageScale();
             float strokeWidth = MathEx.Clamp(state.strokeWidth * scale, 0.0f, 200.0f);
             Paint strokePaint = state.stroke;
@@ -1874,20 +1873,6 @@ namespace NanoVG
 
         #endregion
 
-        #region Internal Render API
-
-        internal enum Texture
-        {
-            NVG_TEXTURE_ALPHA = 0x01,
-            NVG_TEXTURE_RGBA = 0x02,
-        }
-
-        internal struct nvgScissor
-        {
-            public Transform2D xform;
-            public Extent2D extent; // todo: needed? xform could be implicitly of unit square..
-        }
-
         public void Dispose()
         {
             if (commands != null)
@@ -1940,20 +1925,18 @@ namespace NanoVG
             //free(ctx);
         }
 
-        #endregion
-
         #region Private - paths
 
         [Flags]
-        internal enum NVGpointFlags
+        internal enum PointFlags
         {
-            NVG_PT_CORNER = 0x01,
-            NVG_PT_LEFT = 0x02,
-            NVG_PT_BEVEL = 0x04,
-            NVG_PR_INNERBEVEL = 0x08,
+            CORNER = 0x01,
+            LEFT = 0x02,
+            BEVEL = 0x04,
+            INNERBEVEL = 0x08,
         };
 
-        internal struct NVGpoint
+        internal struct Point
         {
             public float x;
             public float y;
@@ -1962,7 +1945,7 @@ namespace NanoVG
             public float len;
             public float dmx;
             public float dmy;
-            public NVGpointFlags flags;
+            public PointFlags flags;
         }
 
         internal class Path
@@ -1982,9 +1965,9 @@ namespace NanoVG
             public bool convex;
         }
 
-        internal class NVGpathCache
+        internal class PathCache
         {
-            public NVGpoint[] points;
+            public Point[] points;
             public int npoints;
             public int cpoints;
 
@@ -2082,20 +2065,20 @@ namespace NanoVG
             // Flatten
             for (int i = 0; i < ncommands;)
             {
-                NVGcommands cmd = (NVGcommands)commands[i];
+                CommandTypes cmd = (CommandTypes)commands[i];
                 switch (cmd)
                 {
-                    case NVGcommands.NVG_MOVETO:
+                    case CommandTypes.MOVETO:
                         nvg__addPath();
-                        nvg__addPoint(commands[i + 1], commands[i + 2], NVGpointFlags.NVG_PT_CORNER);
+                        nvg__addPoint(commands[i + 1], commands[i + 2], PointFlags.CORNER);
                         i += 3;
                         break;
-                    case NVGcommands.NVG_LINETO:
-                        nvg__addPoint(commands[i + 1], commands[i + 2], NVGpointFlags.NVG_PT_CORNER);
+                    case CommandTypes.LINETO:
+                        nvg__addPoint(commands[i + 1], commands[i + 2], PointFlags.CORNER);
                         i += 3;
                         break;
-                    case NVGcommands.NVG_BEZIERTO:
-                        if (nvg__lastPoint(out NVGpoint last))
+                    case CommandTypes.BEZIERTO:
+                        if (nvg__lastPoint(out Point last))
                         {
                             nvg__tesselateBezier(
                                 last.x,
@@ -2107,16 +2090,16 @@ namespace NanoVG
                                 commands[i + 5],
                                 commands[i + 6],
                                 0,
-                                NVGpointFlags.NVG_PT_CORNER);
+                                PointFlags.CORNER);
                         }
 
                         i += 7;
                         break;
-                    case NVGcommands.NVG_CLOSE:
+                    case CommandTypes.CLOSE:
                         nvg__closePath();
                         i++;
                         break;
-                    case NVGcommands.NVG_WINDING:
+                    case CommandTypes.WINDING:
                         nvg__pathWinding((Winding)commands[i + 1]);
                         i += 2;
                         break;
@@ -2133,7 +2116,7 @@ namespace NanoVG
             for (int j = 0; j < cache.npaths; j++)
             {
                 var path = cache.paths[j];
-                var pts = new Span<NVGpoint>(cache.points, path.first, path.count);
+                var pts = new Span<Point>(cache.points, path.first, path.count);
 
                 // If the first and last points are the same, remove the last, mark as closed path.
                 var p0 = path.count - 1;
@@ -2179,7 +2162,7 @@ namespace NanoVG
             }
         }
 
-        private void nvg__addPoint(float x, float y, NVGpointFlags flags)
+        private void nvg__addPoint(float x, float y, PointFlags flags)
         {
             var path = nvg__lastPath();
 
@@ -2191,7 +2174,7 @@ namespace NanoVG
             if (path.count > 0 && cache.npoints > 0)
             {
                 // if its the same point as last one, just add flags appropriately
-                nvg__lastPoint(out NVGpoint pt);
+                nvg__lastPoint(out Point pt);
                 if (MathEx.PointEquals(pt.x, pt.y, x, y, distTol))
                 {
                     pt.flags |= flags;
@@ -2207,7 +2190,7 @@ namespace NanoVG
                 cache.cpoints = cpoints;
             }
 
-            cache.points[cache.npoints] = new NVGpoint()
+            cache.points[cache.npoints] = new Point()
             {
                 x = x,
                 y = y,
@@ -2218,7 +2201,7 @@ namespace NanoVG
             path.count++;
         }
 
-        private bool nvg__lastPoint(out NVGpoint pt)
+        private bool nvg__lastPoint(out Point pt)
         {
             if (cache.npoints > 0)
             {
@@ -2239,7 +2222,7 @@ namespace NanoVG
             return acx * aby - abx * acy;
         }
 
-        private static float nvg__polyArea(Span<NVGpoint> pts, int npts)
+        private static float nvg__polyArea(Span<Point> pts, int npts)
         {
             int i;
             float area = 0;
@@ -2254,9 +2237,9 @@ namespace NanoVG
             return area * 0.5f;
         }
 
-        private static void nvg__polyReverse(Span<NVGpoint> pts, int npts) // todo: can be replaced with span.reverse?
+        private static void nvg__polyReverse(Span<Point> pts, int npts) // todo: can be replaced with span.reverse?
         {
-            NVGpoint tmp;
+            Point tmp;
             int i = 0, j = npts - 1;
             while (i < j)
             {
@@ -2278,7 +2261,7 @@ namespace NanoVG
             float x4,
             float y4,
             int level,
-            NVGpointFlags type)
+            PointFlags type)
         {
             float x12, y12, x23, y23, x34, y34, x123, y123, x234, y234, x1234, y1234;
             float dx, dy, d2, d3;
@@ -2352,7 +2335,7 @@ namespace NanoVG
             for (int i = 0; i < cache.npaths; i++)
             {
                 Path path = cache.paths[i];
-                var pts = new Span<NVGpoint>(cache.points, path.first, path.count);
+                var pts = new Span<Point>(cache.points, path.first, path.count);
 
                 // Calculate shape vertices
                 float woff = 0.5f * aa;
@@ -2364,13 +2347,13 @@ namespace NanoVG
                     int p1 = 0;
                     for (int j = 0; j < path.count; ++j)
                     {
-                        if (pts[p1].flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL))
+                        if (pts[p1].flags.HasFlag(PointFlags.BEVEL))
                         {
                             float dlx0 = pts[p0].dy;
                             float dly0 = -pts[p0].dx;
                             float dlx1 = pts[p1].dy;
                             float dly1 = -pts[p1].dx;
-                            if (pts[p1].flags.HasFlag(NVGpointFlags.NVG_PT_LEFT))
+                            if (pts[p1].flags.HasFlag(PointFlags.LEFT))
                             {
                                 float lx = pts[p1].x + pts[p1].dmx * woff;
                                 float ly = pts[p1].y + pts[p1].dmy * woff;
@@ -2433,7 +2416,7 @@ namespace NanoVG
 
                     for (int j = 0; j < path.count; ++j)
                     {
-                        if (pts[p1].flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL | NVGpointFlags.NVG_PR_INNERBEVEL))
+                        if (pts[p1].flags.HasFlag(PointFlags.BEVEL | PointFlags.INNERBEVEL))
                         {
                             nvg__bevelJoin(verts, ref dst, ref pts[p0], ref pts[p1], lw, rw, lu, ru, fringeWidth);
                         }
@@ -2519,7 +2502,7 @@ namespace NanoVG
             for (int i = 0; i < cache.npaths; i++)
             {
                 Path path = cache.paths[i];
-                Span<NVGpoint> pts = new Span<NVGpoint>(cache.points, path.first, path.count);
+                Span<Point> pts = new Span<Point>(cache.points, path.first, path.count);
                 int p0;
                 int p1;
                 int s, e;
@@ -2571,7 +2554,7 @@ namespace NanoVG
 
                 for (int j = s; j < e; ++j)
                 {
-                    if (pts[p1].flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL | NVGpointFlags.NVG_PR_INNERBEVEL))
+                    if (pts[p1].flags.HasFlag(PointFlags.BEVEL | PointFlags.INNERBEVEL))
                     {
                         if (lineJoin == NanoVG.LineCap.ROUND)
                         {
@@ -2630,8 +2613,8 @@ namespace NanoVG
 
         private static void nvg__chooseBevel(
             bool bevel,
-            ref NVGpoint p0,
-            ref NVGpoint p1,
+            ref Point p0,
+            ref Point p1,
             float w,
             out float x0,
             out float y0,
@@ -2657,8 +2640,8 @@ namespace NanoVG
         private static void nvg__roundJoin(
             Span<Vertex> verts,
             ref int dst,
-            ref NVGpoint p0,
-            ref NVGpoint p1,
+            ref Point p0,
+            ref Point p1,
             float lw,
             float rw,
             float lu,
@@ -2673,10 +2656,10 @@ namespace NanoVG
             float dly1 = -p1.dx;
             ////NVG_NOTUSED(fringe);
 
-            if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_LEFT))
+            if (p1.flags.HasFlag(PointFlags.LEFT))
             {
                 float lx0, ly0, lx1, ly1, a0, a1;
-                nvg__chooseBevel(p1.flags.HasFlag(NVGpointFlags.NVG_PR_INNERBEVEL), ref p0, ref p1, lw, out lx0, out ly0, out lx1, out ly1);
+                nvg__chooseBevel(p1.flags.HasFlag(PointFlags.INNERBEVEL), ref p0, ref p1, lw, out lx0, out ly0, out lx1, out ly1);
                 a0 = (float)Math.Atan2(-dly0, -dlx0);
                 a1 = (float)Math.Atan2(-dly1, -dlx1);
                 if (a1 > a0)
@@ -2704,7 +2687,7 @@ namespace NanoVG
             else
             {
                 float rx0, ry0, rx1, ry1, a0, a1;
-                nvg__chooseBevel(p1.flags.HasFlag(NVGpointFlags.NVG_PR_INNERBEVEL), ref p0, ref p1, -rw, out rx0, out ry0, out rx1, out ry1);
+                nvg__chooseBevel(p1.flags.HasFlag(PointFlags.INNERBEVEL), ref p0, ref p1, -rw, out rx0, out ry0, out rx1, out ry1);
                 a0 = (float)Math.Atan2(dly0, dlx0);
                 a1 = (float)Math.Atan2(dly1, dlx1);
                 if (a1 < a0)
@@ -2734,8 +2717,8 @@ namespace NanoVG
         private static void nvg__bevelJoin(
             Span<Vertex> verts,
             ref int dst,
-            ref NVGpoint p0,
-            ref NVGpoint p1,
+            ref Point p0,
+            ref Point p1,
             float lw,
             float rw,
             float lu,
@@ -2750,14 +2733,14 @@ namespace NanoVG
             float dly1 = -p1.dx;
             ////NVG_NOTUSED(fringe);
 
-            if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_LEFT))
+            if (p1.flags.HasFlag(PointFlags.LEFT))
             {
-                nvg__chooseBevel(p1.flags.HasFlag(NVGpointFlags.NVG_PR_INNERBEVEL), ref p0, ref p1, lw, out lx0, out ly0, out lx1, out ly1);
+                nvg__chooseBevel(p1.flags.HasFlag(PointFlags.INNERBEVEL), ref p0, ref p1, lw, out lx0, out ly0, out lx1, out ly1);
 
                 verts[dst++] = new Vertex(lx0, ly0, lu, 1);
                 verts[dst++] = new Vertex(p1.x - dlx0 * rw, p1.y - dly0 * rw, ru, 1);
 
-                if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL))
+                if (p1.flags.HasFlag(PointFlags.BEVEL))
                 {
                     verts[dst++] = new Vertex(lx0, ly0, lu, 1);
                     verts[dst++] = new Vertex(p1.x - dlx0 * rw, p1.y - dly0 * rw, ru, 1);
@@ -2785,12 +2768,12 @@ namespace NanoVG
             }
             else
             {
-                nvg__chooseBevel(p1.flags.HasFlag(NVGpointFlags.NVG_PR_INNERBEVEL), ref p0, ref p1, -rw, out rx0, out ry0, out rx1, out ry1);
+                nvg__chooseBevel(p1.flags.HasFlag(PointFlags.INNERBEVEL), ref p0, ref p1, -rw, out rx0, out ry0, out rx1, out ry1);
 
                 verts[dst++] = new Vertex(p1.x + dlx0 * lw, p1.y + dly0 * lw, lu, 1);
                 verts[dst++] = new Vertex(rx0, ry0, ru, 1);
 
-                if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL))
+                if (p1.flags.HasFlag(PointFlags.BEVEL))
                 {
                     verts[dst++] = new Vertex(p1.x + dlx0 * lw, p1.y + dly0 * lw, lu, 1);
                     verts[dst++] = new Vertex(rx0, ry0, ru, 1);
@@ -2830,7 +2813,7 @@ namespace NanoVG
             for (int i = 0; i < cache.npaths; i++)
             {
                 Path path = cache.paths[i];
-                var pts = new Span<NVGpoint>(cache.points, path.first, path.count);
+                var pts = new Span<Point>(cache.points, path.first, path.count);
                 int p0i = path.count - 1;
                 int p1i = 0;
                 int nleft = 0;
@@ -2839,8 +2822,8 @@ namespace NanoVG
 
                 for (int j = 0; j < path.count; j++)
                 {
-                    ref NVGpoint p0 = ref pts[p0i];
-                    ref NVGpoint p1 = ref pts[p1i];
+                    ref Point p0 = ref pts[p0i];
+                    ref Point p1 = ref pts[p1i];
                     float cross, limit;
                     float dlx0 = p0.dy;
                     float dly0 = -p0.dx;
@@ -2864,33 +2847,33 @@ namespace NanoVG
                     }
 
                     // Clear flags, but keep the corner.
-                    p1.flags = p1.flags.HasFlag(NVGpointFlags.NVG_PT_CORNER) ? NVGpointFlags.NVG_PT_CORNER : 0;
+                    p1.flags = p1.flags.HasFlag(PointFlags.CORNER) ? PointFlags.CORNER : 0;
 
                     // Keep track of left turns.
                     cross = p1.dx * p0.dy - p0.dx * p1.dy;
                     if (cross > 0.0f)
                     {
                         nleft++;
-                        p1.flags |= NVGpointFlags.NVG_PT_LEFT;
+                        p1.flags |= PointFlags.LEFT;
                     }
 
                     // Calculate if we should use bevel or miter for inner join.
                     limit = Math.Max(1.01f, Math.Min(p0.len, p1.len) * iw);
                     if ((dmr2 * limit * limit) < 1.0f)
                     {
-                        p1.flags |= NVGpointFlags.NVG_PR_INNERBEVEL;
+                        p1.flags |= PointFlags.INNERBEVEL;
                     }
 
                     // Check to see if the corner needs to be beveled.
-                    if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_CORNER))
+                    if (p1.flags.HasFlag(PointFlags.CORNER))
                     {
                         if ((dmr2 * miterLimit * miterLimit) < 1.0f || lineJoin == NanoVG.LineCap.BEVEL || lineJoin == NanoVG.LineCap.ROUND)
                         {
-                            p1.flags |= NVGpointFlags.NVG_PT_BEVEL;
+                            p1.flags |= PointFlags.BEVEL;
                         }
                     }
 
-                    if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL | NVGpointFlags.NVG_PR_INNERBEVEL))
+                    if (p1.flags.HasFlag(PointFlags.BEVEL | PointFlags.INNERBEVEL))
                     {
                         path.nbevel++;
                     }
@@ -2905,7 +2888,7 @@ namespace NanoVG
         private static void nvg__buttCapStart(
             Span<Vertex> verts,
             ref int dst,
-            ref NVGpoint p,
+            ref Point p,
             float dx,
             float dy,
             float w,
@@ -2927,7 +2910,7 @@ namespace NanoVG
         private static void nvg__buttCapEnd(
             Span<Vertex> verts,
             ref int dst,
-            ref NVGpoint p,
+            ref Point p,
             float dx,
             float dy,
             float w,
@@ -2949,7 +2932,7 @@ namespace NanoVG
         private static void nvg__roundCapStart(
             Span<Vertex> verts,
             ref int dst,
-            ref NVGpoint p,
+            ref Point p,
             float dx,
             float dy,
             float w,
@@ -2979,7 +2962,7 @@ namespace NanoVG
         private static void nvg__roundCapEnd(
             Span<Vertex> verts,
             ref int dst,
-            ref NVGpoint p,
+            ref Point p,
             float dx,
             float dy,
             float w,
@@ -3045,7 +3028,7 @@ namespace NanoVG
             }
 
             // transform commands
-            if ((int)vals[0] != (int)NVGcommands.NVG_CLOSE && (int)vals[0] != (int)NVGcommands.NVG_WINDING)
+            if ((int)vals[0] != (int)CommandTypes.CLOSE && (int)vals[0] != (int)CommandTypes.WINDING)
             {
                 commandx = vals[nvals - 2];
                 commandy = vals[nvals - 1];
@@ -3054,27 +3037,27 @@ namespace NanoVG
             int i = 0;
             while (i < nvals)
             {
-                var cmd = (NVGcommands)vals[i];
+                var cmd = (CommandTypes)vals[i];
                 switch (cmd)
                 {
-                    case NVGcommands.NVG_MOVETO:
+                    case CommandTypes.MOVETO:
                         state.xform.TransformPoint(out vals[i + 1], out vals[i + 2], vals[i + 1], vals[i + 2]);
                         i += 3;
                         break;
-                    case NVGcommands.NVG_LINETO:
+                    case CommandTypes.LINETO:
                         state.xform.TransformPoint(out vals[i + 1], out vals[i + 2], vals[i + 1], vals[i + 2]);
                         i += 3;
                         break;
-                    case NVGcommands.NVG_BEZIERTO:
+                    case CommandTypes.BEZIERTO:
                         state.xform.TransformPoint(out vals[i + 1], out vals[i + 2], vals[i + 1], vals[i + 2]);
                         state.xform.TransformPoint(out vals[i + 3], out vals[i + 4], vals[i + 3], vals[i + 4]);
                         state.xform.TransformPoint(out vals[i + 5], out vals[i + 6], vals[i + 5], vals[i + 6]);
                         i += 7;
                         break;
-                    case NVGcommands.NVG_CLOSE:
+                    case CommandTypes.CLOSE:
                         i++;
                         break;
-                    case NVGcommands.NVG_WINDING:
+                    case CommandTypes.WINDING:
                         i += 2;
                         break;
                     default:
@@ -3088,16 +3071,16 @@ namespace NanoVG
             ncommands += nvals;
         }
 
-        private enum NVGcommands
+        private enum CommandTypes
         {
-            NVG_MOVETO = 0,
-            NVG_LINETO = 1,
-            NVG_BEZIERTO = 2,
-            NVG_CLOSE = 3,
-            NVG_WINDING = 4,
+            MOVETO = 0,
+            LINETO = 1,
+            BEZIERTO = 2,
+            CLOSE = 3,
+            WINDING = 4,
         }
 
-        internal class NVGstate
+        private class State
         {
             public CompositeOperationState compositeOperation;
             public int shapeAntiAlias;
@@ -3109,7 +3092,7 @@ namespace NanoVG
             public LineCap lineCap;
             public float alpha;
             public Transform2D xform;
-            public nvgScissor scissor;
+            public ScissorInfo scissor;
             public float fontSize;
             public float letterSpacing;
             public float lineHeight;
@@ -3117,9 +3100,9 @@ namespace NanoVG
             public int textAlign;
             public int fontId;
 
-            public NVGstate Clone()
+            public State Clone()
             {
-                return (NVGstate)this.MemberwiseClone();
+                return (State)this.MemberwiseClone();
             }
         }
 
@@ -3224,7 +3207,7 @@ namespace NanoVG
         XOR,
     }
 
-    struct CompositeOperationState
+    internal struct CompositeOperationState
     {
         public CompositeOperationState(CompositeOperation op)
         {
@@ -3319,25 +3302,25 @@ namespace NanoVG
         float minx, maxx;   // Actual bounds of the row. Logical with and bounds can differ because of kerning and some parts over extending.
     }
 
-    enum ImageFlags
+    internal enum ImageFlags
     {
         /// <summary>Generate mipmaps during creation of the image.</summary>
-        IMAGE_GENERATE_MIPMAPS = 1 << 0,
+        GenerateMipMaps = 1 << 0,
 
         /// <summary>Repeat image in X direction.</summary>
-        IMAGE_REPEATX = 1 << 1,
+        RepeatX = 1 << 1,
 
         /// <summary>Repeat image in Y direction.</summary>
-        IMAGE_REPEATY = 1 << 2,
+        RepeatY = 1 << 2,
 
         /// <summary>Flips (inverses) image in Y direction when rendered.</summary>
-        IMAGE_FLIPY = 1 << 3,
+        FlipY = 1 << 3,
 
         /// <summary>Image data has premultiplied alpha.</summary>
-        IMAGE_PREMULTIPLIED = 1 << 4,
+        Premultiplied = 1 << 4,
 
         /// <summary>Image interpolation is Nearest instead Linear.</summary>
-        IMAGE_NEAREST = 1 << 5,
+        Nearest = 1 << 5,
     }
 }
 

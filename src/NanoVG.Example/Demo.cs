@@ -36,7 +36,7 @@ namespace NanoVG
             return col.R == 0.0f && col.G == 0.0f && col.B == 0.0f && col.A == 0.0f;
         }
 
-        private static void DrawWindow(Context vg, string title, float x, float y, float w, float h)
+        private static void DrawWindow(NVG vg, string title, float x, float y, float w, float h)
         {
             float cornerRadius = 3.0f;
             Paint shadowPaint;
@@ -88,7 +88,7 @@ namespace NanoVG
             vg.Restore();
         }
 
-        private static void DrawSearchBox(Context vg, string text, float x, float y, float w, float h)
+        private static void DrawSearchBox(NVG vg, string text, float x, float y, float w, float h)
         {
             Paint bg;
             float cornerRadius = h / 2 - 1;
@@ -126,7 +126,7 @@ namespace NanoVG
             ////vg.Text(x + w - h * 0.55f, y + h * 0.55f, IconCircledCross, 0);
         }
 
-        private static void DrawDropDown(Context vg, string text, float x, float y, float w, float h)
+        private static void DrawDropDown(NVG vg, string text, float x, float y, float w, float h)
         {
             Paint bg;
             float cornerRadius = 4.0f;
@@ -155,7 +155,7 @@ namespace NanoVG
             ////vg.Text(x + w - h * 0.5f, y + h * 0.5f, IconChevronRight, 0);
         }
 
-        private static void DrawLabel(Context vg, string text, float x, float y, float w, float h)
+        private static void DrawLabel(NVG vg, string text, float x, float y, float w, float h)
         {
             ////NVG_NOTUSED(w);
 
@@ -167,7 +167,7 @@ namespace NanoVG
             ////vg.Text(x, y + h * 0.5f, text, 0);
         }
 
-        private static void DrawEditBoxBase(Context vg, float x, float y, float w, float h)
+        private static void DrawEditBoxBase(NVG vg, float x, float y, float w, float h)
         {
             // Edit
             var bg = Paint.BoxGradient(x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, RGBA(255, 255, 255, 32), RGBA(32, 32, 32, 32));
@@ -182,7 +182,7 @@ namespace NanoVG
             vg.Stroke();
         }
 
-        private static void DrawEditBox(Context vg, string text, float x, float y, float w, float h)
+        private static void DrawEditBox(NVG vg, string text, float x, float y, float w, float h)
         {
             DrawEditBoxBase(vg, x, y, w, h);
 
@@ -193,7 +193,7 @@ namespace NanoVG
             ////vg.Text(x + h * 0.3f, y + h * 0.5f, text, 0);
         }
 
-        private static void DrawEditBoxNum(Context vg, string text, string units, float x, float y, float w, float h)
+        private static void DrawEditBoxNum(NVG vg, string text, string units, float x, float y, float w, float h)
         {
             float uw;
 
@@ -214,7 +214,7 @@ namespace NanoVG
             ////vg.Text(x + w - uw - h * 0.5f, y + h * 0.5f, text, 0);
         }
 
-        private static void DrawCheckBox(Context vg, string text, float x, float y, float w, float h)
+        private static void DrawCheckBox(NVG vg, string text, float x, float y, float w, float h)
         {
             Paint bg;
             ////NVG_NOTUSED(w);
@@ -239,7 +239,7 @@ namespace NanoVG
             ////vg.Text(x + 9 + 2, y + h * 0.5f, IconCheck, 0);
         }
 
-        private static void DrawButton(Context vg, string preicon, string text, float x, float y, float w, float h, Color col)
+        private static void DrawButton(NVG vg, string preicon, string text, float x, float y, float w, float h, Color col)
         {
             Paint bg;
             float cornerRadius = 4.0f;
@@ -291,7 +291,7 @@ namespace NanoVG
             ////vg.Text(x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f, text, 0);
         }
 
-        private static void DrawSlider(Context vg, float pos, float x, float y, float w, float h)
+        private static void DrawSlider(NVG vg, float pos, float x, float y, float w, float h)
         {
             Paint bg, knob;
             float cy = y + (int)(h * 0.5f);
@@ -333,7 +333,7 @@ namespace NanoVG
             vg.Restore();
         }
 
-        private static void DrawEyes(Context vg, float x, float y, float w, float h, float mx, float my, float t)
+        private static void DrawEyes(NVG vg, float x, float y, float w, float h, float mx, float my, float t)
         {
             Paint gloss, bg;
             float ex = w * 0.23f;
@@ -405,7 +405,7 @@ namespace NanoVG
             vg.Fill();
         }
 
-        private static void DrawGraph(Context vg, float x, float y, float w, float h, float t)
+        private static void DrawGraph(NVG vg, float x, float y, float w, float h, float t)
         {
             Paint bg;
             float[] samples = new float[]
@@ -495,7 +495,7 @@ namespace NanoVG
             vg.StrokeWidth(1.0f);
         }
 
-        private static void DrawSpinner(Context vg, float cx, float cy, float r, float t)
+        private static void DrawSpinner(NVG vg, float cx, float cy, float r, float t)
         {
             float a0 = 0.0f + t * 6;
             float a1 = (float)Math.PI + t * 6;
@@ -521,7 +521,7 @@ namespace NanoVG
             vg.Restore();
         }
 
-        private static void DrawThumbnails(Context vg, float x, float y, float w, float h, int[] images, float t)
+        private static void DrawThumbnails(NVG vg, float x, float y, float w, float h, int[] images, float t)
         {
             float cornerRadius = 3.0f;
             Paint shadowPaint, imgPaint, fadePaint;
@@ -647,7 +647,7 @@ namespace NanoVG
             vg.Restore();
         }
 
-        private static void DrawColorwheel(Context vg, float x, float y, float w, float h, float t)
+        private static void DrawColorwheel(NVG vg, float x, float y, float w, float h, float t)
         {
             int i;
             float r0, r1, ax, ay, bx, by, cx, cy, aeps, r;
@@ -753,7 +753,7 @@ namespace NanoVG
             vg.Restore();
         }
 
-        private static void DrawLines(Context vg, float x, float y, float w, float h, float t)
+        private static void DrawLines(NVG vg, float x, float y, float w, float h, float t)
         {
             int i, j;
             float pad = 5.0f, s = w / 9.0f - pad * 2;
@@ -809,7 +809,7 @@ namespace NanoVG
             vg.Restore();
         }
 
-        public static void LoadDemoData(Context vg, out DemoData data)
+        public static void LoadDemoData(NVG vg, out DemoData data)
         {
             if (vg == null)
             {
@@ -856,7 +856,7 @@ namespace NanoVG
             ////NVG.AddFallbackFontId(vg, data.fontBold, data.fontEmoji);
         }
 
-        public static void FreeDemoData(Context vg, DemoData data)
+        public static void FreeDemoData(NVG vg, DemoData data)
         {
             if (vg == null)
             {
@@ -869,7 +869,7 @@ namespace NanoVG
             }
         }
 
-        private static void DrawParagraph(Context vg, float x, float y, float width, float height, float mx, float my)
+        private static void DrawParagraph(NVG vg, float x, float y, float width, float height, float mx, float my)
         {
             ////TextRow rows[3];
             ////GlyphPosition glyphs[100];
@@ -997,7 +997,7 @@ namespace NanoVG
             ////NVG.Restore(vg);
         }
 
-        private static void DrawWidths(Context vg, float x, float y, float width)
+        private static void DrawWidths(NVG vg, float x, float y, float width)
         {
             vg.Save();
             vg.StrokeColor(RGBA(0, 0, 0, 255));
@@ -1016,7 +1016,7 @@ namespace NanoVG
             vg.Restore();
         }
 
-        private static void DrawCaps(Context vg, float x, float y, float width)
+        private static void DrawCaps(NVG vg, float x, float y, float width)
         {
             var caps = new LineCap[] { LineCap.BUTT, LineCap.ROUND, LineCap.SQUARE };
             float lineWidth = 8.0f;
@@ -1047,7 +1047,7 @@ namespace NanoVG
             vg.Restore();
         }
 
-        private static void DrawScissor(Context vg, float x, float y, float t)
+        private static void DrawScissor(NVG vg, float x, float y, float t)
         {
             vg.Save();
 
@@ -1083,7 +1083,7 @@ namespace NanoVG
             vg.Restore();
         }
 
-        public static void RenderDemo(Context vg, float mx, float my, float width, float height, float t, bool blowup, DemoData data)
+        public static void RenderDemo(NVG vg, float mx, float my, float width, float height, float t, bool blowup, DemoData data)
         {
             float x, y, popy;
 

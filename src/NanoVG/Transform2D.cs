@@ -4,16 +4,6 @@ namespace NanoVG
 {
     public struct Transform2D
     {
-        public Transform2D(float r1c1, float r2c1, float r1c2, float r2c2, float r1c3, float r2c3)
-        {
-            R1C1 = r1c1;
-            R2C1 = r2c1;
-            R1C2 = r1c2;
-            R2C2 = r2c2;
-            R1C3 = r1c3;
-            R2C3 = r2c3;
-        }
-
         /// <summary>Row 1, column 1 - the coefficient of X in the X component of the output.</summary>
         public float R1C1;
 
@@ -32,10 +22,20 @@ namespace NanoVG
         /// <summary>Row 2, column 3 - the constant term in the Y component of the output.</summary>
         public float R2C3;
 
+        public Transform2D(float r1c1, float r2c1, float r1c2, float r2c2, float r1c3, float r2c3)
+        {
+            R1C1 = r1c1;
+            R2C1 = r2c1;
+            R1C2 = r1c2;
+            R2C2 = r2c2;
+            R1C3 = r1c3;
+            R2C3 = r2c3;
+        }
+
         /// <summary>
-        /// Creates a new identity transform.
+        /// Returns the identity transform.
         /// </summary>
-        /// <returns>The new transform.</returns>
+        /// <returns>The transform.</returns>
         public static Transform2D Identity()
         {
             return new Transform2D
@@ -50,12 +50,12 @@ namespace NanoVG
         }
 
         /// <summary>
-        /// Sets a matrix buffer to a translation matrix.
+        /// Returns a translation transform.
         /// </summary>
-        /// <param name="dst">The buffer to populate with (the first two rows of) the translation matrix (in column-major order).</param>
         /// <param name="tx">The x-offset of the translation.</param>
         /// <param name="ty">The y-offset of the translation.</param>
-        public static Transform2D Translate(float tx, float ty)
+        /// <returns>The transform.</returns>
+        public static Transform2D Translation(float tx, float ty)
         {
             return new Transform2D
             {
@@ -69,12 +69,12 @@ namespace NanoVG
         }
 
         /// <summary>
-        /// Sets a matrix buffer to a scale matrix.
+        /// Returns a scaling transform.
         /// </summary>
-        /// <param name="dst">The buffer to populate with (the first two rows of) the scale matrix (in column-major order).</param>
         /// <param name="sx">The scale in the x-direction.</param>
         /// <param name="sy">The scale in the y-direction.</param>
-        public static Transform2D Scale(float sx, float sy)
+        /// <returns>The transform.</returns>
+        public static Transform2D Scaling(float sx, float sy)
         {
             return new Transform2D
             {
@@ -88,11 +88,11 @@ namespace NanoVG
         }
 
         /// <summary>
-        /// Sets the transform to rotate matrix. Angle is specified in radians.
+        /// Returns a rotation transform.
         /// </summary>
-        /// <param name="dst">The buffer to populate with (the first two rows of) the rotation matrix (in column-major order).</param>
         /// <param name="a">The angle (in radians) of the rotation.</param>
-        public static Transform2D Rotate(float a)
+        /// <returns>The transform.</returns>
+        public static Transform2D Rotation(float a)
         {
             float cs = (float)Math.Cos(a);
             float sn = (float)Math.Sin(a);
@@ -109,10 +109,10 @@ namespace NanoVG
         }
 
         /// <summary>
-        /// Sets the transform to skew-x matrix. Angle is specified in radians.
+        /// Returns a skew-x transform.
         /// </summary>
-        /// <param name="dst">The buffer to populate with (the first two rows of) the skew matrix (in column-major order).</param>
         /// <param name="a">The angle of the skew, in radians.</param>
+        /// <returns>The transform.</returns>
         public static Transform2D SkewX(float a)
         {
             return new Transform2D
@@ -127,10 +127,10 @@ namespace NanoVG
         }
 
         /// <summary>
-        /// // Sets the transform to skew-y matrix. Angle is specified in radians.
+        /// Returns a skew-y transform.
         /// </summary>
-        /// <param name="dst">The buffer to populate with (the first two rows of) the skew matrix (in column-major order).</param>
         /// <param name="a">The angle of the skew, in radians.</param>
+        /// <returns>The transform.</returns>
         public static Transform2D SkewY(float a)
         {
             return new Transform2D

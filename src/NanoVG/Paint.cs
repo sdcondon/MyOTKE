@@ -28,14 +28,12 @@ namespace NanoVG
         /// <returns>The created <see cref="Paint"/> instance.</returns>
         public static Paint LinearGradient(float sx, float sy, float ex, float ey, Color icol, Color ocol)
         {
-            Paint p = new Paint();
-            float dx, dy, d;
             const float large = 100000;
 
             // Calculate transform aligned to the line
-            dx = ex - sx;
-            dy = ey - sy;
-            d = (float)Math.Sqrt(dx * dx + dy * dy);
+            float dx = ex - sx;
+            float dy = ey - sy;
+            float d = (float)Math.Sqrt(dx * dx + dy * dy);
             if (d > 0.0001f)
             {
                 dx /= d;
@@ -47,24 +45,27 @@ namespace NanoVG
                 dy = 1;
             }
 
-            p.xform.R1C1 = dy;
-            p.xform.R2C1 = -dx;
-            p.xform.R1C2 = dx;
-            p.xform.R2C2 = dy;
-            p.xform.R1C3 = sx - dx * large;
-            p.xform.R2C3 = sy - dy * large;
-
-            p.extent.X = large;
-            p.extent.Y = large + d * 0.5f;
-
-            p.radius = 0.0f;
-
-            p.feather = Math.Max(1.0f, d);
-
-            p.innerColor = icol;
-            p.outerColor = ocol;
-
-            return p;
+            return new Paint()
+            {
+                xform = new Transform2D()
+                {
+                    R1C1 = dy,
+                    R2C1 = -dx,
+                    R1C2 = dx,
+                    R2C2 = dy,
+                    R1C3 = sx - dx * large,
+                    R2C3 = sy - dy * large,
+                },
+                extent = new Extent2D()
+                {
+                    X = large,
+                    Y = large + d * 0.5f,
+                },
+                radius = 0.0f,
+                feather = Math.Max(1.0f, d),
+                innerColor = icol,
+                outerColor = ocol,
+            };
         }
 
         /// <summary>
@@ -155,7 +156,7 @@ namespace NanoVG
         {
             Paint p = new Paint();
 
-            p.xform = Transform2D.Rotate(angle);
+            p.xform = Transform2D.Rotation(angle);
             p.xform.R1C3 = cx;
             p.xform.R2C3 = cy;
 

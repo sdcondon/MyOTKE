@@ -188,7 +188,7 @@ namespace NanoVG
 
     public class Game : GameWindow
     {
-        private Context vg;
+        private NVG vg;
 
         static bool blowup = false;
         static bool screenshot = false;
@@ -214,9 +214,9 @@ namespace NanoVG
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
 #if DEMO_MSAA
-            vg = new Context(CreateFlags.NVG_STENCIL_STROKES | CreateFlags.NVG_DEBUG);
+            vg = new NVG(NVGFlags.StencilStrokes | NVGFlags.Debug);
 #else
-            vg = new Context(CreateFlags.NVG_ANTIALIAS | CreateFlags.NVG_STENCIL_STROKES | CreateFlags.NVG_DEBUG);
+            vg = new NVG(NVGFlags.AntiAlias | NVGFlags.StencilStrokes | NVGFlags.Debug);
 #endif
 
             Demo.LoadDemoData(vg, out data);

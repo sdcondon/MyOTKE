@@ -182,7 +182,7 @@ namespace NanoVG
             };
         }
 
-        public static Color glnvg__premulColor(Color c)
+        public static Color Premultiply(Color c)
         {
             c.R *= c.A;
             c.G *= c.A;
