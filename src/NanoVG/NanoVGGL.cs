@@ -31,7 +31,6 @@ using OpenTK.Graphics.OpenGL;
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using static NanoVG.NVG;
 
 namespace NanoVG
 {
@@ -119,7 +118,7 @@ namespace NanoVG
             public uint tex;
             public int width;
             public int height;
-            public NVG.Texture type;
+            public Context.Texture type;
             public ImageFlags flags;
         }
 
@@ -657,7 +656,7 @@ namespace NanoVG
             return 1;
         }
 
-        static int glnvg__renderCreateTexture(object cxt, NVG.Texture type, int w, int h, ImageFlags imageFlags, byte[] data)
+        static int glnvg__renderCreateTexture(object cxt, Context.Texture type, int w, int h, ImageFlags imageFlags, byte[] data)
         {
             GLNVGcontext gl = (GLNVGcontext)cxt;
             ref GLNVGtexture tex = ref glnvg__allocTexture(gl);
@@ -703,7 +702,7 @@ namespace NanoVG
             }
 #endif
 
-            if (type == NVG.Texture.NVG_TEXTURE_RGBA)
+            if (type == Context.Texture.NVG_TEXTURE_RGBA)
             {
                 GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, w, h, 0, PixelFormat.Rgba, PixelType.UnsignedByte, data);
             }
@@ -812,7 +811,7 @@ namespace NanoVG
             w = tex->width;
 #endif
 
-            if (tex.type == NVG.Texture.NVG_TEXTURE_RGBA)
+            if (tex.type == Context.Texture.NVG_TEXTURE_RGBA)
             {
                 GL.TexSubImage2D(TextureTarget.Texture2D, 0, x, y, w, h, PixelFormat.Rgba, PixelType.UnsignedByte, data);
             }
@@ -879,7 +878,7 @@ namespace NanoVG
             GLNVGcontext gl,
             ref GLNVGfragUniforms frag,
             ref Paint paint,
-            ref NVG.nvgScissor scissor,
+            ref Context.nvgScissor scissor,
             float width,
             float fringe,
             float strokeThr)
@@ -934,7 +933,7 @@ namespace NanoVG
                 frag.type = GLNVGshaderType.NSVG_SHADER_FILLIMG;
 
 #if NANOVG_GL_USE_UNIFORMBUFFER
-                if (tex.type == Texture.NVG_TEXTURE_RGBA)
+                if (tex.type == Context.Texture.NVG_TEXTURE_RGBA)
                 {
                     frag.texType = tex.flags.HasFlag(ImageFlags.IMAGE_PREMULTIPLIED) ? 0 : 1;
                 }
@@ -1316,7 +1315,7 @@ namespace NanoVG
             gl.nuniforms = 0;
         }
 
-        static int glnvg__maxVertCount(Path[] paths, int npaths)
+        static int glnvg__maxVertCount(Context.Path[] paths, int npaths)
         {
             int i, count = 0;
             for (i = 0; i < npaths; i++)
@@ -1400,10 +1399,10 @@ namespace NanoVG
             object cxt,
             ref Paint paint,
             CompositeOperationState compositeOperation,
-            ref NVG.nvgScissor scissor,
+            ref Context.nvgScissor scissor,
             float fringe,
-            Bounds2D bounds,
-            Path[] paths,
+            Context.Bounds2D bounds,
+            Context.Path[] paths,
             int npaths)
         {
             GLNVGcontext gl = (GLNVGcontext)cxt;
@@ -1429,7 +1428,7 @@ namespace NanoVG
             for (int i = 0; i < npaths; i++)
             {
                 ref GLNVGpath copy = ref gl.paths[call.pathOffset + i];
-                ref Path path = ref paths[i];
+                ref Context.Path path = ref paths[i];
                 copy = new GLNVGpath();
                 if (path.nfill > 0)
                 {
@@ -1483,10 +1482,10 @@ namespace NanoVG
             object uptr,
             ref Paint paint,
             CompositeOperationState compositeOperation,
-            ref NVG.nvgScissor scissor,
+            ref Context.nvgScissor scissor,
             float fringe,
             float strokeWidth,
-            Path[] paths,
+            Context.Path[] paths,
             int npaths)
         {
             GLNVGcontext gl = (GLNVGcontext)uptr;
@@ -1505,8 +1504,8 @@ namespace NanoVG
             for (int i = 0; i < npaths; i++)
             {
                 ref GLNVGpath copy = ref gl.paths[call.pathOffset + i];
-                ref Path path = ref paths[i];
-                path = new Path();
+                ref Context.Path path = ref paths[i];
+                path = new Context.Path();
                 if (path.nstroke > 0)
                 {
                     copy.strokeOffset = offset;
@@ -1535,7 +1534,7 @@ namespace NanoVG
             object uptr,
             ref Paint paint,
             CompositeOperationState compositeOperation,
-            ref NVG.nvgScissor scissor,
+            ref Context.nvgScissor scissor,
             Vertex[] verts,
             int nverts)
         {
@@ -1608,7 +1607,7 @@ namespace NanoVG
             GLNVGcontext gl = new GLNVGcontext();
             gl.flags = flags;
 
-            var @params = new NVG.Params();
+            var @params = new Context.Params();
             @params.renderCreate = glnvg__renderCreate;
             @params.renderCreateTexture = glnvg__renderCreateTexture;
             @params.renderDeleteTexture = glnvg__renderDeleteTexture;
@@ -1624,7 +1623,7 @@ namespace NanoVG
             @params.userPtr = gl;
             @params.edgeAntiAlias = flags.HasFlag(CreateFlags.NVG_ANTIALIAS) ? 1 : 0;
 
-            return NVG.CreateInternal(@params);
+            return Context.CreateInternal(@params);
         }
 
 #if NANOVG_GL2
@@ -1637,7 +1636,7 @@ namespace NanoVG
         public static void nvgDeleteGLES3(Context ctx)
 #endif
         {
-            NVG.DeleteInternal(ctx);
+            Context.DeleteInternal(ctx);
         }
 
 #if NANOVG_GL2
@@ -1650,10 +1649,10 @@ namespace NanoVG
         int nvglCreateImageFromHandleGLES3(Context ctx, uint textureId, int w, int h, NVGimageFlagsGL imageFlags)
 #endif
         {
-            GLNVGcontext gl = (GLNVGcontext)NVG.InternalParams(ctx).userPtr;
+            GLNVGcontext gl = (GLNVGcontext)ctx.InternalParams().userPtr;
             ref GLNVGtexture tex = ref glnvg__allocTexture(gl);
 
-            tex.type = Texture.NVG_TEXTURE_RGBA;
+            tex.type = Context.Texture.NVG_TEXTURE_RGBA;
             tex.tex = textureId;
             tex.flags = imageFlags;
             tex.width = w;
@@ -1672,7 +1671,7 @@ namespace NanoVG
         uint nvglImageHandleGLES3(Context ctx, int image)
 #endif
         {
-            GLNVGcontext gl = (GLNVGcontext)NVG.InternalParams(ctx).userPtr;
+            GLNVGcontext gl = (GLNVGcontext)ctx.InternalParams().userPtr;
             glnvg__findTexture(gl, image, out var tex);
             return tex.tex;
         }

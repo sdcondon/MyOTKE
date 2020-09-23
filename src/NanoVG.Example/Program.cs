@@ -251,7 +251,7 @@ namespace NanoVG
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 
-            NVG.BeginFrame(vg, winWidth, winHeight, pxRatio);
+            vg.BeginFrame(winWidth, winHeight, pxRatio);
 
             var mstate = Mouse.GetCursorState();
             Demo.RenderDemo(vg, mstate.X, mstate.Y, winWidth, winHeight, (float)RenderPeriod, blowup, data);
@@ -263,7 +263,7 @@ namespace NanoVG
             //    renderGraph(vg, 5 + 200 + 5 + 200 + 5, 5, &gpuGraph);
             //}
 
-            NVG.EndFrame(vg);
+            vg.EndFrame();
 
             Context.SwapBuffers();
             base.OnRenderFrame(e);
