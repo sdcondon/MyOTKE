@@ -25,7 +25,7 @@ using System.Threading;
 
 namespace NanoVG
 {
-    public class Context
+    public class Context : IDisposable
     {
         private const float NVG_KAPPA90 = 0.5522847493f; // Length proportional to radius of a cubic bezier handle for 90deg arcs.
 
@@ -39,7 +39,8 @@ namespace NanoVG
         private const int NVG_INIT_VERTS_SIZE = 256;
         private const int NVG_MAX_STATES = 32;
 
-        private Params @params;
+        private readonly IRenderer renderer;
+        private readonly int edgeAntiAlias;
 
         private float[] commands;
         private int ccommands;
@@ -66,6 +67,63 @@ namespace NanoVG
         private int textTriCount;
 
         private NVGstate CurrentState => states[nstates - 1];
+
+        public Context(CreateFlags flags)
+            : this(flags, new GLNVGcontext(flags))
+        {
+        }
+
+        internal Context(CreateFlags flags, IRenderer renderer)
+        {
+            this.edgeAntiAlias = flags.HasFlag(CreateFlags.NVG_ANTIALIAS) ? 1 : 0;
+            this.renderer = renderer;
+
+            for (int i = 0; i < NVG_MAX_FONTIMAGES; i++)
+            {
+                fontImages[i] = 0;
+            }
+
+            commands = new float[NVG_INIT_COMMANDS_SIZE];
+            ccommands = NVG_INIT_COMMANDS_SIZE;
+            ncommands = 0;
+
+            cache = new NVGpathCache()
+            {
+                points = new NVGpoint[NVG_INIT_POINTS_SIZE],
+                npoints = 0,
+                cpoints = NVG_INIT_POINTS_SIZE,
+                paths = new Path[NVG_INIT_PATHS_SIZE],
+                npaths = 0,
+                cpaths = NVG_INIT_PATHS_SIZE,
+                verts = new Vertex[NVG_INIT_VERTS_SIZE],
+                nverts = 0,
+                cverts = NVG_INIT_VERTS_SIZE,
+            };
+
+            Save();
+            Reset();
+
+            nvg__setDevicePixelRatio(1.0f);
+
+            renderer.RenderCreate();
+
+            // Init font rendering
+            FontStash.FONSparams fontParams = new FontStash.FONSparams();
+            fontParams.width = NVG_INIT_FONTIMAGE_SIZE;
+            fontParams.height = NVG_INIT_FONTIMAGE_SIZE;
+            fontParams.flags = FontStash.FONSflags.FONS_ZERO_TOPLEFT;
+            fontParams.renderCreate = null;
+            fontParams.renderUpdate = null;
+            fontParams.renderDraw = null;
+            fontParams.renderDelete = null;
+            fontParams.userPtr = null;
+
+            fs = FontStash.fonsCreateInternal(ref fontParams);
+
+            // Create font texture
+            fontImages[0] = renderer.RenderCreateTexture(Texture.NVG_TEXTURE_ALPHA, fontParams.width, fontParams.height, 0, null);
+            fontImageIdx = 0;
+        }
 
         #region Public - Frames
 
@@ -100,7 +158,7 @@ namespace NanoVG
 
             nvg__setDevicePixelRatio(devicePixelRatio);
 
-            @params.renderViewport(windowWidth, windowHeight, devicePixelRatio);
+            renderer.RenderViewport(windowWidth, windowHeight, devicePixelRatio);
 
             drawCallCount = 0;
             fillTriCount = 0;
@@ -114,7 +172,7 @@ namespace NanoVG
         /// <param name="ctx">The context to use.</param>
         public void CancelFrame()
         {
-            @params.renderCancel();
+            renderer.RenderCancel();
         }
 
         /// <summary>
@@ -122,7 +180,7 @@ namespace NanoVG
         /// </summary>
         public void EndFrame()
         {
-            @params.renderFlush();
+            renderer.RenderFlush();
 
             if (fontImageIdx != 0)
             {
@@ -572,8 +630,8 @@ namespace NanoVG
         /// <param name="data">The image data.</param>
         public void UpdateImage(int image, byte[] data)
         {
-            @params.renderGetTextureSize(image, out int w, out int h);
-            @params.renderUpdateTexture(image, 0, 0, w, h, data);
+            renderer.RenderGetTextureSize(image, out int w, out int h);
+            renderer.RenderUpdateTexture(image, 0, 0, w, h, data);
         }
 
         /// <summary>
@@ -584,7 +642,7 @@ namespace NanoVG
         /// <param name="h">The height of the image.</param>
         public void ImageSize(int image, out int w, out int h)
         {
-            @params.renderGetTextureSize(image, out w, out h);
+            renderer.RenderGetTextureSize(image, out w, out h);
         }
 
         /// <summary>
@@ -593,7 +651,7 @@ namespace NanoVG
         /// <param name="image">The ID of the image to delete.</param>
         public void DeleteImage(int image)
         {
-            @params.renderDeleteTexture(image);
+            renderer.RenderDeleteTexture(image);
         }
 
         #endregion
@@ -658,7 +716,7 @@ namespace NanoVG
             var pxform = state.scissor.xform;
             ex = state.scissor.extent.X;
             ey = state.scissor.extent.Y;
-            state.xform.Inverse(out var invxorm);
+            var invxorm= state.xform.Inverse();
             Transform2D.Multiply(ref pxform, invxorm);
             tex = ex * Math.Abs(pxform.R1C1) + ey * Math.Abs(pxform.R1C2);
             tey = ex * Math.Abs(pxform.R2C1) + ey * Math.Abs(pxform.R2C2);
@@ -1069,7 +1127,7 @@ namespace NanoVG
             Paint fillPaint = state.fill;
 
             nvg__flattenPaths();
-            if (@params.edgeAntiAlias != 0 && state.shapeAntiAlias != 0)
+            if (edgeAntiAlias != 0 && state.shapeAntiAlias != 0)
             {
                 nvg__expandFill(fringeWidth, NanoVG.LineCap.MITER, 2.4f);
             }
@@ -1082,7 +1140,7 @@ namespace NanoVG
             fillPaint.innerColor.A *= state.alpha;
             fillPaint.outerColor.A *= state.alpha;
 
-            @params.renderFill(
+            renderer.RenderFill(
                 ref fillPaint,
                 state.compositeOperation,
                 ref state.scissor,
@@ -1127,7 +1185,7 @@ namespace NanoVG
 
             nvg__flattenPaths();
 
-            if (@params.edgeAntiAlias != 0 && state.shapeAntiAlias != 0)
+            if (edgeAntiAlias != 0 && state.shapeAntiAlias != 0)
             {
                 nvg__expandStroke(strokeWidth * 0.5f, fringeWidth, state.lineCap, state.lineJoin, state.miterLimit);
             }
@@ -1136,7 +1194,7 @@ namespace NanoVG
                 nvg__expandStroke(strokeWidth * 0.5f, 0.0f, state.lineCap, state.lineJoin, state.miterLimit);
             }
 
-            @params.renderStroke(
+            renderer.RenderStroke(
                 ref strokePaint,
                 state.compositeOperation,
                 ref state.scissor,
@@ -1830,114 +1888,16 @@ namespace NanoVG
             public Extent2D extent; // todo: needed? xform could be implicitly of unit square..
         }
 
-        internal class Params
+        public void Dispose()
         {
-            public delegate int RenderCreate();
-
-            public delegate int RenderCreateTexture(Texture type, int w, int h, ImageFlags imageFlags, byte[] data);
-
-            public delegate int RenderDeleteTexture(int image);
-
-            public delegate int RenderUpdateTexture(int image, int x, int y, int w, int h, byte[] data);
-
-            public delegate int RenderGetTextureSize(int image, out int w, out int h);
-
-            public delegate void RenderViewport(float width, float height, float devicePixelRatio);
-
-            public delegate void RenderCancel();
-
-            public delegate void RenderFlush();
-
-            public delegate void RenderFill(ref Paint paint, CompositeOperationState compositeOperation, ref nvgScissor scissor, float fringe, Bounds2D bounds, Path[] paths, int npaths);
-
-            public delegate void RenderStroke(ref Paint paint, CompositeOperationState compositeOperation, ref nvgScissor scissor, float fringe, float strokeWidth, Path[] paths, int npaths);
-
-            public delegate void RenderTriangles(ref Paint paint, CompositeOperationState compositeOperation, ref nvgScissor scissor, Vertex[] verts, int nverts);
-
-            public delegate void RenderDelete();
-
-            public int edgeAntiAlias;
-            public RenderCreate renderCreate;
-            public RenderCreateTexture renderCreateTexture;
-            public RenderDeleteTexture renderDeleteTexture;
-            public RenderUpdateTexture renderUpdateTexture;
-            public RenderGetTextureSize renderGetTextureSize;
-            public RenderViewport renderViewport;
-            public RenderCancel renderCancel;
-            public RenderFlush renderFlush;
-            public RenderFill renderFill;
-            public RenderStroke renderStroke;
-            public RenderTriangles renderTriangles;
-            public RenderDelete renderDelete;
-        }
-
-        // Constructor and destructor, called by the render back-end.
-        internal static Context CreateInternal(Params @params)
-        {
-            Context ctx = new Context();
-
-            ctx.@params = @params;
-            for (int i = 0; i < NVG_MAX_FONTIMAGES; i++)
-            {
-                ctx.fontImages[i] = 0;
-            }
-
-            ctx.commands = new float[NVG_INIT_COMMANDS_SIZE];
-            ctx.ccommands = NVG_INIT_COMMANDS_SIZE;
-            ctx.ncommands = 0;
-
-            ctx.cache = new NVGpathCache()
-            {
-                points = new NVGpoint[NVG_INIT_POINTS_SIZE],
-                npoints = 0,
-                cpoints = NVG_INIT_POINTS_SIZE,
-                paths = new Path[NVG_INIT_PATHS_SIZE],
-                npaths = 0,
-                cpaths = NVG_INIT_PATHS_SIZE,
-                verts = new Vertex[NVG_INIT_VERTS_SIZE],
-                nverts = 0,
-                cverts = NVG_INIT_VERTS_SIZE,
-            };
-
-            ctx.Save();
-            ctx.Reset();
-
-            ctx.nvg__setDevicePixelRatio(1.0f);
-
-            ctx.@params.renderCreate();
-
-            // Init font rendering
-            FontStash.FONSparams fontParams = new FontStash.FONSparams();
-            fontParams.width = NVG_INIT_FONTIMAGE_SIZE;
-            fontParams.height = NVG_INIT_FONTIMAGE_SIZE;
-            fontParams.flags = FontStash.FONSflags.FONS_ZERO_TOPLEFT;
-            fontParams.renderCreate = null;
-            fontParams.renderUpdate = null;
-            fontParams.renderDraw = null;
-            fontParams.renderDelete = null;
-            fontParams.userPtr = null;
-
-            ctx.fs = FontStash.fonsCreateInternal(ref fontParams);
-
-            // Create font texture
-            ctx.fontImages[0] = ctx.@params.renderCreateTexture(Texture.NVG_TEXTURE_ALPHA, fontParams.width, fontParams.height, 0, null);
-            ctx.fontImageIdx = 0;
-
-            return ctx;
-        }
-
-        internal static void DeleteInternal(Context ctx)
-        {
-            if (ctx == null) return;
-
-            if (ctx.commands != null)
+            if (commands != null)
             {
                 //free(ctx.commands);
             }
 
-            if (ctx.cache != null)
+            if (cache != null)
             {
-                var c = ctx.cache;
+                var c = cache;
                 if (c == null)
                 {
                     return;
@@ -1961,31 +1921,23 @@ namespace NanoVG
                 ////free(c);
             }
 
-            if (ctx.fs != null)
+            if (fs != null)
             {
-                FontStash.fonsDeleteInternal(ctx.fs);
+                FontStash.fonsDeleteInternal(fs);
             }
 
             for (int i = 0; i < NVG_MAX_FONTIMAGES; i++)
             {
-                if (ctx.fontImages[i] != 0)
+                if (fontImages[i] != 0)
                 {
-                    ctx.DeleteImage(ctx.fontImages[i]);
-                    ctx.fontImages[i] = 0;
+                    DeleteImage(fontImages[i]);
+                    fontImages[i] = 0;
                 }
             }
 
-            if (ctx.@params.renderDelete != null)
-            {
-                ctx.@params.renderDelete();
-            }
+            renderer.RenderDelete();
 
             //free(ctx);
-        }
-
-        internal Params InternalParams()
-        {
-            return @params;
         }
 
         #endregion

@@ -179,24 +179,24 @@ namespace NanoVG
         /// </summary>
         /// <param name="dst">The buffer to populate with the (first two rows of the) inverse matrix (in column-major order).</param>
         /// <returns>1 if the inverse could be calculated, else 0.</returns>
-        public int Inverse(out Transform2D dst)
+        public Transform2D Inverse()
         {
-            //// TODO: rename to 'Try..' & return a boolean
-            double invdet, det = (double)R1C1 * R2C2 - (double)R1C2 * R2C1;
+            double det = (double)R1C1 * R2C2 - (double)R1C2 * R2C1;
             if (det > -1e-6 && det < 1e-6)
             {
-                dst = Identity();
-                return 0;
+                throw new InvalidOperationException("Transform is not invertible");
             }
 
-            invdet = 1.0 / det;
-            dst.R1C1 = (float)(R2C2 * invdet);
-            dst.R1C2 = (float)(-R1C2 * invdet);
-            dst.R1C3 = (float)(((double)R1C2 * R2C3 - (double)R2C2 * R1C3) * invdet);
-            dst.R2C1 = (float)(-R2C1 * invdet);
-            dst.R2C2 = (float)(R1C1 * invdet);
-            dst.R2C3 = (float)(((double)R2C1 * R1C3 - (double)R1C1 * R2C3) * invdet);
-            return 1;
+            double invdet = 1.0 / det;
+            return new Transform2D
+            {
+                R1C1 = (float)(R2C2 * invdet),
+                R1C2 = (float)(-R1C2 * invdet),
+                R1C3 = (float)(((double)R1C2 * R2C3 - (double)R2C2 * R1C3) * invdet),
+                R2C1 = (float)(-R2C1 * invdet),
+                R2C2 = (float)(R1C1 * invdet),
+                R2C3 = (float)(((double)R2C1 * R1C3 - (double)R1C1 * R2C3) * invdet),
+            };
         }
 
         public float GetAverageScale()

@@ -1053,7 +1053,7 @@ namespace NanoVG
 
             // Draw first rect and set scissor to it's area.
             vg.Translate(x, y);
-            vg.Rotate(Context.DegToRad(5));
+            vg.Rotate((float)Math.PI / 36f); // 5 degrees
             vg.BeginPath();
             vg.Rect(-20, -20, 60, 40);
             vg.FillColor(RGBA(255, 0, 0, 255));
