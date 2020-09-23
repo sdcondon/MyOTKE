@@ -76,5 +76,19 @@ namespace NanoVG
 
             return d;
         }
+
+        /// <summary>
+        /// Converts degrees to radians.
+        /// </summary>
+        /// <param name="deg">The value to convert.</param>
+        /// <returns>The input value converted to radians.</returns>
+        public static float DegToRad(float deg) => deg / 180.0f * (float)Math.PI;
+
+        /// <summary>
+        /// Converts radians to degrees.
+        /// </summary>
+        /// <param name="rad">The value to convert.</param>
+        /// <returns>The input value converted to degrees.</returns>
+        public static float RadToDeg(float rad) => rad / (float)Math.PI * 180.0f;
     }
 }

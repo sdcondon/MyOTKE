@@ -27,48 +27,47 @@ namespace NanoVG
 {
     public class Context
     {
-        // should all be private..
-        internal Params @params;
-
-        internal float[] commands;
-        internal int ccommands;
-        internal int ncommands;
-        internal float commandx;
-        internal float commandy;
-
-        internal NVGstate[] states = new NVGstate[NVG_MAX_STATES];
-        internal int nstates;
-
-        internal NVGpathCache cache;
-
-        internal float tessTol;
-        internal float distTol;
-        internal float fringeWidth;
-        internal float devicePxRatio;
-        internal FontStash.FONScontext fs;
-        internal int[] fontImages = new int[NVG_MAX_FONTIMAGES];
-        internal int fontImageIdx;
-
-        internal int drawCallCount;
-        internal int fillTriCount;
-        internal int strokeTriCount;
-        internal int textTriCount;
-
-        internal NVGstate CurrentState => states[nstates - 1];
-
         private const float NVG_KAPPA90 = 0.5522847493f; // Length proportional to radius of a cubic bezier handle for 90deg arcs.
 
         private const int NVG_INIT_FONTIMAGE_SIZE = 512;
         private const int NVG_MAX_FONTIMAGE_SIZE = 2048;
-        internal const int NVG_MAX_FONTIMAGES = 4;
+        private const int NVG_MAX_FONTIMAGES = 4;
 
         private const int NVG_INIT_COMMANDS_SIZE = 256;
         private const int NVG_INIT_POINTS_SIZE = 128;
         private const int NVG_INIT_PATHS_SIZE = 16;
         private const int NVG_INIT_VERTS_SIZE = 256;
-        internal const int NVG_MAX_STATES = 32;
+        private const int NVG_MAX_STATES = 32;
 
-        #region Frames
+        private Params @params;
+
+        private float[] commands;
+        private int ccommands;
+        private int ncommands;
+        private float commandx;
+        private float commandy;
+
+        private NVGstate[] states = new NVGstate[NVG_MAX_STATES];
+        private int nstates;
+
+        private NVGpathCache cache;
+
+        private float tessTol;
+        private float distTol;
+        private float fringeWidth;
+        private float devicePxRatio;
+        private FontStash.FONScontext fs;
+        private int[] fontImages = new int[NVG_MAX_FONTIMAGES];
+        private int fontImageIdx;
+
+        private int drawCallCount;
+        private int fillTriCount;
+        private int strokeTriCount;
+        private int textTriCount;
+
+        private NVGstate CurrentState => states[nstates - 1];
+
+        #region Public - Frames
 
         /// <summary>
         /// Begin drawing a new frame.
@@ -168,7 +167,7 @@ namespace NanoVG
 
         #endregion
 
-        #region Composite operations
+        #region Public - Composite operations
 
         //// The composite operations in NanoVG are modeled after HTML Canvas API, and
         //// the blend func is based on OpenGL (see corresponding manuals for more info).
@@ -213,7 +212,7 @@ namespace NanoVG
 
         #endregion
 
-        #region State Handling
+        #region Public - State Handling
 
         //// NanoVG contains state which represents how paths will be rendered.
         //// The state contains transform, fill and stroke styles, text and font styles,
@@ -286,7 +285,7 @@ namespace NanoVG
 
         #endregion
 
-        #region Render style setters
+        #region Public - Render style setters
 
         //// Fill and stroke render style can be either a solid color or a paint which is a gradient or a pattern.
         //// Solid color is simply defined as a color value, different kinds of paints can be created
@@ -394,7 +393,7 @@ namespace NanoVG
 
         #endregion
 
-        #region Transforms
+        #region Public - Transforms
 
         //// The paths, gradients, patterns and scissor region are transformed by an transformation
         //// matrix at the time when they are passed to the API.
@@ -416,6 +415,15 @@ namespace NanoVG
         public void ResetTransform()
         {
             CurrentState.xform = Transform2D.Identity();
+        }
+
+        /// <summary>
+        /// Stores the top part (a-f) of the current transformation matrix in to the specified buffer.
+        /// </summary>
+        /// <param name="xform">Buffer to be populated with values of the first two rows of the transform matrix, in column-major order.</param>
+        public void CurrentTransform(ref Transform2D xform)
+        {
+            xform = CurrentState.xform;
         }
 
         /// <summary>
@@ -468,7 +476,7 @@ namespace NanoVG
         /// Skews the current coordinate system along Y axis.
         /// </summary>
         /// <param name="angle">The angle of the skew, in radians.</param>
-        public void SkewY(Context ctx, float angle)
+        public void SkewY(float angle)
         {
             var t = Transform2D.SkewY(angle);
             Transform2D.Premultiply(ref CurrentState.xform, t);
@@ -485,56 +493,9 @@ namespace NanoVG
             Transform2D.Premultiply(ref CurrentState.xform, t);
         }
 
-        /// <summary>
-        /// Stores the top part (a-f) of the current transformation matrix in to the specified buffer.
-        /// </summary>
-        /// <param name="xform">Buffer to be populated with values of the first two rows of the transform matrix, in column-major order.</param>
-        public void CurrentTransform(Transform2D xform)
-        {
-            CurrentState.xform = xform;
-        }
-
-        // The following functions can be used to make calculations on 2x3 transformation matrices.
-        // A 2x3 matrix is represented as float[6].
-
-        /// <summary>
-        /// Transform a point by given transform.
-        /// </summary>
-        /// <param name="dx">The x-ordinate of the resultant point.</param>
-        /// <param name="dy">The y-ordinate of the resultant point.</param>
-        /// <param name="t">The transformation matrix.</param>
-        /// <param name="sx">The x-ordinate of the source point.</param>
-        /// <param name="sy">The y-ordinate of the source point.</param>
-        public static void TransformPoint(out float dx, out float dy, Transform2D t, float sx, float sy)
-        {
-            dx = sx * t.R1C1 + sy * t.R1C2 + t.R1C3;
-            dy = sx * t.R2C1 + sy * t.R2C2 + t.R2C3;
-        }
-
-        /// <summary>
-        /// Converts degrees to radians.
-        /// </summary>
-        /// <param name="deg">The value to convert.</param>
-        /// <returns>The input value converted to radians.</returns>
-        public static float DegToRad(float deg) => deg / 180.0f * (float)Math.PI;
-
-        /// <summary>
-        /// Converts radians to degrees.
-        /// </summary>
-        /// <param name="rad">The value to convert.</param>
-        /// <returns>The input value converted to degrees.</returns>
-        public static float RadToDeg(float rad) => rad / (float)Math.PI * 180.0f;
-
-        private static float nvg__getAverageScale(Transform2D t)
-        {
-            float sx = (float)Math.Sqrt(t.R1C1 * t.R1C1 + t.R1C2 * t.R1C2);
-            float sy = (float)Math.Sqrt(t.R2C1 * t.R2C1 + t.R2C2 * t.R2C2);
-            return (sx + sy) * 0.5f;
-        }
-
         #endregion
 
-        #region Images
+        #region Public - Images
 
         //// NanoVG allows you to load jpg, png, psd, tga, pic and gif files to be used for rendering.
         //// In addition you can upload your own image. The image loading is provided by stb_image.
@@ -637,7 +598,7 @@ namespace NanoVG
 
         #endregion
 
-        #region Scissoring
+        #region Public - Scissoring
 
         //// Scissoring allows you to clip the rendering into a rectangle. This is useful for various
         //// user interface cases like rendering a text edit or a timeline.
@@ -719,7 +680,7 @@ namespace NanoVG
 
         #endregion
 
-        #region Paths
+        #region Public - Paths
 
         // Drawing a new shape starts with nvgBeginPath(), it clears all the currently defined paths.
         // Then you define one or more paths and sub-paths which describe the shape. The are functions
@@ -1146,7 +1107,7 @@ namespace NanoVG
         public void Stroke()
         {
             NVGstate state = CurrentState;
-            float scale = nvg__getAverageScale(state.xform);
+            float scale = state.xform.GetAverageScale();
             float strokeWidth = MathEx.Clamp(state.strokeWidth * scale, 0.0f, 200.0f);
             Paint strokePaint = state.stroke;
 
@@ -1195,7 +1156,7 @@ namespace NanoVG
 
         #endregion
 
-        #region Text
+        #region Public - Text
 
         ////NanoVG allows you to load .ttf files and use the font to render text.
         ////
@@ -1925,7 +1886,18 @@ namespace NanoVG
             ctx.ccommands = NVG_INIT_COMMANDS_SIZE;
             ctx.ncommands = 0;
 
-            ctx.cache = nvg__allocPathCache();
+            ctx.cache = new NVGpathCache()
+            {
+                points = new NVGpoint[NVG_INIT_POINTS_SIZE],
+                npoints = 0,
+                cpoints = NVG_INIT_POINTS_SIZE,
+                paths = new Path[NVG_INIT_PATHS_SIZE],
+                npaths = 0,
+                cpaths = NVG_INIT_PATHS_SIZE,
+                verts = new Vertex[NVG_INIT_VERTS_SIZE],
+                nverts = 0,
+                cverts = NVG_INIT_VERTS_SIZE,
+            };
 
             ctx.Save();
             ctx.Reset();
@@ -1965,7 +1937,28 @@ namespace NanoVG
 
             if (ctx.cache != null)
             {
-                nvg__deletePathCache(ctx.cache);
+                var c = ctx.cache;
+                if (c == null)
+                {
+                    return;
+                }
+
+                if (c.points != null)
+                {
+                    ////free(c.points);
+                }
+
+                if (c.paths != null)
+                {
+                    ////free(c.paths);
+                }
+
+                if (c.verts != null)
+                {
+                    ////free(c.verts);
+                }
+
+                ////free(c);
             }
 
             if (ctx.fs != null)
@@ -1993,56 +1986,6 @@ namespace NanoVG
         internal Params InternalParams()
         {
             return @params;
-        }
-
-        // Debug function to dump cached path data.
-        internal void DebugDumpPathCache()
-        {
-
-        }
-
-        private static NVGpathCache nvg__allocPathCache()
-        {
-            NVGpathCache c = new NVGpathCache();
-
-            c.points = new NVGpoint[NVG_INIT_POINTS_SIZE];
-            c.npoints = 0;
-            c.cpoints = NVG_INIT_POINTS_SIZE;
-
-            c.paths = new Path[NVG_INIT_PATHS_SIZE];
-            c.npaths = 0;
-            c.cpaths = NVG_INIT_PATHS_SIZE;
-
-            c.verts = new Vertex[NVG_INIT_VERTS_SIZE];
-            c.nverts = 0;
-            c.cverts = NVG_INIT_VERTS_SIZE;
-
-            return c;
-        }
-
-        private static void nvg__deletePathCache(NVGpathCache c)
-        {
-            if (c == null)
-            {
-                return;
-            }
-
-            if (c.points != null)
-            {
-                ////free(c.points);
-            }
-
-            if (c.paths != null)
-            {
-                ////free(c.paths);
-            }
-
-            if (c.verts != null)
-            {
-                ////free(c.verts);
-            }
-
-            ////free(c);
         }
 
         #endregion
@@ -3129,10 +3072,6 @@ namespace NanoVG
             return Math.Max(2, (int)Math.Ceiling(arc / da));
         }
 
-        #endregion
-
-        #region Private methods
-
         private void nvg__setDevicePixelRatio(float ratio)
         {
             tessTol = 0.25f / ratio;
@@ -3167,17 +3106,17 @@ namespace NanoVG
                 switch (cmd)
                 {
                     case NVGcommands.NVG_MOVETO:
-                        TransformPoint(out vals[i + 1], out vals[i + 2], state.xform, vals[i + 1], vals[i + 2]);
+                        state.xform.TransformPoint(out vals[i + 1], out vals[i + 2], vals[i + 1], vals[i + 2]);
                         i += 3;
                         break;
                     case NVGcommands.NVG_LINETO:
-                        TransformPoint(out vals[i + 1], out vals[i + 2], state.xform, vals[i + 1], vals[i + 2]);
+                        state.xform.TransformPoint(out vals[i + 1], out vals[i + 2], vals[i + 1], vals[i + 2]);
                         i += 3;
                         break;
                     case NVGcommands.NVG_BEZIERTO:
-                        TransformPoint(out vals[i + 1], out vals[i + 2], state.xform, vals[i + 1], vals[i + 2]);
-                        TransformPoint(out vals[i + 3], out vals[i + 4], state.xform, vals[i + 3], vals[i + 4]);
-                        TransformPoint(out vals[i + 5], out vals[i + 6], state.xform, vals[i + 5], vals[i + 6]);
+                        state.xform.TransformPoint(out vals[i + 1], out vals[i + 2], vals[i + 1], vals[i + 2]);
+                        state.xform.TransformPoint(out vals[i + 3], out vals[i + 4], vals[i + 3], vals[i + 4]);
+                        state.xform.TransformPoint(out vals[i + 5], out vals[i + 6], vals[i + 5], vals[i + 6]);
                         i += 7;
                         break;
                     case NVGcommands.NVG_CLOSE:

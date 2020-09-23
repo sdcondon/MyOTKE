@@ -198,5 +198,25 @@ namespace NanoVG
             dst.R2C3 = (float)(((double)R2C1 * R1C3 - (double)R1C1 * R2C3) * invdet);
             return 1;
         }
+
+        public float GetAverageScale()
+        {
+            float sx = (float)Math.Sqrt(R1C1 * R1C1 + R1C2 * R1C2);
+            float sy = (float)Math.Sqrt(R2C1 * R2C1 + R2C2 * R2C2);
+            return (sx + sy) * 0.5f;
+        }
+
+        /// <summary>
+        /// Transform a point by this transform.
+        /// </summary>
+        /// <param name="dx">The x-ordinate of the resultant point.</param>
+        /// <param name="dy">The y-ordinate of the resultant point.</param>
+        /// <param name="sx">The x-ordinate of the source point.</param>
+        /// <param name="sy">The y-ordinate of the source point.</param>
+        public void TransformPoint(out float dx, out float dy, float sx, float sy)
+        {
+            dx = sx * R1C1 + sy * R1C2 + R1C3;
+            dy = sx * R2C1 + sy * R2C2 + R2C3;
+        }
     }
 }
