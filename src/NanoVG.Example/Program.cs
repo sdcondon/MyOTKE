@@ -214,9 +214,9 @@ namespace NanoVG
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
 #if DEMO_MSAA
-            vg = NanoVGGL.nvgCreateGL3(NanoVGGL.CreateFlags.NVG_STENCIL_STROKES | NanoVGGL.CreateFlags.NVG_DEBUG);
+            vg = GLNVGcontext.nvgCreateGL3(CreateFlags.NVG_STENCIL_STROKES | CreateFlags.NVG_DEBUG);
 #else
-            vg = NanoVGGL.nvgCreateGL3(NanoVGGL.CreateFlags.NVG_ANTIALIAS | NanoVGGL.CreateFlags.NVG_STENCIL_STROKES | NanoVGGL.CreateFlags.NVG_DEBUG);
+            vg = GLNVGcontext.nvgCreateGL3(CreateFlags.NVG_ANTIALIAS | CreateFlags.NVG_STENCIL_STROKES | CreateFlags.NVG_DEBUG);
 #endif
 
             Demo.LoadDemoData(vg, out data);
@@ -278,7 +278,7 @@ namespace NanoVG
         protected override void OnUnload(EventArgs e)
         {
             Demo.FreeDemoData(vg, data);
-            NanoVGGL.nvgDeleteGL3(vg);
+            GLNVGcontext.nvgDeleteGL3(vg);
             base.OnUnload(e);
         }
 

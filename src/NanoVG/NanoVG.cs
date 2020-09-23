@@ -101,7 +101,7 @@ namespace NanoVG
 
             nvg__setDevicePixelRatio(devicePixelRatio);
 
-            @params.renderViewport(@params.userPtr, windowWidth, windowHeight, devicePixelRatio);
+            @params.renderViewport(windowWidth, windowHeight, devicePixelRatio);
 
             drawCallCount = 0;
             fillTriCount = 0;
@@ -115,7 +115,7 @@ namespace NanoVG
         /// <param name="ctx">The context to use.</param>
         public void CancelFrame()
         {
-            @params.renderCancel(@params.userPtr);
+            @params.renderCancel();
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace NanoVG
         /// </summary>
         public void EndFrame()
         {
-            @params.renderFlush(@params.userPtr);
+            @params.renderFlush();
 
             if (fontImageIdx != 0)
             {
@@ -611,8 +611,8 @@ namespace NanoVG
         /// <param name="data">The image data.</param>
         public void UpdateImage(int image, byte[] data)
         {
-            @params.renderGetTextureSize(@params.userPtr, image, out int w, out int h);
-            @params.renderUpdateTexture(@params.userPtr, image, 0, 0, w, h, data);
+            @params.renderGetTextureSize(image, out int w, out int h);
+            @params.renderUpdateTexture(image, 0, 0, w, h, data);
         }
 
         /// <summary>
@@ -623,7 +623,7 @@ namespace NanoVG
         /// <param name="h">The height of the image.</param>
         public void ImageSize(int image, out int w, out int h)
         {
-            @params.renderGetTextureSize(@params.userPtr, image, out w, out h);
+            @params.renderGetTextureSize(image, out w, out h);
         }
 
         /// <summary>
@@ -632,7 +632,7 @@ namespace NanoVG
         /// <param name="image">The ID of the image to delete.</param>
         public void DeleteImage(int image)
         {
-            @params.renderDeleteTexture(@params.userPtr, image);
+            @params.renderDeleteTexture(image);
         }
 
         #endregion
@@ -1122,7 +1122,6 @@ namespace NanoVG
             fillPaint.outerColor.A *= state.alpha;
 
             @params.renderFill(
-                @params.userPtr,
                 ref fillPaint,
                 state.compositeOperation,
                 ref state.scissor,
@@ -1177,7 +1176,6 @@ namespace NanoVG
             }
 
             @params.renderStroke(
-                @params.userPtr,
                 ref strokePaint,
                 state.compositeOperation,
                 ref state.scissor,
@@ -1873,31 +1871,30 @@ namespace NanoVG
 
         internal class Params
         {
-            public delegate int RenderCreate(object uptr);
+            public delegate int RenderCreate();
 
-            public delegate int RenderCreateTexture(object uptr, Texture type, int w, int h, ImageFlags imageFlags, byte[] data);
+            public delegate int RenderCreateTexture(Texture type, int w, int h, ImageFlags imageFlags, byte[] data);
 
-            public delegate int RenderDeleteTexture(object uptr, int image);
+            public delegate int RenderDeleteTexture(int image);
 
-            public delegate int RenderUpdateTexture(object uptr, int image, int x, int y, int w, int h, byte[] data);
+            public delegate int RenderUpdateTexture(int image, int x, int y, int w, int h, byte[] data);
 
-            public delegate int RenderGetTextureSize(object uptr, int image, out int w, out int h);
+            public delegate int RenderGetTextureSize(int image, out int w, out int h);
 
-            public delegate void RenderViewport(object uptr, float width, float height, float devicePixelRatio);
+            public delegate void RenderViewport(float width, float height, float devicePixelRatio);
 
-            public delegate void RenderCancel(object uptr);
+            public delegate void RenderCancel();
 
-            public delegate void RenderFlush(object uptr);
+            public delegate void RenderFlush();
 
-            public delegate void RenderFill(object uptr, ref Paint paint, CompositeOperationState compositeOperation, ref nvgScissor scissor, float fringe, Bounds2D bounds, Path[] paths, int npaths);
+            public delegate void RenderFill(ref Paint paint, CompositeOperationState compositeOperation, ref nvgScissor scissor, float fringe, Bounds2D bounds, Path[] paths, int npaths);
 
-            public delegate void RenderStroke(object uptr, ref Paint paint, CompositeOperationState compositeOperation, ref nvgScissor scissor, float fringe, float strokeWidth, Path[] paths, int npaths);
+            public delegate void RenderStroke(ref Paint paint, CompositeOperationState compositeOperation, ref nvgScissor scissor, float fringe, float strokeWidth, Path[] paths, int npaths);
 
-            public delegate void RenderTriangles(object uptr, ref Paint paint, CompositeOperationState compositeOperation, ref nvgScissor scissor, Vertex[] verts, int nverts);
+            public delegate void RenderTriangles(ref Paint paint, CompositeOperationState compositeOperation, ref nvgScissor scissor, Vertex[] verts, int nverts);
 
-            public delegate void RenderDelete(object uptr);
+            public delegate void RenderDelete();
 
-            public object userPtr;
             public int edgeAntiAlias;
             public RenderCreate renderCreate;
             public RenderCreateTexture renderCreateTexture;
@@ -1930,13 +1927,12 @@ namespace NanoVG
 
             ctx.cache = nvg__allocPathCache();
 
-
             ctx.Save();
             ctx.Reset();
 
             ctx.nvg__setDevicePixelRatio(1.0f);
 
-            ctx.@params.renderCreate(ctx.@params.userPtr);
+            ctx.@params.renderCreate();
 
             // Init font rendering
             FontStash.FONSparams fontParams = new FontStash.FONSparams();
@@ -1952,7 +1948,7 @@ namespace NanoVG
             ctx.fs = FontStash.fonsCreateInternal(ref fontParams);
 
             // Create font texture
-            ctx.fontImages[0] = ctx.@params.renderCreateTexture(ctx.@params.userPtr, Texture.NVG_TEXTURE_ALPHA, fontParams.width, fontParams.height, 0, null);
+            ctx.fontImages[0] = ctx.@params.renderCreateTexture(Texture.NVG_TEXTURE_ALPHA, fontParams.width, fontParams.height, 0, null);
             ctx.fontImageIdx = 0;
 
             return ctx;
@@ -1988,7 +1984,7 @@ namespace NanoVG
 
             if (ctx.@params.renderDelete != null)
             {
-                ctx.@params.renderDelete(ctx.@params.userPtr);
+                ctx.@params.renderDelete();
             }
 
             //free(ctx);
