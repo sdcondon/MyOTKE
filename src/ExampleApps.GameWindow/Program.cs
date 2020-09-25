@@ -266,7 +266,6 @@ namespace MyOTKE.ExampleApps.GameWindow
             private readonly View view;
             private readonly ICamera camera;
 
-            private readonly ColoredLines lines;
             private readonly Text camTextElement;
             private readonly TextStream logElement;
 
@@ -285,7 +284,6 @@ namespace MyOTKE.ExampleApps.GameWindow
                     nearPlaneDistance: 0.1f,
                     farPlaneDistance: 100f)
                 {
-
                 };
 
                 AddRenderable(new PrimitiveRenderer(camera, Observable.Return(cubeSubject), 12)
@@ -338,8 +336,8 @@ namespace MyOTKE.ExampleApps.GameWindow
 
                 // NB: No new heap allocations each time to avoid GC pressure - same array, same primitive.
                 // Could do with more helpers to make this easier. Perhaps Primitive should be a struct after all..
-                //cubeWorldMatrix *= Matrix4x4.CreateRotationZ(0);
-                //cubeWorldMatrix *= Matrix4x4.CreateRotationY(0);
+                ////cubeWorldMatrix *= Matrix4x4.CreateRotationZ(0);
+                ////cubeWorldMatrix *= Matrix4x4.CreateRotationY(0);
                 cubePrimitives[0].SetCuboid(new Vector3(.5f, 1f, 0.75f), cubeWorldMatrix, Color.Red());
                 cubeSubject.OnNext(cubePrimitives);
 

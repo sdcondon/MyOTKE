@@ -15,8 +15,8 @@ namespace MyOTKE.Views.Renderables.ReactivePrimitives
     public class PrimitiveRenderer : IRenderable
     {
         private static readonly object ProgramStateLock = new object();
-        private static GlProgramBuilder programBuilder;
-        private static GlProgram program;
+        private static GlProgramBuilder<Uniforms> programBuilder;
+        private static GlProgram<Uniforms> program;
 
         private readonly IViewProjection camera;
         private readonly IObservable<IObservable<IList<Primitive>>> source;
@@ -50,7 +50,7 @@ namespace MyOTKE.Views.Renderables.ReactivePrimitives
                         programBuilder = new GlProgramBuilder()
                             .WithShaderFromEmbeddedResource(ShaderType.VertexShader, "Colored.Vertex.glsl")
                             .WithShaderFromEmbeddedResource(ShaderType.FragmentShader, "Colored.Fragment.glsl")
-                            .WithUniforms("MVP", "V", "M", "AmbientLightColor", "DirectedLightDirection", "DirectedLightColor", "LightPosition_worldspace", "LightColor", "LightPower");
+                            .WithDefaultUniformBlock<Uniforms>();
                     }
                 }
             }
@@ -160,16 +160,18 @@ namespace MyOTKE.Views.Renderables.ReactivePrimitives
         {
             ThrowIfDisposed();
 
-            program.UseWithUniformValues(
-                Matrix4x4.Transpose(this.camera.View * this.camera.Projection),
-                Matrix4x4.Transpose(this.camera.View),
-                Matrix4x4.Transpose(Matrix4x4.Identity),
-                (Vector3)AmbientLightColor,
-                DirectedLightDirection,
-                (Vector3)DirectedLightColor,
-                PointLightPosition,
-                (Vector3)PointLightColor,
-                PointLightPower);
+            program.UseWithUniformValues(new Uniforms
+            {
+                MVP = Matrix4x4.Transpose(this.camera.View * this.camera.Projection),
+                V = Matrix4x4.Transpose(this.camera.View),
+                M = Matrix4x4.Transpose(Matrix4x4.Identity),
+                AmbientLightColor = AmbientLightColor,
+                DirectedLightDirection = DirectedLightDirection,
+                DirectedLightColor = DirectedLightColor,
+                PointLightPosition = PointLightPosition,
+                PointLightColor = PointLightColor,
+                PointLightPower = PointLightPower,
+            });
             this.coloredTriangleBuffer.Draw();
             this.coloredLineBuffer.Draw();
         }
@@ -188,6 +190,19 @@ namespace MyOTKE.Views.Renderables.ReactivePrimitives
             {
                 throw new ObjectDisposedException(GetType().FullName);
             }
+        }
+
+        private struct Uniforms
+        {
+            public Matrix4x4 MVP;
+            public Matrix4x4 V;
+            public Matrix4x4 M;
+            public Vector3 AmbientLightColor;
+            public Vector3 DirectedLightDirection;
+            public Vector3 DirectedLightColor;
+            public Vector3 PointLightPosition;
+            public Vector3 PointLightColor;
+            public float PointLightPower;
         }
     }
 }

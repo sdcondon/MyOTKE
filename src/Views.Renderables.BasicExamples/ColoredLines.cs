@@ -16,8 +16,8 @@ namespace MyOTKE.Views.Renderables.BasicExamples
     public class ColoredLines : IRenderable
     {
         private static readonly object ProgramStateLock = new object();
-        private static GlProgramBuilder programBuilder;
-        private static GlProgram program;
+        private static GlProgramBuilder<Uniforms> programBuilder;
+        private static GlProgram<Uniforms> program;
 
         private readonly IViewProjection viewProjection;
         private readonly ObservableCollection<Line> lines;
@@ -44,7 +44,7 @@ namespace MyOTKE.Views.Renderables.BasicExamples
                         programBuilder = new GlProgramBuilder()
                             .WithShaderFromEmbeddedResource(ShaderType.VertexShader, "Colored.Vertex.glsl")
                             .WithShaderFromEmbeddedResource(ShaderType.FragmentShader, "Colored.Fragment.glsl")
-                            .WithUniforms("MVP", "V", "M", "LightPosition_worldspace", "LightColor", "LightPower", "AmbientLightColor");
+                            .WithDefaultUniformBlock<Uniforms>();
                     }
                 }
             }
@@ -135,14 +135,16 @@ namespace MyOTKE.Views.Renderables.BasicExamples
         {
             ThrowIfDisposed();
 
-            program.UseWithUniformValues(
-                Matrix4x4.Transpose(this.viewProjection.View * this.viewProjection.Projection),
-                Matrix4x4.Transpose(this.viewProjection.View),
-                Matrix4x4.Identity,
-                PointLightPosition,
-                (Vector3)PointLightColor,
-                PointLightPower,
-                (Vector3)AmbientLightColor);
+            program.UseWithUniformValues(new Uniforms
+            {
+                MVP = Matrix4x4.Transpose(this.viewProjection.View * this.viewProjection.Projection),
+                V = Matrix4x4.Transpose(this.viewProjection.View),
+                M = Matrix4x4.Identity,
+                AmbientLightColor = AmbientLightColor,
+                PointLightPosition = PointLightPosition,
+                PointLightColor = PointLightColor,
+                PointLightPower = PointLightPower,
+            });
             this.linesBuffer.Draw();
         }
 
@@ -159,6 +161,17 @@ namespace MyOTKE.Views.Renderables.BasicExamples
             {
                 throw new ObjectDisposedException(GetType().FullName);
             }
+        }
+
+        private struct Uniforms
+        {
+            public Matrix4x4 MVP;
+            public Matrix4x4 V;
+            public Matrix4x4 M;
+            public Vector3 AmbientLightColor;
+            public Vector3 PointLightPosition;
+            public Vector3 PointLightColor;
+            public float PointLightPower;
         }
 
         private struct Vertex

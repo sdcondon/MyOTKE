@@ -16,7 +16,7 @@ out vec4 color;
 uniform vec3 AmbientLightColor;
 uniform vec3 DirectedLightDirection;
 uniform vec3 DirectedLightColor;
-uniform vec3 PointLightPosition_worldspace;
+uniform vec3 PointLightPosition;
 uniform vec3 PointLightColor;
 uniform float PointLightPower;
 
@@ -27,7 +27,7 @@ void main(){
 	vec4 MaterialSpecularColor = matColor * vec4(0.1, 0.1, 0.1, 1);
 
 	// Distance to the point light
-	float distance = length(PointLightPosition_worldspace - Position_worldspace);
+	float distance = length(PointLightPosition - Position_worldspace);
 
 	float directedLightCosTheta;
 	float cosTheta;

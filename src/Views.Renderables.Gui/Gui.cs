@@ -15,8 +15,8 @@ namespace MyOTKE.Views.Renderables.Gui
         private const string ShaderResourceNamePrefix = "MyOTKE.Views.Renderables.Gui.Shaders";
 
         private static readonly object ProgramStateLock = new object();
-        private static GlProgramBuilder programBuilder;
-        private static GlProgram program;
+        private static GlProgramBuilder<Uniforms> programBuilder;
+        private static GlProgram<Uniforms> program;
 
         private readonly View view;
 
@@ -45,7 +45,7 @@ namespace MyOTKE.Views.Renderables.Gui
                         programBuilder = new GlProgramBuilder()
                             .WithShaderFromEmbeddedResource(ShaderType.VertexShader, $"{ShaderResourceNamePrefix}.Gui.Vertex.glsl")
                             .WithShaderFromEmbeddedResource(ShaderType.FragmentShader, $"{ShaderResourceNamePrefix}.Gui.Fragment.glsl")
-                            .WithUniforms("P", "text");
+                            .WithDefaultUniformBlock<Uniforms>();
                     }
                 }
             }
@@ -112,7 +112,11 @@ namespace MyOTKE.Views.Renderables.Gui
             // Assume the GUI is drawn last and is independent - goes on top of everything drawn already - so clear the depth buffer
             GL.Clear(ClearBufferMask.DepthBufferBit);
 
-            program.UseWithUniformValues(Matrix4x4.Transpose(Matrix4x4.CreateOrthographic(Size.X, Size.Y, 1f, -1f)), 0);
+            program.UseWithUniformValues(new Uniforms
+            {
+                P = Matrix4x4.Transpose(Matrix4x4.CreateOrthographic(Size.X, Size.Y, 1f, -1f)),
+                text = 0,
+            });
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.Texture2DArray, Text.Font.TextureId);
             this.vertexBuffer.Draw();
@@ -137,6 +141,12 @@ namespace MyOTKE.Views.Renderables.Gui
         private void View_Resized(object sender, Vector2 e)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Size)));
+        }
+
+        private struct Uniforms
+        {
+            public Matrix4x4 P;
+            public int text;
         }
     }
 }

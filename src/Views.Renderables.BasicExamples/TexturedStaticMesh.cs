@@ -14,8 +14,8 @@ namespace MyOTKE.Views.Renderables.BasicExamples
     public sealed class TexturedStaticMesh : IRenderable
     {
         private static readonly object ProgramStateLock = new object();
-        private static GlProgramBuilder programBuilder;
-        private static GlProgram program;
+        private static GlProgramBuilder<Uniforms> programBuilder;
+        private static GlProgram<Uniforms> program;
 
         private readonly IViewProjection viewProjection;
         private readonly string textureFilePath;
@@ -49,7 +49,7 @@ namespace MyOTKE.Views.Renderables.BasicExamples
                         programBuilder = new GlProgramBuilder()
                             .WithShaderFromEmbeddedResource(ShaderType.VertexShader, "Textured.Vertex.glsl")
                             .WithShaderFromEmbeddedResource(ShaderType.FragmentShader, "Textured.Fragment.glsl")
-                            .WithUniforms("MVP", "V", "M", "myTextureSampler", "LightPosition_worldspace", "LightColor", "LightPower", "AmbientLightColor");
+                            .WithDefaultUniformBlock<Uniforms>();
                     }
                 }
             }
@@ -125,15 +125,17 @@ namespace MyOTKE.Views.Renderables.BasicExamples
         {
             ThrowIfDisposed();
 
-            program.UseWithUniformValues(
-                Matrix4x4.Transpose(this.Model * this.viewProjection.View * this.viewProjection.Projection),
-                Matrix4x4.Transpose(this.viewProjection.View),
-                Matrix4x4.Transpose(this.Model),
-                0,
-                PointLightPosition,
-                (Vector3)PointLightColor,
-                PointLightPower,
-                (Vector3)AmbientLightColor);
+            program.UseWithUniformValues(new Uniforms
+            {
+                MVP = Matrix4x4.Transpose(this.Model * this.viewProjection.View * this.viewProjection.Projection),
+                V = Matrix4x4.Transpose(this.viewProjection.View),
+                M = Matrix4x4.Transpose(this.Model),
+                TextureSampler = 0,
+                AmbientLightColor = AmbientLightColor,
+                LightPosition = PointLightPosition,
+                LightColor = PointLightColor,
+                LightPower = PointLightPower,
+            });
 
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.Texture2D, textures[0]);
@@ -196,6 +198,18 @@ namespace MyOTKE.Views.Renderables.BasicExamples
                 UV = uv;
                 Normal = normal;
             }
+        }
+
+        private struct Uniforms
+        {
+            public Matrix4x4 MVP;
+            public Matrix4x4 V;
+            public Matrix4x4 M;
+            public int TextureSampler;
+            public Vector3 AmbientLightColor;
+            public Vector3 LightPosition;
+            public Vector3 LightColor;
+            public float LightPower;
         }
     }
 }

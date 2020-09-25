@@ -11,9 +11,8 @@ in vec3 LightDirection_cameraspace;
 out vec4 color;
 
 // Values that stay constant for the whole mesh.
-uniform sampler2D myTextureSampler;
-//uniform mat4 MV;
-uniform vec3 LightPosition_worldspace;
+uniform sampler2D TextureSampler;
+uniform vec3 LightPosition;
 uniform vec3 LightColor;
 uniform float LightPower;
 uniform vec3 AmbientLightColor;
@@ -21,11 +20,11 @@ uniform vec3 AmbientLightColor;
 void main(){
 
 	// Material properties
-	vec4 MaterialDiffuseColor = texture(myTextureSampler, UV);
+	vec4 MaterialDiffuseColor = texture(TextureSampler, UV);
 	vec4 MaterialSpecularColor = vec4(0.3, 0.3, 0.3, 1);
 
 	// Distance to the light
-	float distance = length(LightPosition_worldspace - Position_worldspace);
+	float distance = length(LightPosition - Position_worldspace);
 
 	// Normal of the computed fragment, in camera space
 	vec3 n = normalize( Normal_cameraspace );
