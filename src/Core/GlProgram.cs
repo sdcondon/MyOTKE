@@ -136,7 +136,6 @@ namespace MyOTKE.Core
                 var shaderId = GL.CreateShader(shaderSpec.Type);
 
                 // Compile shader
-                DebugEx.WriteLine("Compiling shader");
                 GL.ShaderSource(shaderId, shaderSpec.Source);
                 GL.CompileShader(shaderId);
 
@@ -152,7 +151,6 @@ namespace MyOTKE.Core
             }
 
             // Link & check program
-            DebugEx.WriteLine("Linking program");
             GL.LinkProgram(this.id);
             GL.GetProgram(this.id, GetProgramParameterName.LinkStatus, out var linkStatus);
             if (linkStatus != (int)OpenTK.Graphics.OpenGL.Boolean.True)
@@ -213,18 +211,18 @@ namespace MyOTKE.Core
             var setters = new List<Expression>();
 
             var publicFields = typeof(T).GetFields();
-            DebugEx.WriteLine($"Uniform struct {typeof(T).Name} contains the following public fields, that will be mapped to uniforms by name: {string.Join(", ", publicFields.Select(f => f.Name))}");
+            DebugEx.WriteLine($"{typeof(T).FullName} public fields that will be mapped to uniforms by name: {string.Join(", ", publicFields.Select(f => f.Name))}");
             foreach (var field in publicFields)
             {
-                if (!DefaultBlockUniformSettersByType.TryGetValue(field.FieldType, out var uniformSetter))
-                {
-                    throw new ArgumentException($"Uniforms struct contains field of unsupported type {field.FieldType}", nameof(T));
-                }
-
                 var uniformLocation = GL.GetUniformLocation(this.id, field.Name);
                 if (uniformLocation == -1)
                 {
                     throw new ArgumentException($"Uniform struct contains field '{field.Name}', which does not exist as a uniform in this program.");
+                }
+
+                if (!DefaultBlockUniformSettersByType.TryGetValue(field.FieldType, out var uniformSetter))
+                {
+                    throw new ArgumentException($"Uniform struct contains field of unsupported type {field.FieldType}", nameof(T));
                 }
 
                 setters.Add(Expression.Invoke(

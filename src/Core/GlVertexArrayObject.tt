@@ -36,7 +36,7 @@ namespace MyOTKE.Core
 <# WriteLines(i, i => $"(BufferUsageHint usage, int capacity, T{i}[] data) attributeBufferSpec{i},", 3); #>
             (int capacity, uint[] data) indexSpec)
         {
-            GlExt.ThrowIfNoCurrentContext();
+            GlEx.ThrowIfNoCurrentContext();
 
             // Record primitive type for use in draw calls, create and bind the VAO
             this.primitiveType = primitiveType;
@@ -146,10 +146,10 @@ namespace MyOTKE.Core
                 GC.SuppressFinalize(this);
             }
 
-            ////if (GraphicsContext.CurrentContext != null)
-            ////{
-            GL.DeleteVertexArrays(1, new[] { this.id });
-            ////}
+            if (GraphicsContext.CurrentContext != null)
+            {
+                GL.DeleteVertexArrays(1, new[] { this.id });
+            }
         }
     }
 <# } #>}

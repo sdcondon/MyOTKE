@@ -79,7 +79,7 @@ namespace MyOTKE.Core
             }
             else if (!t.IsValueType || t.IsAutoLayout)
             {
-                throw new ArgumentException("Unsupported type - passed type must be blittable");
+                throw new ArgumentException($"Unsupported type {t} - passed type must be blittable", nameof(t));
             }
             else
             {
