@@ -105,16 +105,17 @@ namespace NanoVG
             renderer.RenderCreate();
 
             // Init font rendering
-            FontStash.FONSparams fontParams = new FontStash.FONSparams();
-            fontParams.width = NVG_INIT_FONTIMAGE_SIZE;
-            fontParams.height = NVG_INIT_FONTIMAGE_SIZE;
-            fontParams.flags = FontStash.FONSflags.FONS_ZERO_TOPLEFT;
-            fontParams.renderCreate = null;
-            fontParams.renderUpdate = null;
-            fontParams.renderDraw = null;
-            fontParams.renderDelete = null;
-            fontParams.userPtr = null;
-
+            FontStash.FONSparams fontParams = new FontStash.FONSparams
+            {
+                width = NVG_INIT_FONTIMAGE_SIZE,
+                height = NVG_INIT_FONTIMAGE_SIZE,
+                flags = FontStash.FONSflags.FONS_ZERO_TOPLEFT,
+                renderCreate = null,
+                renderUpdate = null,
+                renderDraw = null,
+                renderDelete = null,
+                userPtr = null,
+            };
             fs = FontStash.fonsCreateInternal(ref fontParams);
 
             // Create font texture
