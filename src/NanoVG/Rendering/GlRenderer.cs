@@ -792,20 +792,21 @@ namespace NanoVG
                 call.uniformOffset = AllocFragUniforms(2);
 
                 // Simple shader for stencil
-                ref var frag = ref FragUniformRef(call.uniformOffset / this.fragSize);
-                frag = new GlFragUniforms();
-                frag.strokeThr = -1.0f;
-                frag.type = Shader.Simple;
+                uniforms[call.uniformOffset / this.fragSize] = new GlFragUniforms()
+                {
+                    strokeThr = -1.0f,
+                    type = Shader.Simple,
+                };
 
                 // Fill shader
-                glnvg__convertPaint(ref FragUniformRef(call.uniformOffset / this.fragSize + 1/* + gl->fragSize*/), ref paint, ref scissor, fringe, fringe, -1.0f);
+                glnvg__convertPaint(ref uniforms[call.uniformOffset / this.fragSize + 1/* + gl->fragSize*/], ref paint, ref scissor, fringe, fringe, -1.0f);
             }
             else
             {
                 call.uniformOffset = AllocFragUniforms(1);
 
                 // Fill shader
-                glnvg__convertPaint(ref FragUniformRef(call.uniformOffset / this.fragSize), ref paint, ref scissor, fringe, fringe, -1.0f);
+                glnvg__convertPaint(ref uniforms[call.uniformOffset / this.fragSize], ref paint, ref scissor, fringe, fringe, -1.0f);
             }
         }
 
@@ -847,14 +848,14 @@ namespace NanoVG
             {
                 // Fill shader
                 call.uniformOffset = AllocFragUniforms(2);
-                glnvg__convertPaint(ref FragUniformRef(call.uniformOffset / this.fragSize), ref paint, ref scissor, strokeWidth, fringe, -1.0f);
-                glnvg__convertPaint(ref FragUniformRef(call.uniformOffset / this.fragSize + 1/*+ gl->fragSize*/), ref paint, ref scissor, strokeWidth, fringe, 1.0f - 0.5f / 255.0f);
+                glnvg__convertPaint(ref uniforms[call.uniformOffset / this.fragSize], ref paint, ref scissor, strokeWidth, fringe, -1.0f);
+                glnvg__convertPaint(ref uniforms[call.uniformOffset / this.fragSize + 1/*+ gl->fragSize*/], ref paint, ref scissor, strokeWidth, fringe, 1.0f - 0.5f / 255.0f);
             }
             else
             {
                 // Fill shader
                 call.uniformOffset = AllocFragUniforms(1);
-                glnvg__convertPaint(ref FragUniformRef(call.uniformOffset / this.fragSize), ref paint, ref scissor, strokeWidth, fringe, -1.0f);
+                glnvg__convertPaint(ref uniforms[call.uniformOffset / this.fragSize], ref paint, ref scissor, strokeWidth, fringe, -1.0f);
             }
         }
 
@@ -878,7 +879,7 @@ namespace NanoVG
 
             // Fill shader
             call.uniformOffset = AllocFragUniforms(1);
-            ref var frag = ref FragUniformRef(call.uniformOffset / this.fragSize);
+            ref var frag = ref uniforms[call.uniformOffset / this.fragSize];
             glnvg__convertPaint(ref frag, ref paint, ref scissor, 1.0f, 1.0f, -1.0f);
             frag.type = Shader.Image;
         }
@@ -1340,11 +1341,6 @@ namespace NanoVG
             int ret = nuniforms * structSize;
             nuniforms += n;
             return ret;
-        }
-
-        private ref GlFragUniforms FragUniformRef(int i)
-        {
-            return ref uniforms[i];
         }
 
 #if NANOVG_GL2
