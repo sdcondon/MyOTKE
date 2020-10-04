@@ -15,8 +15,8 @@ namespace MyOTKE.Views.Renderables.Gui
         private const string ShaderResourceNamePrefix = "MyOTKE.Views.Renderables.Gui.Shaders";
 
         private static readonly object ProgramStateLock = new object();
-        private static GlProgramBuilder<Uniforms> programBuilder;
-        private static GlProgram<Uniforms> program;
+        private static GlProgramWithDUBBuilder<Uniforms> programBuilder;
+        private static GlProgramWithDUB<Uniforms> program;
 
         private readonly View view;
 

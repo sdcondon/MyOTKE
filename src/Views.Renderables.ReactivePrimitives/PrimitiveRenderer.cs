@@ -15,8 +15,8 @@ namespace MyOTKE.Views.Renderables.ReactivePrimitives
     public class PrimitiveRenderer : IRenderable
     {
         private static readonly object ProgramStateLock = new object();
-        private static GlProgramBuilder<Uniforms> programBuilder;
-        private static GlProgram<Uniforms> program;
+        private static GlProgramWithDUBBuilder<Uniforms> programBuilder;
+        private static GlProgramWithDUB<Uniforms> program;
 
         private readonly IViewProjection camera;
         private readonly IObservable<IObservable<IList<Primitive>>> source;

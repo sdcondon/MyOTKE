@@ -1,4 +1,10 @@
-﻿#pragma warning disable SA1402
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#@ include file="_Common.t4" #>
+#pragma warning disable SA1402
 using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
@@ -7,10 +13,12 @@ using System.Reflection;
 
 namespace MyOTKE.Core
 {
+<# for(int i = 0; i <= MaxUniformBufferBlocks; i++) { #>
+<# WriteLineIf(i > 0, ""); #>
     /// <summary>
     /// Builder class for <see cref="GlProgram"/> objects that presents a fluent-ish interface.
     /// </summary>
-    public sealed class GlProgramBuilder
+    public sealed class GlProgramBuilder<#= TList(i, "<", ">") #>
     {
         private readonly List<(ShaderType Type, string Source)> shaderSpecs = new List<(ShaderType, string)>();
 
@@ -106,12 +114,14 @@ namespace MyOTKE.Core
             return new GlProgram(shaderSpecs);
         }
     }
+<# } #>
+<# for(int i = 0; i <= MaxUniformBufferBlocks; i++) { #>
 
     /// <summary>
     /// Builder class for <see cref="GlProgramWithDUB{T}"/> objects that presents a fluent-ish interface.
     /// </summary>
     /// <typeparam name="TDefaultUniformBlock">The type of the container used for default block uniforms.</typeparam>
-    public class GlProgramWithDUBBuilder<TDefaultUniformBlock>
+    public class GlProgramWithDUBBuilder<TDefaultUniformBlock<#= TList(i, ", ") #>>
         where TDefaultUniformBlock : struct
     {
         private readonly List<(ShaderType Type, string Source)> shaderSpecs = new List<(ShaderType, string)>();
@@ -186,5 +196,5 @@ namespace MyOTKE.Core
             return new GlProgramWithDUB<TDefaultUniformBlock>(shaderSpecs);
         }
     }
-}
+<# } #>}
 #pragma warning restore SA1402

@@ -16,8 +16,8 @@ namespace MyOTKE.Views.Renderables.BasicExamples
     public class ColoredLines : IRenderable
     {
         private static readonly object ProgramStateLock = new object();
-        private static GlProgramBuilder<Uniforms> programBuilder;
-        private static GlProgram<Uniforms> program;
+        private static GlProgramWithDUBBuilder<Uniforms> programBuilder;
+        private static GlProgramWithDUB<Uniforms> program;
 
         private readonly IViewProjection viewProjection;
         private readonly ObservableCollection<Line> lines;

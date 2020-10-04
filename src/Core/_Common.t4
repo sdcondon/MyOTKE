@@ -3,6 +3,7 @@
 <#@ import namespace="System.Linq" #><#+
 
 const int MaxBufferCount = 3;
+const int MaxUniformBufferBlocks = 0;
 
 void WriteLines(int count, Func<int, string> writeLine, int indent = 0)
 {

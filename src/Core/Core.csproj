@@ -15,7 +15,7 @@
   <ItemGroup>
     <None Remove="$(DocumentationFile)" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="OpenTK" Version="3.2.0" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
@@ -26,6 +26,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="GlProgram.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GlProgram.tt</DependentUpon>
+    </Compile>
+    <Compile Update="GlProgramBuilder.cs">
+	  <DesignTime>True</DesignTime>
+	  <AutoGen>True</AutoGen>
+	  <DependentUpon>GlProgramBuilder.tt</DependentUpon>
+    </Compile>
     <Compile Update="GlVertexArrayObject.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -51,10 +61,17 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>VertexArrayObjectBuilder.tt</DependentUpon>
     </Compile>
-  
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="GlProgram.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>GlProgram.cs</LastGenOutput>
+    </None>
+    <None Update="GlProgramBuilder.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>GlProgramBuilder.cs</LastGenOutput>
+    </None>
     <None Update="GlVertexArrayObject.tt">
       <LastGenOutput>GlVertexArrayObject.cs</LastGenOutput>
       <Generator>TextTemplatingFileGenerator</Generator>
