@@ -11,7 +11,7 @@ using System;
 
 namespace MyOTKE.Core
 {
-<# for(int i = 1; i <= MaxBufferCount; i++) { #>
+<# for(int i = 1; i <= MaxVertexBufferCount; i++) { #>
 <# WriteLineIf(i > 1, ""); #>
     /// <summary>
     /// Interface for types representing an OpenGL vertex array object.

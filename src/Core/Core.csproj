@@ -17,6 +17,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="VaoDecorators\SynchronizedVertexArrayObjectBuilder.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SynchronizedVertexArrayObjectBuilder.tt</DependentUpon>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="OpenTK" Version="3.2.0" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
   </ItemGroup>
@@ -56,6 +64,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>SynchronizedVertexArrayObject.tt</DependentUpon>
     </Compile>
+    <Compile Update="VaoDecorators\SynchronizedVertexArrayObjectBuilder.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SynchronizedVertexArrayObjectBuilder.tt</DependentUpon>
+    </Compile>
 	<Compile Update="VertexArrayObjectBuilder.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -87,6 +100,10 @@
     <None Update="VaoDecorators\SynchronizedVertexArrayObject.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>SynchronizedVertexArrayObject.cs</LastGenOutput>
+    </None>
+    <None Update="VaoDecorators\SynchronizedVertexArrayObjectBuilder.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>SynchronizedVertexArrayObjectBuilder.cs</LastGenOutput>
     </None>
     <None Update="VertexArrayObjectBuilder.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

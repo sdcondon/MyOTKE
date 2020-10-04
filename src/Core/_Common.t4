@@ -2,7 +2,7 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Linq" #><#+
 
-const int MaxBufferCount = 3;
+const int MaxVertexBufferCount = 3;
 const int MaxUniformBufferBlocks = 0;
 
 void WriteLines(int count, Func<int, string> writeLine, int indent = 0)
@@ -23,11 +23,12 @@ void WriteLineIf(bool predicate, string line, int indent = 0)
     }
 }
 
-void WriteTypeParamDocs(int count, Func<int, string> desc)
+void WriteTypeParamDocs(int count, Func<int, string> desc, int indent = 1)
 {
     for (int i = 1; i <= count; i++)
     {
-        WriteLine($"    /// <typeparam name=\"T{i}\">{desc(i)}</typeparam>");
+        Write(new String(' ', 4 * indent));
+        WriteLine($"/// <typeparam name=\"T{i}\">{desc(i)}</typeparam>");
     }
 }
 

@@ -117,7 +117,7 @@ namespace MyOTKE.Core
         private readonly List<(ShaderType Type, string Source)> shaderSpecs = new List<(ShaderType, string)>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GlProgramBuilder{TDefaultUniformBlock}"/> class.
+        /// Initializes a new instance of the <see cref="GlProgramWithDUBBuilder{TDefaultUniformBlock}"/> class.
         /// </summary>
         /// <param name="shaderSpecs">Initial specifications for each shader in the program.</param>
         internal GlProgramWithDUBBuilder(List<(ShaderType Type, string Source)> shaderSpecs)

@@ -10,7 +10,7 @@ using System;
 
 namespace MyOTKE.Core.VaoDecorators
 {
-<# for(int i = 1; i <= MaxBufferCount; i++) { #>
+<# for(int i = 1; i <= MaxVertexBufferCount; i++) { #>
 <# WriteLineIf(i > 1, ""); #>
     /// <summary>
     /// Decorator for <see cref="IVertexArrayObject{<#= TList(i) #>}"/> that explicitly synchronizes with OpenGL (making it simple but slow..).

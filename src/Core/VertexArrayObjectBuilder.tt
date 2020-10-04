@@ -6,11 +6,10 @@
 <#@ include file="_Common.t4" #>
 #pragma warning disable SA1402
 using OpenTK.Graphics.OpenGL;
-using MyOTKE.Core.VaoDecorators;
 
 namespace MyOTKE.Core
 {
-<# for(int i = 0; i <= MaxBufferCount; i++) { #>
+<# for(int i = 0; i <= MaxVertexBufferCount; i++) { #>
 <# WriteLineIf(i > 0, ""); #>
     /// <summary>
     /// Builder class for <see cref="GlVertexArrayObject<#= TList(i, "{", "}") #>"/> objects that presents a fluent-ish interface.
@@ -38,7 +37,7 @@ namespace MyOTKE.Core
 <# WriteLineIf(i > 0, $"this.indexSpec = indexSpec;", 3); #>
 <# WriteLines(i, j => $"this.bufferSpec{j} = bufferSpec{j};", 3); #>
         }
-<# if(i < MaxBufferCount) { #>
+<# if(i < MaxVertexBufferCount) { #>
 
         /// <summary>
         /// Adds a new populated attribute buffer to be included in the built VAO.
@@ -99,17 +98,6 @@ namespace MyOTKE.Core
 <# if (i > 0) { #>
 
         /// <summary>
-        /// Specifies that the built VAO should be explicitly synchronized, with any pending changes flushed on each draw call.
-        /// <para/>
-        /// Specifically, means that the created VAO will be a <see cref="SynchronizedVertexArrayObject{<#= TList(i) #>}"/> instance.
-        /// </summary>
-        /// <returns>The updated builder.</returns>
-        public SynchronizedVertexArrayObjectBuilder<<#= TList(i) #>> Synchronized()
-        {
-            return new SynchronizedVertexArrayObjectBuilder<<#= TList(i) #>>(this);
-        }
-
-        /// <summary>
         /// Builds a new <see cref="IVertexArrayObject{<#= TList(i) #>}"/> instance based on the state of the builder.
         /// </summary>
         /// <returns>The built VAO.</returns>
@@ -121,39 +109,6 @@ namespace MyOTKE.Core
                 indexSpec);
         }
 <# } #>
-    }
-<# } #>
-<# for(int i = 1; i <= MaxBufferCount; i++) { #>
-
-    /// <summary>
-    /// Builder class for <see cref="GlVertexArrayObject<#= TList(i, "{", "}") #>"/> objects that presents a fluent-ish interface.
-    /// </summary>
-<# WriteTypeParamDocs(i, i => $"The type of data to be stored in the { Ordinal(i) } buffer."); #>
-    /// <remarks>
-    /// Useful for setting up a VAO before the OpenGL context has initialized.
-    /// </remarks>
-    public sealed class SynchronizedVertexArrayObjectBuilder<#= TList(i, "<", ">") #>
-<# WriteLines(i, i => $"where T{i} : struct", 2); #>
-    {
-        private readonly VertexArrayObjectBuilder<#= TList(i, "<", ">") #> innerBuilder;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SynchronizedVertexArrayObjectBuilder<#= TList(i, "{", "}") #>"/> class.
-        /// </summary>
-        /// <param name="innerBuilder">The builder wrapped by this builder.</param>
-        public SynchronizedVertexArrayObjectBuilder(VertexArrayObjectBuilder<#= TList(i, "<", ">") #> innerBuilder)
-        {
-            this.innerBuilder = innerBuilder;
-        }
-
-        /// <summary>
-        /// Builds a new <see cref="IVertexArrayObject{<#= TList(i) #>}"/> instance based on the state of the builder.
-        /// </summary>
-        /// <returns>The built VAO.</returns>
-        public IVertexArrayObject<<#= TList(i) #>> Build()
-        {
-            return new SynchronizedVertexArrayObject<<#= TList(i) #>>(innerBuilder.Build());
-        }
     }
 <# } #>
 }

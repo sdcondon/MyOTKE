@@ -170,7 +170,7 @@ namespace MyOTKE.Core
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="GlProgramWithDefaultBlockUniforms{TDefaultUniformBlock}"/> class.
+        /// Finalizes an instance of the <see cref="GlProgramWithDUB{TDefaultUniformBlock}"/> class.
         /// </summary>
         ~GlProgramWithDUB() => Dispose(false);
 
