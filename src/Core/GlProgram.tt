@@ -78,7 +78,7 @@ namespace MyOTKE.Core
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="GlProgram"/> class.
+        /// Finalizes an instance of the <see cref="GlProgram<#= TList(i, "{", "}") #>"/> class.
         /// </summary>
         ~GlProgram() => Dispose(false);
 
@@ -113,7 +113,8 @@ namespace MyOTKE.Core
     /// Represents a compiled OpenGL program that makes use of uniforms in the default uniform block.
     /// </summary>
     /// <typeparam name="TDefaultUniformBlock">The type of the container used for default block uniforms.</typeparam>
-    public sealed class GlProgramWithDUB<TDefaultUniformBlock> : IDisposable
+<# WriteTypeParamDocs(i, i => $"The type of the { Ordinal(i) } uniform buffer object."); #>
+    public sealed class GlProgramWithDUB<TDefaultUniformBlock<#= TList(i, ", ") #>> : IDisposable
         where TDefaultUniformBlock : struct
     {
         private static readonly Dictionary<Type, Expression> DefaultBlockUniformSettersByType = new Dictionary<Type, Expression>
@@ -130,7 +131,7 @@ namespace MyOTKE.Core
         private readonly Action<TDefaultUniformBlock> setDefaultUniformBlock;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GlProgramWithDUB{TDefaultUniformBlock}"/> class.
+        /// Initializes a new instance of the <see cref="GlProgramWithDUB{TDefaultUniformBlock<#= TList(i, ", ") #>}"/> class.
         /// </summary>
         /// <param name="shaderSpecs">Specifications for each of the shaders to be included in the program.</param>
         internal GlProgramWithDUB(IEnumerable<(ShaderType Type, string Source)> shaderSpecs)
@@ -182,7 +183,7 @@ namespace MyOTKE.Core
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="GlProgramWithDUB{TDefaultUniformBlock}"/> class.
+        /// Finalizes an instance of the <see cref="GlProgramWithDUB{TDefaultUniformBlock<#= TList(i, ", ") #>}"/> class.
         /// </summary>
         ~GlProgramWithDUB() => Dispose(false);
 

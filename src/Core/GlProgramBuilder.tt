@@ -16,9 +16,11 @@ namespace MyOTKE.Core
 <# for(int i = 0; i <= MaxUniformBufferBlocks; i++) { #>
 <# WriteLineIf(i > 0, ""); #>
     /// <summary>
-    /// Builder class for <see cref="GlProgram"/> objects that presents a fluent-ish interface.
+    /// Builder class for <see cref="GlProgram<#= TList(i, "{", "}") #>"/> objects that presents a fluent-ish interface.
     /// </summary>
+<# WriteTypeParamDocs(i, i => $"The type of the { Ordinal(i) } uniform buffer object."); #>
     public sealed class GlProgramBuilder<#= TList(i, "<", ">") #>
+<# WriteLines(i, i => $"where T{i} : struct", 2); #>
     {
         private readonly List<(ShaderType Type, string Source)> shaderSpecs = new List<(ShaderType, string)>();
 
@@ -28,7 +30,7 @@ namespace MyOTKE.Core
         /// <param name="shaderType">The type of shader to be added.</param>
         /// <param name="sourceStream">The stream containing the source of the shader (in UTF-8).</param>
         /// <returns>The updated builder.</returns>
-        public GlProgramBuilder WithShaderFromStream(ShaderType shaderType, Stream sourceStream)
+        public GlProgramBuilder<#= TList(i, "<", ">") #> WithShaderFromStream(ShaderType shaderType, Stream sourceStream)
         {
             using (var reader = new StreamReader(sourceStream))
             {
@@ -43,7 +45,7 @@ namespace MyOTKE.Core
         /// </summary>
         /// <param name="sourceStream">The stream containing the source of the shader (in UTF-8).</param>
         /// <returns>The updated builder.</returns>
-        public GlProgramBuilder WithVertexShaderFromStream(Stream sourceStream)
+        public GlProgramBuilder<#= TList(i, "<", ">") #> WithVertexShaderFromStream(Stream sourceStream)
         {
             return WithShaderFromStream(ShaderType.VertexShader, sourceStream);
         }
@@ -53,7 +55,7 @@ namespace MyOTKE.Core
         /// </summary>
         /// <param name="sourceStream">The stream containing the source of the shader (in UTF-8).</param>
         /// <returns>The updated builder.</returns>
-        public GlProgramBuilder WithFragmentShaderFromStream(Stream sourceStream)
+        public GlProgramBuilder<#= TList(i, "<", ">") #> WithFragmentShaderFromStream(Stream sourceStream)
         {
             return WithShaderFromStream(ShaderType.FragmentShader, sourceStream);
         }
@@ -64,7 +66,7 @@ namespace MyOTKE.Core
         /// <param name="shaderType">The type of shader to be added.</param>
         /// <param name="filePath">The path of the file containing the source of the shader (in UTF-8).</param>
         /// <returns>The updated builder.</returns>
-        public GlProgramBuilder WithShaderFromFile(ShaderType shaderType, string filePath)
+        public GlProgramBuilder<#= TList(i, "<", ">") #> WithShaderFromFile(ShaderType shaderType, string filePath)
         {
             DebugEx.WriteLine($"Loading {shaderType} shader from file path '{filePath}'");
             using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
@@ -79,7 +81,7 @@ namespace MyOTKE.Core
         /// <param name="shaderType">The type of shader to be added.</param>
         /// <param name="resourceName">The name of the resource containing the source of the shader (in UTF-8).</param>
         /// <returns>The updated builder.</returns>
-        public GlProgramBuilder WithShaderFromEmbeddedResource(ShaderType shaderType, string resourceName)
+        public GlProgramBuilder<#= TList(i, "<", ">") #> WithShaderFromEmbeddedResource(ShaderType shaderType, string resourceName)
         {
             var assembly = Assembly.GetCallingAssembly();
             DebugEx.WriteLine($"Loading {shaderType} shader from resource '{resourceName}' embedded in assembly '{assembly.GetName().Name}'");
@@ -99,19 +101,19 @@ namespace MyOTKE.Core
         /// </summary>
         /// <typeparam name="T">The type of the container used for default block uniforms.</typeparam>
         /// <returns>The updated builder.</returns>
-        public GlProgramWithDUBBuilder<T> WithDefaultUniformBlock<T>()
+        public GlProgramWithDUBBuilder<T<#= TList(i, ", ") #>> WithDefaultUniformBlock<T>()
             where T : struct
         {
-            return new GlProgramWithDUBBuilder<T>(shaderSpecs);
+            return new GlProgramWithDUBBuilder<T<#= TList(i, ", ") #>>(shaderSpecs);
         }
 
         /// <summary>
-        /// Builds a new <see cref="GlProgram"/> instance based on the state of the builder.
+        /// Builds a new <see cref="GlProgram<#= TList(i, "{", "}") #>"/> instance based on the state of the builder.
         /// </summary>
         /// <returns>The built program.</returns>
-        public GlProgram Build()
+        public GlProgram<#= TList(i, "<", ">") #> Build()
         {
-            return new GlProgram(shaderSpecs);
+            return new GlProgram<#= TList(i, "<", ">") #>(shaderSpecs);
         }
     }
 <# } #>
@@ -121,13 +123,15 @@ namespace MyOTKE.Core
     /// Builder class for <see cref="GlProgramWithDUB{T}"/> objects that presents a fluent-ish interface.
     /// </summary>
     /// <typeparam name="TDefaultUniformBlock">The type of the container used for default block uniforms.</typeparam>
+<# WriteTypeParamDocs(i, i => $"The type of the { Ordinal(i) } uniform buffer object."); #>
     public class GlProgramWithDUBBuilder<TDefaultUniformBlock<#= TList(i, ", ") #>>
         where TDefaultUniformBlock : struct
+<# WriteLines(i, i => $"where T{i} : struct", 2); #>
     {
         private readonly List<(ShaderType Type, string Source)> shaderSpecs = new List<(ShaderType, string)>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GlProgramWithDUBBuilder{TDefaultUniformBlock}"/> class.
+        /// Initializes a new instance of the <see cref="GlProgramWithDUBBuilder{TDefaultUniformBlock<#= TList(i, ", ") #>}"/> class.
         /// </summary>
         /// <param name="shaderSpecs">Initial specifications for each shader in the program.</param>
         internal GlProgramWithDUBBuilder(List<(ShaderType Type, string Source)> shaderSpecs)
@@ -141,7 +145,7 @@ namespace MyOTKE.Core
         /// <param name="shaderType">The type of shader to be added.</param>
         /// <param name="sourceStream">The stream containing the source of the shader (in UTF-8).</param>
         /// <returns>The updated builder.</returns>
-        public GlProgramWithDUBBuilder<TDefaultUniformBlock> WithShaderFromStream(ShaderType shaderType, Stream sourceStream)
+        public GlProgramWithDUBBuilder<TDefaultUniformBlock<#= TList(i, ", ") #>> WithShaderFromStream(ShaderType shaderType, Stream sourceStream)
         {
             using (var reader = new StreamReader(sourceStream))
             {
@@ -157,7 +161,7 @@ namespace MyOTKE.Core
         /// <param name="shaderType">The type of shader to be added.</param>
         /// <param name="filePath">The path of the file containing the source of the shader (in UTF-8).</param>
         /// <returns>The updated builder.</returns>
-        public GlProgramWithDUBBuilder<TDefaultUniformBlock> WithShaderFromFile(ShaderType shaderType, string filePath)
+        public GlProgramWithDUBBuilder<TDefaultUniformBlock<#= TList(i, ", ") #>> WithShaderFromFile(ShaderType shaderType, string filePath)
         {
             DebugEx.WriteLine($"Loading {shaderType} shader from file path '{filePath}'");
             using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
@@ -172,7 +176,7 @@ namespace MyOTKE.Core
         /// <param name="shaderType">The type of shader to be added.</param>
         /// <param name="resourceName">The name of the resource containing the source of the shader (in UTF-8).</param>
         /// <returns>The updated builder.</returns>
-        public GlProgramWithDUBBuilder<TDefaultUniformBlock> WithShaderFromEmbeddedResource(ShaderType shaderType, string resourceName)
+        public GlProgramWithDUBBuilder<TDefaultUniformBlock<#= TList(i, ", ") #>> WithShaderFromEmbeddedResource(ShaderType shaderType, string resourceName)
         {
             var assembly = Assembly.GetCallingAssembly();
             DebugEx.WriteLine($"Loading {shaderType} shader from resource '{resourceName}' embedded in assembly '{assembly.GetName().Name}'");

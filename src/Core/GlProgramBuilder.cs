@@ -108,6 +108,108 @@ namespace MyOTKE.Core
     }
 
     /// <summary>
+    /// Builder class for <see cref="GlProgram{T1}"/> objects that presents a fluent-ish interface.
+    /// </summary>
+    /// <typeparam name="T1">The type of the 1st uniform buffer object.</typeparam>
+    public sealed class GlProgramBuilder<T1>
+        where T1 : struct
+    {
+        private readonly List<(ShaderType Type, string Source)> shaderSpecs = new List<(ShaderType, string)>();
+
+        /// <summary>
+        /// Adds a shader to be included in the built program, reading the source from a <see cref="Stream"/> object.
+        /// </summary>
+        /// <param name="shaderType">The type of shader to be added.</param>
+        /// <param name="sourceStream">The stream containing the source of the shader (in UTF-8).</param>
+        /// <returns>The updated builder.</returns>
+        public GlProgramBuilder<T1> WithShaderFromStream(ShaderType shaderType, Stream sourceStream)
+        {
+            using (var reader = new StreamReader(sourceStream))
+            {
+                shaderSpecs.Add((shaderType, reader.ReadToEnd()));
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a vertex shader to be included in the built program, reading the source from a <see cref="Stream"/> object.
+        /// </summary>
+        /// <param name="sourceStream">The stream containing the source of the shader (in UTF-8).</param>
+        /// <returns>The updated builder.</returns>
+        public GlProgramBuilder<T1> WithVertexShaderFromStream(Stream sourceStream)
+        {
+            return WithShaderFromStream(ShaderType.VertexShader, sourceStream);
+        }
+
+        /// <summary>
+        /// Adds a fragment shader to be included in the built program, reading the source from a <see cref="Stream"/> object.
+        /// </summary>
+        /// <param name="sourceStream">The stream containing the source of the shader (in UTF-8).</param>
+        /// <returns>The updated builder.</returns>
+        public GlProgramBuilder<T1> WithFragmentShaderFromStream(Stream sourceStream)
+        {
+            return WithShaderFromStream(ShaderType.FragmentShader, sourceStream);
+        }
+
+        /// <summary>
+        /// Adds a shader to be included in the built program, reading the source from a file.
+        /// </summary>
+        /// <param name="shaderType">The type of shader to be added.</param>
+        /// <param name="filePath">The path of the file containing the source of the shader (in UTF-8).</param>
+        /// <returns>The updated builder.</returns>
+        public GlProgramBuilder<T1> WithShaderFromFile(ShaderType shaderType, string filePath)
+        {
+            DebugEx.WriteLine($"Loading {shaderType} shader from file path '{filePath}'");
+            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                return WithShaderFromStream(shaderType, stream);
+            }
+        }
+
+        /// <summary>
+        /// Adds a shader to be included in the built program, reading the source from a resource embedded in the calling assembly.
+        /// </summary>
+        /// <param name="shaderType">The type of shader to be added.</param>
+        /// <param name="resourceName">The name of the resource containing the source of the shader (in UTF-8).</param>
+        /// <returns>The updated builder.</returns>
+        public GlProgramBuilder<T1> WithShaderFromEmbeddedResource(ShaderType shaderType, string resourceName)
+        {
+            var assembly = Assembly.GetCallingAssembly();
+            DebugEx.WriteLine($"Loading {shaderType} shader from resource '{resourceName}' embedded in assembly '{assembly.GetName().Name}'");
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (stream == null)
+                {
+                    throw new ArgumentException($"Resource '{resourceName}' not found");
+                }
+
+                return WithShaderFromStream(shaderType, stream);
+            }
+        }
+
+        /// <summary>
+        /// Registers the set of uniforms required by the program.
+        /// </summary>
+        /// <typeparam name="T">The type of the container used for default block uniforms.</typeparam>
+        /// <returns>The updated builder.</returns>
+        public GlProgramWithDUBBuilder<T, T1> WithDefaultUniformBlock<T>()
+            where T : struct
+        {
+            return new GlProgramWithDUBBuilder<T, T1>(shaderSpecs);
+        }
+
+        /// <summary>
+        /// Builds a new <see cref="GlProgram{T1}"/> instance based on the state of the builder.
+        /// </summary>
+        /// <returns>The built program.</returns>
+        public GlProgram<T1> Build()
+        {
+            return new GlProgram<T1>(shaderSpecs);
+        }
+    }
+
+    /// <summary>
     /// Builder class for <see cref="GlProgramWithDUB{T}"/> objects that presents a fluent-ish interface.
     /// </summary>
     /// <typeparam name="TDefaultUniformBlock">The type of the container used for default block uniforms.</typeparam>
@@ -163,6 +265,88 @@ namespace MyOTKE.Core
         /// <param name="resourceName">The name of the resource containing the source of the shader (in UTF-8).</param>
         /// <returns>The updated builder.</returns>
         public GlProgramWithDUBBuilder<TDefaultUniformBlock> WithShaderFromEmbeddedResource(ShaderType shaderType, string resourceName)
+        {
+            var assembly = Assembly.GetCallingAssembly();
+            DebugEx.WriteLine($"Loading {shaderType} shader from resource '{resourceName}' embedded in assembly '{assembly.GetName().Name}'");
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (stream == null)
+                {
+                    throw new ArgumentException($"Resource '{resourceName}' not found");
+                }
+
+                return WithShaderFromStream(shaderType, stream);
+            }
+        }
+
+        /// <summary>
+        /// Builds a new <see cref="GlProgram"/> instance based on the state of the builder.
+        /// </summary>
+        /// <returns>The built program.</returns>
+        public GlProgramWithDUB<TDefaultUniformBlock> Build()
+        {
+            return new GlProgramWithDUB<TDefaultUniformBlock>(shaderSpecs);
+        }
+    }
+
+    /// <summary>
+    /// Builder class for <see cref="GlProgramWithDUB{T}"/> objects that presents a fluent-ish interface.
+    /// </summary>
+    /// <typeparam name="TDefaultUniformBlock">The type of the container used for default block uniforms.</typeparam>
+    /// <typeparam name="T1">The type of the 1st uniform buffer object.</typeparam>
+    public class GlProgramWithDUBBuilder<TDefaultUniformBlock, T1>
+        where TDefaultUniformBlock : struct
+        where T1 : struct
+    {
+        private readonly List<(ShaderType Type, string Source)> shaderSpecs = new List<(ShaderType, string)>();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GlProgramWithDUBBuilder{TDefaultUniformBlock, T1}"/> class.
+        /// </summary>
+        /// <param name="shaderSpecs">Initial specifications for each shader in the program.</param>
+        internal GlProgramWithDUBBuilder(List<(ShaderType Type, string Source)> shaderSpecs)
+        {
+            this.shaderSpecs = shaderSpecs;
+        }
+
+        /// <summary>
+        /// Adds a shader to be included in the built program, reading the source from a <see cref="Stream"/> object.
+        /// </summary>
+        /// <param name="shaderType">The type of shader to be added.</param>
+        /// <param name="sourceStream">The stream containing the source of the shader (in UTF-8).</param>
+        /// <returns>The updated builder.</returns>
+        public GlProgramWithDUBBuilder<TDefaultUniformBlock, T1> WithShaderFromStream(ShaderType shaderType, Stream sourceStream)
+        {
+            using (var reader = new StreamReader(sourceStream))
+            {
+                shaderSpecs.Add((shaderType, reader.ReadToEnd()));
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a shader to be included in the built program, reading the source from a file.
+        /// </summary>
+        /// <param name="shaderType">The type of shader to be added.</param>
+        /// <param name="filePath">The path of the file containing the source of the shader (in UTF-8).</param>
+        /// <returns>The updated builder.</returns>
+        public GlProgramWithDUBBuilder<TDefaultUniformBlock, T1> WithShaderFromFile(ShaderType shaderType, string filePath)
+        {
+            DebugEx.WriteLine($"Loading {shaderType} shader from file path '{filePath}'");
+            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                return WithShaderFromStream(shaderType, stream);
+            }
+        }
+
+        /// <summary>
+        /// Adds a shader to be included in the built program, reading the source from a resource embedded in the calling assembly.
+        /// </summary>
+        /// <param name="shaderType">The type of shader to be added.</param>
+        /// <param name="resourceName">The name of the resource containing the source of the shader (in UTF-8).</param>
+        /// <returns>The updated builder.</returns>
+        public GlProgramWithDUBBuilder<TDefaultUniformBlock, T1> WithShaderFromEmbeddedResource(ShaderType shaderType, string resourceName)
         {
             var assembly = Assembly.GetCallingAssembly();
             DebugEx.WriteLine($"Loading {shaderType} shader from resource '{resourceName}' embedded in assembly '{assembly.GetName().Name}'");
