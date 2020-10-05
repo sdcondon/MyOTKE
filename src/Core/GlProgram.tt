@@ -58,7 +58,20 @@ namespace MyOTKE.Core
 
                 GL.AttachShader(this.id, shaderId);
                 shaderIds.Add(shaderId);
+
+                ////TODO: for blockName/bindingPoint from uboSpecs
+                ////uniformBlockIndex = GL.GetUniformBlockIndex(shaderId, blockName);
+                ////if (uniformBlockIndex != GL_INVALID_INDEX)
+                ////{
+                ////    GL.UniformBlockBinding(shaderId, uniformBlockIndex, bindingPoint);
+                ////}
             }
+
+            ////TODO: for blockName/bindingPoint from uboSpecs
+            ////unsigned int uboExampleBlock;
+            ////GL.GenBuffers(1, &uboExampleBlock);
+            ////GL.BindBuffer(GL_UNIFORM_BUFFER, uboExampleBlock);
+            ////GL.BufferData(GL_UNIFORM_BUFFER, 152, NULL, GL_STATIC_DRAW); // allocate 152 bytes of memory
 
             // Link & check program
             DebugEx.WriteLine("Linking program");

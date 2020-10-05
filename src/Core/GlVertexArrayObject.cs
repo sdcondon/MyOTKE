@@ -43,7 +43,6 @@ namespace MyOTKE.Core
                 var buffer = new GlVertexBufferObject<T>(
                     BufferTarget.ArrayBuffer,
                     attributeBufferSpec.usage,
-                    typeof(T),
                     attributeBufferSpec.capacity,
                     attributeBufferSpec.data);
                 for (uint j = 0; j < buffer.Attributes.Length; j++, k++)
@@ -67,7 +66,7 @@ namespace MyOTKE.Core
             // Establish element count & populate index buffer if there is one
             if (indexSpec.capacity > 0)
             {
-                this.indexBuffer = new GlVertexBufferObject<uint>(BufferTarget.ElementArrayBuffer, BufferUsageHint.DynamicDraw, typeof(uint), indexSpec.capacity, indexSpec.data);
+                this.indexBuffer = new GlVertexBufferObject<uint>(BufferTarget.ElementArrayBuffer, BufferUsageHint.DynamicDraw, indexSpec.capacity, indexSpec.data);
             }
         }
 
@@ -186,7 +185,6 @@ namespace MyOTKE.Core
                 var buffer = new GlVertexBufferObject<T>(
                     BufferTarget.ArrayBuffer,
                     attributeBufferSpec.usage,
-                    typeof(T),
                     attributeBufferSpec.capacity,
                     attributeBufferSpec.data);
                 for (uint j = 0; j < buffer.Attributes.Length; j++, k++)
@@ -211,7 +209,7 @@ namespace MyOTKE.Core
             // Establish element count & populate index buffer if there is one
             if (indexSpec.capacity > 0)
             {
-                this.indexBuffer = new GlVertexBufferObject<uint>(BufferTarget.ElementArrayBuffer, BufferUsageHint.DynamicDraw, typeof(uint), indexSpec.capacity, indexSpec.data);
+                this.indexBuffer = new GlVertexBufferObject<uint>(BufferTarget.ElementArrayBuffer, BufferUsageHint.DynamicDraw, indexSpec.capacity, indexSpec.data);
             }
         }
 
@@ -339,7 +337,6 @@ namespace MyOTKE.Core
                 var buffer = new GlVertexBufferObject<T>(
                     BufferTarget.ArrayBuffer,
                     attributeBufferSpec.usage,
-                    typeof(T),
                     attributeBufferSpec.capacity,
                     attributeBufferSpec.data);
                 for (uint j = 0; j < buffer.Attributes.Length; j++, k++)
@@ -365,7 +362,7 @@ namespace MyOTKE.Core
             // Establish element count & populate index buffer if there is one
             if (indexSpec.capacity > 0)
             {
-                this.indexBuffer = new GlVertexBufferObject<uint>(BufferTarget.ElementArrayBuffer, BufferUsageHint.DynamicDraw, typeof(uint), indexSpec.capacity, indexSpec.data);
+                this.indexBuffer = new GlVertexBufferObject<uint>(BufferTarget.ElementArrayBuffer, BufferUsageHint.DynamicDraw, indexSpec.capacity, indexSpec.data);
             }
         }
 

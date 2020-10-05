@@ -8,29 +8,27 @@ namespace MyOTKE.Core
     /// <summary>
     /// A OpenGL vertex buffer object.
     /// </summary>
-    /// <typeparam name="T">The .NET type of data to be stored in the buffer.</typeparam>
+    /// <typeparam name="T">The .NET type of the data to be stored in the buffer. The type must be a blittable value type (or an exception will be thrown on type initialization).</typeparam>
     internal sealed class GlVertexBufferObject<T> : IVertexBufferObject<T>, IDisposable
         where T : struct
     {
-        private readonly int elementSize;
+        private static readonly int ElementSize = Marshal.SizeOf(typeof(T));
+        private static readonly GlVertexAttributeInfo[] AttributessStatic = GlVertexAttributeInfo.ForType(typeof(T));
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GlVertexBufferObject{T}"/> class. SIDE EFFECT: New buffer will be bound to the given target.
         /// </summary>
         /// <param name="target">OpenGL buffer target specification.</param>
         /// <param name="usage">OpenGL buffer usage specification.</param>
-        /// <param name="elementType">The type of elements to be stored in the buffer. The data type must be a blittable value type (or an exception will be thrown).</param>
         /// <param name="elementCapacity">The maximum number of elements to be stored in the buffer.</param>
         /// <param name="elementData">The data to populate the buffer with.</param>
-        public GlVertexBufferObject(BufferTarget target, BufferUsageHint usage, Type elementType, int elementCapacity, T[] elementData)
+        public GlVertexBufferObject(BufferTarget target, BufferUsageHint usage, int elementCapacity, T[] elementData)
         {
-            this.Attributes = GlVertexAttributeInfo.ForType(elementType);
             this.Capacity = elementCapacity;
-            elementSize = Marshal.SizeOf(typeof(T));
 
             this.Id = GL.GenBuffer();
             GL.BindBuffer(target, this.Id); // NB: Side effect - leaves this buffer bound.
-            GL.BufferData(target, Marshal.SizeOf(elementType) * elementCapacity, elementData, usage);
+            GL.BufferData(target, ElementSize * elementCapacity, elementData, usage);
         }
 
         /// <summary>
@@ -42,7 +40,7 @@ namespace MyOTKE.Core
         public int Id { get; }
 
         /// <inheritdoc />
-        public GlVertexAttributeInfo[] Attributes { get; }
+        public GlVertexAttributeInfo[] Attributes => AttributessStatic;
 
         /// <inheritdoc />
         public int Capacity { get; }
@@ -55,8 +53,8 @@ namespace MyOTKE.Core
                 T data = default;
                 GL.GetNamedBufferSubData(
                     buffer: Id,
-                    offset: new IntPtr(index * elementSize),
-                    size: elementSize,
+                    offset: new IntPtr(index * ElementSize),
+                    size: ElementSize,
                     data: ref data);
                 return data;
             }
@@ -65,8 +63,8 @@ namespace MyOTKE.Core
             {
                 GL.NamedBufferSubData(
                     buffer: Id,
-                    offset: new IntPtr(index * elementSize),
-                    size: elementSize,
+                    offset: new IntPtr(index * ElementSize),
+                    size: ElementSize,
                     data: ref value);
             }
         }
@@ -77,9 +75,9 @@ namespace MyOTKE.Core
             GL.CopyNamedBufferSubData(
                 readBuffer: Id,
                 writeBuffer: Id,
-                readOffset: new IntPtr(readIndex * elementSize),
-                writeOffset: new IntPtr(writeIndex * elementSize),
-                size: count * elementSize);
+                readOffset: new IntPtr(readIndex * ElementSize),
+                writeOffset: new IntPtr(writeIndex * ElementSize),
+                size: count * ElementSize);
         }
 
         /// <inheritdoc />
