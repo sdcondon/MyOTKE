@@ -1,6 +1,8 @@
 ﻿using MyOTKE.Core;
 using MyOTKE.ReactiveBuffers;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 using System.ComponentModel;
 using System.Numerics;
@@ -32,7 +34,7 @@ namespace MyOTKE.Views.Renderables.Gui
         public Gui(View view, int initialCapacity)
         {
             this.view = view;
-            this.view.Resized += View_Resized;
+            this.view.Resize += View_Resized;
 
             this.SubElements = new ElementCollection(this);
 
@@ -70,7 +72,7 @@ namespace MyOTKE.Views.Renderables.Gui
         public Vector2 Center => Vector2.Zero;
 
         /// <inheritdoc /> from IElementParent
-        public Vector2 Size => new Vector2(view.Width, view.Height);
+        public Vector2 Size => new Vector2(view.ClientSize.X, view.ClientSize.Y);
 
         /// <inheritdoc /> from IRenderable
         public void Load()
@@ -98,9 +100,9 @@ namespace MyOTKE.Views.Renderables.Gui
         {
             ThrowIfDisposed();
 
-            if (view.WasLeftMouseButtonReleased)
+            if (view.IsMouseButtonReleased(MouseButton.Left))
             {
-                Clicked?.Invoke(this, new Vector2(view.CursorPosition.X, -view.CursorPosition.Y));
+                Clicked?.Invoke(this, new Vector2(view.CenterOffset.X, -view.CenterOffset.Y));
             }
         }
 
@@ -125,7 +127,7 @@ namespace MyOTKE.Views.Renderables.Gui
         /// <inheritdoc />
         public void Dispose()
         {
-            this.view.Resized -= View_Resized;
+            this.view.Resize -= View_Resized;
             this.vertexBuffer?.Dispose();
             this.isDisposed = true;
         }
@@ -138,7 +140,7 @@ namespace MyOTKE.Views.Renderables.Gui
             }
         }
 
-        private void View_Resized(object sender, Vector2 e)
+        private void View_Resized(ResizeEventArgs e)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Size)));
         }

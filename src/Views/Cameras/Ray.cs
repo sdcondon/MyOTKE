@@ -17,8 +17,8 @@ namespace MyOTKE.Views
         public Ray(ICamera camera, View view)
         {
             // http://antongerdelan.net/opengl/raycasting.html
-            float x = (2.0f * view.CursorPosition.X) / view.Width;
-            float y = -(2.0f * view.CursorPosition.Y) / view.Height;
+            float x = (2.0f * view.CenterOffset.X) / view.ClientSize.X;
+            float y = -(2.0f * view.CenterOffset.Y) / view.ClientSize.Y;
             var ray_clip = new Vector3(x, y, -1.0f);
 
             Matrix4x4.Invert(camera.Projection, out var projInverse);

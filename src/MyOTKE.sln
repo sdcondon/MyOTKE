@@ -15,8 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveBuffers.Tests", "Re
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Views", "Views\Views.csproj", "{A2286415-CD5D-4DE1-8B2E-73B94434F1CD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Views.Contexts.GameWindow", "Views.Contexts.GameWindow\Views.Contexts.GameWindow.csproj", "{609E6CBF-2D9C-4B2B-9532-2B94F1A51F90}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Views.Renderables.BasicExamples", "Views.Renderables.BasicExamples\Views.Renderables.BasicExamples.csproj", "{C1710E1D-65AC-48E4-A6C9-40832721C736}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Views.Renderables.Gui", "Views.Renderables.Gui\Views.Renderables.Gui.csproj", "{A58A14DB-0A5E-459A-8970-F89D212DA025}"
@@ -53,10 +51,6 @@ Global
 		{A2286415-CD5D-4DE1-8B2E-73B94434F1CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2286415-CD5D-4DE1-8B2E-73B94434F1CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2286415-CD5D-4DE1-8B2E-73B94434F1CD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{609E6CBF-2D9C-4B2B-9532-2B94F1A51F90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{609E6CBF-2D9C-4B2B-9532-2B94F1A51F90}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{609E6CBF-2D9C-4B2B-9532-2B94F1A51F90}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{609E6CBF-2D9C-4B2B-9532-2B94F1A51F90}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C1710E1D-65AC-48E4-A6C9-40832721C736}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C1710E1D-65AC-48E4-A6C9-40832721C736}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1710E1D-65AC-48E4-A6C9-40832721C736}.Release|Any CPU.ActiveCfg = Release|Any CPU

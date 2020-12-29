@@ -1,9 +1,7 @@
 ﻿using MyOTKE.Views;
-using MyOTKE.Views.Contexts.GameWindow;
 using MyOTKE.Views.Renderables.BasicExamples;
 using MyOTKE.Views.Renderables.Gui;
 using MyOTKE.Views.Renderables.ReactivePrimitives;
-using OpenTK.Input;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 using System.Collections.Generic;
@@ -25,7 +23,7 @@ namespace MyOTKE.ExampleApps.GameWindow
         [STAThread]
         public static void Main()
         {
-            var form = new GameWindowViewHost()
+            var view = new View(false, Color.Black())
             {
                 Title = "MyOTKE Example",
                 ////WindowState = OpenTK.WindowState.Fullscreen
@@ -36,16 +34,13 @@ namespace MyOTKE.ExampleApps.GameWindow
             // texture management stuff in the core lib.
             Text.Font = new Font(@"Assets\Fonts\Inconsolata\Inconsolata-Regular.ttf");
 
-            // A View encapsulates an interactive OpenGl rendered viewport
-            var view = new View(form.ViewContext, false, Color.Black());
-
             // Views have a Renderable property. Renderables can be composed of other renderables -
             // there's even a handy CompositeRenderable base class to make this easy - see the two examples
             // below, and note that MenuRenderable (which consists of a single Gui renderable and has
             // no overrides) is only a class of its own to make disposal on button press easy.
             view.Renderable = new MenuRenderable(view);
 
-            form.Run();
+            view.Run();
         }
 
         private class MenuRenderable : CompositeRenderable
@@ -242,19 +237,19 @@ namespace MyOTKE.ExampleApps.GameWindow
                 cubePrimitives[0].SetCuboid(new Vector3(.5f, 1f, 0.75f), cubeWorldMatrix, Color.Red());
                 cubeSubject.OnNext(cubePrimitives);
 
-                if (view.WasLeftMouseButtonReleased)
+                if (view.IsMouseButtonReleased(MouseButton.Left))
                 {
                     var ray = new Ray(camera, view);
                     lines.AddLine(ray.Origin, ray.Origin + ray.Direction * 10);
                     logElement.PushMessage($"RAY FROM {ray.Origin:F2}");
                 }
 
-                if (view.KeysReleased.Contains(Keys.Space))
+                if (view.IsKeyReleased(Keys.Space))
                 {
                     view.LockCursor = !view.LockCursor;
                 }
 
-                if (view.KeysReleased.Contains(Keys.Q))
+                if (view.IsKeyReleased(Keys.Q))
                 {
                     view.Renderable = new MenuRenderable(view);
                     this.Dispose();
@@ -342,7 +337,7 @@ namespace MyOTKE.ExampleApps.GameWindow
                 cubePrimitives[0].SetCuboid(new Vector3(.5f, 1f, 0.75f), cubeWorldMatrix, Color.Red());
                 cubeSubject.OnNext(cubePrimitives);
 
-                if (view.KeysReleased.Contains(Keys.Q))
+                if (view.IsKeyReleased(Keys.Q))
                 {
                     view.Renderable = new MenuRenderable(view);
                     this.Dispose();

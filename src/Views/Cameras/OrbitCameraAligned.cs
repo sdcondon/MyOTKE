@@ -90,31 +90,31 @@ namespace MyOTKE.Views
         public void Update(TimeSpan elapsed)
         {
             //// Pan up - rotate forward and up around their cross product
-            if (view.KeysDown.Contains(Keys.W))
+            if (view.IsKeyDown(Keys.W))
             {
                 latitude += RotationSpeed * (float)elapsed.TotalSeconds;
                 latitude = (float)Math.Min(latitude, Math.PI / 2f);
             }
             //// Pan down - rotate forward and up around their cross product
-            if (view.KeysDown.Contains(Keys.S))
+            if (view.IsKeyDown(Keys.S))
             {
                 latitude -= RotationSpeed * (float)elapsed.TotalSeconds;
                 latitude = (float)Math.Max(latitude, -Math.PI / 2f);
             }
             //// Pan right - rotate forward around up
-            if (view.KeysDown.Contains(Keys.D))
+            if (view.IsKeyDown(Keys.D))
             {
                 longitude += RotationSpeed * (float)elapsed.TotalSeconds;
                 longitude = longitude % (float)(2f * Math.PI);
             }
             //// Pan left - rotate forward around up
-            if (view.KeysDown.Contains(Keys.A))
+            if (view.IsKeyDown(Keys.A))
             {
                 longitude -= RotationSpeed * (float)elapsed.TotalSeconds;
                 longitude = longitude % (float)(2f * Math.PI);
             }
             //// Zoom
-            zoomLevel += view.MouseWheelDelta;
+            zoomLevel += (int)view.MouseState.ScrollDelta.Y;
 
             // Projection matrix
             Projection = Matrix4x4.CreatePerspectiveFieldOfView(

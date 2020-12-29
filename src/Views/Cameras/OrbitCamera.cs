@@ -95,41 +95,41 @@ namespace MyOTKE.Views
         public void Update(TimeSpan elapsed)
         {
             //// Pan up - rotate forward and up around their cross product
-            if (view.KeysDown.Contains(Keys.W))
+            if (view.IsKeyDown(Keys.W))
             {
                 var t = Matrix4x4.CreateFromAxisAngle(Vector3.Cross(forward, up), -RotationSpeed);
                 forward = Vector3.Transform(forward, t);
                 up = Vector3.Transform(up, t);
             }
             //// Pan down - rotate forward and up around their cross product
-            if (view.KeysDown.Contains(Keys.S))
+            if (view.IsKeyDown(Keys.S))
             {
                 var t = Matrix4x4.CreateFromAxisAngle(Vector3.Cross(forward, up), RotationSpeed);
                 forward = Vector3.Normalize(Vector3.Transform(forward, t));
                 up = Vector3.Normalize(Vector3.Transform(up, t));
             }
             //// Pan right - rotate forward around up
-            if (view.KeysDown.Contains(Keys.D))
+            if (view.IsKeyDown(Keys.D))
             {
                 forward = Vector3.Normalize(Vector3.Transform(forward, Matrix4x4.CreateFromAxisAngle(up, RotationSpeed)));
             }
             //// Pan left - rotate forward around up
-            if (view.KeysDown.Contains(Keys.A))
+            if (view.IsKeyDown(Keys.A))
             {
                 forward = Vector3.Normalize(Vector3.Transform(forward, Matrix4x4.CreateFromAxisAngle(up, -RotationSpeed)));
             }
             //// Roll right - rotate up around forward
-            if (view.KeysDown.Contains(Keys.Q))
+            if (view.IsKeyDown(Keys.Q))
             {
                 up = Vector3.Normalize(Vector3.Transform(up, Matrix4x4.CreateFromAxisAngle(forward, -RollSpeed)));
             }
             //// Roll left - rotate up around forward
-            if (view.KeysDown.Contains(Keys.E))
+            if (view.IsKeyDown(Keys.E))
             {
                 up = Vector3.Normalize(Vector3.Transform(up, Matrix4x4.CreateFromAxisAngle(forward, RollSpeed)));
             }
             //// Zoom
-            zoomLevel += view.MouseWheelDelta;
+            zoomLevel += (int)view.MouseState.ScrollDelta.Y;
 
             // Projection matrix
             Projection = Matrix4x4.CreatePerspectiveFieldOfView(

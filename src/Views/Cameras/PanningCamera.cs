@@ -104,52 +104,52 @@ namespace MyOTKE.Views
         /// <inheritdoc />
         public void Update(TimeSpan elapsed)
         {
-            if (view.KeysDown.Contains(Keys.W))
+            if (view.IsKeyDown(Keys.W))
             {
                 target += movementSpeed * (float)elapsed.TotalSeconds * Distance * Vector3.UnitY;
             }
 
-            if (view.KeysDown.Contains(Keys.S))
+            if (view.IsKeyDown(Keys.S))
             {
                 target -= movementSpeed * (float)elapsed.TotalSeconds * Distance * Vector3.UnitY;
             }
 
-            if (view.KeysDown.Contains(Keys.D))
+            if (view.IsKeyDown(Keys.D))
             {
                 target += movementSpeed * (float)elapsed.TotalSeconds * Distance * Vector3.UnitX;
             }
 
-            if (view.KeysDown.Contains(Keys.A))
+            if (view.IsKeyDown(Keys.A))
             {
                 target -= movementSpeed * (float)elapsed.TotalSeconds * Distance * Vector3.UnitX;
             }
 
-            if (view.KeysDown.Contains(Keys.R))
+            if (view.IsKeyDown(Keys.R))
             {
                 VerticalAngle -= VerticalRotationSpeed * (float)elapsed.TotalSeconds;
                 VerticalAngle = Math.Max(VerticalAngle, 0);
             }
 
-            if (view.KeysDown.Contains(Keys.F))
+            if (view.IsKeyDown(Keys.F))
             {
                 VerticalAngle += VerticalRotationSpeed * (float)elapsed.TotalSeconds;
                 VerticalAngle = Math.Min(VerticalAngle, VerticalAngleMax);
             }
 
-            if (view.KeysDown.Contains(Keys.Q))
+            if (view.IsKeyDown(Keys.Q))
             {
                 HorizontalAngle -= HorizontalRotationSpeed * (float)elapsed.TotalSeconds;
                 HorizontalAngle = Math.Max(HorizontalAngle, 0);
             }
 
-            if (view.KeysDown.Contains(Keys.E))
+            if (view.IsKeyDown(Keys.E))
             {
                 HorizontalAngle += HorizontalRotationSpeed * (float)elapsed.TotalSeconds;
                 HorizontalAngle = Math.Min(HorizontalAngle, (float)Math.PI * 2);
             }
 
             // Zoom
-            zoomLevel += view.MouseWheelDelta;
+            zoomLevel += (int)view.MouseState.ScrollDelta.Y;
 
             // Projection matrix
             Projection = Matrix4x4.CreatePerspectiveFieldOfView(

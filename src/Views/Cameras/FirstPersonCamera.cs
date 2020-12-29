@@ -88,11 +88,11 @@ namespace MyOTKE.Views
             if (view.LockCursor)
             {
                 // Compute new orientation
-                var xDiff = view.CursorPosition.X;
+                var xDiff = view.CenterOffset.X;
                 xDiff = Math.Abs(xDiff) < 2 ? 0 : xDiff;
                 horizontalAngle -= RotationSpeed * xDiff;
 
-                var yDiff = view.CursorPosition.Y;
+                var yDiff = view.CenterOffset.Y;
                 yDiff = Math.Abs(yDiff) < 2 ? 0 : yDiff;
                 verticalAngle -= RotationSpeed * yDiff;
                 verticalAngle = Math.Max(-(float)Math.PI / 2, Math.Min(verticalAngle, (float)Math.PI / 2));
@@ -114,22 +114,22 @@ namespace MyOTKE.Views
             var up = Vector3.Cross(right, direction);
 
             //// Move forward
-            if (view.KeysDown.Contains(Keys.W))
+            if (view.IsKeyDown(Keys.W))
             {
                 Position += direction * (float)elapsed.TotalSeconds * MovementSpeed;
             }
             //// Move backward
-            if (view.KeysDown.Contains(Keys.S))
+            if (view.IsKeyDown(Keys.S))
             {
                 Position -= direction * (float)elapsed.TotalSeconds * MovementSpeed;
             }
             //// Strafe right
-            if (view.KeysDown.Contains(Keys.D))
+            if (view.IsKeyDown(Keys.D))
             {
                 Position += right * (float)elapsed.TotalSeconds * MovementSpeed;
             }
             //// Strafe left
-            if (view.KeysDown.Contains(Keys.A))
+            if (view.IsKeyDown(Keys.A))
             {
                 Position -= right * (float)elapsed.TotalSeconds * MovementSpeed;
             }
