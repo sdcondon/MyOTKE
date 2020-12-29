@@ -1,5 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,9 +17,9 @@ namespace MyOTKE.Views
         private readonly IViewContext context;
         private readonly Color clearColor;
         private readonly Stopwatch modelUpdateIntervalStopwatch = new Stopwatch();
-        private readonly HashSet<Key> keysPressed = new HashSet<Key>();
-        private readonly HashSet<Key> keysDown = new HashSet<Key>();
-        private readonly HashSet<Key> keysReleased = new HashSet<Key>();
+        private readonly HashSet<Keys> keysPressed = new HashSet<Keys>();
+        private readonly HashSet<Keys> keysDown = new HashSet<Keys>();
+        private readonly HashSet<Keys> keysReleased = new HashSet<Keys>();
 
         private IRenderable renderable;
         private bool lockCursor;
@@ -66,17 +68,17 @@ namespace MyOTKE.Views
         /// <summary>
         /// Gets the set of keys pressed since the last update. TODO: should be readonly.
         /// </summary>
-        public HashSet<Key> KeysPressed => keysPressed;
+        public HashSet<Keys> KeysPressed => keysPressed;
 
         /// <summary>
         /// Gets the set of currently pressed keys. TODO: should be readonly.
         /// </summary>
-        public HashSet<Key> KeysDown => keysDown;
+        public HashSet<Keys> KeysDown => keysDown;
 
         /// <summary>
         /// Gets the set of keys released since the last update.
         /// </summary>
-        public HashSet<Key> KeysReleased => keysReleased;
+        public HashSet<Keys> KeysReleased => keysReleased;
 
         /// <summary>
         /// Gets the cursor position, with the origin being at the centre of the view, X increasing from left to right and Y increasing from top to bottom.
@@ -181,9 +183,9 @@ namespace MyOTKE.Views
         /// <summary>
         /// Closes the view.
         /// </summary>
-        public void Exit()
+        public void Close()
         {
-            context.Exit();
+            context.Close();
         }
 
         /// <inheritdoc />
@@ -227,13 +229,13 @@ namespace MyOTKE.Views
             isContextCreated = true;
         }
 
-        private void OnGlRender(object sender, EventArgs eventArgs)
+        private void OnGlRender(object sender, FrameEventArgs eventArgs)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             renderable.Render();
         }
 
-        private void OnGlContextUpdate(object sender, EventArgs eventArgs)
+        private void OnGlContextUpdate(object sender, FrameEventArgs eventArgs)
         {
             if (context.IsFocused)
             {
@@ -276,13 +278,13 @@ namespace MyOTKE.Views
             Dispose();
         }
 
-        private void OnKeyDown(object sender, Key a)
+        private void OnKeyDown(object sender, Keys a)
         {
             keysPressed.Add(a);
             keysDown.Add(a);
         }
 
-        private void OnKeyUp(object sender, Key a)
+        private void OnKeyUp(object sender, Keys a)
         {
             keysReleased.Add(a);
             keysDown.Remove(a);

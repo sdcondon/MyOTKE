@@ -103,7 +103,7 @@ namespace MyOTKE.Core
                 GC.SuppressFinalize(this);
             }
 
-            if (GraphicsContext.CurrentContext != null)
+            ////if (GraphicsContext.CurrentContext != null)
             {
                 GL.DeleteProgram(this.id);
             }
@@ -207,7 +207,7 @@ namespace MyOTKE.Core
                 GC.SuppressFinalize(this);
             }
 
-            if (GraphicsContext.CurrentContext != null)
+            ////if (GraphicsContext.CurrentContext != null)
             {
                 GL.DeleteProgram(this.id);
             }

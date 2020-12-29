@@ -1,4 +1,5 @@
 ﻿using OpenTK.Input;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 using System.Numerics;
 
@@ -89,25 +90,25 @@ namespace MyOTKE.Views
         public void Update(TimeSpan elapsed)
         {
             //// Pan up - rotate forward and up around their cross product
-            if (view.KeysDown.Contains(Key.W))
+            if (view.KeysDown.Contains(Keys.W))
             {
                 latitude += RotationSpeed * (float)elapsed.TotalSeconds;
                 latitude = (float)Math.Min(latitude, Math.PI / 2f);
             }
             //// Pan down - rotate forward and up around their cross product
-            if (view.KeysDown.Contains(Key.S))
+            if (view.KeysDown.Contains(Keys.S))
             {
                 latitude -= RotationSpeed * (float)elapsed.TotalSeconds;
                 latitude = (float)Math.Max(latitude, -Math.PI / 2f);
             }
             //// Pan right - rotate forward around up
-            if (view.KeysDown.Contains(Key.D))
+            if (view.KeysDown.Contains(Keys.D))
             {
                 longitude += RotationSpeed * (float)elapsed.TotalSeconds;
                 longitude = longitude % (float)(2f * Math.PI);
             }
             //// Pan left - rotate forward around up
-            if (view.KeysDown.Contains(Key.A))
+            if (view.KeysDown.Contains(Keys.A))
             {
                 longitude -= RotationSpeed * (float)elapsed.TotalSeconds;
                 longitude = longitude % (float)(2f * Math.PI);

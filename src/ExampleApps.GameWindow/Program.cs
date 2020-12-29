@@ -4,6 +4,7 @@ using MyOTKE.Views.Renderables.BasicExamples;
 using MyOTKE.Views.Renderables.Gui;
 using MyOTKE.Views.Renderables.ReactivePrimitives;
 using OpenTK.Input;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -93,7 +94,7 @@ namespace MyOTKE.ExampleApps.GameWindow
                             color: Color.Blue(.5f),
                             textColor: Color.White(),
                             text: "QUIT",
-                            v => view.Exit()),
+                            v => view.Close()),
                         new Text(
                             layout: new Layout((0f, -1f), (0f, -1f), (1f, 100)),
                             color: Color.Grey(0.7f),
@@ -248,12 +249,12 @@ namespace MyOTKE.ExampleApps.GameWindow
                     logElement.PushMessage($"RAY FROM {ray.Origin:F2}");
                 }
 
-                if (view.KeysReleased.Contains(Key.Space))
+                if (view.KeysReleased.Contains(Keys.Space))
                 {
                     view.LockCursor = !view.LockCursor;
                 }
 
-                if (view.KeysReleased.Contains(Key.Q))
+                if (view.KeysReleased.Contains(Keys.Q))
                 {
                     view.Renderable = new MenuRenderable(view);
                     this.Dispose();
@@ -341,7 +342,7 @@ namespace MyOTKE.ExampleApps.GameWindow
                 cubePrimitives[0].SetCuboid(new Vector3(.5f, 1f, 0.75f), cubeWorldMatrix, Color.Red());
                 cubeSubject.OnNext(cubePrimitives);
 
-                if (view.KeysReleased.Contains(Key.Q))
+                if (view.KeysReleased.Contains(Keys.Q))
                 {
                     view.Renderable = new MenuRenderable(view);
                     this.Dispose();

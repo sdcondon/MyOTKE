@@ -90,7 +90,7 @@ namespace MyOTKE.Core
                 GC.SuppressFinalize(this);
             }
 
-            if (GraphicsContext.CurrentContext != null)
+            ////if (GraphicsContext.CurrentContext != null)
             {
                 GL.DeleteBuffers(1, new[] { this.Id });
             }

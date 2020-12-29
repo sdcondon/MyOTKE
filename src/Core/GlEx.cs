@@ -13,10 +13,10 @@ namespace MyOTKE.Core
         /// </summary>
         public static void ThrowIfNoCurrentContext()
         {
-            if (GraphicsContext.CurrentContext == null)
-            {
-                throw new InvalidOperationException("Cannot do OpenGL operations because the calling thread has no current OpenGL context");
-            }
+            ////if (GraphicsContext.CurrentContext == null)
+            ////{
+            ////throw new InvalidOperationException("Cannot do OpenGL operations because the calling thread has no current OpenGL context");
+            ////}
         }
     }
 }

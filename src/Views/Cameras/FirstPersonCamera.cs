@@ -1,4 +1,4 @@
-﻿using OpenTK.Input;
+﻿using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 using System.Numerics;
 
@@ -114,22 +114,22 @@ namespace MyOTKE.Views
             var up = Vector3.Cross(right, direction);
 
             //// Move forward
-            if (view.KeysDown.Contains(Key.W))
+            if (view.KeysDown.Contains(Keys.W))
             {
                 Position += direction * (float)elapsed.TotalSeconds * MovementSpeed;
             }
             //// Move backward
-            if (view.KeysDown.Contains(Key.S))
+            if (view.KeysDown.Contains(Keys.S))
             {
                 Position -= direction * (float)elapsed.TotalSeconds * MovementSpeed;
             }
             //// Strafe right
-            if (view.KeysDown.Contains(Key.D))
+            if (view.KeysDown.Contains(Keys.D))
             {
                 Position += right * (float)elapsed.TotalSeconds * MovementSpeed;
             }
             //// Strafe left
-            if (view.KeysDown.Contains(Key.A))
+            if (view.KeysDown.Contains(Keys.A))
             {
                 Position -= right * (float)elapsed.TotalSeconds * MovementSpeed;
             }

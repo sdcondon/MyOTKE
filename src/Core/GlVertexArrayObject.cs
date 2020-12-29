@@ -135,7 +135,7 @@ namespace MyOTKE.Core
                 GC.SuppressFinalize(this);
             }
 
-            if (GraphicsContext.CurrentContext != null)
+            ////if (GraphicsContext.CurrentContext != null)
             {
                 GL.DeleteVertexArrays(1, new[] { this.id });
             }
@@ -282,7 +282,7 @@ namespace MyOTKE.Core
                 GC.SuppressFinalize(this);
             }
 
-            if (GraphicsContext.CurrentContext != null)
+            ////if (GraphicsContext.CurrentContext != null)
             {
                 GL.DeleteVertexArrays(1, new[] { this.id });
             }
@@ -439,7 +439,7 @@ namespace MyOTKE.Core
                 GC.SuppressFinalize(this);
             }
 
-            if (GraphicsContext.CurrentContext != null)
+            ////if (GraphicsContext.CurrentContext != null)
             {
                 GL.DeleteVertexArrays(1, new[] { this.id });
             }

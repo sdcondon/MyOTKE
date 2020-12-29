@@ -1,8 +1,8 @@
-﻿using OpenTK;
-using OpenTK.Graphics;
-using OpenTK.Input;
+﻿using OpenTK.Mathematics;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
-using System.Drawing;
 
 namespace MyOTKE.Views.Contexts.GameWindow
 {
@@ -12,12 +12,13 @@ namespace MyOTKE.Views.Contexts.GameWindow
     /// <remarks>
     /// See https://opentk.net/learn/chapter1/1-creating-a-window.html for tutorial.
     /// </remarks>
-    public sealed class GameWindowViewHost : OpenTK.GameWindow
+    public sealed class GameWindowViewHost : OpenTK.Windowing.Desktop.GameWindow
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="GameWindowViewHost"/> class.
         /// </summary>
         public GameWindowViewHost()
+            : base(GameWindowSettings.Default, NativeWindowSettings.Default)
         {
             ViewContext = new GameWindowViewContext(this);
         }
@@ -29,7 +30,7 @@ namespace MyOTKE.Views.Contexts.GameWindow
         /// <param name="height">The height of the window in pixels.</param>
         /// <param name="title">The title of the window.</param>
         public GameWindowViewHost(int width, int height, string title)
-            : base(width, height, GraphicsMode.Default, title)
+            : base(GameWindowSettings.Default, new NativeWindowSettings { Size = new Vector2i(width, height), Title = title })
         {
             ViewContext = new GameWindowViewContext(this);
         }
@@ -53,14 +54,15 @@ namespace MyOTKE.Views.Contexts.GameWindow
             public GameWindowViewContext(GameWindowViewHost parent)
             {
                 this.parent = parent;
-                parent.Load += (s, a) => Loading?.Invoke(this, a);
-                parent.RenderFrame += (s, a) => RenderingFrame?.Invoke(this, a);
-                parent.UpdateFrame += (s, a) => Updating?.Invoke(this, a);
-                parent.Unload += (s, a) => Unloading?.Invoke(this, a);
-                parent.KeyDown += (s, a) => KeyDown?.Invoke(this, a.Key);
-                parent.KeyUp += (s, a) => KeyUp?.Invoke(this, a.Key);
-                parent.MouseWheel += (s, a) => MouseWheel?.Invoke(this, a.Delta);
-                parent.MouseDown += (s, a) =>
+                parent.Load += () => Loading?.Invoke(this, EventArgs.Empty);
+                parent.RenderFrame += a => RenderingFrame?.Invoke(this, a);
+                parent.UpdateFrame += a => Updating?.Invoke(this, a);
+                parent.Unload += () => Unloading?.Invoke(this, EventArgs.Empty);
+                parent.KeyDown += a => KeyDown?.Invoke(this, a.Key);
+                parent.KeyUp += a => KeyUp?.Invoke(this, a.Key);
+                parent.MouseWheel += a => MouseWheel?.Invoke(this, (int)a.OffsetX);
+
+                parent.MouseDown += a =>
                 {
                     switch (a.Button)
                     {
@@ -75,7 +77,8 @@ namespace MyOTKE.Views.Contexts.GameWindow
                             break;
                     }
                 };
-                parent.MouseUp += (s, a) =>
+
+                parent.MouseUp += a =>
                 {
                     switch (a.Button)
                     {
@@ -90,10 +93,12 @@ namespace MyOTKE.Views.Contexts.GameWindow
                             break;
                     }
                 };
-                parent.Resize += (s, a) => Resize?.Invoke(
+
+                parent.Resize += a => Resize?.Invoke(
                     this,
-                    new System.Numerics.Vector2(parent.ClientSize.Width, parent.ClientSize.Height));
-                parent.FocusedChanged += (s, a) => GotFocus?.Invoke(this, EventArgs.Empty);
+                    new System.Numerics.Vector2(parent.ClientSize.X, parent.ClientSize.Y));
+
+                parent.FocusedChanged += a => GotFocus?.Invoke(this, EventArgs.Empty);
             }
 
             /// <inheritdoc />
@@ -103,16 +108,16 @@ namespace MyOTKE.Views.Contexts.GameWindow
             public event EventHandler<FrameEventArgs> RenderingFrame;
 
             /// <inheritdoc />
-            public event EventHandler Updating;
+            public event EventHandler<FrameEventArgs> Updating;
 
             /// <inheritdoc />
             public event EventHandler Unloading;
 
             /// <inheritdoc />
-            public event EventHandler<Key> KeyDown;
+            public event EventHandler<Keys> KeyDown;
 
             /// <inheritdoc />
-            public event EventHandler<Key> KeyUp;
+            public event EventHandler<Keys> KeyUp;
 
             /// <inheritdoc />
             public event EventHandler<int> MouseWheel;
@@ -142,28 +147,25 @@ namespace MyOTKE.Views.Contexts.GameWindow
             public event EventHandler GotFocus;
 
             /// <inheritdoc />
-            int IViewContext.Width => parent.ClientSize.Width;
+            int IViewContext.Width => parent.ClientSize.X;
 
             /// <inheritdoc />
-            int IViewContext.Height => parent.ClientSize.Height;
+            int IViewContext.Height => parent.ClientSize.Y;
 
             /// <inheritdoc />
-            public bool IsFocused => parent.Focused;
+            public bool IsFocused => parent.IsFocused;
 
             /// <inheritdoc />
-            System.Numerics.Vector2 IViewContext.CursorPosition
+            public System.Numerics.Vector2 CursorPosition
             {
                 get
                 {
-                    var state = Mouse.GetCursorState();
-                    var point = parent.PointToClient(new Point(state.X, state.Y));
-                    return new System.Numerics.Vector2(point.X, point.Y);
+                    return new System.Numerics.Vector2(parent.MousePosition.X, parent.MousePosition.Y);
                 }
 
                 set
                 {
-                    var point = parent.PointToScreen(new Point((int)value.X, (int)value.Y));
-                    Mouse.SetPosition(point.X, point.Y);
+                    parent.MousePosition = new Vector2(value.X, value.Y);
                 }
             }
 
@@ -172,21 +174,14 @@ namespace MyOTKE.Views.Contexts.GameWindow
             {
                 set
                 {
-                    if (value)
-                    {
-                        parent.CursorVisible = value;
-                    }
-                    else
-                    {
-                        parent.CursorVisible = value;
-                    }
+                    parent.CursorVisible = value;
                 }
             }
 
             /// <inheritdoc />
-            public void Exit()
+            public void Close()
             {
-                parent.Exit();
+                parent.Close();
             }
         }
     }

@@ -1,5 +1,7 @@
 ﻿using OpenTK;
 using OpenTK.Input;
+using OpenTK.Windowing.Common; // BAD- why bother with the abstraction..
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 
 namespace MyOTKE.Views
@@ -16,16 +18,16 @@ namespace MyOTKE.Views
         event EventHandler<FrameEventArgs> RenderingFrame;
 
         /// <summary>Occurs when the context is updating.</summary>
-        event EventHandler Updating;
+        event EventHandler<FrameEventArgs> Updating;
 
         /// <summary>Occurs when the OpenGL is being destroyed.</summary>
         event EventHandler Unloading;
 
         /// <summary>Occurs when a key is pressed.</summary>
-        event EventHandler<Key> KeyDown;
+        event EventHandler<Keys> KeyDown;
 
         /// <summary>Occurs when a key is released.</summary>
-        event EventHandler<Key> KeyUp;
+        event EventHandler<Keys> KeyUp;
 
         /// <summary>Occurs when the left mouse button is pressed.</summary>
         event EventHandler LeftMouseDown;
@@ -70,6 +72,6 @@ namespace MyOTKE.Views
         bool ShowCursor { set; }
 
         /// <summary>Closes the app.</summary>
-        void Exit();
+        void Close();
     }
 }
