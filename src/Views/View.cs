@@ -78,12 +78,12 @@ namespace MyOTKE.Views
         public float AspectRatio => (float)ClientSize.X / ClientSize.Y;
 
         /// <summary>
-        /// Gets the position of the center of a context, given its size.
+        /// Gets the position of the center of a view, given its size.
         /// </summary>
         public System.Numerics.Vector2 Center => new System.Numerics.Vector2(ClientSize.X / 2, ClientSize.Y / 2);
 
         /// <summary>
-        /// 
+        /// Gets the offset to the current mouse position from the center of the view.
         /// </summary>
         public System.Numerics.Vector2 CenterOffset => new System.Numerics.Vector2(MousePosition.X, MousePosition.Y) - Center;
 
@@ -115,6 +115,7 @@ namespace MyOTKE.Views
             base.Dispose(disposing);
         }
 
+        /// <inheritdoc />
         protected override void OnLoad()
         {
             GL.ClearColor(clearColor.R, clearColor.G, clearColor.B, clearColor.A);
@@ -130,6 +131,7 @@ namespace MyOTKE.Views
             isContextCreated = true;
         }
 
+        /// <inheritdoc />
         protected override void OnRenderFrame(FrameEventArgs eventArgs)
         {
             base.OnRenderFrame(eventArgs);
@@ -140,6 +142,7 @@ namespace MyOTKE.Views
             Context.SwapBuffers();
         }
 
+        /// <inheritdoc />
         protected override void OnUpdateFrame(FrameEventArgs eventArgs)
         {
             if (IsFocused)
@@ -166,17 +169,20 @@ namespace MyOTKE.Views
             }
         }
 
+        /// <inheritdoc />
         protected override void OnUnload()
         {
             Dispose();
         }
 
+        /// <inheritdoc />
         protected override void OnResize(ResizeEventArgs e)
         {
             base.OnResize(e);
             GL.Viewport(0, 0, (int)e.Size.X, (int)e.Size.Y);
         }
 
+        /// <inheritdoc />
         protected override void OnFocusedChanged(FocusedChangedEventArgs e)
         {
             base.OnFocusedChanged(e);
@@ -203,6 +209,5 @@ namespace MyOTKE.Views
         ////{
         ////    Debug.WriteLine($"{e.Name}({string.Join(',', e.Args)}) {e.ReturnValue}", "KHRONOS API");
         ////}
-        ///
     }
 }
