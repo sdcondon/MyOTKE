@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace MyOTKE.Views
+namespace MyOTKE.Renderables
 {
     /// <summary>
     /// Structure that represents a color. Can be implicitly converted to a RGB <see cref="Vector3"/> or RGBA <see cref="Vector4"/>.

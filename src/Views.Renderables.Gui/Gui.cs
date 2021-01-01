@@ -7,7 +7,7 @@ using System;
 using System.ComponentModel;
 using System.Numerics;
 
-namespace MyOTKE.Views.Renderables.Gui
+namespace MyOTKE.Renderables.Gui
 {
     /// <summary>
     /// Renderable container for a set of graphical user interface elements.
@@ -20,7 +20,7 @@ namespace MyOTKE.Views.Renderables.Gui
         private static GlProgramWithDUBBuilder<Uniforms> programBuilder;
         private static GlProgramWithDUB<Uniforms> program;
 
-        private readonly View view;
+        private readonly MyOTKEWindow view;
 
         private ReactiveBufferBuilder<Vertex> vertexBufferBuilder;
         private ReactiveBuffer<Vertex> vertexBuffer;
@@ -31,7 +31,7 @@ namespace MyOTKE.Views.Renderables.Gui
         /// </summary>
         /// <param name="view">The view from which to derive size and input.</param>
         /// <param name="initialCapacity">Initial capacity of the GUI, in vertices.</param>
-        public Gui(View view, int initialCapacity)
+        public Gui(MyOTKEWindow view, int initialCapacity)
         {
             this.view = view;
             this.view.Resize += View_Resized;

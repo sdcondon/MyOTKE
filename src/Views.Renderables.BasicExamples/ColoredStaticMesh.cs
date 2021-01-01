@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
-namespace MyOTKE.Views.Renderables.BasicExamples
+namespace MyOTKE.Renderables.BasicExamples
 {
     /// <summary>
     /// Simple renderable class for static 3D geometry.

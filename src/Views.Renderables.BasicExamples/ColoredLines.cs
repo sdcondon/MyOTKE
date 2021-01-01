@@ -8,7 +8,7 @@ using System.ComponentModel;
 using System.Numerics;
 using System.Reactive.Linq;
 
-namespace MyOTKE.Views.Renderables.BasicExamples
+namespace MyOTKE.Renderables.BasicExamples
 {
     /// <summary>
     /// Renderable class for 3D lines. For debug utilities.

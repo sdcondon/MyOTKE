@@ -2,14 +2,14 @@
 using System;
 using System.Numerics;
 
-namespace MyOTKE.Views
+namespace MyOTKE.Renderables
 {
     /// <summary>
     /// An <see cref="ICamera"/> implementation that uses an "FPS"-style control scheme.
     /// </summary>
     public class FirstPersonCamera : ICamera
     {
-        private readonly View view;
+        private readonly MyOTKEWindow view;
         private float horizontalAngle;
         private float verticalAngle;
 
@@ -26,7 +26,7 @@ namespace MyOTKE.Views
         /// <param name="initialHorizontalAngleRadians">The initial angle between the camera direction and the Y axis, in radians.</param>
         /// <param name="initialVerticalAngleRadians">The initial angle between between the camera direction and the X axis, in radians.</param>
         public FirstPersonCamera(
-            View view,
+            MyOTKEWindow view,
             float movementSpeed,
             float rotationSpeed,
             float fieldOfViewRadians,

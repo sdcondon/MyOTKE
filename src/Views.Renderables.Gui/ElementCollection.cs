@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Linq;
 
-namespace MyOTKE.Views.Renderables.Gui
+namespace MyOTKE.Renderables.Gui
 {
     public class ElementCollection : ICollection<ElementBase>
     {
@@ -14,6 +14,10 @@ namespace MyOTKE.Views.Renderables.Gui
         private readonly ObservableComposite<IList<Vertex>> composite;
         private readonly Dictionary<ElementBase, Action> removalCallbacks = new Dictionary<ElementBase, Action>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ElementCollection"/> class.
+        /// </summary>
+        /// <param name="owner">The parent of this collection.</param>
         public ElementCollection(IElementParent owner)
         {
             this.owner = owner;

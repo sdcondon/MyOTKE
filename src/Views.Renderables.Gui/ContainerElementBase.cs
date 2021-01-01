@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace MyOTKE.Views.Renderables.Gui
+namespace MyOTKE.Renderables.Gui
 {
     /// <summary>
     /// Base class for GUI elements that can contain other elements.

@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace MyOTKE.Views.Renderables.ReactivePrimitives
+namespace MyOTKE.Renderables.ReactivePrimitives
 {
     /// <summary>
     /// Container struct for the attributes of a vertex of a primitive.

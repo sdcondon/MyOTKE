@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace MyOTKE.Views
+namespace MyOTKE.Renderables
 {
     /// <summary>
     /// Interface for types that provide view and projection matrices, and can change over time (e.g. in reponse to user input).

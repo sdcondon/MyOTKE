@@ -1,7 +1,7 @@
-﻿using MyOTKE.Views;
-using MyOTKE.Views.Renderables.BasicExamples;
-using MyOTKE.Views.Renderables.Gui;
-using MyOTKE.Views.Renderables.ReactivePrimitives;
+﻿using MyOTKE.Renderables;
+using MyOTKE.Renderables.BasicExamples;
+using MyOTKE.Renderables.Gui;
+using MyOTKE.Renderables.ReactivePrimitives;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 using System.Collections.Generic;
@@ -23,7 +23,7 @@ namespace MyOTKE.ExampleApps.GameWindow
         [STAThread]
         public static void Main()
         {
-            var view = new View(false, Color.Black())
+            var view = new MyOTKEWindow(false, Color.Black())
             {
                 Title = "MyOTKE Example",
                 ////WindowState = OpenTK.WindowState.Fullscreen
@@ -45,7 +45,7 @@ namespace MyOTKE.ExampleApps.GameWindow
 
         private class MenuRenderable : CompositeRenderable
         {
-            public MenuRenderable(View view)
+            public MenuRenderable(MyOTKEWindow view)
             {
                 view.LockCursor = false;
 
@@ -104,7 +104,7 @@ namespace MyOTKE.ExampleApps.GameWindow
 
         private class FirstPersonRenderable : CompositeRenderable
         {
-            private readonly View view;
+            private readonly MyOTKEWindow view;
             private readonly ICamera camera;
 
             private readonly ColoredLines lines;
@@ -116,7 +116,7 @@ namespace MyOTKE.ExampleApps.GameWindow
             private Matrix4x4 cubeWorldMatrix = Matrix4x4.Identity;
             private Vector3 lastCamPosition = Vector3.Zero;
 
-            public FirstPersonRenderable(View view)
+            public FirstPersonRenderable(MyOTKEWindow view)
             {
                 this.view = view;
                 camera = new FirstPersonCamera(
@@ -259,7 +259,7 @@ namespace MyOTKE.ExampleApps.GameWindow
 
         private class OrbitRenderable : CompositeRenderable
         {
-            private readonly View view;
+            private readonly MyOTKEWindow view;
             private readonly ICamera camera;
 
             private readonly Text camTextElement;
@@ -270,7 +270,7 @@ namespace MyOTKE.ExampleApps.GameWindow
             private Matrix4x4 cubeWorldMatrix = Matrix4x4.Identity;
             private Vector3 lastCamPosition = Vector3.Zero;
 
-            public OrbitRenderable(View view)
+            public OrbitRenderable(MyOTKEWindow view)
             {
                 this.view = view;
                 camera = new OrbitCameraAligned(

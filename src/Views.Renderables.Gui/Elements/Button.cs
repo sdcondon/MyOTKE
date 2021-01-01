@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace MyOTKE.Views.Renderables.Gui
+namespace MyOTKE.Renderables.Gui
 {
     /// <summary>
     /// A clickable GUI button consisting of some text on a colored panel.

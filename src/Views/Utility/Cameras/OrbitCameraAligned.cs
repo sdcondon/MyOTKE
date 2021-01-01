@@ -3,14 +3,14 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 using System.Numerics;
 
-namespace MyOTKE.Views
+namespace MyOTKE.Renderables
 {
     /// <summary>
     /// Implementation of <see cref="ICamera"/> that rotates around the origin.
     /// </summary>
     public class OrbitCameraAligned : ICamera
     {
-        private readonly View view;
+        private readonly MyOTKEWindow view;
 
         private float longitude = 0f;
         private float latitude = 0f;
@@ -28,7 +28,7 @@ namespace MyOTKE.Views
         /// <param name="nearPlaneDistance">The distance of the near plane from the camera.</param>
         /// <param name="farPlaneDistance">The ditance of the far plane from the camera.</param>
         public OrbitCameraAligned(
-            View view,
+            MyOTKEWindow view,
             float rotationSpeedBase,
             float fieldOfViewRadians,
             float nearPlaneDistance,
@@ -42,7 +42,7 @@ namespace MyOTKE.Views
         }
 
         /// <summary>
-        /// Gets or sets the base (i.e. at default zoom distance) rotation speed of the camera in radians per update.
+        /// Gets or sets the base (i.e. at default zoom distance) rotation speed of the camera in radians per second.
         /// </summary>
         public float RotationSpeedBase { get; set; } // = 0.01f;
 
@@ -67,7 +67,7 @@ namespace MyOTKE.Views
         public float Distance => (float)(ZoomMinDistance + ZoomDefaultDistance * Math.Pow(ZoomBase, zoomLevel));
 
         /// <summary>
-        /// Gets the current rotation speed of the camera, in radians per update.
+        /// Gets the current rotation speed of the camera, in radians per second.
         /// </summary>
         public float RotationSpeed => RotationSpeedBase * (Distance - ZoomMinDistance) / ZoomDefaultDistance;
 

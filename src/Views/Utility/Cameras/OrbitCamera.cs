@@ -3,14 +3,14 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 using System.Numerics;
 
-namespace MyOTKE.Views
+namespace MyOTKE.Renderables
 {
     /// <summary>
     /// Implementation of <see cref="ICamera"/> that rotates around the origin.
     /// </summary>
     public class OrbitCamera : ICamera
     {
-        private readonly View view;
+        private readonly MyOTKEWindow view;
 
         private Vector3 forward = new Vector3(0f, 0f, 1f);
         private Vector3 up = new Vector3(0f, 1f, 0f);
@@ -26,7 +26,7 @@ namespace MyOTKE.Views
         /// <param name="nearPlaneDistance">The distance of the near plane from the camera.</param>
         /// <param name="farPlaneDistance">The ditance of the far plane from the camera.</param>
         public OrbitCamera(
-            View view,
+            MyOTKEWindow view,
             float rotationSpeedBase,
             float rollSpeed,
             float fieldOfViewRadians,

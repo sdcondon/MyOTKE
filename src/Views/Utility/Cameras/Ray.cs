@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace MyOTKE.Views
+namespace MyOTKE.Renderables
 {
     /// <summary>
     /// Represents a semi-infinite 3D ray, that has a start point and a direction.
@@ -14,7 +14,7 @@ namespace MyOTKE.Views
         /// </summary>
         /// <param name="camera">The camera to project the ray from.</param>
         /// <param name="view">The view from which to retrieve the mouse position to determine the ray's direction.</param>
-        public Ray(ICamera camera, View view)
+        public Ray(ICamera camera, MyOTKEWindow view)
         {
             // http://antongerdelan.net/opengl/raycasting.html
             float x = (2.0f * view.CenterOffset.X) / view.ClientSize.X;

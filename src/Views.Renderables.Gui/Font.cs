@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace MyOTKE.Views.Renderables.Gui
+namespace MyOTKE.Renderables.Gui
 {
     /// <summary>
     /// See https://www.freetype.org/freetype2/docs/tutorial/step1.html and

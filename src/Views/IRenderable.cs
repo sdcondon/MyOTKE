@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace MyOTKE.Views
+namespace MyOTKE.Renderables
 {
     /// <summary>
-    /// A discrete renderable part of a <see cref="View"/>. Typically will encapsulate everything
+    /// A discrete renderable part of a <see cref="MyOTKEWindow"/>. Typically will encapsulate everything
     /// that results in one or more OpenGl draw calls: the program(s), the relevant buffers, etc.
     /// </summary>
     public interface IRenderable : IDisposable

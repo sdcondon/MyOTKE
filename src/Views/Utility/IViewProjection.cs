@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace MyOTKE.Views
+namespace MyOTKE.Renderables
 {
     /// <summary>
     /// A source of view and projection matrices. Used by some <see cref="IRenderable"/> implementations.

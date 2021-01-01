@@ -3,7 +3,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 using System.Numerics;
 
-namespace MyOTKE.Views
+namespace MyOTKE.Renderables
 {
     /// <summary>
     /// Implementation of <see cref="ICamera"/> that moves in the XY plane.
@@ -13,7 +13,7 @@ namespace MyOTKE.Views
         private const float ZoomDefaultDistance = 600f;
         private const float ZoomBase = 0.999f;
 
-        private readonly View view;
+        private readonly MyOTKEWindow view;
         private readonly float movementSpeed;
 
         private Vector3 target;
@@ -30,7 +30,7 @@ namespace MyOTKE.Views
         /// <param name="movementSpeed">The movement speed of the camera, in units per second per unit distance from target.</param>
         /// <param name="verticalAngle">The initial angle, in radians, between the camera's view direction and the Z-axis.</param>
         public PanningCamera(
-            View view,
+            MyOTKEWindow view,
             float fieldOfViewRadians, // = (float)Math.PI / 4.0f;
             float nearPlaneDistance, // = 0.01f;
             float farPlaneDistance, // = 100f;

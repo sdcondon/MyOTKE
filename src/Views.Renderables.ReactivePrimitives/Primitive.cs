@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace MyOTKE.Views.Renderables.ReactivePrimitives
+namespace MyOTKE.Renderables.ReactivePrimitives
 {
     /// <summary>
     /// Container for primitive vertex data.

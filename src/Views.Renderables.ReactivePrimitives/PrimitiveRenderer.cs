@@ -7,7 +7,7 @@ using System.Linq;
 using System.Numerics;
 using System.Reactive.Linq;
 
-namespace MyOTKE.Views.Renderables.ReactivePrimitives
+namespace MyOTKE.Renderables.ReactivePrimitives
 {
     /// <summary>
     /// Implementation of <see cref="IRenderable" /> that renders a set of primitive shapes from an observable sequence of source data.

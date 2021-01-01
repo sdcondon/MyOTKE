@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>MyOTKE.Views</AssemblyName>
-    <RootNamespace>MyOTKE.Views</RootNamespace>
+    <AssemblyName>MyOTKE.Renderables</AssemblyName>
+    <RootNamespace>MyOTKE.Renderables</RootNamespace>
 	<DocumentationFile>MyOTKE.Views.xml</DocumentationFile>
   </PropertyGroup>
 

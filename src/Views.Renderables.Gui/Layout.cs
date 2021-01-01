@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace MyOTKE.Views.Renderables.Gui
+namespace MyOTKE.Renderables.Gui
 {
     /// <summary>
     /// Container for positioning data for an element (relative to its parent).

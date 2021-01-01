@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace MyOTKE.Views.Renderables.Gui
+namespace MyOTKE.Renderables.Gui
 {
     /// <summary>
     /// Container for information about a GUI element vertex.

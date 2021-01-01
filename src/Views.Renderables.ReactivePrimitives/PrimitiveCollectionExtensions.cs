@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
 
-namespace MyOTKE.Views.Renderables.ReactivePrimitives
+namespace MyOTKE.Renderables.ReactivePrimitives
 {
     /// <summary>
     /// Extension methods for the <see cref="Primitive"/> class.

@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>MyOTKE.Views.Renderables.BasicExamples</AssemblyName>
+    <RootNamespace>MyOTKE.Views.Renderables.BasicExamples</RootNamespace>
+	<DocumentationFile>MyOTKE.Views.Renderables.BasicExamples.xml</DocumentationFile>
+    
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>My Open Toolkit Engine, view engine: Test renderable implementations.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<None Remove="$(DocumentationFile)" />
+    <None Remove="Colored.Fragment.glsl" />
+    <None Remove="Colored.Vertex.glsl" />
+    <None Remove="Textured.Fragment.glsl" />
+    <None Remove="Textured.Vertex.glsl" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<EmbeddedResource Include="Colored.Fragment.glsl">
+	  <LogicalName>Colored.Fragment.glsl</LogicalName>
+	</EmbeddedResource>
+	<EmbeddedResource Include="Colored.Vertex.glsl">
+	  <LogicalName>Colored.Vertex.glsl</LogicalName>
+	</EmbeddedResource>
+	<EmbeddedResource Include="Textured.Fragment.glsl">
+	  <LogicalName>Textured.Fragment.glsl</LogicalName>
+	</EmbeddedResource>
+	<EmbeddedResource Include="Textured.Vertex.glsl">
+	  <LogicalName>Textured.Vertex.glsl</LogicalName>
+	</EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\ReactiveBuffers\ReactiveBuffers.csproj" />
+    <ProjectReference Include="..\Views\Renderables.csproj" />
+  </ItemGroup>
+
+</Project>
