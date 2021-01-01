@@ -36,7 +36,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\ReactiveBuffers\ReactiveBuffers.csproj" />
-    <ProjectReference Include="..\Views\Renderables.csproj" />
+    <ProjectReference Include="..\Renderables\Renderables.csproj" />
   </ItemGroup>
 
 </Project>

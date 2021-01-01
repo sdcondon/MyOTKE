@@ -10,7 +10,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
 
-namespace MyOTKE.ExampleApps.GameWindow
+namespace MyOTKE.ExampleApp
 {
     /// <summary>
     /// The main entry point for the application.

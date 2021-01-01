@@ -7,7 +7,7 @@
     <RepositoryUrl>https://github.com/sdcondon/MyOTKE.git</RepositoryUrl>
     <PackageProjectUrl>https://github.com/sdcondon/MyOTKE</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-	<PackageTags>opengl opentk</PackageTags>
+	<PackageTags>opengl opentk engine</PackageTags>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>

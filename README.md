@@ -20,4 +20,4 @@ Hobbyist mucking about with [the Open Toolkit](https://opentk.net/).
 
 ## Usage
 
-See the [example app code](./src/ExampleApps.GameWindow).
+See the [example app code](./src/ExampleApps.GameWindow) (for top-level stuff), and the various Renderables implementation projects (for usage of the classes in the Core library).

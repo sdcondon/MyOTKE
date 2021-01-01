@@ -3,8 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>MyOTKE.ExampleApps.GameWindow</AssemblyName>
-    <RootNamespace>MyOTKE.ExampleApps.GameWindow</RootNamespace>
+    <AssemblyName>MyOTKE.ExampleApp</AssemblyName>
+    <RootNamespace>MyOTKE.ExampleApp</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,10 +30,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Views.Renderables.BasicExamples\Renderables.BasicExamples.csproj" />
-    <ProjectReference Include="..\Views.Renderables.Gui\Renderables.Gui.csproj" />
-    <ProjectReference Include="..\Views.Renderables.ReactivePrimitives\Renderables.ReactivePrimitives.csproj" />
-    <ProjectReference Include="..\Views\Renderables.csproj" />
+    <ProjectReference Include="..\Renderables.BasicExamples\Renderables.BasicExamples.csproj" />
+    <ProjectReference Include="..\Renderables.Gui\Renderables.Gui.csproj" />
+    <ProjectReference Include="..\Renderables.ReactivePrimitives\Renderables.ReactivePrimitives.csproj" />
+    <ProjectReference Include="..\Renderables\Renderables.csproj" />
   </ItemGroup>
   
 </Project>
