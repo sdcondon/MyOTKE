@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>MyOTKE.Views.Renderables.ReactivePrimitives</AssemblyName>
-    <RootNamespace>MyOTKE.Views.Renderables.ReactivePrimitives</RootNamespace>
-	<DocumentationFile>MyOTKE.Views.Renderables.ReactivePrimitives.xml</DocumentationFile>
+    <AssemblyName>MyOTKE.Renderables.ReactivePrimitives</AssemblyName>
+    <RootNamespace>MyOTKE.Renderables.ReactivePrimitives</RootNamespace>
+	<DocumentationFile>MyOTKE.Renderables.ReactivePrimitives.xml</DocumentationFile>
     
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>My Open Toolkit Engine, view engine: Renderable for ReactiveX-managed primitives</Description>

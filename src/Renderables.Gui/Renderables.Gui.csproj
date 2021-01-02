@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>MyOTKE.Views.Renderables.Gui</AssemblyName>
-    <RootNamespace>MyOTKE.Views.Renderables.Gui</RootNamespace>
-	<DocumentationFile>MyOTKE.Views.Renderables.Gui.xml</DocumentationFile>
+    <AssemblyName>MyOTKE.Renderables.Gui</AssemblyName>
+    <RootNamespace>MyOTKE.Renderables.Gui</RootNamespace>
+	<DocumentationFile>MyOTKE.Renderables.Gui.xml</DocumentationFile>
     
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>My Open Toolkit Engine, view engine: GUI renderable implementation.</Description>
