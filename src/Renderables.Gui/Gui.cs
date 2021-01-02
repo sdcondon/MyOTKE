@@ -14,8 +14,6 @@ namespace MyOTKE.Renderables.Gui
     /// </summary>
     public class Gui : IRenderable, IElementParent
     {
-        private const string ShaderResourceNamePrefix = "MyOTKE.Views.Renderables.Gui.Shaders";
-
         private static readonly object ProgramStateLock = new object();
         private static GlProgramWithDUBBuilder<Uniforms> programBuilder;
         private static GlProgramWithDUB<Uniforms> program;
@@ -45,8 +43,8 @@ namespace MyOTKE.Renderables.Gui
                     if (program == null && programBuilder == null)
                     {
                         programBuilder = new GlProgramBuilder()
-                            .WithShaderFromEmbeddedResource(ShaderType.VertexShader, $"{ShaderResourceNamePrefix}.Gui.Vertex.glsl")
-                            .WithShaderFromEmbeddedResource(ShaderType.FragmentShader, $"{ShaderResourceNamePrefix}.Gui.Fragment.glsl")
+                            .WithShaderFromEmbeddedResource(ShaderType.VertexShader, $"Gui.Vertex.glsl")
+                            .WithShaderFromEmbeddedResource(ShaderType.FragmentShader, $"Gui.Fragment.glsl")
                             .WithDefaultUniformBlock<Uniforms>();
                     }
                 }
