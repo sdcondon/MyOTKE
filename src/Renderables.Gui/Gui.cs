@@ -43,8 +43,8 @@ namespace MyOTKE.Renderables.Gui
                     if (program == null && programBuilder == null)
                     {
                         programBuilder = new GlProgramBuilder()
-                            .WithShaderFromEmbeddedResource(ShaderType.VertexShader, $"Gui.Vertex.glsl")
-                            .WithShaderFromEmbeddedResource(ShaderType.FragmentShader, $"Gui.Fragment.glsl")
+                            .WithVertexShaderFromEmbeddedResource("Gui.Vertex.glsl")
+                            .WithFragmentShaderFromEmbeddedResource("Gui.Fragment.glsl")
                             .WithDefaultUniformBlock<Uniforms>();
                     }
                 }

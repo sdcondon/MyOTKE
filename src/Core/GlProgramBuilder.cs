@@ -15,22 +15,6 @@ namespace MyOTKE.Core
         private readonly List<(ShaderType Type, string Source)> shaderSpecs = new List<(ShaderType, string)>();
 
         /// <summary>
-        /// Adds a shader to be included in the built program, reading the source from a <see cref="Stream"/> object.
-        /// </summary>
-        /// <param name="shaderType">The type of shader to be added.</param>
-        /// <param name="sourceStream">The stream containing the source of the shader (in UTF-8).</param>
-        /// <returns>The updated builder.</returns>
-        public GlProgramBuilder WithShaderFromStream(ShaderType shaderType, Stream sourceStream)
-        {
-            using (var reader = new StreamReader(sourceStream))
-            {
-                shaderSpecs.Add((shaderType, reader.ReadToEnd()));
-            }
-
-            return this;
-        }
-
-        /// <summary>
         /// Adds a vertex shader to be included in the built program, reading the source from a <see cref="Stream"/> object.
         /// </summary>
         /// <param name="sourceStream">The stream containing the source of the shader (in UTF-8).</param>
@@ -51,30 +35,39 @@ namespace MyOTKE.Core
         }
 
         /// <summary>
-        /// Adds a shader to be included in the built program, reading the source from a file.
+        /// Adds a vertex shader to be included in the built program, reading the source from a file.
         /// </summary>
-        /// <param name="shaderType">The type of shader to be added.</param>
         /// <param name="filePath">The path of the file containing the source of the shader (in UTF-8).</param>
         /// <returns>The updated builder.</returns>
-        public GlProgramBuilder WithShaderFromFile(ShaderType shaderType, string filePath)
+        public GlProgramBuilder WithVertexShaderFromFile(string filePath)
         {
-            DebugEx.WriteLine($"Loading {shaderType} shader from file path '{filePath}'");
             using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
-                return WithShaderFromStream(shaderType, stream);
+                return WithShaderFromStream(ShaderType.VertexShader, stream);
             }
         }
 
         /// <summary>
-        /// Adds a shader to be included in the built program, reading the source from a resource embedded in the calling assembly.
+        /// Adds a fragment shader to be included in the built program, reading the source from a file.
         /// </summary>
-        /// <param name="shaderType">The type of shader to be added.</param>
+        /// <param name="filePath">The path of the file containing the source of the shader (in UTF-8).</param>
+        /// <returns>The updated builder.</returns>
+        public GlProgramBuilder WithFragmentShaderFromFile(string filePath)
+        {
+            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                return WithShaderFromStream(ShaderType.FragmentShader, stream);
+            }
+        }
+
+        /// <summary>
+        /// Adds a vertex shader to be included in the built program, reading the source from a resource embedded in the calling assembly.
+        /// </summary>
         /// <param name="resourceName">The name of the resource containing the source of the shader (in UTF-8).</param>
         /// <returns>The updated builder.</returns>
-        public GlProgramBuilder WithShaderFromEmbeddedResource(ShaderType shaderType, string resourceName)
+        public GlProgramBuilder WithVertexShaderFromEmbeddedResource(string resourceName)
         {
             var assembly = Assembly.GetCallingAssembly();
-            DebugEx.WriteLine($"Loading {shaderType} shader from resource '{resourceName}' embedded in assembly '{assembly.GetName().Name}'");
             using (var stream = assembly.GetManifestResourceStream(resourceName))
             {
                 if (stream == null)
@@ -82,7 +75,26 @@ namespace MyOTKE.Core
                     throw new ArgumentException($"Resource '{resourceName}' not found");
                 }
 
-                return WithShaderFromStream(shaderType, stream);
+                return WithShaderFromStream(ShaderType.VertexShader, stream);
+            }
+        }
+
+        /// <summary>
+        /// Adds a fragment shader to be included in the built program, reading the source from a resource embedded in the calling assembly.
+        /// </summary>
+        /// <param name="resourceName">The name of the resource containing the source of the shader (in UTF-8).</param>
+        /// <returns>The updated builder.</returns>
+        public GlProgramBuilder WithFragmentShaderFromEmbeddedResource(string resourceName)
+        {
+            var assembly = Assembly.GetCallingAssembly();
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (stream == null)
+                {
+                    throw new ArgumentException($"Resource '{resourceName}' not found");
+                }
+
+                return WithShaderFromStream(ShaderType.FragmentShader, stream);
             }
         }
 
@@ -105,6 +117,16 @@ namespace MyOTKE.Core
         {
             return new GlProgram(shaderSpecs);
         }
+
+        private GlProgramBuilder WithShaderFromStream(ShaderType shaderType, Stream sourceStream)
+        {
+            using (var reader = new StreamReader(sourceStream))
+            {
+                shaderSpecs.Add((shaderType, reader.ReadToEnd()));
+            }
+
+            return this;
+        }
     }
 
     /// <summary>
@@ -126,46 +148,39 @@ namespace MyOTKE.Core
         }
 
         /// <summary>
-        /// Adds a shader to be included in the built program, reading the source from a <see cref="Stream"/> object.
+        /// Adds a vertex shader to be included in the built program, reading the source from a file.
         /// </summary>
-        /// <param name="shaderType">The type of shader to be added.</param>
-        /// <param name="sourceStream">The stream containing the source of the shader (in UTF-8).</param>
-        /// <returns>The updated builder.</returns>
-        public GlProgramWithDUBBuilder<TDefaultUniformBlock> WithShaderFromStream(ShaderType shaderType, Stream sourceStream)
-        {
-            using (var reader = new StreamReader(sourceStream))
-            {
-                shaderSpecs.Add((shaderType, reader.ReadToEnd()));
-            }
-
-            return this;
-        }
-
-        /// <summary>
-        /// Adds a shader to be included in the built program, reading the source from a file.
-        /// </summary>
-        /// <param name="shaderType">The type of shader to be added.</param>
         /// <param name="filePath">The path of the file containing the source of the shader (in UTF-8).</param>
         /// <returns>The updated builder.</returns>
-        public GlProgramWithDUBBuilder<TDefaultUniformBlock> WithShaderFromFile(ShaderType shaderType, string filePath)
+        public GlProgramWithDUBBuilder<TDefaultUniformBlock> WithVertexShaderFromFile(string filePath)
         {
-            DebugEx.WriteLine($"Loading {shaderType} shader from file path '{filePath}'");
             using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
-                return WithShaderFromStream(shaderType, stream);
+                return WithShaderFromStream(ShaderType.VertexShader, stream);
             }
         }
 
         /// <summary>
-        /// Adds a shader to be included in the built program, reading the source from a resource embedded in the calling assembly.
+        /// Adds a fragment shader to be included in the built program, reading the source from a file.
         /// </summary>
-        /// <param name="shaderType">The type of shader to be added.</param>
+        /// <param name="filePath">The path of the file containing the source of the shader (in UTF-8).</param>
+        /// <returns>The updated builder.</returns>
+        public GlProgramWithDUBBuilder<TDefaultUniformBlock> WithFragmentShaderFromFile(string filePath)
+        {
+            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                return WithShaderFromStream(ShaderType.FragmentShader, stream);
+            }
+        }
+
+        /// <summary>
+        /// Adds a vertex shader to be included in the built program, reading the source from a resource embedded in the calling assembly.
+        /// </summary>
         /// <param name="resourceName">The name of the resource containing the source of the shader (in UTF-8).</param>
         /// <returns>The updated builder.</returns>
-        public GlProgramWithDUBBuilder<TDefaultUniformBlock> WithShaderFromEmbeddedResource(ShaderType shaderType, string resourceName)
+        public GlProgramWithDUBBuilder<TDefaultUniformBlock> WithVertexShaderFromEmbeddedResource(string resourceName)
         {
             var assembly = Assembly.GetCallingAssembly();
-            DebugEx.WriteLine($"Loading {shaderType} shader from resource '{resourceName}' embedded in assembly '{assembly.GetName().Name}'");
             using (var stream = assembly.GetManifestResourceStream(resourceName))
             {
                 if (stream == null)
@@ -173,7 +188,26 @@ namespace MyOTKE.Core
                     throw new ArgumentException($"Resource '{resourceName}' not found");
                 }
 
-                return WithShaderFromStream(shaderType, stream);
+                return WithShaderFromStream(ShaderType.VertexShader, stream);
+            }
+        }
+
+        /// <summary>
+        /// Adds a fragment shader to be included in the built program, reading the source from a resource embedded in the calling assembly.
+        /// </summary>
+        /// <param name="resourceName">The name of the resource containing the source of the shader (in UTF-8).</param>
+        /// <returns>The updated builder.</returns>
+        public GlProgramWithDUBBuilder<TDefaultUniformBlock> WithFragmentShaderFromEmbeddedResource(string resourceName)
+        {
+            var assembly = Assembly.GetCallingAssembly();
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (stream == null)
+                {
+                    throw new ArgumentException($"Resource '{resourceName}' not found");
+                }
+
+                return WithShaderFromStream(ShaderType.FragmentShader, stream);
             }
         }
 
@@ -184,6 +218,16 @@ namespace MyOTKE.Core
         public GlProgramWithDUB<TDefaultUniformBlock> Build()
         {
             return new GlProgramWithDUB<TDefaultUniformBlock>(shaderSpecs);
+        }
+
+        private GlProgramWithDUBBuilder<TDefaultUniformBlock> WithShaderFromStream(ShaderType shaderType, Stream sourceStream)
+        {
+            using (var reader = new StreamReader(sourceStream))
+            {
+                shaderSpecs.Add((shaderType, reader.ReadToEnd()));
+            }
+
+            return this;
         }
     }
 }

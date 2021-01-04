@@ -47,8 +47,8 @@ namespace MyOTKE.Renderables.BasicExamples
                     if (program == null && programBuilder == null)
                     {
                         programBuilder = new GlProgramBuilder()
-                            .WithShaderFromEmbeddedResource(ShaderType.VertexShader, "Textured.Vertex.glsl")
-                            .WithShaderFromEmbeddedResource(ShaderType.FragmentShader, "Textured.Fragment.glsl")
+                            .WithVertexShaderFromEmbeddedResource("Textured.Vertex.glsl")
+                            .WithFragmentShaderFromEmbeddedResource("Textured.Fragment.glsl")
                             .WithDefaultUniformBlock<Uniforms>();
                     }
                 }

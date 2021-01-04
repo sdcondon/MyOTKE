@@ -48,8 +48,8 @@ namespace MyOTKE.Renderables.ReactivePrimitives
                     if (program == null && programBuilder == null)
                     {
                         programBuilder = new GlProgramBuilder()
-                            .WithShaderFromEmbeddedResource(ShaderType.VertexShader, "Colored.Vertex.glsl")
-                            .WithShaderFromEmbeddedResource(ShaderType.FragmentShader, "Colored.Fragment.glsl")
+                            .WithVertexShaderFromEmbeddedResource("Colored.Vertex.glsl")
+                            .WithFragmentShaderFromEmbeddedResource("Colored.Fragment.glsl")
                             .WithDefaultUniformBlock<Uniforms>();
                     }
                 }
