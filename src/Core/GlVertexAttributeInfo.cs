@@ -62,6 +62,16 @@ namespace MyOTKE.Core
         /// <summary>
         /// Returns attribute info for a given (blittable) type.
         /// </summary>
+        /// <typeparam name="T">The type.</typeparam>
+        /// <returns>An array of attribute info.</returns>
+        internal static GlVertexAttributeInfo[] ForType<T>()
+        {
+            return ForType(typeof(T));
+        }
+
+        /// <summary>
+        /// Returns attribute info for a given (blittable) type.
+        /// </summary>
         /// <param name="t">The type.</param>
         /// <returns>An array of attribute info.</returns>
         internal static GlVertexAttributeInfo[] ForType(Type t)

@@ -35,9 +35,10 @@ namespace MyOTKE.Core
                 var shaderId = GL.CreateShader(shaderSpec.Type);
 
                 // Compile shader
-                DebugEx.WriteLine("Compiling shader");
                 GL.ShaderSource(shaderId, shaderSpec.Source);
+                DebugEx.ThrowIfGlError("setting shader source");
                 GL.CompileShader(shaderId);
+                DebugEx.ThrowIfGlError("compiling shader");
 
                 // Check shader
                 GL.GetShader(shaderId, ShaderParameter.CompileStatus, out var compileStatus);
@@ -47,6 +48,7 @@ namespace MyOTKE.Core
                 }
 
                 GL.AttachShader(this.id, shaderId);
+                DebugEx.ThrowIfGlError("attaching shader");
                 shaderIds.Add(shaderId);
 
                 ////TODO: for blockName/bindingPoint from uboSpecs
@@ -64,8 +66,8 @@ namespace MyOTKE.Core
             ////GL.BufferData(GL_UNIFORM_BUFFER, 152, NULL, GL_STATIC_DRAW); // allocate 152 bytes of memory
 
             // Link & check program
-            DebugEx.WriteLine("Linking program");
             GL.LinkProgram(this.id);
+            DebugEx.ThrowIfGlError("linking program");
             GL.GetProgram(this.id, GetProgramParameterName.LinkStatus, out var linkStatus);
             if (linkStatus != (int)OpenTK.Graphics.OpenGL.Boolean.True)
             {
@@ -76,7 +78,9 @@ namespace MyOTKE.Core
             foreach (var shaderId in shaderIds)
             {
                 GL.DetachShader(this.id, shaderId); // Line not in superbible?
+                DebugEx.ThrowIfGlError("detaching shader");
                 GL.DeleteShader(shaderId);
+                DebugEx.ThrowIfGlError("deleting shader");
             }
         }
 
@@ -91,6 +95,7 @@ namespace MyOTKE.Core
         public void Use()
         {
             GL.UseProgram(this.id);
+            DebugEx.ThrowIfGlError("using program");
         }
 
         /// <inheritdoc />
@@ -106,6 +111,7 @@ namespace MyOTKE.Core
             ////if (GraphicsContext.CurrentContext != null)
             {
                 GL.DeleteProgram(this.id);
+                DebugEx.ThrowIfGlError("deleting program");
             }
         }
     }
@@ -140,6 +146,7 @@ namespace MyOTKE.Core
 
             // Create program
             this.id = GL.CreateProgram();
+            DebugEx.ThrowIfGlError("creating program");
 
             // Compile shaders
             var shaderIds = new List<int>();
@@ -150,7 +157,9 @@ namespace MyOTKE.Core
 
                 // Compile shader
                 GL.ShaderSource(shaderId, shaderSpec.Source);
+                DebugEx.ThrowIfGlError("setting shader source");
                 GL.CompileShader(shaderId);
+                DebugEx.ThrowIfGlError("compiling shader");
 
                 // Check shader
                 GL.GetShader(shaderId, ShaderParameter.CompileStatus, out var compileStatus);
@@ -160,6 +169,7 @@ namespace MyOTKE.Core
                 }
 
                 GL.AttachShader(this.id, shaderId);
+                DebugEx.ThrowIfGlError("attaching shader");
                 shaderIds.Add(shaderId);
             }
 
@@ -175,7 +185,9 @@ namespace MyOTKE.Core
             foreach (var shaderId in shaderIds)
             {
                 GL.DetachShader(this.id, shaderId); // Line not in superbible?
+                DebugEx.ThrowIfGlError("detaching shader");
                 GL.DeleteShader(shaderId);
+                DebugEx.ThrowIfGlError("deleting shader");
             }
 
             // Get uniform IDs
@@ -194,6 +206,7 @@ namespace MyOTKE.Core
         public void UseWithUniformValues(TDefaultUniformBlock uniforms)
         {
             GL.UseProgram(this.id);
+            DebugEx.ThrowIfGlError("using program");
             setDefaultUniformBlock(uniforms);
         }
 
@@ -210,6 +223,7 @@ namespace MyOTKE.Core
             ////if (GraphicsContext.CurrentContext != null)
             {
                 GL.DeleteProgram(this.id);
+                DebugEx.ThrowIfGlError("deleting program");
             }
         }
 

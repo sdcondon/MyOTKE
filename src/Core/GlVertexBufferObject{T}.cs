@@ -1,5 +1,4 @@
-﻿using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL;
+﻿using OpenTK.Graphics.OpenGL;
 using System;
 using System.Runtime.InteropServices;
 
@@ -12,8 +11,8 @@ namespace MyOTKE.Core
     internal sealed class GlVertexBufferObject<T> : IVertexBufferObject<T>, IDisposable
         where T : struct
     {
-        private static readonly int ElementSize = Marshal.SizeOf(typeof(T));
-        private static readonly GlVertexAttributeInfo[] AttributessStatic = GlVertexAttributeInfo.ForType(typeof(T));
+        private static readonly int ElementSize = Marshal.SizeOf<T>();
+        private static readonly GlVertexAttributeInfo[] AttributesStatic = GlVertexAttributeInfo.ForType<T>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GlVertexBufferObject{T}"/> class. SIDE EFFECT: New buffer will be bound to the given target.
@@ -27,8 +26,11 @@ namespace MyOTKE.Core
             this.Capacity = elementCapacity;
 
             this.Id = GL.GenBuffer();
+            DebugEx.ThrowIfGlError("creating buffer");
             GL.BindBuffer(target, this.Id); // NB: Side effect - leaves this buffer bound.
+            DebugEx.ThrowIfGlError("binding buffer");
             GL.BufferData(target, ElementSize * elementCapacity, elementData, usage);
+            DebugEx.ThrowIfGlError("creating buffer data store");
         }
 
         /// <summary>
@@ -40,7 +42,7 @@ namespace MyOTKE.Core
         public int Id { get; }
 
         /// <inheritdoc />
-        public GlVertexAttributeInfo[] Attributes => AttributessStatic;
+        public GlVertexAttributeInfo[] Attributes => AttributesStatic;
 
         /// <inheritdoc />
         public int Capacity { get; }
@@ -56,6 +58,7 @@ namespace MyOTKE.Core
                     offset: new IntPtr(index * ElementSize),
                     size: ElementSize,
                     data: ref data);
+                DebugEx.ThrowIfGlError("getting buffer sub-data");
                 return data;
             }
 
@@ -66,6 +69,7 @@ namespace MyOTKE.Core
                     offset: new IntPtr(index * ElementSize),
                     size: ElementSize,
                     data: ref value);
+                DebugEx.ThrowIfGlError("setting buffer sub-data");
             }
         }
 
@@ -78,7 +82,20 @@ namespace MyOTKE.Core
                 readOffset: new IntPtr(readIndex * ElementSize),
                 writeOffset: new IntPtr(writeIndex * ElementSize),
                 size: count * ElementSize);
+            DebugEx.ThrowIfGlError("copying buffer sub-data");
         }
+
+        //// TODO?: The vast majority of time we'll probably want to interpret the buffer as storing a single type
+        //// of object, but sometimes e.g.
+        //// AsBufferOf<byte>()..
+        //// AsBufferOf<int>(t => t.MyIntProp) - mapping func - would need to calculate stride (and modify this class to account for it when getting and setting)
+        //// AsBufferOf<whatever>(attributeinfo) - not safe, but empowering..
+        ////public GlVertexBufferObject<TElement> AsBufferOf<TElement>()
+        ////{
+        ////    //// being able to use custom attributes would be cool? Would need to support creation thereof..
+        ////    var mappedCapacity = Capacity; //... scale me (what if not an integer? error or ...)
+        ////    return new GlVertexBufferObject<TElement>(Id, ...);
+        ////}
 
         /// <inheritdoc />
         public void Dispose() => Dispose(true);
@@ -92,7 +109,7 @@ namespace MyOTKE.Core
 
             ////if (GraphicsContext.CurrentContext != null)
             {
-                GL.DeleteBuffers(1, new[] { this.Id });
+                GL.DeleteBuffer(this.Id);
             }
         }
     }

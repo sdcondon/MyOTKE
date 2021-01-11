@@ -33,7 +33,9 @@ namespace MyOTKE.Core
             // Record primitive type for use in draw calls, create and bind the VAO
             this.primitiveType = primitiveType;
             this.id = GL.GenVertexArray(); // superbible uses CreateVertexArray?
+            DebugEx.ThrowIfGlError("creating vertex array");
             GL.BindVertexArray(id);
+            DebugEx.ThrowIfGlError("binding vertex array");
 
             // Set up the attribute buffers
             int k = 0;
@@ -99,6 +101,7 @@ namespace MyOTKE.Core
                     count: count == -1 ? this.VertexCount : count,
                     type: DrawElementsType.UnsignedInt,
                     indices: IntPtr.Zero);
+                DebugEx.ThrowIfGlError("drawing elements");
             }
             else
             {
@@ -107,19 +110,20 @@ namespace MyOTKE.Core
                     mode: this.primitiveType,
                     first: 0,
                     count: count == -1 ? this.VertexCount : count);
+                DebugEx.ThrowIfGlError("drawing arrays");
             }
         }
 
         /// <inheritdoc />
         public void Dispose() => Dispose(true);
 
-        /*public void ResizeAttributeBuffer(int bufferIndex, int newSize)
-        {
-            //var newId = Gl.GenBuffer();
-            //Gl.NamedBufferData(newId, (uint)(Marshal.SizeOf(elementType) * value), null, usage);
-            //Gl.CopyNamedBufferSubData(this.Id, newId, 0, 0, (uint)(Marshal.SizeOf(elementType) * count));
-            //count = value;
-        }*/
+        ////public void ResizeAttributeBuffer(int bufferIndex, int newSize)
+        ////{
+        ////    //var newId = Gl.GenBuffer();
+        ////    //Gl.NamedBufferData(newId, (uint)(Marshal.SizeOf(elementType) * value), null, usage);
+        ////    //Gl.CopyNamedBufferSubData(this.Id, newId, 0, 0, (uint)(Marshal.SizeOf(elementType) * count));
+        ////    //count = value;
+        ////}
 
         private void Dispose(bool disposing)
         {
@@ -138,6 +142,7 @@ namespace MyOTKE.Core
             ////if (GraphicsContext.CurrentContext != null)
             {
                 GL.DeleteVertexArrays(1, new[] { this.id });
+                DebugEx.ThrowIfGlError("deleting vertex array");
             }
         }
     }
@@ -175,7 +180,9 @@ namespace MyOTKE.Core
             // Record primitive type for use in draw calls, create and bind the VAO
             this.primitiveType = primitiveType;
             this.id = GL.GenVertexArray(); // superbible uses CreateVertexArray?
+            DebugEx.ThrowIfGlError("creating vertex array");
             GL.BindVertexArray(id);
+            DebugEx.ThrowIfGlError("binding vertex array");
 
             // Set up the attribute buffers
             int k = 0;
@@ -245,6 +252,7 @@ namespace MyOTKE.Core
                     count: count == -1 ? this.VertexCount : count,
                     type: DrawElementsType.UnsignedInt,
                     indices: IntPtr.Zero);
+                DebugEx.ThrowIfGlError("drawing elements");
             }
             else
             {
@@ -253,19 +261,20 @@ namespace MyOTKE.Core
                     mode: this.primitiveType,
                     first: 0,
                     count: count == -1 ? this.VertexCount : count);
+                DebugEx.ThrowIfGlError("drawing arrays");
             }
         }
 
         /// <inheritdoc />
         public void Dispose() => Dispose(true);
 
-        /*public void ResizeAttributeBuffer(int bufferIndex, int newSize)
-        {
-            //var newId = Gl.GenBuffer();
-            //Gl.NamedBufferData(newId, (uint)(Marshal.SizeOf(elementType) * value), null, usage);
-            //Gl.CopyNamedBufferSubData(this.Id, newId, 0, 0, (uint)(Marshal.SizeOf(elementType) * count));
-            //count = value;
-        }*/
+        ////public void ResizeAttributeBuffer(int bufferIndex, int newSize)
+        ////{
+        ////    //var newId = Gl.GenBuffer();
+        ////    //Gl.NamedBufferData(newId, (uint)(Marshal.SizeOf(elementType) * value), null, usage);
+        ////    //Gl.CopyNamedBufferSubData(this.Id, newId, 0, 0, (uint)(Marshal.SizeOf(elementType) * count));
+        ////    //count = value;
+        ////}
 
         private void Dispose(bool disposing)
         {
@@ -285,6 +294,7 @@ namespace MyOTKE.Core
             ////if (GraphicsContext.CurrentContext != null)
             {
                 GL.DeleteVertexArrays(1, new[] { this.id });
+                DebugEx.ThrowIfGlError("deleting vertex array");
             }
         }
     }
@@ -327,7 +337,9 @@ namespace MyOTKE.Core
             // Record primitive type for use in draw calls, create and bind the VAO
             this.primitiveType = primitiveType;
             this.id = GL.GenVertexArray(); // superbible uses CreateVertexArray?
+            DebugEx.ThrowIfGlError("creating vertex array");
             GL.BindVertexArray(id);
+            DebugEx.ThrowIfGlError("binding vertex array");
 
             // Set up the attribute buffers
             int k = 0;
@@ -401,6 +413,7 @@ namespace MyOTKE.Core
                     count: count == -1 ? this.VertexCount : count,
                     type: DrawElementsType.UnsignedInt,
                     indices: IntPtr.Zero);
+                DebugEx.ThrowIfGlError("drawing elements");
             }
             else
             {
@@ -409,19 +422,20 @@ namespace MyOTKE.Core
                     mode: this.primitiveType,
                     first: 0,
                     count: count == -1 ? this.VertexCount : count);
+                DebugEx.ThrowIfGlError("drawing arrays");
             }
         }
 
         /// <inheritdoc />
         public void Dispose() => Dispose(true);
 
-        /*public void ResizeAttributeBuffer(int bufferIndex, int newSize)
-        {
-            //var newId = Gl.GenBuffer();
-            //Gl.NamedBufferData(newId, (uint)(Marshal.SizeOf(elementType) * value), null, usage);
-            //Gl.CopyNamedBufferSubData(this.Id, newId, 0, 0, (uint)(Marshal.SizeOf(elementType) * count));
-            //count = value;
-        }*/
+        ////public void ResizeAttributeBuffer(int bufferIndex, int newSize)
+        ////{
+        ////    //var newId = Gl.GenBuffer();
+        ////    //Gl.NamedBufferData(newId, (uint)(Marshal.SizeOf(elementType) * value), null, usage);
+        ////    //Gl.CopyNamedBufferSubData(this.Id, newId, 0, 0, (uint)(Marshal.SizeOf(elementType) * count));
+        ////    //count = value;
+        ////}
 
         private void Dispose(bool disposing)
         {
@@ -442,6 +456,7 @@ namespace MyOTKE.Core
             ////if (GraphicsContext.CurrentContext != null)
             {
                 GL.DeleteVertexArrays(1, new[] { this.id });
+                DebugEx.ThrowIfGlError("deleting vertex array");
             }
         }
     }
