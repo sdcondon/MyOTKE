@@ -26,11 +26,11 @@ namespace MyOTKE.Core
             this.Capacity = elementCapacity;
 
             this.Id = GL.GenBuffer();
-            DebugEx.ThrowIfGlError("creating buffer");
+            GlDebug.ThrowIfGlError("creating buffer");
             GL.BindBuffer(target, this.Id); // NB: Side effect - leaves this buffer bound.
-            DebugEx.ThrowIfGlError("binding buffer");
+            GlDebug.ThrowIfGlError("binding buffer");
             GL.BufferData(target, ElementSize * elementCapacity, elementData, usage);
-            DebugEx.ThrowIfGlError("creating buffer data store");
+            GlDebug.ThrowIfGlError("creating buffer data store");
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace MyOTKE.Core
                     offset: new IntPtr(index * ElementSize),
                     size: ElementSize,
                     data: ref data);
-                DebugEx.ThrowIfGlError("getting buffer sub-data");
+                GlDebug.ThrowIfGlError("getting buffer sub-data");
                 return data;
             }
 
@@ -69,7 +69,7 @@ namespace MyOTKE.Core
                     offset: new IntPtr(index * ElementSize),
                     size: ElementSize,
                     data: ref value);
-                DebugEx.ThrowIfGlError("setting buffer sub-data");
+                GlDebug.ThrowIfGlError("setting buffer sub-data");
             }
         }
 
@@ -82,7 +82,7 @@ namespace MyOTKE.Core
                 readOffset: new IntPtr(readIndex * ElementSize),
                 writeOffset: new IntPtr(writeIndex * ElementSize),
                 size: count * ElementSize);
-            DebugEx.ThrowIfGlError("copying buffer sub-data");
+            GlDebug.ThrowIfGlError("copying buffer sub-data");
         }
 
         //// TODO?: The vast majority of time we'll probably want to interpret the buffer as storing a single type
@@ -107,10 +107,7 @@ namespace MyOTKE.Core
                 GC.SuppressFinalize(this);
             }
 
-            ////if (GraphicsContext.CurrentContext != null)
-            {
-                GL.DeleteBuffer(this.Id);
-            }
+            GL.DeleteBuffer(this.Id);
         }
     }
 }

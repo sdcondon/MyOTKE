@@ -4,12 +4,12 @@ using OpenTK.Graphics.OpenGL;
 namespace MyOTKE.Core
 {
     /// <summary>
-    /// Builder class for <see cref="GlVertexArrayObject"/> objects that presents a fluent-ish interface.
+    /// Builder class for vertex array objects that presents a fluent-ish interface.
     /// </summary>
     public sealed class VertexArrayObjectBuilder
     {
         private readonly PrimitiveType primitiveType;
-        private (int count, uint[] data) indexSpec;
+        private (BufferUsageHint usage, int count, uint[] data) indexSpec;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VertexArrayObjectBuilder"/> class.
@@ -56,22 +56,24 @@ namespace MyOTKE.Core
         /// <summary>
         /// Sets the index buffer to be included in the built VAO.
         /// </summary>
+        /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="data">The data with which to populate the buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder WithIndex(uint[] data)
+        public VertexArrayObjectBuilder WithIndexBuffer(BufferUsageHint bufferUsage, uint[] data)
         {
-            this.indexSpec = (data.Length, data);
+            this.indexSpec = (bufferUsage, data.Length, data);
             return this;
         }
 
         /// <summary>
         /// Sets the index buffer to be included in the built VAO.
         /// </summary>
+        /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="capacity">The size of the index buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder WithIndex(int capacity)
+        public VertexArrayObjectBuilder WithIndexBuffer(BufferUsageHint bufferUsage, int capacity)
         {
-            this.indexSpec = (capacity, null);
+            this.indexSpec = (bufferUsage, capacity, null);
             return this;
         }
     }
@@ -85,7 +87,7 @@ namespace MyOTKE.Core
     {
         private readonly PrimitiveType primitiveType;
         private readonly (BufferUsageHint usage, int elementCount, T1[] data) bufferSpec1;
-        private (int count, uint[] data) indexSpec;
+        private (BufferUsageHint usage, int count, uint[] data) indexSpec;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VertexArrayObjectBuilder{T1}"/> class.
@@ -95,7 +97,7 @@ namespace MyOTKE.Core
         /// <param name="bufferSpec1">Specification for the 1st buffer.</param>
         internal VertexArrayObjectBuilder(
             PrimitiveType primitiveType,
-            (int count, uint[] data) indexSpec,
+            (BufferUsageHint usage, int count, uint[] data) indexSpec,
             (BufferUsageHint usage, int elementCount, T1[] data) bufferSpec1)
         {
             this.primitiveType = primitiveType;
@@ -140,22 +142,24 @@ namespace MyOTKE.Core
         /// <summary>
         /// Sets the index buffer to be included in the built VAO.
         /// </summary>
+        /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="data">The data with which to populate the buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<T1> WithIndex(uint[] data)
+        public VertexArrayObjectBuilder<T1> WithIndexBuffer(BufferUsageHint bufferUsage, uint[] data)
         {
-            this.indexSpec = (data.Length, data);
+            this.indexSpec = (bufferUsage, data.Length, data);
             return this;
         }
 
         /// <summary>
         /// Sets the index buffer to be included in the built VAO.
         /// </summary>
+        /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="capacity">The size of the index buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<T1> WithIndex(int capacity)
+        public VertexArrayObjectBuilder<T1> WithIndexBuffer(BufferUsageHint bufferUsage, int capacity)
         {
-            this.indexSpec = (capacity, null);
+            this.indexSpec = (bufferUsage, capacity, null);
             return this;
         }
 
@@ -184,7 +188,7 @@ namespace MyOTKE.Core
         private readonly PrimitiveType primitiveType;
         private readonly (BufferUsageHint usage, int elementCount, T1[] data) bufferSpec1;
         private readonly (BufferUsageHint usage, int elementCount, T2[] data) bufferSpec2;
-        private (int count, uint[] data) indexSpec;
+        private (BufferUsageHint usage, int count, uint[] data) indexSpec;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VertexArrayObjectBuilder{T1, T2}"/> class.
@@ -195,7 +199,7 @@ namespace MyOTKE.Core
         /// <param name="bufferSpec2">Specification for the 2nd buffer.</param>
         internal VertexArrayObjectBuilder(
             PrimitiveType primitiveType,
-            (int count, uint[] data) indexSpec,
+            (BufferUsageHint usage, int count, uint[] data) indexSpec,
             (BufferUsageHint usage, int elementCount, T1[] data) bufferSpec1,
             (BufferUsageHint usage, int elementCount, T2[] data) bufferSpec2)
         {
@@ -244,22 +248,24 @@ namespace MyOTKE.Core
         /// <summary>
         /// Sets the index buffer to be included in the built VAO.
         /// </summary>
+        /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="data">The data with which to populate the buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<T1, T2> WithIndex(uint[] data)
+        public VertexArrayObjectBuilder<T1, T2> WithIndexBuffer(BufferUsageHint bufferUsage, uint[] data)
         {
-            this.indexSpec = (data.Length, data);
+            this.indexSpec = (bufferUsage, data.Length, data);
             return this;
         }
 
         /// <summary>
         /// Sets the index buffer to be included in the built VAO.
         /// </summary>
+        /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="capacity">The size of the index buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<T1, T2> WithIndex(int capacity)
+        public VertexArrayObjectBuilder<T1, T2> WithIndexBuffer(BufferUsageHint bufferUsage, int capacity)
         {
-            this.indexSpec = (capacity, null);
+            this.indexSpec = (bufferUsage, capacity, null);
             return this;
         }
 
@@ -292,7 +298,7 @@ namespace MyOTKE.Core
         private readonly (BufferUsageHint usage, int elementCount, T1[] data) bufferSpec1;
         private readonly (BufferUsageHint usage, int elementCount, T2[] data) bufferSpec2;
         private readonly (BufferUsageHint usage, int elementCount, T3[] data) bufferSpec3;
-        private (int count, uint[] data) indexSpec;
+        private (BufferUsageHint usage, int count, uint[] data) indexSpec;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VertexArrayObjectBuilder{T1, T2, T3}"/> class.
@@ -304,7 +310,7 @@ namespace MyOTKE.Core
         /// <param name="bufferSpec3">Specification for the 3rd buffer.</param>
         internal VertexArrayObjectBuilder(
             PrimitiveType primitiveType,
-            (int count, uint[] data) indexSpec,
+            (BufferUsageHint usage, int count, uint[] data) indexSpec,
             (BufferUsageHint usage, int elementCount, T1[] data) bufferSpec1,
             (BufferUsageHint usage, int elementCount, T2[] data) bufferSpec2,
             (BufferUsageHint usage, int elementCount, T3[] data) bufferSpec3)
@@ -319,22 +325,24 @@ namespace MyOTKE.Core
         /// <summary>
         /// Sets the index buffer to be included in the built VAO.
         /// </summary>
+        /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="data">The data with which to populate the buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<T1, T2, T3> WithIndex(uint[] data)
+        public VertexArrayObjectBuilder<T1, T2, T3> WithIndexBuffer(BufferUsageHint bufferUsage, uint[] data)
         {
-            this.indexSpec = (data.Length, data);
+            this.indexSpec = (bufferUsage, data.Length, data);
             return this;
         }
 
         /// <summary>
         /// Sets the index buffer to be included in the built VAO.
         /// </summary>
+        /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="capacity">The size of the index buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<T1, T2, T3> WithIndex(int capacity)
+        public VertexArrayObjectBuilder<T1, T2, T3> WithIndexBuffer(BufferUsageHint bufferUsage, int capacity)
         {
-            this.indexSpec = (capacity, null);
+            this.indexSpec = (bufferUsage, capacity, null);
             return this;
         }
 

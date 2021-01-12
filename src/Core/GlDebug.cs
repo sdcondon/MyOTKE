@@ -5,16 +5,24 @@ using System.Diagnostics;
 namespace MyOTKE.Core
 {
     /// <summary>
-    /// Debug utility methods.
+    /// Debug utility methods for Open GL.
     /// </summary>
-    internal static class DebugEx
+    public static class GlDebug
     {
+        /// <summary>
+        /// Registers Open GL debug callback that writes to debug trace listeners (i.e. calls <see cref="Debug.WriteLine(object, string)"/> with "OPENGL" as the category).
+        /// </summary>
+        [Conditional("DEBUG")]
+        public static void RegisterDebugCallback()
+        {
+        }
+
         /// <summary>
         /// Records a debug message, prefixed by the calling type and method.
         /// </summary>
         /// <param name="message">The message to be recorded.</param>
         [Conditional("DEBUG")]
-        public static void WriteLine(string message)
+        internal static void WriteLine(string message)
         {
             var method = new StackFrame(1).GetMethod();
             Debug.WriteLine(message, $"{method.DeclaringType.FullName}::{method.Name}");
@@ -25,7 +33,7 @@ namespace MyOTKE.Core
         /// </summary>
         /// <param name="action">The action that was just carried out (use the present participle to make the message read correctly - e.g. "doing the thing").</param>
         [Conditional("DEBUG")]
-        public static void ThrowIfGlError(string action)
+        internal static void ThrowIfGlError(string action)
         {
             var errorCode = GL.GetError();
             if (errorCode != ErrorCode.NoError)

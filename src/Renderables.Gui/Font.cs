@@ -84,11 +84,6 @@ namespace MyOTKE.Renderables.Gui
 
         private void LoadGlyphs()
         {
-            ////if (GraphicsContext.CurrentContext == null)
-            ////{
-            ////    throw new InvalidOperationException("No current OpenGL context!");
-            ////}
-
             this.glyphs = new GlyphInfo[face.GlyphCount];
 
             // Create texture array to store glyphs

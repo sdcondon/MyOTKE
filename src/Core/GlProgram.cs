@@ -22,8 +22,6 @@ namespace MyOTKE.Core
         /// <param name="shaderSpecs">Specifications for each of the shaders to be included in the program.</param>
         internal GlProgram(IEnumerable<(ShaderType Type, string Source)> shaderSpecs)
         {
-            GlEx.ThrowIfNoCurrentContext();
-
             // Create program
             this.id = GL.CreateProgram();
 
@@ -36,9 +34,9 @@ namespace MyOTKE.Core
 
                 // Compile shader
                 GL.ShaderSource(shaderId, shaderSpec.Source);
-                DebugEx.ThrowIfGlError("setting shader source");
+                GlDebug.ThrowIfGlError("setting shader source");
                 GL.CompileShader(shaderId);
-                DebugEx.ThrowIfGlError("compiling shader");
+                GlDebug.ThrowIfGlError("compiling shader");
 
                 // Check shader
                 GL.GetShader(shaderId, ShaderParameter.CompileStatus, out var compileStatus);
@@ -48,7 +46,7 @@ namespace MyOTKE.Core
                 }
 
                 GL.AttachShader(this.id, shaderId);
-                DebugEx.ThrowIfGlError("attaching shader");
+                GlDebug.ThrowIfGlError("attaching shader");
                 shaderIds.Add(shaderId);
 
                 ////TODO: for blockName/bindingPoint from uboSpecs
@@ -67,7 +65,7 @@ namespace MyOTKE.Core
 
             // Link & check program
             GL.LinkProgram(this.id);
-            DebugEx.ThrowIfGlError("linking program");
+            GlDebug.ThrowIfGlError("linking program");
             GL.GetProgram(this.id, GetProgramParameterName.LinkStatus, out var linkStatus);
             if (linkStatus != (int)OpenTK.Graphics.OpenGL.Boolean.True)
             {
@@ -78,9 +76,9 @@ namespace MyOTKE.Core
             foreach (var shaderId in shaderIds)
             {
                 GL.DetachShader(this.id, shaderId); // Line not in superbible?
-                DebugEx.ThrowIfGlError("detaching shader");
+                GlDebug.ThrowIfGlError("detaching shader");
                 GL.DeleteShader(shaderId);
-                DebugEx.ThrowIfGlError("deleting shader");
+                GlDebug.ThrowIfGlError("deleting shader");
             }
         }
 
@@ -95,7 +93,7 @@ namespace MyOTKE.Core
         public void Use()
         {
             GL.UseProgram(this.id);
-            DebugEx.ThrowIfGlError("using program");
+            GlDebug.ThrowIfGlError("using program");
         }
 
         /// <inheritdoc />
@@ -108,11 +106,8 @@ namespace MyOTKE.Core
                 GC.SuppressFinalize(this);
             }
 
-            ////if (GraphicsContext.CurrentContext != null)
-            {
-                GL.DeleteProgram(this.id);
-                DebugEx.ThrowIfGlError("deleting program");
-            }
+            GL.DeleteProgram(this.id);
+            GlDebug.ThrowIfGlError("deleting program");
         }
     }
 
@@ -123,16 +118,6 @@ namespace MyOTKE.Core
     public sealed class GlProgramWithDUB<TDefaultUniformBlock> : IDisposable
         where TDefaultUniformBlock : struct
     {
-        private static readonly Dictionary<Type, Expression> DefaultBlockUniformSettersByType = new Dictionary<Type, Expression>
-        {
-            [typeof(Matrix4x4)] = (Expression<Action<int, Matrix4x4>>)((i, m) => GL.UniformMatrix4(i, 1, true, new[] { m.M11, m.M12, m.M13, m.M14, m.M21, m.M22, m.M23, m.M24, m.M31, m.M32, m.M33, m.M34, m.M41, m.M42, m.M43, m.M44 })),
-            [typeof(Vector3)] = (Expression<Action<int, Vector3>>)((i, v) => GL.Uniform3(i, v.X, v.Y, v.Z)),
-            [typeof(float)] = (Expression<Action<int, float>>)((i, f) => GL.Uniform1(i, f)),
-            [typeof(int)] = (Expression<Action<int, int>>)((i, iv) => GL.Uniform1(i, iv)),
-            [typeof(uint)] = (Expression<Action<int, uint>>)((i, u) => GL.Uniform1(i, u)),
-            [typeof(long)] = (Expression<Action<int, long>>)((i, l) => GL.Uniform1(i, l)),
-        };
-
         private readonly int id;
         private readonly Action<TDefaultUniformBlock> setDefaultUniformBlock;
 
@@ -142,11 +127,9 @@ namespace MyOTKE.Core
         /// <param name="shaderSpecs">Specifications for each of the shaders to be included in the program.</param>
         internal GlProgramWithDUB(IEnumerable<(ShaderType Type, string Source)> shaderSpecs)
         {
-            GlEx.ThrowIfNoCurrentContext();
-
             // Create program
             this.id = GL.CreateProgram();
-            DebugEx.ThrowIfGlError("creating program");
+            GlDebug.ThrowIfGlError("creating program");
 
             // Compile shaders
             var shaderIds = new List<int>();
@@ -157,9 +140,9 @@ namespace MyOTKE.Core
 
                 // Compile shader
                 GL.ShaderSource(shaderId, shaderSpec.Source);
-                DebugEx.ThrowIfGlError("setting shader source");
+                GlDebug.ThrowIfGlError("setting shader source");
                 GL.CompileShader(shaderId);
-                DebugEx.ThrowIfGlError("compiling shader");
+                GlDebug.ThrowIfGlError("compiling shader");
 
                 // Check shader
                 GL.GetShader(shaderId, ShaderParameter.CompileStatus, out var compileStatus);
@@ -169,7 +152,7 @@ namespace MyOTKE.Core
                 }
 
                 GL.AttachShader(this.id, shaderId);
-                DebugEx.ThrowIfGlError("attaching shader");
+                GlDebug.ThrowIfGlError("attaching shader");
                 shaderIds.Add(shaderId);
             }
 
@@ -185,13 +168,13 @@ namespace MyOTKE.Core
             foreach (var shaderId in shaderIds)
             {
                 GL.DetachShader(this.id, shaderId); // Line not in superbible?
-                DebugEx.ThrowIfGlError("detaching shader");
+                GlDebug.ThrowIfGlError("detaching shader");
                 GL.DeleteShader(shaderId);
-                DebugEx.ThrowIfGlError("deleting shader");
+                GlDebug.ThrowIfGlError("deleting shader");
             }
 
             // Get uniform IDs
-            this.setDefaultUniformBlock = MakeDefaultUniformBlockSetter<TDefaultUniformBlock>();
+            this.setDefaultUniformBlock = GlMarshal.MakeDefaultUniformBlockSetter<TDefaultUniformBlock>(this.id);
         }
 
         /// <summary>
@@ -206,7 +189,7 @@ namespace MyOTKE.Core
         public void UseWithUniformValues(TDefaultUniformBlock uniforms)
         {
             GL.UseProgram(this.id);
-            DebugEx.ThrowIfGlError("using program");
+            GlDebug.ThrowIfGlError("using program");
             setDefaultUniformBlock(uniforms);
         }
 
@@ -220,45 +203,8 @@ namespace MyOTKE.Core
                 GC.SuppressFinalize(this);
             }
 
-            ////if (GraphicsContext.CurrentContext != null)
-            {
-                GL.DeleteProgram(this.id);
-                DebugEx.ThrowIfGlError("deleting program");
-            }
-        }
-
-        /// <remarks>
-        /// Better than reflection every time, but probably less efficient than it could be due to clunky assembly of expressions.
-        /// A prime candidate for replacement by source generation.
-        /// </remarks>
-        private Action<T> MakeDefaultUniformBlockSetter<T>()
-            where T : struct
-        {
-            var inputParam = Expression.Parameter(typeof(T));
-            var setters = new List<Expression>();
-
-            var publicFields = typeof(T).GetFields();
-            DebugEx.WriteLine($"{typeof(T).FullName} public fields that will be mapped to uniforms by name: {string.Join(", ", publicFields.Select(f => f.Name))}");
-            foreach (var field in publicFields)
-            {
-                var uniformLocation = GL.GetUniformLocation(this.id, field.Name);
-                if (uniformLocation == -1)
-                {
-                    throw new ArgumentException($"Uniform struct contains field '{field.Name}', which does not exist as a uniform in this program.");
-                }
-
-                if (!DefaultBlockUniformSettersByType.TryGetValue(field.FieldType, out var uniformSetter))
-                {
-                    throw new ArgumentException($"Uniform struct contains field of unsupported type {field.FieldType}", nameof(T));
-                }
-
-                setters.Add(Expression.Invoke(
-                    uniformSetter,
-                    Expression.Constant(uniformLocation),
-                    Expression.Field(inputParam, field)));
-            }
-
-            return Expression.Lambda<Action<T>>(Expression.Block(setters), inputParam).Compile();
+            GL.DeleteProgram(this.id);
+            GlDebug.ThrowIfGlError("deleting program");
         }
     }
 }

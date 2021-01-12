@@ -37,7 +37,7 @@ namespace MyOTKE.ReactiveBuffers
 
             builder = new VertexArrayObjectBuilder(primitiveType)
                 .WithAttributeBuffer<TVertex>(BufferUsageHint.DynamicDraw, atomCapacity * verticesPerAtom)
-                .WithIndex(atomCapacity * atomIndices.Count)
+                .WithIndexBuffer(BufferUsageHint.DynamicDraw, atomCapacity * atomIndices.Count)
                 .Synchronized();
 
             this.vertexSource = atomSource;

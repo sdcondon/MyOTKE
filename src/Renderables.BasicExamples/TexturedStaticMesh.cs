@@ -56,7 +56,7 @@ namespace MyOTKE.Renderables.BasicExamples
 
             this.vertexArrayObjectBuilder = new VertexArrayObjectBuilder(PrimitiveType.Triangles)
                 .WithAttributeBuffer(BufferUsageHint.StaticDraw, vertices.ToArray())
-                .WithIndex(indices.ToArray());
+                .WithIndexBuffer(BufferUsageHint.StaticDraw, indices.ToArray());
 
             this.textureFilePath = textureFilePath;
         }

@@ -20,7 +20,7 @@ namespace MyOTKE.Core
     {
         private readonly PrimitiveType primitiveType;
 <# WriteLines(i, i => $"private readonly (BufferUsageHint usage, int elementCount, T{i}[] data) bufferSpec{i};", 2); #>
-        private (int count, uint[] data) indexSpec;
+        private (BufferUsageHint usage, int count, uint[] data) indexSpec;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VertexArrayObjectBuilder<#= TList(i, "{", "}") #>"/> class.
@@ -30,7 +30,7 @@ namespace MyOTKE.Core
 <# WriteLines(i, i => $"/// <param name=\"bufferSpec{i}\">Specification for the { Ordinal(i) } buffer.</param>", 2); #>
         <# Write(i == 0 ? "public" : "internal"); #> VertexArrayObjectBuilder(
             PrimitiveType primitiveType<# WriteLine(i > 0 ? "," : ")"); #>
-<# WriteLineIf(i > 0, $"(int count, uint[] data) indexSpec,", 3); #>
+<# WriteLineIf(i > 0, $"(BufferUsageHint usage, int count, uint[] data) indexSpec,", 3); #>
 <# WriteLines(i, j => $"(BufferUsageHint usage, int elementCount, T{j}[] data) bufferSpec{j}{(j < i ? "," : ")")}", 3); #>
         {
             this.primitiveType = primitiveType;
@@ -77,22 +77,24 @@ namespace MyOTKE.Core
         /// <summary>
         /// Sets the index buffer to be included in the built VAO.
         /// </summary>
+        /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="data">The data with which to populate the buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<#= TList(i, "<", ">") #> WithIndex(uint[] data)
+        public VertexArrayObjectBuilder<#= TList(i, "<", ">") #> WithIndexBuffer(BufferUsageHint bufferUsage, uint[] data)
         {
-            this.indexSpec = (data.Length, data);
+            this.indexSpec = (bufferUsage, data.Length, data);
             return this;
         }
 
         /// <summary>
         /// Sets the index buffer to be included in the built VAO.
         /// </summary>
+        /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="capacity">The size of the index buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<#= TList(i, "<", ">") #> WithIndex(int capacity)
+        public VertexArrayObjectBuilder<#= TList(i, "<", ">") #> WithIndexBuffer(BufferUsageHint bufferUsage, int capacity)
         {
-            this.indexSpec = (capacity, null);
+            this.indexSpec = (bufferUsage, capacity, null);
             return this;
         }
 <# if (i > 0) { #>

@@ -26,16 +26,14 @@ namespace MyOTKE.Core
         internal GlVertexArrayObject(
             PrimitiveType primitiveType,
             (BufferUsageHint usage, int capacity, T1[] data) attributeBufferSpec1,
-            (int capacity, uint[] data) indexSpec)
+            (BufferUsageHint usage, int capacity, uint[] data) indexSpec)
         {
-            GlEx.ThrowIfNoCurrentContext();
-
             // Record primitive type for use in draw calls, create and bind the VAO
             this.primitiveType = primitiveType;
             this.id = GL.GenVertexArray(); // superbible uses CreateVertexArray?
-            DebugEx.ThrowIfGlError("creating vertex array");
+            GlDebug.ThrowIfGlError("creating vertex array");
             GL.BindVertexArray(id);
-            DebugEx.ThrowIfGlError("binding vertex array");
+            GlDebug.ThrowIfGlError("binding vertex array");
 
             // Set up the attribute buffers
             int k = 0;
@@ -68,7 +66,7 @@ namespace MyOTKE.Core
             // Establish element count & populate index buffer if there is one
             if (indexSpec.capacity > 0)
             {
-                this.indexBuffer = new GlVertexBufferObject<uint>(BufferTarget.ElementArrayBuffer, BufferUsageHint.DynamicDraw, indexSpec.capacity, indexSpec.data);
+                this.indexBuffer = new GlVertexBufferObject<uint>(BufferTarget.ElementArrayBuffer, indexSpec.usage, indexSpec.capacity, indexSpec.data);
             }
         }
 
@@ -101,7 +99,7 @@ namespace MyOTKE.Core
                     count: count == -1 ? this.VertexCount : count,
                     type: DrawElementsType.UnsignedInt,
                     indices: IntPtr.Zero);
-                DebugEx.ThrowIfGlError("drawing elements");
+                GlDebug.ThrowIfGlError("drawing elements");
             }
             else
             {
@@ -110,7 +108,7 @@ namespace MyOTKE.Core
                     mode: this.primitiveType,
                     first: 0,
                     count: count == -1 ? this.VertexCount : count);
-                DebugEx.ThrowIfGlError("drawing arrays");
+                GlDebug.ThrowIfGlError("drawing arrays");
             }
         }
 
@@ -139,11 +137,8 @@ namespace MyOTKE.Core
                 GC.SuppressFinalize(this);
             }
 
-            ////if (GraphicsContext.CurrentContext != null)
-            {
-                GL.DeleteVertexArrays(1, new[] { this.id });
-                DebugEx.ThrowIfGlError("deleting vertex array");
-            }
+            GL.DeleteVertexArrays(1, new[] { this.id });
+            GlDebug.ThrowIfGlError("deleting vertex array");
         }
     }
 
@@ -173,16 +168,14 @@ namespace MyOTKE.Core
             PrimitiveType primitiveType,
             (BufferUsageHint usage, int capacity, T1[] data) attributeBufferSpec1,
             (BufferUsageHint usage, int capacity, T2[] data) attributeBufferSpec2,
-            (int capacity, uint[] data) indexSpec)
+            (BufferUsageHint usage, int capacity, uint[] data) indexSpec)
         {
-            GlEx.ThrowIfNoCurrentContext();
-
             // Record primitive type for use in draw calls, create and bind the VAO
             this.primitiveType = primitiveType;
             this.id = GL.GenVertexArray(); // superbible uses CreateVertexArray?
-            DebugEx.ThrowIfGlError("creating vertex array");
+            GlDebug.ThrowIfGlError("creating vertex array");
             GL.BindVertexArray(id);
-            DebugEx.ThrowIfGlError("binding vertex array");
+            GlDebug.ThrowIfGlError("binding vertex array");
 
             // Set up the attribute buffers
             int k = 0;
@@ -216,7 +209,7 @@ namespace MyOTKE.Core
             // Establish element count & populate index buffer if there is one
             if (indexSpec.capacity > 0)
             {
-                this.indexBuffer = new GlVertexBufferObject<uint>(BufferTarget.ElementArrayBuffer, BufferUsageHint.DynamicDraw, indexSpec.capacity, indexSpec.data);
+                this.indexBuffer = new GlVertexBufferObject<uint>(BufferTarget.ElementArrayBuffer, indexSpec.usage, indexSpec.capacity, indexSpec.data);
             }
         }
 
@@ -252,7 +245,7 @@ namespace MyOTKE.Core
                     count: count == -1 ? this.VertexCount : count,
                     type: DrawElementsType.UnsignedInt,
                     indices: IntPtr.Zero);
-                DebugEx.ThrowIfGlError("drawing elements");
+                GlDebug.ThrowIfGlError("drawing elements");
             }
             else
             {
@@ -261,7 +254,7 @@ namespace MyOTKE.Core
                     mode: this.primitiveType,
                     first: 0,
                     count: count == -1 ? this.VertexCount : count);
-                DebugEx.ThrowIfGlError("drawing arrays");
+                GlDebug.ThrowIfGlError("drawing arrays");
             }
         }
 
@@ -291,11 +284,8 @@ namespace MyOTKE.Core
                 GC.SuppressFinalize(this);
             }
 
-            ////if (GraphicsContext.CurrentContext != null)
-            {
-                GL.DeleteVertexArrays(1, new[] { this.id });
-                DebugEx.ThrowIfGlError("deleting vertex array");
-            }
+            GL.DeleteVertexArrays(1, new[] { this.id });
+            GlDebug.ThrowIfGlError("deleting vertex array");
         }
     }
 
@@ -330,16 +320,14 @@ namespace MyOTKE.Core
             (BufferUsageHint usage, int capacity, T1[] data) attributeBufferSpec1,
             (BufferUsageHint usage, int capacity, T2[] data) attributeBufferSpec2,
             (BufferUsageHint usage, int capacity, T3[] data) attributeBufferSpec3,
-            (int capacity, uint[] data) indexSpec)
+            (BufferUsageHint usage, int capacity, uint[] data) indexSpec)
         {
-            GlEx.ThrowIfNoCurrentContext();
-
             // Record primitive type for use in draw calls, create and bind the VAO
             this.primitiveType = primitiveType;
             this.id = GL.GenVertexArray(); // superbible uses CreateVertexArray?
-            DebugEx.ThrowIfGlError("creating vertex array");
+            GlDebug.ThrowIfGlError("creating vertex array");
             GL.BindVertexArray(id);
-            DebugEx.ThrowIfGlError("binding vertex array");
+            GlDebug.ThrowIfGlError("binding vertex array");
 
             // Set up the attribute buffers
             int k = 0;
@@ -374,7 +362,7 @@ namespace MyOTKE.Core
             // Establish element count & populate index buffer if there is one
             if (indexSpec.capacity > 0)
             {
-                this.indexBuffer = new GlVertexBufferObject<uint>(BufferTarget.ElementArrayBuffer, BufferUsageHint.DynamicDraw, indexSpec.capacity, indexSpec.data);
+                this.indexBuffer = new GlVertexBufferObject<uint>(BufferTarget.ElementArrayBuffer, indexSpec.usage, indexSpec.capacity, indexSpec.data);
             }
         }
 
@@ -413,7 +401,7 @@ namespace MyOTKE.Core
                     count: count == -1 ? this.VertexCount : count,
                     type: DrawElementsType.UnsignedInt,
                     indices: IntPtr.Zero);
-                DebugEx.ThrowIfGlError("drawing elements");
+                GlDebug.ThrowIfGlError("drawing elements");
             }
             else
             {
@@ -422,7 +410,7 @@ namespace MyOTKE.Core
                     mode: this.primitiveType,
                     first: 0,
                     count: count == -1 ? this.VertexCount : count);
-                DebugEx.ThrowIfGlError("drawing arrays");
+                GlDebug.ThrowIfGlError("drawing arrays");
             }
         }
 
@@ -453,11 +441,8 @@ namespace MyOTKE.Core
                 GC.SuppressFinalize(this);
             }
 
-            ////if (GraphicsContext.CurrentContext != null)
-            {
-                GL.DeleteVertexArrays(1, new[] { this.id });
-                DebugEx.ThrowIfGlError("deleting vertex array");
-            }
+            GL.DeleteVertexArrays(1, new[] { this.id });
+            GlDebug.ThrowIfGlError("deleting vertex array");
         }
     }
 }

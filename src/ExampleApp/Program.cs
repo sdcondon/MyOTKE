@@ -330,13 +330,6 @@ namespace MyOTKE.ExampleApp
                     lastCamPosition = camera.Position;
                 }
 
-                // NB: No new heap allocations each time to avoid GC pressure - same array, same primitive.
-                // Could do with more helpers to make this easier. Perhaps Primitive should be a struct after all..
-                ////cubeWorldMatrix *= Matrix4x4.CreateRotationZ(0);
-                ////cubeWorldMatrix *= Matrix4x4.CreateRotationY(0);
-                cubePrimitives[0].SetCuboid(new Vector3(.5f, 1f, 0.75f), cubeWorldMatrix, Color.Red());
-                cubeSubject.OnNext(cubePrimitives);
-
                 if (view.IsKeyReleased(Keys.Q))
                 {
                     view.Renderable = new MenuRenderable(view);
