@@ -15,6 +15,7 @@ namespace MyOTKE.Core
     {
         // TODO: These as lambdas is probably less efficient than it could be. Would be nice to be able to use just Call()..
         // Then again, the fact that some args need to be transformed first..
+        // Also need to get rid of the heap allocation for Matrix4x4. It can work with an OpenTK.Math Matrix4 - but wants a ref - how to build a ref in an expression?
         private static readonly Dictionary<Type, Expression> DefaultBlockUniformSettersByType = new Dictionary<Type, Expression>
         {
             [typeof(Matrix4x4)] = (Expression<Action<int, Matrix4x4>>)((i, m) => GL.UniformMatrix4(i, 1, true, new[] { m.M11, m.M12, m.M13, m.M14, m.M21, m.M22, m.M23, m.M24, m.M31, m.M32, m.M33, m.M34, m.M41, m.M42, m.M43, m.M44 })),

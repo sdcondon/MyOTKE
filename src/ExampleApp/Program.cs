@@ -2,6 +2,7 @@
 using MyOTKE.Renderables.BasicExamples;
 using MyOTKE.Renderables.Gui;
 using MyOTKE.Renderables.ReactivePrimitives;
+using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,11 @@ namespace MyOTKE.ExampleApp
         [STAThread]
         public static void Main()
         {
-            var view = new MyOTKEWindow(false, Color.Black())
+            var view = new MyOTKEWindow(
+                gameWindowSettings: GameWindowSettings.Default,
+                nativeWindowSettings: NativeWindowSettings.Default,
+                lockCursor: false,
+                clearColor: Color.Black())
             {
                 Title = "MyOTKE Example",
                 ////WindowState = OpenTK.WindowState.Fullscreen

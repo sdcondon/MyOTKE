@@ -26,10 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Renderables.BasicExamples\Renderables.BasicExamples.csproj" />
     <ProjectReference Include="..\Renderables.Gui\Renderables.Gui.csproj" />
     <ProjectReference Include="..\Renderables.ReactivePrimitives\Renderables.ReactivePrimitives.csproj" />

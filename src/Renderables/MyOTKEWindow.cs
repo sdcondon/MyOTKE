@@ -1,5 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL;
-using OpenTK.Mathematics;
+﻿using MyOTKE.Core;
+using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using System;
@@ -25,35 +25,14 @@ namespace MyOTKE.Renderables
         /// <summary>
         /// Initializes a new instance of the <see cref="MyOTKEWindow"/> class.
         /// </summary>
-        public MyOTKEWindow()
-            : base(GameWindowSettings.Default, NativeWindowSettings.Default)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MyOTKEWindow"/> class.
-        /// </summary>
-        /// <param name="width">The width of the window in pixels.</param>
-        /// <param name="height">The height of the window in pixels.</param>
-        /// <param name="title">The title of the window.</param>
-        public MyOTKEWindow(int width, int height, string title)
-            : base(GameWindowSettings.Default, new NativeWindowSettings { Size = new Vector2i(width, height), Title = title })
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MyOTKEWindow"/> class.
-        /// </summary>
+        /// <param name="gameWindowSettings">The GameWindow related settings.</param>
+        /// <param name="nativeWindowSettings">The NativeWindow related settings.</param>
         /// <param name="lockCursor">A value indicating whether the cursor is placed back at the center of the view during each update.</param>
         /// <param name="clearColor">The color to clear the view with on each render call.</param>
-        public MyOTKEWindow(bool lockCursor, Color clearColor)
-             : base(GameWindowSettings.Default, NativeWindowSettings.Default)
+        public MyOTKEWindow(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, bool lockCursor, Color clearColor)
+             : base(gameWindowSettings, nativeWindowSettings)
         {
-            Debug.WriteLine("Registering OpenGL debug handler");
-            GL.DebugMessageCallback(OnGlDebugMessage, IntPtr.Zero);
-
-            ////KhronosApi.LogEnabled = true;
-            ////KhronosApi.Log += KhronosApi_Log;
+            GlDebug.RegisterDebugCallback();
 
             this.LockCursor = lockCursor;
             this.clearColor = clearColor;
@@ -192,22 +171,5 @@ namespace MyOTKE.Renderables
                 MousePosition = ClientSize.ToVector2() / 2;
             }
         }
-
-        private void OnGlDebugMessage(
-            DebugSource source,
-            DebugType type,
-            int id,
-            DebugSeverity severity,
-            int length,
-            IntPtr message,
-            IntPtr userParam)
-        {
-            Debug.WriteLine($"{id} {source} {type} {severity}", "OPENGL");
-        }
-
-        ////private void KhronosApi_Log(object sender, KhronosLogEventArgs e)
-        ////{
-        ////    Debug.WriteLine($"{e.Name}({string.Join(',', e.Args)}) {e.ReturnValue}", "KHRONOS API");
-        ////}
     }
 }

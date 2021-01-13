@@ -1,6 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace MyOTKE.Core
 {
@@ -15,6 +16,29 @@ namespace MyOTKE.Core
         [Conditional("DEBUG")]
         public static void RegisterDebugCallback()
         {
+            Debug.WriteLine("Registering OpenGL debug handler");
+            GL.DebugMessageCallback(OnGlDebugMessage, IntPtr.Zero);
+
+            ////KhronosApi.LogEnabled = true;
+            ////KhronosApi.Log += KhronosApi_Log;
+
+            void OnGlDebugMessage(
+                DebugSource source,
+                DebugType type,
+                int id,
+                DebugSeverity severity,
+                int length,
+                IntPtr message,
+                IntPtr userParam)
+            {
+                var messageString = Marshal.PtrToStringAuto(message);
+                Debug.WriteLine($"{id} {source} {type} {severity}: {messageString}", "OPENGL");
+            }
+
+            ////void KhronosApi_Log(object sender, KhronosLogEventArgs e)
+            ////{
+            ////    Debug.WriteLine($"{e.Name}({string.Join(',', e.Args)}) {e.ReturnValue}", "KHRONOS API");
+            ////}
         }
 
         /// <summary>
