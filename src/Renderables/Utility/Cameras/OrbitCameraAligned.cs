@@ -1,7 +1,6 @@
-﻿using OpenTK.Input;
+﻿using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
-using System.Numerics;
 
 namespace MyOTKE.Renderables
 {
@@ -75,10 +74,10 @@ namespace MyOTKE.Renderables
         public Vector3 Position => -forward * Distance;
 
         /// <inheritdoc />
-        public Matrix4x4 View { get; private set; }
+        public Matrix4 View { get; private set; }
 
         /// <inheritdoc />
-        public Matrix4x4 Projection { get; private set; }
+        public Matrix4 Projection { get; private set; }
 
         private float ZoomDefaultDistance { get; set; } = 1.5f;
 
@@ -117,20 +116,20 @@ namespace MyOTKE.Renderables
             zoomLevel += (int)view.MouseState.ScrollDelta.Y;
 
             // Projection matrix
-            Projection = Matrix4x4.CreatePerspectiveFieldOfView(
+            Projection = Matrix4.CreatePerspectiveFieldOfView(
                 FieldOfViewRadians,
                 view.AspectRatio,
                 NearPlaneDistance,
                 FarPlaneDistance);
 
             // Camera matrix
-            var longitudeRot = Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, longitude);
+            var longitudeRot = Quaternion.FromAxisAngle(Vector3.UnitY, longitude);
             var x = Vector3.Transform(Vector3.UnitX, longitudeRot);
-            var latitudeRot = Matrix4x4.CreateFromAxisAngle(Vector3.Cross(x, Vector3.UnitY), latitude);
+            var latitudeRot = Quaternion.FromAxisAngle(Vector3.Cross(x, Vector3.UnitY), latitude);
             this.forward = -Vector3.Transform(x, latitudeRot);
             this.up = Vector3.Transform(Vector3.UnitY, latitudeRot);
 
-            View = Matrix4x4.CreateLookAt(Position, Vector3.Zero, up);
+            View = Matrix4.LookAt(Position, Vector3.Zero, up);
         }
     }
 }

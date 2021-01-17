@@ -1,11 +1,11 @@
 ﻿#pragma warning disable SA1402
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Numerics;
 
 namespace MyOTKE.Core
 {

@@ -1,9 +1,9 @@
 ﻿using MyOTKE.Core;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 
 namespace MyOTKE.Renderables.BasicExamples
 {
@@ -57,7 +57,7 @@ namespace MyOTKE.Renderables.BasicExamples
         /// <summary>
         /// Gets or sets the model transform for this mesh.
         /// </summary>
-        public Matrix4x4 Model { get; set; } = Matrix4x4.Identity;
+        public Matrix4 Model { get; set; } = Matrix4.Identity;
 
         /// <summary>
         /// Gets or sets the lighting applied as a minimum to every fragment.
@@ -122,9 +122,9 @@ namespace MyOTKE.Renderables.BasicExamples
 
             program.UseWithUniformValues(new Uniforms
             {
-                MVP = Matrix4x4.Transpose(this.Model * this.viewProjection.View * this.viewProjection.Projection),
-                V = Matrix4x4.Transpose(this.viewProjection.View),
-                M = Matrix4x4.Transpose(this.Model),
+                MVP = this.Model * this.viewProjection.View * this.viewProjection.Projection,
+                V = this.viewProjection.View,
+                M = this.Model,
                 AmbientLightColor = AmbientLightColor,
                 DirectedLightDirection = DirectedLightDirection,
                 DirectedLightColor = DirectedLightColor,
@@ -186,9 +186,9 @@ namespace MyOTKE.Renderables.BasicExamples
 
         private struct Uniforms
         {
-            public Matrix4x4 MVP;
-            public Matrix4x4 V;
-            public Matrix4x4 M;
+            public Matrix4 MVP;
+            public Matrix4 V;
+            public Matrix4 M;
             public Vector3 AmbientLightColor;
             public Vector3 DirectedLightDirection;
             public Vector3 DirectedLightColor;

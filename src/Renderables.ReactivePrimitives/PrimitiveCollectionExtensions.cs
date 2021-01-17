@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Numerics;
+﻿using OpenTK.Mathematics;
+using System.Collections.Generic;
 
 namespace MyOTKE.Renderables.ReactivePrimitives
 {
@@ -15,7 +15,7 @@ namespace MyOTKE.Renderables.ReactivePrimitives
         /// <param name="size">The dimensions of the cuboid.</param>
         /// <param name="worldTransform">The world transform of the cuboid.</param>
         /// <param name="color">The color of the cuboid.</param>
-        public static void AddCuboid(this ICollection<Primitive> list, Vector3 size, Matrix4x4 worldTransform, Color color)
+        public static void AddCuboid(this ICollection<Primitive> list, Vector3 size, Matrix4 worldTransform, Color color)
         {
             list.Add(Primitive.Cuboid(size, worldTransform, color));
         }
@@ -27,7 +27,7 @@ namespace MyOTKE.Renderables.ReactivePrimitives
         /// <param name="size">The dimensions of the quad.</param>
         /// <param name="worldTransform">The world transform of the quad.</param>
         /// <param name="color">The color of the quad.</param>
-        public static void AddQuad(this ICollection<Primitive> list, Vector2 size, Matrix4x4 worldTransform, Color color)
+        public static void AddQuad(this ICollection<Primitive> list, Vector2 size, Matrix4 worldTransform, Color color)
         {
             list.Add(Primitive.Quad(size, worldTransform, color));
         }
@@ -64,7 +64,7 @@ namespace MyOTKE.Renderables.ReactivePrimitives
         /// <param name="radius">The radius of the circle.</param>
         /// <param name="worldTransform">The world transform of the circle.</param>
         /// <param name="color">The color of the circle.</param>
-        public static void AddLineCircle(this ICollection<Primitive> list, float radius, Matrix4x4 worldTransform, Color color)
+        public static void AddLineCircle(this ICollection<Primitive> list, float radius, Matrix4 worldTransform, Color color)
         {
             list.Add(Primitive.LineCircle(radius, worldTransform, color));
         }
@@ -77,7 +77,7 @@ namespace MyOTKE.Renderables.ReactivePrimitives
         /// <param name="radiusY">The Y-axis radius of the ellipse.</param>
         /// <param name="worldTransform">The world transform of the ellipse.</param>
         /// <param name="color">The color of the ellipse.</param>
-        public static void AddLineEllipse(this ICollection<Primitive> list, float radiusX, float radiusY, Matrix4x4 worldTransform, Color color)
+        public static void AddLineEllipse(this ICollection<Primitive> list, float radiusX, float radiusY, Matrix4 worldTransform, Color color)
         {
             list.Add(Primitive.LineEllipse(radiusX, radiusY, worldTransform, color));
         }
@@ -89,7 +89,7 @@ namespace MyOTKE.Renderables.ReactivePrimitives
         /// <param name="sideLength">The side length the square.</param>
         /// <param name="worldTransform">The world transform of the square.</param>
         /// <param name="color">The color of the square.</param>
-        public static void AddLineSquare(this ICollection<Primitive> list, float sideLength, Matrix4x4 worldTransform, Color color)
+        public static void AddLineSquare(this ICollection<Primitive> list, float sideLength, Matrix4 worldTransform, Color color)
         {
             list.Add(Primitive.LineSquare(sideLength, worldTransform, color));
         }
@@ -101,7 +101,7 @@ namespace MyOTKE.Renderables.ReactivePrimitives
         /// <param name="positions">The positions of the vertices of the polygon.</param>
         /// <param name="worldTransform">The world transform of the polygon.</param>
         /// <param name="color">The color of the polygon.</param>
-        public static void AddLinePolygon(this ICollection<Primitive> list, Vector2[] positions, Matrix4x4 worldTransform, Color color)
+        public static void AddLinePolygon(this ICollection<Primitive> list, Vector2[] positions, Matrix4 worldTransform, Color color)
         {
             list.Add(Primitive.LinePolygon(positions, worldTransform, color));
         }

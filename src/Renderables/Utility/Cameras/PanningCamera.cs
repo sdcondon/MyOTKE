@@ -1,7 +1,6 @@
-﻿using OpenTK.Input;
+﻿using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
-using System.Numerics;
 
 namespace MyOTKE.Renderables
 {
@@ -93,13 +92,13 @@ namespace MyOTKE.Renderables
         public float Distance => (float)(ZoomDefaultDistance * Math.Pow(ZoomBase, zoomLevel));
 
         /// <inheritdoc />
-        public Vector3 Position => target + Vector3.Transform(Vector3.UnitZ * Distance, Matrix4x4.CreateRotationZ(HorizontalAngle) * Matrix4x4.CreateRotationX(VerticalAngle));
+        public Vector3 Position => target + Vector3.TransformPosition(Vector3.UnitZ * Distance, Matrix4.CreateRotationZ(HorizontalAngle) * Matrix4.CreateRotationX(VerticalAngle));
 
         /// <inheritdoc />
-        public Matrix4x4 View { get; private set; }
+        public Matrix4 View { get; private set; }
 
         /// <inheritdoc />
-        public Matrix4x4 Projection { get; private set; }
+        public Matrix4 Projection { get; private set; }
 
         /// <inheritdoc />
         public void Update(TimeSpan elapsed)
@@ -152,14 +151,14 @@ namespace MyOTKE.Renderables
             zoomLevel += (int)view.MouseState.ScrollDelta.Y;
 
             // Projection matrix
-            Projection = Matrix4x4.CreatePerspectiveFieldOfView(
+            Projection = Matrix4.CreatePerspectiveFieldOfView(
                 FieldOfViewRadians,
                 view.AspectRatio,
                 NearPlaneDistance,
                 FarPlaneDistance);
 
             // Camera matrix
-            View = Matrix4x4.CreateLookAt(Position, target, Vector3.UnitY);
+            View = Matrix4.LookAt(Position, target, Vector3.UnitY);
         }
     }
 }

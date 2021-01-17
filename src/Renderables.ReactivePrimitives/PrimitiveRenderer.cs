@@ -1,10 +1,10 @@
 ﻿using MyOTKE.Core;
 using MyOTKE.ReactiveBuffers;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Reactive.Linq;
 
 namespace MyOTKE.Renderables.ReactivePrimitives
@@ -162,9 +162,9 @@ namespace MyOTKE.Renderables.ReactivePrimitives
 
             program.UseWithUniformValues(new Uniforms
             {
-                MVP = Matrix4x4.Transpose(this.camera.View * this.camera.Projection),
-                V = Matrix4x4.Transpose(this.camera.View),
-                M = Matrix4x4.Transpose(Matrix4x4.Identity),
+                MVP = this.camera.View * this.camera.Projection,
+                V = this.camera.View,
+                M = Matrix4.Identity,
                 AmbientLightColor = AmbientLightColor,
                 DirectedLightDirection = DirectedLightDirection,
                 DirectedLightColor = DirectedLightColor,
@@ -194,9 +194,9 @@ namespace MyOTKE.Renderables.ReactivePrimitives
 
         private struct Uniforms
         {
-            public Matrix4x4 MVP;
-            public Matrix4x4 V;
-            public Matrix4x4 M;
+            public Matrix4 MVP;
+            public Matrix4 V;
+            public Matrix4 M;
             public Vector3 AmbientLightColor;
             public Vector3 DirectedLightDirection;
             public Vector3 DirectedLightColor;

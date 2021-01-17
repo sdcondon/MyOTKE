@@ -1,8 +1,8 @@
 ﻿using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
 using SharpFont;
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 
 namespace MyOTKE.Renderables.Gui
 {

@@ -1,11 +1,11 @@
 ﻿using MyOTKE.Core;
 using MyOTKE.ReactiveBuffers;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 using System.ComponentModel;
-using System.Numerics;
 
 namespace MyOTKE.Renderables.Gui
 {
@@ -114,7 +114,7 @@ namespace MyOTKE.Renderables.Gui
 
             program.UseWithUniformValues(new Uniforms
             {
-                P = Matrix4x4.Transpose(Matrix4x4.CreateOrthographic(Size.X, Size.Y, 1f, -1f)),
+                P = Matrix4.Transpose(Matrix4.CreateOrthographic(Size.X, Size.Y, 1f, -1f)),
                 text = 0,
             });
             GL.ActiveTexture(TextureUnit.Texture0);
@@ -145,7 +145,7 @@ namespace MyOTKE.Renderables.Gui
 
         private struct Uniforms
         {
-            public Matrix4x4 P;
+            public Matrix4 P;
             public int text;
         }
     }

@@ -2,11 +2,11 @@
 using MyOTKE.Renderables.BasicExamples;
 using MyOTKE.Renderables.Gui;
 using MyOTKE.Renderables.ReactivePrimitives;
+using OpenTK.Mathematics;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
@@ -118,7 +118,7 @@ namespace MyOTKE.ExampleApp
 
             private readonly Subject<IList<Primitive>> cubeSubject = new Subject<IList<Primitive>>();
             private readonly Primitive[] cubePrimitives = new Primitive[1] { Primitive.Empty() };
-            private Matrix4x4 cubeWorldMatrix = Matrix4x4.Identity;
+            private Matrix4 cubeWorldMatrix = Matrix4.Identity;
             private Vector3 lastCamPosition = Vector3.Zero;
 
             public FirstPersonRenderable(MyOTKEWindow view)
@@ -237,8 +237,8 @@ namespace MyOTKE.ExampleApp
 
                 // NB: No new heap allocations each time to avoid GC pressure - same array, same primitive.
                 // Could do with more helpers to make this easier. Perhaps Primitive should be a struct after all..
-                cubeWorldMatrix *= Matrix4x4.CreateRotationZ((float)elapsed.TotalSeconds);
-                cubeWorldMatrix *= Matrix4x4.CreateRotationY((float)elapsed.TotalSeconds / 2);
+                cubeWorldMatrix *= Matrix4.CreateRotationZ((float)elapsed.TotalSeconds);
+                cubeWorldMatrix *= Matrix4.CreateRotationY((float)elapsed.TotalSeconds / 2);
                 cubePrimitives[0].SetCuboid(new Vector3(.5f, 1f, 0.75f), cubeWorldMatrix, Color.Red());
                 cubeSubject.OnNext(cubePrimitives);
 
@@ -272,7 +272,7 @@ namespace MyOTKE.ExampleApp
 
             private readonly Subject<IList<Primitive>> cubeSubject = new Subject<IList<Primitive>>();
             private readonly Primitive[] cubePrimitives = new Primitive[1] { Primitive.Empty() };
-            private Matrix4x4 cubeWorldMatrix = Matrix4x4.Identity;
+            private Matrix4 cubeWorldMatrix = Matrix4.Identity;
             private Vector3 lastCamPosition = Vector3.Zero;
 
             public OrbitRenderable(MyOTKEWindow view)

@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 using Xunit;
 
 namespace MyOTKE.Core

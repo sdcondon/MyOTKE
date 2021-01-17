@@ -1,5 +1,6 @@
-﻿using System;
-using System.Numerics;
+﻿using OpenTK.Mathematics;
+using System;
+using Plane = System.Numerics.Plane;
 
 namespace MyOTKE.Renderables
 {
@@ -19,14 +20,14 @@ namespace MyOTKE.Renderables
             // http://antongerdelan.net/opengl/raycasting.html
             float x = (2.0f * view.CenterOffset.X) / view.ClientSize.X;
             float y = -(2.0f * view.CenterOffset.Y) / view.ClientSize.Y;
-            var ray_clip = new Vector3(x, y, -1.0f);
+            var ray_clip = new Vector4(x, y, -1.0f, 0f);
 
-            Matrix4x4.Invert(camera.Projection, out var projInverse);
-            var ray_eye = Vector4.Transform(ray_clip, projInverse);
+            Matrix4.Invert(camera.Projection, out var projInverse);
+            var ray_eye = projInverse * ray_clip;
             ray_eye = new Vector4(ray_eye.X, ray_eye.Y, -1.0f, 0.0f);
 
-            Matrix4x4.Invert(camera.View, out var viewInverse);
-            var ray_wor = Vector4.Transform(ray_eye, viewInverse);
+            Matrix4.Invert(camera.View, out var viewInverse);
+            var ray_wor = viewInverse * ray_eye;
             Direction = Vector3.Normalize(new Vector3(ray_wor.X, ray_wor.Y, ray_wor.Z));
 
             Origin = camera.Position; // todo: do we really need a camera position?
@@ -80,8 +81,8 @@ namespace MyOTKE.Renderables
         /// <returns>The position of the intersection of the ray with the plane, or null if no such intersection exists.</returns>
         public static Vector3? GetIntersection(Ray ray, Plane plane)
         {
-            var numerator = Plane.DotNormal(plane, plane.Normal * plane.D - ray.Origin);
-            var denominator = Plane.DotNormal(plane, ray.Direction);
+            var numerator = Plane.DotNormal(plane, plane.Normal * plane.D - new System.Numerics.Vector3(ray.Origin.X, ray.Origin.Y, ray.Origin.Z));
+            var denominator = Plane.DotNormal(plane, new System.Numerics.Vector3(ray.Direction.X, ray.Direction.Y, ray.Direction.Z));
 
             if (denominator != 0)
             {

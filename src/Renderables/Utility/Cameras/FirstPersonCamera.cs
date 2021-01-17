@@ -1,6 +1,6 @@
-﻿using OpenTK.Windowing.GraphicsLibraryFramework;
+﻿using OpenTK.Mathematics;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
-using System.Numerics;
 
 namespace MyOTKE.Renderables
 {
@@ -67,10 +67,10 @@ namespace MyOTKE.Renderables
         public Vector3 Position { get; private set; } // = new Vector3(0, 0, -300);
 
         /// <inheritdoc />
-        public Matrix4x4 View { get; private set; }
+        public Matrix4 View { get; private set; }
 
         /// <inheritdoc />
-        public Matrix4x4 Projection { get; private set; }
+        public Matrix4 Projection { get; private set; }
 
         /// <summary>
         /// Gets or sets the distance of the near plane from the camera.
@@ -134,14 +134,14 @@ namespace MyOTKE.Renderables
                 Position -= right * (float)elapsed.TotalSeconds * MovementSpeed;
             }
 
-            Projection = Matrix4x4.CreatePerspectiveFieldOfView(
+            Projection = Matrix4.CreatePerspectiveFieldOfView(
                 FieldOfViewRadians,
                 view.AspectRatio,
                 NearPlaneDistance,
                 FarPlaneDistance);
 
             // Camera matrix
-            View = Matrix4x4.CreateLookAt(
+            View = Matrix4.LookAt(
                 Position,             // Camera is here
                 Position + direction, // and looks here : at the same position, plus "direction"
                 up);                  // Head is up (set to 0,-1,0 to look upside-down)

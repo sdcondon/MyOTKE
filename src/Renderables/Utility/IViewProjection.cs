@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+﻿using OpenTK.Mathematics;
 
 namespace MyOTKE.Renderables
 {
@@ -10,11 +10,11 @@ namespace MyOTKE.Renderables
         /// <summary>
         /// Gets the view matrix.
         /// </summary>
-        Matrix4x4 View { get; }
+        Matrix4 View { get; }
 
         /// <summary>
         /// Gets the projection matrix.
         /// </summary>
-        Matrix4x4 Projection { get; }
+        Matrix4 Projection { get; }
     }
 }

@@ -1,7 +1,6 @@
-﻿using OpenTK.Input;
+﻿using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
-using System.Numerics;
 
 namespace MyOTKE.Renderables
 {
@@ -80,10 +79,10 @@ namespace MyOTKE.Renderables
         public Vector3 Position => -forward * Distance;
 
         /// <inheritdoc />
-        public Matrix4x4 View { get; private set; }
+        public Matrix4 View { get; private set; }
 
         /// <inheritdoc />
-        public Matrix4x4 Projection { get; private set; }
+        public Matrix4 Projection { get; private set; }
 
         private float ZoomDefaultDistance { get; set; } = 1.5f;
 
@@ -97,49 +96,49 @@ namespace MyOTKE.Renderables
             //// Pan up - rotate forward and up around their cross product
             if (view.IsKeyDown(Keys.W))
             {
-                var t = Matrix4x4.CreateFromAxisAngle(Vector3.Cross(forward, up), -RotationSpeed);
+                var t = Quaternion.FromAxisAngle(Vector3.Cross(forward, up), -RotationSpeed);
                 forward = Vector3.Transform(forward, t);
                 up = Vector3.Transform(up, t);
             }
             //// Pan down - rotate forward and up around their cross product
             if (view.IsKeyDown(Keys.S))
             {
-                var t = Matrix4x4.CreateFromAxisAngle(Vector3.Cross(forward, up), RotationSpeed);
+                var t = Quaternion.FromAxisAngle(Vector3.Cross(forward, up), RotationSpeed);
                 forward = Vector3.Normalize(Vector3.Transform(forward, t));
                 up = Vector3.Normalize(Vector3.Transform(up, t));
             }
             //// Pan right - rotate forward around up
             if (view.IsKeyDown(Keys.D))
             {
-                forward = Vector3.Normalize(Vector3.Transform(forward, Matrix4x4.CreateFromAxisAngle(up, RotationSpeed)));
+                forward = Vector3.Normalize(Vector3.Transform(forward, Quaternion.FromAxisAngle(up, RotationSpeed)));
             }
             //// Pan left - rotate forward around up
             if (view.IsKeyDown(Keys.A))
             {
-                forward = Vector3.Normalize(Vector3.Transform(forward, Matrix4x4.CreateFromAxisAngle(up, -RotationSpeed)));
+                forward = Vector3.Normalize(Vector3.Transform(forward, Quaternion.FromAxisAngle(up, -RotationSpeed)));
             }
             //// Roll right - rotate up around forward
             if (view.IsKeyDown(Keys.Q))
             {
-                up = Vector3.Normalize(Vector3.Transform(up, Matrix4x4.CreateFromAxisAngle(forward, -RollSpeed)));
+                up = Vector3.Normalize(Vector3.Transform(up, Quaternion.FromAxisAngle(forward, -RollSpeed)));
             }
             //// Roll left - rotate up around forward
             if (view.IsKeyDown(Keys.E))
             {
-                up = Vector3.Normalize(Vector3.Transform(up, Matrix4x4.CreateFromAxisAngle(forward, RollSpeed)));
+                up = Vector3.Normalize(Vector3.Transform(up, Quaternion.FromAxisAngle(forward, RollSpeed)));
             }
             //// Zoom
             zoomLevel += (int)view.MouseState.ScrollDelta.Y;
 
             // Projection matrix
-            Projection = Matrix4x4.CreatePerspectiveFieldOfView(
+            Projection = Matrix4.CreatePerspectiveFieldOfView(
                 FieldOfViewRadians,
                 view.AspectRatio,
                 NearPlaneDistance,
                 FarPlaneDistance);
 
             // Camera matrix
-            View = Matrix4x4.CreateLookAt(Position, Vector3.Zero, up);
+            View = Matrix4.LookAt(Position, Vector3.Zero, up);
         }
     }
 }

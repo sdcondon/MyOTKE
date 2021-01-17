@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Numerics;
+﻿using OpenTK.Mathematics;
+using System.Collections.Generic;
 
 namespace MyOTKE.Renderables.Gui
 {

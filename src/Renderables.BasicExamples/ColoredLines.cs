@@ -1,11 +1,11 @@
 ﻿using MyOTKE.Core;
 using MyOTKE.ReactiveBuffers;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Numerics;
 using System.Reactive.Linq;
 
 namespace MyOTKE.Renderables.BasicExamples
@@ -137,9 +137,9 @@ namespace MyOTKE.Renderables.BasicExamples
 
             program.UseWithUniformValues(new Uniforms
             {
-                MVP = Matrix4x4.Transpose(this.viewProjection.View * this.viewProjection.Projection),
-                V = Matrix4x4.Transpose(this.viewProjection.View),
-                M = Matrix4x4.Identity,
+                MVP = this.viewProjection.View * this.viewProjection.Projection,
+                V = this.viewProjection.View,
+                M = Matrix4.Identity,
                 AmbientLightColor = AmbientLightColor,
                 PointLightPosition = PointLightPosition,
                 PointLightColor = PointLightColor,
@@ -165,9 +165,9 @@ namespace MyOTKE.Renderables.BasicExamples
 
         private struct Uniforms
         {
-            public Matrix4x4 MVP;
-            public Matrix4x4 V;
-            public Matrix4x4 M;
+            public Matrix4 MVP;
+            public Matrix4 V;
+            public Matrix4 M;
             public Vector3 AmbientLightColor;
             public Vector3 PointLightPosition;
             public Vector3 PointLightColor;
