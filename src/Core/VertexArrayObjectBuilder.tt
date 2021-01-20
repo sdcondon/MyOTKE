@@ -46,7 +46,7 @@ namespace MyOTKE.Core
         /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="data">The data with which to populate the buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<<#= TList(i, "", ", ") #>T> WithAttributeBuffer<T>(BufferUsageHint bufferUsage, T[] data)
+        public VertexArrayObjectBuilder<<#= TList(i, "", ", ") #>T> WithNewAttributeBuffer<T>(BufferUsageHint bufferUsage, T[] data)
             where T : struct
         {
             return new VertexArrayObjectBuilder<<#= TList(i, "", ", ") #>T>(
@@ -63,7 +63,7 @@ namespace MyOTKE.Core
         /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="size">The size of the buffer, in instances of <see typeparamref="T"/>.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<<#= TList(i, "", ", ") #>T> WithAttributeBuffer<T>(BufferUsageHint bufferUsage, int size)
+        public VertexArrayObjectBuilder<<#= TList(i, "", ", ") #>T> WithNewAttributeBuffer<T>(BufferUsageHint bufferUsage, int size)
             where T : struct
         {
             return new VertexArrayObjectBuilder<<#= TList(i, "", ", ") #>T>(
@@ -80,7 +80,7 @@ namespace MyOTKE.Core
         /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="data">The data with which to populate the buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<#= TList(i, "<", ">") #> WithIndexBuffer(BufferUsageHint bufferUsage, uint[] data)
+        public VertexArrayObjectBuilder<#= TList(i, "<", ">") #> WithNewIndexBuffer(BufferUsageHint bufferUsage, uint[] data)
         {
             this.indexSpec = (bufferUsage, data.Length, data);
             return this;
@@ -92,7 +92,7 @@ namespace MyOTKE.Core
         /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="capacity">The size of the index buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<#= TList(i, "<", ">") #> WithIndexBuffer(BufferUsageHint bufferUsage, int capacity)
+        public VertexArrayObjectBuilder<#= TList(i, "<", ">") #> WithNewIndexBuffer(BufferUsageHint bufferUsage, int capacity)
         {
             this.indexSpec = (bufferUsage, capacity, null);
             return this;

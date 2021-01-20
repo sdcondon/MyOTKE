@@ -36,8 +36,8 @@ namespace MyOTKE.ReactiveBuffers
             var verticesPerAtom = atomIndices.Max() + 1; // Perhaps should throw if has unused indices..
 
             builder = new VertexArrayObjectBuilder(primitiveType)
-                .WithAttributeBuffer<TVertex>(BufferUsageHint.DynamicDraw, atomCapacity * verticesPerAtom)
-                .WithIndexBuffer(BufferUsageHint.DynamicDraw, atomCapacity * atomIndices.Count)
+                .WithNewAttributeBuffer<TVertex>(BufferUsageHint.DynamicDraw, atomCapacity * verticesPerAtom)
+                .WithNewIndexBuffer(BufferUsageHint.DynamicDraw, atomCapacity * atomIndices.Count)
                 .Synchronized();
 
             this.vertexSource = atomSource;

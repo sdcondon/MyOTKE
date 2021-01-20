@@ -4,7 +4,7 @@ using OpenTK.Graphics.OpenGL;
 namespace MyOTKE.Core
 {
     /// <summary>
-    /// Builder class for vertex array objects that presents a fluent-ish interface.
+    /// Builder class for <see cref="GlVertexArrayObject"/> objects that presents a fluent-ish interface.
     /// </summary>
     public sealed class VertexArrayObjectBuilder
     {
@@ -28,7 +28,7 @@ namespace MyOTKE.Core
         /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="data">The data with which to populate the buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<T> WithAttributeBuffer<T>(BufferUsageHint bufferUsage, T[] data)
+        public VertexArrayObjectBuilder<T> WithNewAttributeBuffer<T>(BufferUsageHint bufferUsage, T[] data)
             where T : struct
         {
             return new VertexArrayObjectBuilder<T>(
@@ -44,7 +44,7 @@ namespace MyOTKE.Core
         /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="size">The size of the buffer, in instances of <see typeparamref="T"/>.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<T> WithAttributeBuffer<T>(BufferUsageHint bufferUsage, int size)
+        public VertexArrayObjectBuilder<T> WithNewAttributeBuffer<T>(BufferUsageHint bufferUsage, int size)
             where T : struct
         {
             return new VertexArrayObjectBuilder<T>(
@@ -59,7 +59,7 @@ namespace MyOTKE.Core
         /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="data">The data with which to populate the buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder WithIndexBuffer(BufferUsageHint bufferUsage, uint[] data)
+        public VertexArrayObjectBuilder WithNewIndexBuffer(BufferUsageHint bufferUsage, uint[] data)
         {
             this.indexSpec = (bufferUsage, data.Length, data);
             return this;
@@ -71,7 +71,7 @@ namespace MyOTKE.Core
         /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="capacity">The size of the index buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder WithIndexBuffer(BufferUsageHint bufferUsage, int capacity)
+        public VertexArrayObjectBuilder WithNewIndexBuffer(BufferUsageHint bufferUsage, int capacity)
         {
             this.indexSpec = (bufferUsage, capacity, null);
             return this;
@@ -112,7 +112,7 @@ namespace MyOTKE.Core
         /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="data">The data with which to populate the buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<T1, T> WithAttributeBuffer<T>(BufferUsageHint bufferUsage, T[] data)
+        public VertexArrayObjectBuilder<T1, T> WithNewAttributeBuffer<T>(BufferUsageHint bufferUsage, T[] data)
             where T : struct
         {
             return new VertexArrayObjectBuilder<T1, T>(
@@ -129,7 +129,7 @@ namespace MyOTKE.Core
         /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="size">The size of the buffer, in instances of <see typeparamref="T"/>.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<T1, T> WithAttributeBuffer<T>(BufferUsageHint bufferUsage, int size)
+        public VertexArrayObjectBuilder<T1, T> WithNewAttributeBuffer<T>(BufferUsageHint bufferUsage, int size)
             where T : struct
         {
             return new VertexArrayObjectBuilder<T1, T>(
@@ -145,7 +145,7 @@ namespace MyOTKE.Core
         /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="data">The data with which to populate the buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<T1> WithIndexBuffer(BufferUsageHint bufferUsage, uint[] data)
+        public VertexArrayObjectBuilder<T1> WithNewIndexBuffer(BufferUsageHint bufferUsage, uint[] data)
         {
             this.indexSpec = (bufferUsage, data.Length, data);
             return this;
@@ -157,7 +157,7 @@ namespace MyOTKE.Core
         /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="capacity">The size of the index buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<T1> WithIndexBuffer(BufferUsageHint bufferUsage, int capacity)
+        public VertexArrayObjectBuilder<T1> WithNewIndexBuffer(BufferUsageHint bufferUsage, int capacity)
         {
             this.indexSpec = (bufferUsage, capacity, null);
             return this;
@@ -216,7 +216,7 @@ namespace MyOTKE.Core
         /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="data">The data with which to populate the buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<T1, T2, T> WithAttributeBuffer<T>(BufferUsageHint bufferUsage, T[] data)
+        public VertexArrayObjectBuilder<T1, T2, T> WithNewAttributeBuffer<T>(BufferUsageHint bufferUsage, T[] data)
             where T : struct
         {
             return new VertexArrayObjectBuilder<T1, T2, T>(
@@ -234,7 +234,7 @@ namespace MyOTKE.Core
         /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="size">The size of the buffer, in instances of <see typeparamref="T"/>.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<T1, T2, T> WithAttributeBuffer<T>(BufferUsageHint bufferUsage, int size)
+        public VertexArrayObjectBuilder<T1, T2, T> WithNewAttributeBuffer<T>(BufferUsageHint bufferUsage, int size)
             where T : struct
         {
             return new VertexArrayObjectBuilder<T1, T2, T>(
@@ -251,7 +251,7 @@ namespace MyOTKE.Core
         /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="data">The data with which to populate the buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<T1, T2> WithIndexBuffer(BufferUsageHint bufferUsage, uint[] data)
+        public VertexArrayObjectBuilder<T1, T2> WithNewIndexBuffer(BufferUsageHint bufferUsage, uint[] data)
         {
             this.indexSpec = (bufferUsage, data.Length, data);
             return this;
@@ -263,7 +263,7 @@ namespace MyOTKE.Core
         /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="capacity">The size of the index buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<T1, T2> WithIndexBuffer(BufferUsageHint bufferUsage, int capacity)
+        public VertexArrayObjectBuilder<T1, T2> WithNewIndexBuffer(BufferUsageHint bufferUsage, int capacity)
         {
             this.indexSpec = (bufferUsage, capacity, null);
             return this;
@@ -328,7 +328,7 @@ namespace MyOTKE.Core
         /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="data">The data with which to populate the buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<T1, T2, T3> WithIndexBuffer(BufferUsageHint bufferUsage, uint[] data)
+        public VertexArrayObjectBuilder<T1, T2, T3> WithNewIndexBuffer(BufferUsageHint bufferUsage, uint[] data)
         {
             this.indexSpec = (bufferUsage, data.Length, data);
             return this;
@@ -340,7 +340,7 @@ namespace MyOTKE.Core
         /// <param name="bufferUsage">The usage type for the buffer.</param>
         /// <param name="capacity">The size of the index buffer.</param>
         /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<T1, T2, T3> WithIndexBuffer(BufferUsageHint bufferUsage, int capacity)
+        public VertexArrayObjectBuilder<T1, T2, T3> WithNewIndexBuffer(BufferUsageHint bufferUsage, int capacity)
         {
             this.indexSpec = (bufferUsage, capacity, null);
             return this;

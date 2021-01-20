@@ -90,6 +90,7 @@ namespace MyOTKE.Core
         //// AsBufferOf<byte>()..
         //// AsBufferOf<int>(t => t.MyIntProp) - mapping func - would need to calculate stride (and modify this class to account for it when getting and setting)
         //// AsBufferOf<whatever>(attributeinfo) - not safe, but empowering..
+        //// HOWEVER: Would need to decide what to do about finalizer - losing the 1-1 relationship between object and buffer means don't necessarily want to delete buffer in finalizer..
         ////public GlVertexBufferObject<TElement> AsBufferOf<TElement>()
         ////{
         ////    //// being able to use custom attributes would be cool? Would need to support creation thereof..

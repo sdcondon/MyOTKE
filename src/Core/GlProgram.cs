@@ -14,8 +14,6 @@ namespace MyOTKE.Core
     /// </summary>
     public sealed class GlProgram : IDisposable
     {
-        private readonly int id;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="GlProgram"/> class.
         /// </summary>
@@ -23,7 +21,7 @@ namespace MyOTKE.Core
         internal GlProgram(IEnumerable<(ShaderType Type, string Source)> shaderSpecs)
         {
             // Create program
-            this.id = GL.CreateProgram();
+            this.Id = GL.CreateProgram();
 
             // Compile shaders
             var shaderIds = new List<int>();
@@ -45,7 +43,7 @@ namespace MyOTKE.Core
                     throw new ArgumentException("Shader compilation failed: " + GL.GetShaderInfoLog(shaderId), nameof(shaderSpecs));
                 }
 
-                GL.AttachShader(this.id, shaderId);
+                GL.AttachShader(this.Id, shaderId);
                 GlDebug.ThrowIfGlError("attaching shader");
                 shaderIds.Add(shaderId);
 
@@ -64,18 +62,18 @@ namespace MyOTKE.Core
             ////GL.BufferData(GL_UNIFORM_BUFFER, 152, NULL, GL_STATIC_DRAW); // allocate 152 bytes of memory
 
             // Link & check program
-            GL.LinkProgram(this.id);
+            GL.LinkProgram(this.Id);
             GlDebug.ThrowIfGlError("linking program");
-            GL.GetProgram(this.id, GetProgramParameterName.LinkStatus, out var linkStatus);
+            GL.GetProgram(this.Id, GetProgramParameterName.LinkStatus, out var linkStatus);
             if (linkStatus != (int)OpenTK.Graphics.OpenGL.Boolean.True)
             {
-                throw new ArgumentException("Program linking failed: " + GL.GetProgramInfoLog(this.id), nameof(shaderSpecs));
+                throw new ArgumentException("Program linking failed: " + GL.GetProgramInfoLog(this.Id), nameof(shaderSpecs));
             }
 
             // Detach and delete shaders
             foreach (var shaderId in shaderIds)
             {
-                GL.DetachShader(this.id, shaderId); // Line not in superbible?
+                GL.DetachShader(this.Id, shaderId); // Line not in superbible?
                 GlDebug.ThrowIfGlError("detaching shader");
                 GL.DeleteShader(shaderId);
                 GlDebug.ThrowIfGlError("deleting shader");
@@ -88,11 +86,16 @@ namespace MyOTKE.Core
         ~GlProgram() => Dispose(false);
 
         /// <summary>
+        /// Gets the OpenGL identifier for this program.
+        /// </summary>
+        public int Id { get; }
+
+        /// <summary>
         /// Installs the program as part of the current rendering state and sets the current uniform values (using the default uniform block).
         /// </summary>
         public void Use()
         {
-            GL.UseProgram(this.id);
+            GL.UseProgram(this.Id);
             GlDebug.ThrowIfGlError("using program");
         }
 
@@ -106,7 +109,7 @@ namespace MyOTKE.Core
                 GC.SuppressFinalize(this);
             }
 
-            GL.DeleteProgram(this.id);
+            GL.DeleteProgram(this.Id);
             GlDebug.ThrowIfGlError("deleting program");
         }
     }
@@ -118,7 +121,6 @@ namespace MyOTKE.Core
     public sealed class GlProgramWithDUB<TDefaultUniformBlock> : IDisposable
         where TDefaultUniformBlock : struct
     {
-        private readonly int id;
         private readonly Action<TDefaultUniformBlock> setDefaultUniformBlock;
 
         /// <summary>
@@ -128,7 +130,7 @@ namespace MyOTKE.Core
         internal GlProgramWithDUB(IEnumerable<(ShaderType Type, string Source)> shaderSpecs)
         {
             // Create program
-            this.id = GL.CreateProgram();
+            this.Id = GL.CreateProgram();
             GlDebug.ThrowIfGlError("creating program");
 
             // Compile shaders
@@ -151,30 +153,30 @@ namespace MyOTKE.Core
                     throw new ArgumentException("Shader compilation failed: " + GL.GetShaderInfoLog(shaderId), nameof(shaderSpecs));
                 }
 
-                GL.AttachShader(this.id, shaderId);
+                GL.AttachShader(this.Id, shaderId);
                 GlDebug.ThrowIfGlError("attaching shader");
                 shaderIds.Add(shaderId);
             }
 
             // Link & check program
-            GL.LinkProgram(this.id);
-            GL.GetProgram(this.id, GetProgramParameterName.LinkStatus, out var linkStatus);
+            GL.LinkProgram(this.Id);
+            GL.GetProgram(this.Id, GetProgramParameterName.LinkStatus, out var linkStatus);
             if (linkStatus != (int)OpenTK.Graphics.OpenGL.Boolean.True)
             {
-                throw new ArgumentException("Program linking failed: " + GL.GetProgramInfoLog(this.id), nameof(shaderSpecs));
+                throw new ArgumentException("Program linking failed: " + GL.GetProgramInfoLog(this.Id), nameof(shaderSpecs));
             }
 
             // Detach and delete shaders
             foreach (var shaderId in shaderIds)
             {
-                GL.DetachShader(this.id, shaderId); // Line not in superbible?
+                GL.DetachShader(this.Id, shaderId); // Line not in superbible?
                 GlDebug.ThrowIfGlError("detaching shader");
                 GL.DeleteShader(shaderId);
                 GlDebug.ThrowIfGlError("deleting shader");
             }
 
             // Get uniform IDs
-            this.setDefaultUniformBlock = GlMarshal.MakeDefaultUniformBlockSetter<TDefaultUniformBlock>(this.id);
+            this.setDefaultUniformBlock = GlMarshal.MakeDefaultUniformBlockSetter<TDefaultUniformBlock>(this.Id);
         }
 
         /// <summary>
@@ -183,12 +185,17 @@ namespace MyOTKE.Core
         ~GlProgramWithDUB() => Dispose(false);
 
         /// <summary>
+        /// Gets the OpenGL identifier for this program.
+        /// </summary>
+        public int Id { get; }
+
+        /// <summary>
         /// Installs the program as part of the current rendering state and sets the current uniform values (using the default uniform block).
         /// </summary>
         /// <param name="uniforms">The uniform values.</param>
         public void UseWithUniformValues(TDefaultUniformBlock uniforms)
         {
-            GL.UseProgram(this.id);
+            GL.UseProgram(this.Id);
             GlDebug.ThrowIfGlError("using program");
             setDefaultUniformBlock(uniforms);
         }
@@ -203,7 +210,7 @@ namespace MyOTKE.Core
                 GC.SuppressFinalize(this);
             }
 
-            GL.DeleteProgram(this.id);
+            GL.DeleteProgram(this.Id);
             GlDebug.ThrowIfGlError("deleting program");
         }
     }
