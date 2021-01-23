@@ -7,7 +7,7 @@
 	<DocumentationFile>MyOTKE.ReactiveBuffers.xml</DocumentationFile>
     
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>My Open Toolkit Engine, reactive buffers: logic for managing Open GL buffers using Observables of vertex data</Description>
+    <Description>My Open Toolkit Engine - reactive buffers: logic for managing Open GL buffers using Observables of vertex data</Description>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 

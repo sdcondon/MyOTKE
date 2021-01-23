@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace MyOTKE.Renderables.Gui
+namespace MyOTKE.Engine.Components.Gui
 {
     /// <summary>
     /// Base class for GUI elements. Provides for a nested element hierarchy, with elements being placed relative to their parents.

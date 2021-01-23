@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>MyOTKE.Renderables.ReactivePrimitives</AssemblyName>
-    <RootNamespace>MyOTKE.Renderables.ReactivePrimitives</RootNamespace>
+    <AssemblyName>MyOTKE.Engine.Components.ReactivePrimitives</AssemblyName>
+    <RootNamespace>MyOTKE.Engine.Components.ReactivePrimitives</RootNamespace>
 	<DocumentationFile>MyOTKE.Renderables.ReactivePrimitives.xml</DocumentationFile>
     
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>My Open Toolkit Engine, view engine: Renderable for ReactiveX-managed primitives</Description>
+    <Description>My Open Toolkit Engine - the engine itself: Component for ReactiveX-managed primitives</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,7 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\ReactiveBuffers\ReactiveBuffers.csproj" />
-    <ProjectReference Include="..\Renderables\Renderables.csproj" />
+    <ProjectReference Include="..\Renderables\Engine.csproj" />
   </ItemGroup>
 
 </Project>

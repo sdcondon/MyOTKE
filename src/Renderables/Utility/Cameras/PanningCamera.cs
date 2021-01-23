@@ -2,7 +2,7 @@
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 
-namespace MyOTKE.Renderables
+namespace MyOTKE.Engine
 {
     /// <summary>
     /// Implementation of <see cref="ICamera"/> that moves in the XY plane.

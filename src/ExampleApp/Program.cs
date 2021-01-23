@@ -1,7 +1,7 @@
-﻿using MyOTKE.Renderables;
-using MyOTKE.Renderables.BasicExamples;
-using MyOTKE.Renderables.Gui;
-using MyOTKE.Renderables.ReactivePrimitives;
+﻿using MyOTKE.Engine;
+using MyOTKE.Engine.Components.BasicExamples;
+using MyOTKE.Engine.Components.Gui;
+using MyOTKE.Engine.Components.ReactivePrimitives;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
@@ -48,7 +48,7 @@ namespace MyOTKE.ExampleApp
             view.Run();
         }
 
-        private class MenuRenderable : CompositeRenderable
+        private class MenuRenderable : CompositeComponent
         {
             public MenuRenderable(MyOTKEWindow view)
             {
@@ -107,7 +107,7 @@ namespace MyOTKE.ExampleApp
             }
         }
 
-        private class FirstPersonRenderable : CompositeRenderable
+        private class FirstPersonRenderable : CompositeComponent
         {
             private readonly MyOTKEWindow view;
             private readonly ICamera camera;
@@ -262,7 +262,7 @@ namespace MyOTKE.ExampleApp
             }
         }
 
-        private class OrbitRenderable : CompositeRenderable
+        private class OrbitRenderable : CompositeComponent
         {
             private readonly MyOTKEWindow view;
             private readonly ICamera camera;

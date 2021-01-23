@@ -1,9 +1,9 @@
 ﻿using OpenTK.Mathematics;
 
-namespace MyOTKE.Renderables
+namespace MyOTKE.Engine
 {
     /// <summary>
-    /// A source of view and projection matrices. Used by some <see cref="IRenderable"/> implementations.
+    /// A source of view and projection matrices. Used by some <see cref="IComponent"/> implementations.
     /// </summary>
     public interface IViewProjection
     {

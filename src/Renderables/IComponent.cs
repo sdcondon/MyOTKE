@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace MyOTKE.Renderables
+namespace MyOTKE.Engine
 {
     /// <summary>
     /// A discrete renderable part of a <see cref="MyOTKEWindow"/>. Typically will encapsulate everything
     /// that results in one or more OpenGl draw calls: the program(s), the relevant buffers, etc.
     /// </summary>
-    public interface IRenderable : IDisposable
+    public interface IComponent : IDisposable
     {
         /// <summary>
         /// Loads the instance, compiling any programs and populating any required buffers. Invoked as soon as an OpenGL render context is available.

@@ -1,7 +1,7 @@
 ﻿using OpenTK.Mathematics;
 using System.Collections.Generic;
 
-namespace MyOTKE.Renderables.ReactivePrimitives
+namespace MyOTKE.Engine.Components.ReactivePrimitives
 {
     /// <summary>
     /// Extension methods for the <see cref="Primitive"/> class.

@@ -5,7 +5,7 @@ using OpenTK.Windowing.Desktop;
 using System;
 using System.Diagnostics;
 
-namespace MyOTKE.Renderables
+namespace MyOTKE.Engine
 {
     /// <summary>
     /// Encapsulates an interactive view rendered with OpenGl.
@@ -18,7 +18,7 @@ namespace MyOTKE.Renderables
         private readonly Color clearColor;
         private readonly Stopwatch modelUpdateIntervalStopwatch = new Stopwatch();
 
-        private IRenderable renderable;
+        private IComponent renderable;
         private bool lockCursor;
         private bool isContextCreated;
 
@@ -69,7 +69,7 @@ namespace MyOTKE.Renderables
         /// <summary>
         /// Gets or sets the root renderable of the view.
         /// </summary>
-        public IRenderable Renderable
+        public IComponent Renderable
         {
             get => renderable;
             set

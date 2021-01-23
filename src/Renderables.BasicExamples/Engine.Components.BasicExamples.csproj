@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>MyOTKE.Renderables.BasicExamples</AssemblyName>
-    <RootNamespace>MyOTKE.Renderables.BasicExamples</RootNamespace>
+    <AssemblyName>MyOTKE.Engine.Components.BasicExamples</AssemblyName>
+    <RootNamespace>MyOTKE.Engine.Components.BasicExamples</RootNamespace>
 	<DocumentationFile>MyOTKE.Renderables.BasicExamples.xml</DocumentationFile>
     
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>My Open Toolkit Engine, view engine: Test renderable implementations.</Description>
+    <Description>My Open Toolkit Engine - the engine itself: Basic component implementations.</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,7 +36,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\ReactiveBuffers\ReactiveBuffers.csproj" />
-    <ProjectReference Include="..\Renderables\Renderables.csproj" />
+    <ProjectReference Include="..\Renderables\Engine.csproj" />
   </ItemGroup>
 
 </Project>

@@ -9,7 +9,7 @@
   
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>My Open Toolkit Engine, Core: Low-level OO wrappers around Open GL concepts.</Description>
+    <Description>My Open Toolkit Engine - core: Low-level OO wrappers around Open GL concepts.</Description>
   </PropertyGroup>
 
   <ItemGroup>

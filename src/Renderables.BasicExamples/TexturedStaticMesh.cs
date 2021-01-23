@@ -6,12 +6,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace MyOTKE.Renderables.BasicExamples
+namespace MyOTKE.Engine.Components.BasicExamples
 {
     /// <summary>
     /// Renderable class for static 3D geometry.
     /// </summary>
-    public sealed class TexturedStaticMesh : IRenderable
+    public sealed class TexturedStaticMesh : IComponent
     {
         private static readonly object ProgramStateLock = new object();
         private static GlProgramWithDUBBuilder<Uniforms> programBuilder;

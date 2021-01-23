@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace MyOTKE.Renderables.Gui
+namespace MyOTKE.Engine.Components.Gui
 {
     /// <summary>
     /// A GUI element that is a stream of text. New messages can be pushed, old messages will eventually disappear.

@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace MyOTKE.Renderables.Gui
+namespace MyOTKE.Engine.Components.Gui
 {
     /// <summary>
     /// Container for information about a GUI element vertex.

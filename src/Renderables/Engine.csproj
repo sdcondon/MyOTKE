@@ -2,14 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>MyOTKE.Renderables</AssemblyName>
-    <RootNamespace>MyOTKE.Renderables</RootNamespace>
+    <AssemblyName>MyOTKE.Engine</AssemblyName>
+    <RootNamespace>MyOTKE.Engine</RootNamespace>
 	<DocumentationFile>MyOTKE.Views.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>My Open Toolkit Engine, view engine: core types and abstractions.</Description>
+    <Description>My Open Toolkit Engine - the engine itself: core types and abstractions.</Description>
   </PropertyGroup>
 
   <ItemGroup>

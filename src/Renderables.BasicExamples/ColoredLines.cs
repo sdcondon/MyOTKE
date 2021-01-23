@@ -8,12 +8,12 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Reactive.Linq;
 
-namespace MyOTKE.Renderables.BasicExamples
+namespace MyOTKE.Engine.Components.BasicExamples
 {
     /// <summary>
     /// Renderable class for 3D lines. For debug utilities.
     /// </summary>
-    public class ColoredLines : IRenderable
+    public class ColoredLines : IComponent
     {
         private static readonly object ProgramStateLock = new object();
         private static GlProgramWithDUBBuilder<Uniforms> programBuilder;

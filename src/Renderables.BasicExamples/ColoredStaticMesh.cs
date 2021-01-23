@@ -5,12 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MyOTKE.Renderables.BasicExamples
+namespace MyOTKE.Engine.Components.BasicExamples
 {
     /// <summary>
     /// Simple renderable class for static 3D geometry.
     /// </summary>
-    public class ColoredStaticMesh : IRenderable
+    public class ColoredStaticMesh : IComponent
     {
         private static readonly object ProgramStateLock = new object();
         private static GlProgramWithDUBBuilder<Uniforms> programBuilder;

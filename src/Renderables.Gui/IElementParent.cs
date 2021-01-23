@@ -2,7 +2,7 @@
 using System;
 using System.ComponentModel;
 
-namespace MyOTKE.Renderables.Gui
+namespace MyOTKE.Engine.Components.Gui
 {
     /// <summary>
     /// Interface for types that contain GUI elements. This includes parent elements and the root GUI object.

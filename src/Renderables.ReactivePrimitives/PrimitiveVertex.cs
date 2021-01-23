@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace MyOTKE.Renderables.ReactivePrimitives
+namespace MyOTKE.Engine.Components.ReactivePrimitives
 {
     /// <summary>
     /// Container struct for the attributes of a vertex of a primitive.

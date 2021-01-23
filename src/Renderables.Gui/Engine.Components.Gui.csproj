@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>MyOTKE.Renderables.Gui</AssemblyName>
-    <RootNamespace>MyOTKE.Renderables.Gui</RootNamespace>
+    <AssemblyName>MyOTKE.Engine.Components.Gui</AssemblyName>
+    <RootNamespace>MyOTKE.Engine.Components.Gui</RootNamespace>
 	<DocumentationFile>MyOTKE.Renderables.Gui.xml</DocumentationFile>
     
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>My Open Toolkit Engine, view engine: GUI renderable implementation.</Description>
+    <Description>My Open Toolkit Engine - the engine itself: GUI component implementation.</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,7 +33,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\ReactiveBuffers\ReactiveBuffers.csproj" />
-    <ProjectReference Include="..\Renderables\Renderables.csproj" />
+    <ProjectReference Include="..\Renderables\Engine.csproj" />
   </ItemGroup>
 
 </Project>

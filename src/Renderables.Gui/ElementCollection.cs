@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Linq;
 
-namespace MyOTKE.Renderables.Gui
+namespace MyOTKE.Engine.Components.Gui
 {
     public class ElementCollection : ICollection<ElementBase>
     {

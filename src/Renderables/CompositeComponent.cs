@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MyOTKE.Renderables
+namespace MyOTKE.Engine
 {
     /// <summary>
-    /// Base class for <see cref="IRenderable"/> instances that are composed of sub-renderables.
+    /// Base class for <see cref="IComponent"/> instances that are composed of sub-renderables.
     /// </summary>
-    public abstract class CompositeRenderable : IRenderable, IDisposable
+    public abstract class CompositeComponent : IComponent, IDisposable
     {
-        private readonly List<IRenderable> renderables = new List<IRenderable>();
+        private readonly List<IComponent> renderables = new List<IComponent>();
 
         private bool contextCreated;
 
@@ -16,7 +16,7 @@ namespace MyOTKE.Renderables
         /// Adds a sub-renderable.
         /// </summary>
         /// <param name="renderable">The sub-renderable to be added.</param>
-        public void AddRenderable(IRenderable renderable)
+        public void AddRenderable(IComponent renderable)
         {
             if (contextCreated)
             {

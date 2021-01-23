@@ -85,18 +85,26 @@ namespace MyOTKE.Core
             GlDebug.ThrowIfGlError("copying buffer sub-data");
         }
 
-        //// TODO?: The vast majority of time we'll probably want to interpret the buffer as storing a single type
-        //// of object, but sometimes e.g.
-        //// AsBufferOf<byte>()..
-        //// AsBufferOf<int>(t => t.MyIntProp) - mapping func - would need to calculate stride (and modify this class to account for it when getting and setting)
-        //// AsBufferOf<whatever>(attributeinfo) - not safe, but empowering..
-        //// HOWEVER: Would need to decide what to do about finalizer - losing the 1-1 relationship between object and buffer means don't necessarily want to delete buffer in finalizer..
-        ////public GlVertexBufferObject<TElement> AsBufferOf<TElement>()
-        ////{
-        ////    //// being able to use custom attributes would be cool? Would need to support creation thereof..
-        ////    var mappedCapacity = Capacity; //... scale me (what if not an integer? error or ...)
-        ////    return new GlVertexBufferObject<TElement>(Id, ...);
-        ////}
+        /// <summary>
+        /// Thows a <see cref="NotImplementedException"/>.
+        /// <para />
+        /// TODO: The vast majority of time we'll want to interpret the buffer as storing a single type, but sometimes e.g.
+        /// AsBufferOf&lt;byte&gt;(),
+        /// AsBufferOf&lt;int&gt;(t => t.MyIntProp) (would need to calculate stride - and modify this class to account for it in getter and setter),
+        /// perhaps even AsBufferOf&lt;Tr&gt;(attributeinfo) (not safe, but empowering).
+        /// Losing the 1-1 relationship between object and buffer means don't necessarily want to delete buffer in finalizer - could resolve by changing Id to a SafeHandle..
+        /// </summary>
+        /// <typeparam name="TElement">The type to interpret the buffer as containing.</typeparam>
+        /// <returns>A buffer object of the appropriate type.</returns>
+        public GlVertexBufferObject<TElement> AsBufferOf<TElement>()
+            where TElement : struct
+        {
+            throw new NotImplementedException();
+
+            //// being able to use custom attributes would be cool? Would need to support creation thereof..
+            ////var mappedCapacity = Capacity; //... scale me (what if not an integer? error or ...)
+            ////return new GlVertexBufferObject<TElement>(Id, ...);
+        }
 
         /// <inheritdoc />
         public void Dispose() => Dispose(true);

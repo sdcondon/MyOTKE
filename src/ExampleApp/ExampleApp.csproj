@@ -26,10 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Renderables.BasicExamples\Renderables.BasicExamples.csproj" />
-    <ProjectReference Include="..\Renderables.Gui\Renderables.Gui.csproj" />
-    <ProjectReference Include="..\Renderables.ReactivePrimitives\Renderables.ReactivePrimitives.csproj" />
-    <ProjectReference Include="..\Renderables\Renderables.csproj" />
+    <ProjectReference Include="..\Renderables.BasicExamples\Engine.Components.BasicExamples.csproj" />
+    <ProjectReference Include="..\Renderables.Gui\Engine.Components.Gui.csproj" />
+    <ProjectReference Include="..\Renderables.ReactivePrimitives\Engine.Components.ReactivePrimitives.csproj" />
+    <ProjectReference Include="..\Renderables\Engine.csproj" />
   </ItemGroup>
   
 </Project>

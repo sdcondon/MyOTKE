@@ -2,7 +2,7 @@
 using System;
 using Plane = System.Numerics.Plane;
 
-namespace MyOTKE.Renderables
+namespace MyOTKE.Engine
 {
     /// <summary>
     /// Represents a semi-infinite 3D ray, that has a start point and a direction.

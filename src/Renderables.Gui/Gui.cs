@@ -7,12 +7,12 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 using System.ComponentModel;
 
-namespace MyOTKE.Renderables.Gui
+namespace MyOTKE.Engine.Components.Gui
 {
     /// <summary>
     /// Renderable container for a set of graphical user interface elements.
     /// </summary>
-    public class Gui : IRenderable, IElementParent
+    public class Gui : IComponent, IElementParent
     {
         private static readonly object ProgramStateLock = new object();
         private static GlProgramWithDUBBuilder<Uniforms> programBuilder;

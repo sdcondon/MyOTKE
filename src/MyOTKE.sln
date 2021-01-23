@@ -13,13 +13,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveBuffers", "Reactive
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveBuffers.Tests", "ReactiveBuffers.Tests\ReactiveBuffers.Tests.csproj", "{3D0EB427-93E7-4915-A9E5-AF4243F4A447}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Renderables", "Renderables\Renderables.csproj", "{A2286415-CD5D-4DE1-8B2E-73B94434F1CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Engine", "Renderables\Engine.csproj", "{A2286415-CD5D-4DE1-8B2E-73B94434F1CD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Renderables.BasicExamples", "Renderables.BasicExamples\Renderables.BasicExamples.csproj", "{C1710E1D-65AC-48E4-A6C9-40832721C736}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Engine.Components.BasicExamples", "Renderables.BasicExamples\Engine.Components.BasicExamples.csproj", "{C1710E1D-65AC-48E4-A6C9-40832721C736}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Renderables.Gui", "Renderables.Gui\Renderables.Gui.csproj", "{A58A14DB-0A5E-459A-8970-F89D212DA025}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Engine.Components.Gui", "Renderables.Gui\Engine.Components.Gui.csproj", "{A58A14DB-0A5E-459A-8970-F89D212DA025}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Renderables.ReactivePrimitives", "Renderables.ReactivePrimitives\Renderables.ReactivePrimitives.csproj", "{B87E758F-EC42-4E06-9A7F-78F0B2CB4ACA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Engine.Components.ReactivePrimitives", "Renderables.ReactivePrimitives\Engine.Components.ReactivePrimitives.csproj", "{B87E758F-EC42-4E06-9A7F-78F0B2CB4ACA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CA7E2348-93C1-48D9-ABD6-A5F79F267500}"
 	ProjectSection(SolutionItems) = preProject

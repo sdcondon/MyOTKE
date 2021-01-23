@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 
-namespace MyOTKE.Renderables.ReactivePrimitives
+namespace MyOTKE.Engine.Components.ReactivePrimitives
 {
     /// <summary>
-    /// Implementation of <see cref="IRenderable" /> that renders a set of primitive shapes from an observable sequence of source data.
+    /// Implementation of <see cref="IComponent" /> that renders a set of primitive shapes from an observable sequence of source data.
     /// </summary>
-    public class PrimitiveRenderer : IRenderable
+    public class PrimitiveRenderer : IComponent
     {
         private static readonly object ProgramStateLock = new object();
         private static GlProgramWithDUBBuilder<Uniforms> programBuilder;
