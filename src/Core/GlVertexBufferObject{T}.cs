@@ -86,12 +86,12 @@ namespace MyOTKE.Core
         }
 
         /// <summary>
-        /// Thows a <see cref="NotImplementedException"/>.
+        /// Throws a <see cref="NotImplementedException"/>.
         /// <para />
         /// TODO: The vast majority of time we'll want to interpret the buffer as storing a single type, but sometimes e.g.
         /// AsBufferOf&lt;byte&gt;(),
         /// AsBufferOf&lt;int&gt;(t => t.MyIntProp) (would need to calculate stride - and modify this class to account for it in getter and setter),
-        /// perhaps even AsBufferOf&lt;Tr&gt;(attributeinfo) (not safe, but empowering).
+        /// perhaps even AsBufferOf&lt;T&gt;(attributeinfo) (not safe, but empowering).
         /// Losing the 1-1 relationship between object and buffer means don't necessarily want to delete buffer in finalizer - could resolve by changing Id to a SafeHandle..
         /// </summary>
         /// <typeparam name="TElement">The type to interpret the buffer as containing.</typeparam>
