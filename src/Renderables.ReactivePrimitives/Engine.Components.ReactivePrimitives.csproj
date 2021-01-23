@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>MyOTKE.Engine.Components.ReactivePrimitives</AssemblyName>
     <RootNamespace>MyOTKE.Engine.Components.ReactivePrimitives</RootNamespace>
-	<DocumentationFile>MyOTKE.Renderables.ReactivePrimitives.xml</DocumentationFile>
+	<DocumentationFile>MyOTKE.Engine.Components.ReactivePrimitives.xml</DocumentationFile>
     
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>My Open Toolkit Engine - the engine itself: Component for ReactiveX-managed primitives</Description>

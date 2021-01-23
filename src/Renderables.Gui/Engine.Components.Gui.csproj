@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>MyOTKE.Engine.Components.Gui</AssemblyName>
     <RootNamespace>MyOTKE.Engine.Components.Gui</RootNamespace>
-	<DocumentationFile>MyOTKE.Renderables.Gui.xml</DocumentationFile>
+	<DocumentationFile>MyOTKE.Engine.Components.Gui.xml</DocumentationFile>
     
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>My Open Toolkit Engine - the engine itself: GUI component implementation.</Description>

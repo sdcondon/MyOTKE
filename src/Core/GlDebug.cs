@@ -11,7 +11,7 @@ namespace MyOTKE.Core
     public static class GlDebug
     {
         /// <summary>
-        /// Registers Open GL debug callback that writes to debug trace listeners (i.e. calls <see cref="Debug.WriteLine(object, string)"/> with "OPENGL" as the category).
+        /// Registers Open GL debug callback that writes to debug trace listeners (i.e. calls <see cref="Debug.WriteLine(object, string)"/>), with "OpenGL" as the category.
         /// </summary>
         [Conditional("DEBUG")]
         public static void RegisterDebugCallback()
@@ -32,7 +32,7 @@ namespace MyOTKE.Core
                 IntPtr userParam)
             {
                 var messageString = Marshal.PtrToStringAuto(message);
-                Debug.WriteLine($"{id} {source} {type} {severity}: {messageString}", "OPENGL");
+                Debug.WriteLine($"{id} {source} {type} {severity}: {messageString}", "OpenGL");
             }
 
             ////void KhronosApi_Log(object sender, KhronosLogEventArgs e)
@@ -42,7 +42,7 @@ namespace MyOTKE.Core
         }
 
         /// <summary>
-        /// Throws an exception if the Open GL error flag is set (and clears the error).
+        /// Throws an exception if the OpenGL error flag is set (and clears the error).
         /// </summary>
         /// <param name="action">The action that was just carried out (use the present participle to make the message read correctly - e.g. "doing the thing").</param>
         [Conditional("DEBUG")]

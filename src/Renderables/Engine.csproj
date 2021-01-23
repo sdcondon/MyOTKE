@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>MyOTKE.Engine</AssemblyName>
     <RootNamespace>MyOTKE.Engine</RootNamespace>
-	<DocumentationFile>MyOTKE.Views.xml</DocumentationFile>
+	<DocumentationFile>MyOTKE.Engine.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup>

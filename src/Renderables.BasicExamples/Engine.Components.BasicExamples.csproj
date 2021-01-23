@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>MyOTKE.Engine.Components.BasicExamples</AssemblyName>
     <RootNamespace>MyOTKE.Engine.Components.BasicExamples</RootNamespace>
-	<DocumentationFile>MyOTKE.Renderables.BasicExamples.xml</DocumentationFile>
+	<DocumentationFile>MyOTKE.Engine.Components.BasicExamples.xml</DocumentationFile>
     
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>My Open Toolkit Engine - the engine itself: Basic component implementations.</Description>
