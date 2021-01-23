@@ -11,7 +11,7 @@ using System.Reactive.Linq;
 namespace MyOTKE.Engine.Components.BasicExamples
 {
     /// <summary>
-    /// Renderable class for 3D lines. For debug utilities.
+    /// Simple component class that draws a set of 3D lines.
     /// </summary>
     public class ColoredLines : IComponent
     {

@@ -11,12 +11,12 @@ namespace MyOTKE.Core
     public static class GlDebug
     {
         /// <summary>
-        /// Registers Open GL debug callback that writes to debug trace listeners (i.e. calls <see cref="Debug.WriteLine(object, string)"/>), with "OpenGL" as the category.
+        /// Registers an OpenGL debug callback that writes to debug trace listeners (i.e. calls <see cref="Debug.WriteLine(object, string)"/>), with "OpenGL" as the category.
         /// </summary>
         [Conditional("DEBUG")]
         public static void RegisterDebugCallback()
         {
-            Debug.WriteLine("Registering OpenGL debug handler");
+            WriteLine("Registering OpenGL debug handler");
             GL.DebugMessageCallback(OnGlDebugMessage, IntPtr.Zero);
 
             ////KhronosApi.LogEnabled = true;
@@ -64,7 +64,7 @@ namespace MyOTKE.Core
         internal static void WriteLine(string message)
         {
             var method = new StackFrame(1).GetMethod();
-            Debug.WriteLine(message, $"{method.DeclaringType.FullName}::{method.Name}");
+            Debug.WriteLine($"{method.DeclaringType.FullName}::{method.Name}: {message}", "MyOTKE");
         }
     }
 }

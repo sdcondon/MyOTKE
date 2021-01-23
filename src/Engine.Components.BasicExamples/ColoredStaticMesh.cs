@@ -8,7 +8,7 @@ using System.Linq;
 namespace MyOTKE.Engine.Components.BasicExamples
 {
     /// <summary>
-    /// Simple renderable class for static 3D geometry.
+    /// Simple component class that draws static 3D geometry.
     /// </summary>
     public class ColoredStaticMesh : IComponent
     {

@@ -10,7 +10,7 @@ using System.ComponentModel;
 namespace MyOTKE.Engine.Components.Gui
 {
     /// <summary>
-    /// Renderable container for a set of graphical user interface elements.
+    /// Component class for a set of graphical user interface elements.
     /// </summary>
     public class Gui : IComponent, IElementParent
     {
