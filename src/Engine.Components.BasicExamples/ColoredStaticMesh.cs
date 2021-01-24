@@ -120,7 +120,7 @@ namespace MyOTKE.Engine.Components.BasicExamples
         {
             ThrowIfDisposed();
 
-            program.UseWithUniformValues(new Uniforms
+            this.vertexArrayObject.Draw(program, new Uniforms
             {
                 MVP = this.Model * this.viewProjection.View * this.viewProjection.Projection,
                 V = this.viewProjection.View,
@@ -132,7 +132,6 @@ namespace MyOTKE.Engine.Components.BasicExamples
                 PointLightColor = PointLightColor,
                 PointLightPower = PointLightPower,
             });
-            this.vertexArrayObject.Draw(-1);
         }
 
         /// <inheritdoc />

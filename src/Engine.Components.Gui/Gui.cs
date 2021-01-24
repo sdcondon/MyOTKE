@@ -72,7 +72,7 @@ namespace MyOTKE.Engine.Components.Gui
         /// <inheritdoc /> from IElementParent
         public Vector2 Size => new Vector2(view.ClientSize.X, view.ClientSize.Y);
 
-        /// <inheritdoc /> from IRenderable
+        /// <inheritdoc /> from IComponent
         public void Load()
         {
             ThrowIfDisposed();
@@ -104,7 +104,7 @@ namespace MyOTKE.Engine.Components.Gui
             }
         }
 
-        /// <inheritdoc /> from IRenderable
+        /// <inheritdoc /> from IComponent
         public void Render()
         {
             ThrowIfDisposed();
@@ -112,7 +112,7 @@ namespace MyOTKE.Engine.Components.Gui
             // Assume the GUI is drawn last and is independent - goes on top of everything drawn already - so clear the depth buffer
             GL.Clear(ClearBufferMask.DepthBufferBit);
 
-            program.UseWithUniformValues(new Uniforms
+            program.UseWithDefaultUniformBlock(new Uniforms
             {
                 P = Matrix4.Transpose(Matrix4.CreateOrthographic(Size.X, Size.Y, 1f, -1f)),
                 text = 0,

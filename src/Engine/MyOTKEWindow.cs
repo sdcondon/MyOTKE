@@ -18,7 +18,7 @@ namespace MyOTKE.Engine
         private readonly Color clearColor;
         private readonly Stopwatch modelUpdateIntervalStopwatch = new Stopwatch();
 
-        private IComponent renderable;
+        private IComponent rootComponent;
         private bool lockCursor;
         private bool isContextCreated;
 
@@ -67,11 +67,11 @@ namespace MyOTKE.Engine
         public System.Numerics.Vector2 CenterOffset => new System.Numerics.Vector2(MousePosition.X, MousePosition.Y) - Center;
 
         /// <summary>
-        /// Gets or sets the root renderable of the view.
+        /// Gets or sets the root component of the view.
         /// </summary>
-        public IComponent Renderable
+        public IComponent RootComponent
         {
-            get => renderable;
+            get => rootComponent;
             set
             {
                 if (isContextCreated)
@@ -79,7 +79,7 @@ namespace MyOTKE.Engine
                     value.Load();
                 }
 
-                renderable = value;
+                rootComponent = value;
             }
         }
 
@@ -88,7 +88,7 @@ namespace MyOTKE.Engine
         {
             if (disposing)
             {
-                Renderable.Dispose();
+                RootComponent.Dispose();
             }
 
             base.Dispose(disposing);
@@ -106,7 +106,7 @@ namespace MyOTKE.Engine
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
-            renderable.Load();
+            rootComponent.Load();
             isContextCreated = true;
         }
 
@@ -116,7 +116,7 @@ namespace MyOTKE.Engine
             base.OnRenderFrame(eventArgs);
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            renderable.Render();
+            rootComponent.Render();
 
             Context.SwapBuffers();
         }
@@ -138,7 +138,7 @@ namespace MyOTKE.Engine
                 }
 
                 // Update the game world
-                renderable.Update(elapsed);
+                rootComponent.Update(elapsed);
 
                 // Reset user input properties
                 if (this.lockCursor)

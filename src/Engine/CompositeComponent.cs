@@ -8,30 +8,30 @@ namespace MyOTKE.Engine
     /// </summary>
     public abstract class CompositeComponent : IComponent, IDisposable
     {
-        private readonly List<IComponent> renderables = new List<IComponent>();
+        private readonly List<IComponent> components = new List<IComponent>();
 
         private bool contextCreated;
 
         /// <summary>
-        /// Adds a sub-renderable.
+        /// Adds a sub-component.
         /// </summary>
-        /// <param name="renderable">The sub-renderable to be added.</param>
-        public void AddRenderable(IComponent renderable)
+        /// <param name="component">The sub-component to be added.</param>
+        public void AddComponent(IComponent component)
         {
             if (contextCreated)
             {
-                renderable.Load();
+                component.Load();
             }
 
-            renderables.Add(renderable);
+            components.Add(component);
         }
 
         /// <inheritdoc />
         public void Load()
         {
-            for (int i = 0; i < renderables.Count; i++)
+            for (int i = 0; i < components.Count; i++)
             {
-                renderables[i].Load();
+                components[i].Load();
             }
 
             contextCreated = true;
@@ -40,27 +40,27 @@ namespace MyOTKE.Engine
         /// <inheritdoc />
         public virtual void Update(TimeSpan elapsed)
         {
-            for (int i = 0; i < renderables.Count; i++)
+            for (int i = 0; i < components.Count; i++)
             {
-                renderables[i].Update(elapsed);
+                components[i].Update(elapsed);
             }
         }
 
         /// <inheritdoc />
         public void Render()
         {
-            for (int i = 0; i < renderables.Count; i++)
+            for (int i = 0; i < components.Count; i++)
             {
-                renderables[i].Render();
+                components[i].Render();
             }
         }
 
         /// <inheritdoc />
         public void Dispose()
         {
-            for (int i = 0; i < renderables.Count; i++)
+            for (int i = 0; i < components.Count; i++)
             {
-                renderables[i].Dispose();
+                components[i].Dispose();
             }
         }
     }

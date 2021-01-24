@@ -160,7 +160,7 @@ namespace MyOTKE.Engine.Components.ReactivePrimitives
         {
             ThrowIfDisposed();
 
-            program.UseWithUniformValues(new Uniforms
+            program.UseWithDefaultUniformBlock(new Uniforms
             {
                 MVP = this.camera.View * this.camera.Projection,
                 V = this.camera.View,

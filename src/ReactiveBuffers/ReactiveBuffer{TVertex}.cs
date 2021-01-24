@@ -29,7 +29,7 @@ namespace MyOTKE.ReactiveBuffers
         /// </summary>
         /// <param name="vertexArrayObject">The VAO to populate.</param>
         /// <param name="atomSource">
-        /// The outer observable should push an inner observable (atom) for each new renderable.
+        /// The outer observable should push an inner observable (atom) for each new renderable entity.
         /// The atoms should push a new list of vertices whenever the atom's state changes, and complete when it is removed.
         /// </param>
         /// <param name="atomIndices">The vertex indices to use when rendering each atom.</param>

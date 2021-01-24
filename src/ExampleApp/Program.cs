@@ -39,18 +39,18 @@ namespace MyOTKE.ExampleApp
             // texture management stuff in the core lib.
             Text.Font = new Font(@"Assets\Fonts\Inconsolata\Inconsolata-Regular.ttf");
 
-            // Views have a Renderable property. Renderables can be composed of other renderables -
-            // there's even a handy CompositeRenderable base class to make this easy - see the two examples
-            // below, and note that MenuRenderable (which consists of a single Gui renderable and has
+            // Views have a RootComponent property. Components can be composed of other components -
+            // there's even a handy CompositeComponent base class to make this easy - see the two examples
+            // below, and note that MenuComponent (which consists of a single GUI component and has
             // no overrides) is only a class of its own to make disposal on button press easy.
-            view.Renderable = new MenuRenderable(view);
+            view.RootComponent = new MenuComponent(view);
 
             view.Run();
         }
 
-        private class MenuRenderable : CompositeComponent
+        private class MenuComponent : CompositeComponent
         {
-            public MenuRenderable(MyOTKEWindow view)
+            public MenuComponent(MyOTKEWindow view)
             {
                 view.LockCursor = false;
 
@@ -65,7 +65,7 @@ namespace MyOTKE.ExampleApp
                 ////    systemInfo.AppendLine("EGL is available");
                 ////}
 
-                AddRenderable(new Gui(view, 1000)
+                AddComponent(new Gui(view, 1000)
                 {
                     SubElements =
                     {
@@ -76,7 +76,7 @@ namespace MyOTKE.ExampleApp
                             text: "FIRST PERSON DEMO",
                             v =>
                             {
-                                view.Renderable = new FirstPersonRenderable(view);
+                                view.RootComponent = new FirstPersonComponent(view);
                                 this.Dispose();
                             }),
                         new Button(
@@ -86,7 +86,7 @@ namespace MyOTKE.ExampleApp
                             text: "ORBIT DEMO",
                             v =>
                             {
-                                view.Renderable = new OrbitRenderable(view);
+                                view.RootComponent = new OrbitComponent(view);
                                 this.Dispose();
                             }),
                         new Button(
@@ -107,7 +107,7 @@ namespace MyOTKE.ExampleApp
             }
         }
 
-        private class FirstPersonRenderable : CompositeComponent
+        private class FirstPersonComponent : CompositeComponent
         {
             private readonly MyOTKEWindow view;
             private readonly ICamera camera;
@@ -121,7 +121,7 @@ namespace MyOTKE.ExampleApp
             private Matrix4 cubeWorldMatrix = Matrix4.Identity;
             private Vector3 lastCamPosition = Vector3.Zero;
 
-            public FirstPersonRenderable(MyOTKEWindow view)
+            public FirstPersonComponent(MyOTKEWindow view)
             {
                 this.view = view;
                 camera = new FirstPersonCamera(
@@ -150,7 +150,7 @@ namespace MyOTKE.ExampleApp
                         new Vector2(0.5f, 1f),
                         new Vector3(0f, 0f, 1f)),
                 };
-                AddRenderable(new TexturedStaticMesh(
+                AddComponent(new TexturedStaticMesh(
                     camera,
                     texturedTriangleVertices,
                     new uint[] { 0, 1, 2 },
@@ -174,7 +174,7 @@ namespace MyOTKE.ExampleApp
                         Color.Blue(),
                         new Vector3(0f, 0f, 1f)),
                 };
-                AddRenderable(new ColoredStaticMesh(
+                AddComponent(new ColoredStaticMesh(
                     camera,
                     coloredTriangleVertices,
                     new uint[] { 0, 1, 2 })
@@ -182,14 +182,14 @@ namespace MyOTKE.ExampleApp
                     AmbientLightColor = Color.Grey(),
                 });
 
-                AddRenderable(new PrimitiveRenderer(camera, Observable.Return(cubeSubject), 12)
+                AddComponent(new PrimitiveRenderer(camera, Observable.Return(cubeSubject), 12)
                 {
                     AmbientLightColor = Color.Grey(0.1f),
                     DirectedLightDirection = new Vector3(0, 1f, 0f),
                     DirectedLightColor = Color.Grey(),
                 });
 
-                AddRenderable(lines = new ColoredLines(camera)
+                AddComponent(lines = new ColoredLines(camera)
                 {
                     AmbientLightColor = Color.Grey(),
                 });
@@ -203,7 +203,7 @@ namespace MyOTKE.ExampleApp
                     textColor: Color.White(),
                     10);
 
-                AddRenderable(new Gui(view, 1000)
+                AddComponent(new Gui(view, 1000)
                 {
                     SubElements =
                     {
@@ -256,13 +256,13 @@ namespace MyOTKE.ExampleApp
 
                 if (view.IsKeyReleased(Keys.Q))
                 {
-                    view.Renderable = new MenuRenderable(view);
+                    view.RootComponent = new MenuComponent(view);
                     this.Dispose();
                 }
             }
         }
 
-        private class OrbitRenderable : CompositeComponent
+        private class OrbitComponent : CompositeComponent
         {
             private readonly MyOTKEWindow view;
             private readonly ICamera camera;
@@ -275,7 +275,7 @@ namespace MyOTKE.ExampleApp
             private Matrix4 cubeWorldMatrix = Matrix4.Identity;
             private Vector3 lastCamPosition = Vector3.Zero;
 
-            public OrbitRenderable(MyOTKEWindow view)
+            public OrbitComponent(MyOTKEWindow view)
             {
                 this.view = view;
                 camera = new OrbitCameraAligned(
@@ -287,7 +287,7 @@ namespace MyOTKE.ExampleApp
                 {
                 };
 
-                AddRenderable(new PrimitiveRenderer(camera, Observable.Return(cubeSubject), 12)
+                AddComponent(new PrimitiveRenderer(camera, Observable.Return(cubeSubject), 12)
                 {
                     AmbientLightColor = Color.Grey(0.1f),
                     DirectedLightDirection = new Vector3(0, 1f, 0f),
@@ -303,7 +303,7 @@ namespace MyOTKE.ExampleApp
                     textColor: Color.White(),
                     10);
 
-                AddRenderable(new Gui(view, 1000)
+                AddComponent(new Gui(view, 1000)
                 {
                     SubElements =
                     {
@@ -337,7 +337,7 @@ namespace MyOTKE.ExampleApp
 
                 if (view.IsKeyReleased(Keys.Q))
                 {
-                    view.Renderable = new MenuRenderable(view);
+                    view.RootComponent = new MenuComponent(view);
                     this.Dispose();
                 }
             }

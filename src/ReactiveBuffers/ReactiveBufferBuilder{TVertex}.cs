@@ -24,7 +24,7 @@ namespace MyOTKE.ReactiveBuffers
         /// <param name="atomCapacity">The desired capcity (in atoms) of the created buffer.</param>
         /// <param name="atomIndices">The vertex indices to use when rendering each atom.</param>
         /// <param name="atomSource">
-        /// The outer observable should push an inner observable (atom) for each new renderable.
+        /// The outer observable should push an inner observable (atom) for each new renderable entity.
         /// The atoms should push a new list of vertices whenever the atom's state changes, and complete when it is removed.
         /// </param>
         public ReactiveBufferBuilder(

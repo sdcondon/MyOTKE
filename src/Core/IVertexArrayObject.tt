@@ -24,7 +24,7 @@ namespace MyOTKE.Core
 <# for(int j = 1; j <= i; j++) { #>
 
         /// <summary>
-        /// Gets the set of buffer objects contained within this VAO.
+        /// Gets the <#= Ordinal(j) #> attribute buffer object referenced by this VAO.
         /// </summary>
         IVertexBufferObject<T<#= j #>> AttributeBuffer<#= j #> { get; }
 <# } #>

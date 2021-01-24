@@ -15,7 +15,7 @@ namespace MyOTKE.Core
         IVertexBufferObject<uint> IndexBuffer { get; }
 
         /// <summary>
-        /// Gets the set of buffer objects contained within this VAO.
+        /// Gets the 1st attribute buffer object referenced by this VAO.
         /// </summary>
         IVertexBufferObject<T1> AttributeBuffer1 { get; }
 
@@ -41,12 +41,12 @@ namespace MyOTKE.Core
         IVertexBufferObject<uint> IndexBuffer { get; }
 
         /// <summary>
-        /// Gets the set of buffer objects contained within this VAO.
+        /// Gets the 1st attribute buffer object referenced by this VAO.
         /// </summary>
         IVertexBufferObject<T1> AttributeBuffer1 { get; }
 
         /// <summary>
-        /// Gets the set of buffer objects contained within this VAO.
+        /// Gets the 2nd attribute buffer object referenced by this VAO.
         /// </summary>
         IVertexBufferObject<T2> AttributeBuffer2 { get; }
 
@@ -74,17 +74,17 @@ namespace MyOTKE.Core
         IVertexBufferObject<uint> IndexBuffer { get; }
 
         /// <summary>
-        /// Gets the set of buffer objects contained within this VAO.
+        /// Gets the 1st attribute buffer object referenced by this VAO.
         /// </summary>
         IVertexBufferObject<T1> AttributeBuffer1 { get; }
 
         /// <summary>
-        /// Gets the set of buffer objects contained within this VAO.
+        /// Gets the 2nd attribute buffer object referenced by this VAO.
         /// </summary>
         IVertexBufferObject<T2> AttributeBuffer2 { get; }
 
         /// <summary>
-        /// Gets the set of buffer objects contained within this VAO.
+        /// Gets the 3rd attribute buffer object referenced by this VAO.
         /// </summary>
         IVertexBufferObject<T3> AttributeBuffer3 { get; }
 

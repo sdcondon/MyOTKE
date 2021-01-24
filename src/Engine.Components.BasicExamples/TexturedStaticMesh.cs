@@ -125,7 +125,7 @@ namespace MyOTKE.Engine.Components.BasicExamples
         {
             ThrowIfDisposed();
 
-            program.UseWithUniformValues(new Uniforms
+            program.UseWithDefaultUniformBlock(new Uniforms
             {
                 MVP = this.Model * this.viewProjection.View * this.viewProjection.Projection,
                 V = this.viewProjection.View,

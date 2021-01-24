@@ -25,10 +25,15 @@ void WriteLineIf(bool predicate, string line, int indent = 0)
 
 void WriteTypeParamDocs(int count, Func<int, string> desc, int indent = 1)
 {
+    WriteTypeParamDocs(count, i => $"T{i}", desc, indent);
+}
+
+void WriteTypeParamDocs(int count, Func<int, string> paramName, Func<int, string> desc, int indent = 1)
+{
     for (int i = 1; i <= count; i++)
     {
         Write(new String(' ', 4 * indent));
-        WriteLine($"/// <typeparam name=\"T{i}\">{desc(i)}</typeparam>");
+        WriteLine($"/// <typeparam name=\"{paramName(i)}\">{desc(i)}</typeparam>");
     }
 }
 

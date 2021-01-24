@@ -91,7 +91,7 @@ namespace MyOTKE.Core
         public int Id { get; }
 
         /// <summary>
-        /// Installs the program as part of the current rendering state and sets the current uniform values (using the default uniform block).
+        /// Installs the program as part of the current rendering state.
         /// </summary>
         public void Use()
         {
@@ -190,14 +190,14 @@ namespace MyOTKE.Core
         public int Id { get; }
 
         /// <summary>
-        /// Installs the program as part of the current rendering state and sets the current uniform values (using the default uniform block).
+        /// Installs the program as part of the current rendering state and sets the value of the uniforms in the default block.
         /// </summary>
-        /// <param name="uniforms">The uniform values.</param>
-        public void UseWithUniformValues(TDefaultUniformBlock uniforms)
+        /// <param name="defaultUniformBlock">The values for the uniforms in the default block.</param>
+        public void UseWithDefaultUniformBlock(TDefaultUniformBlock defaultUniformBlock)
         {
             GL.UseProgram(this.Id);
             GlDebug.ThrowIfGlError("using program");
-            setDefaultUniformBlock(uniforms);
+            setDefaultUniformBlock(defaultUniformBlock);
         }
 
         /// <inheritdoc />
