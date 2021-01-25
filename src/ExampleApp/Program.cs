@@ -2,7 +2,9 @@
 using MyOTKE.Engine.Components.BasicExamples;
 using MyOTKE.Engine.Components.Gui;
 using MyOTKE.Engine.Components.ReactivePrimitives;
+using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
+using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
@@ -24,28 +26,28 @@ namespace MyOTKE.ExampleApp
         [STAThread]
         public static void Main()
         {
-            var view = new MyOTKEWindow(
+            var window = new MyOTKEWindow(
                 gameWindowSettings: GameWindowSettings.Default,
                 nativeWindowSettings: NativeWindowSettings.Default,
                 lockCursor: false,
                 clearColor: Color.Black())
             {
                 Title = "MyOTKE Example",
-                ////WindowState = OpenTK.WindowState.Fullscreen
-                ////FormBorderStyle = FormBorderStyle.Sizable
+                WindowState = WindowState.Fullscreen,
+                WindowBorder = WindowBorder.Resizable,
             };
 
             // Obviously not ideal to have to set font globally - need to sort this out, probably via some nice
             // texture management stuff in the core lib.
             Text.Font = new Font(@"Assets\Fonts\Inconsolata\Inconsolata-Regular.ttf");
 
-            // Views have a RootComponent property. Components can be composed of other components -
+            // MyOTKEWindow has a RootComponent property. Components can be composed of other components -
             // there's even a handy CompositeComponent base class to make this easy - see the two examples
             // below, and note that MenuComponent (which consists of a single GUI component and has
             // no overrides) is only a class of its own to make disposal on button press easy.
-            view.RootComponent = new MenuComponent(view);
+            window.RootComponent = new MenuComponent(window);
 
-            view.Run();
+            window.Run();
         }
 
         private class MenuComponent : CompositeComponent
@@ -55,15 +57,10 @@ namespace MyOTKE.ExampleApp
                 view.LockCursor = false;
 
                 var systemInfo = new StringBuilder();
-                ////systemInfo.AppendLine($"OpenGl version: {Gl.CurrentVersion}");
-                ////systemInfo.AppendLine($"OpenGl Shading Language version: {Gl.CurrentShadingVersion}");
-                ////systemInfo.AppendLine($"Vendor: {Gl.CurrentVendor}");
-                ////systemInfo.AppendLine($"Renderer: {Gl.CurrentRenderer}");
-
-                ////if (Egl.IsAvailable)
-                ////{
-                ////    systemInfo.AppendLine("EGL is available");
-                ////}
+                systemInfo.AppendLine($"OpenGl version: {GL.GetString(StringName.Version)}");
+                systemInfo.AppendLine($"OpenGl Shading Language version: {GL.GetString(StringName.ShadingLanguageVersion)}");
+                systemInfo.AppendLine($"Vendor: {GL.GetString(StringName.Vendor)}");
+                systemInfo.AppendLine($"Renderer: {GL.GetString(StringName.Renderer)}");
 
                 AddComponent(new Gui(view, 1000)
                 {
