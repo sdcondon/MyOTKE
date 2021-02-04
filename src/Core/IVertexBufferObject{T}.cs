@@ -1,7 +1,9 @@
 ﻿namespace MyOTKE.Core
 {
     /// <summary>
-    /// Interface for types representing an OpenGL vertex buffer object.
+    /// Interface OpenGL vertex buffer objects, interpreted as storing an array of .NET structs of a particular type.
+    /// <para/>
+    /// See https://www.khronos.org/opengl/wiki/Vertex_Specification#Vertex_Buffer_Object.
     /// </summary>
     /// <typeparam name="T">The .NET type of data to be stored in the buffer.</typeparam>
     public interface IVertexBufferObject<T>

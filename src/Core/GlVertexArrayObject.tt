@@ -5,7 +5,6 @@
 <#@ output extension=".cs" #>
 <#@ include file="_Common.t4" #>
 #pragma warning disable SA1402
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using System;
 
@@ -14,9 +13,11 @@ namespace MyOTKE.Core
 <# for(int i = 1; i <= MaxVertexBufferCount; i++) { #>
 <# WriteLineIf(i > 1, ""); #>
     /// <summary>
-    /// Interface for types representing an OpenGL vertex array object.
+    /// Represents an OpenGL vertex array object.
+    /// <para />
+    /// See https://www.khronos.org/opengl/wiki/Vertex_Specification#Vertex_Array_Object.
     /// </summary>
-<# WriteTypeParamDocs(i, i => $"The type of the { Ordinal(i) } buffer."); #>
+<# WriteTypeParamDocs(i, i => $"The type of the { Ordinal(i) } attribute buffer."); #>
     public sealed class GlVertexArrayObject<<#= TList(i) #>> : IVertexArrayObject<<#= TList(i) #>>, IDisposable
 <# WriteLines(i, i => $"where T{i} : struct", 2); #>
     {

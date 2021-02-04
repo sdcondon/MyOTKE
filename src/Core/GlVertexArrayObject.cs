@@ -1,14 +1,15 @@
 ﻿#pragma warning disable SA1402
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using System;
 
 namespace MyOTKE.Core
 {
     /// <summary>
-    /// Interface for types representing an OpenGL vertex array object.
+    /// Represents an OpenGL vertex array object.
+    /// <para />
+    /// See https://www.khronos.org/opengl/wiki/Vertex_Specification#Vertex_Array_Object.
     /// </summary>
-    /// <typeparam name="T1">The type of the 1st buffer.</typeparam>
+    /// <typeparam name="T1">The type of the 1st attribute buffer.</typeparam>
     public sealed class GlVertexArrayObject<T1> : IVertexArrayObject<T1>, IDisposable
         where T1 : struct
     {
@@ -143,10 +144,12 @@ namespace MyOTKE.Core
     }
 
     /// <summary>
-    /// Interface for types representing an OpenGL vertex array object.
+    /// Represents an OpenGL vertex array object.
+    /// <para />
+    /// See https://www.khronos.org/opengl/wiki/Vertex_Specification#Vertex_Array_Object.
     /// </summary>
-    /// <typeparam name="T1">The type of the 1st buffer.</typeparam>
-    /// <typeparam name="T2">The type of the 2nd buffer.</typeparam>
+    /// <typeparam name="T1">The type of the 1st attribute buffer.</typeparam>
+    /// <typeparam name="T2">The type of the 2nd attribute buffer.</typeparam>
     public sealed class GlVertexArrayObject<T1, T2> : IVertexArrayObject<T1, T2>, IDisposable
         where T1 : struct
         where T2 : struct
@@ -290,11 +293,13 @@ namespace MyOTKE.Core
     }
 
     /// <summary>
-    /// Interface for types representing an OpenGL vertex array object.
+    /// Represents an OpenGL vertex array object.
+    /// <para />
+    /// See https://www.khronos.org/opengl/wiki/Vertex_Specification#Vertex_Array_Object.
     /// </summary>
-    /// <typeparam name="T1">The type of the 1st buffer.</typeparam>
-    /// <typeparam name="T2">The type of the 2nd buffer.</typeparam>
-    /// <typeparam name="T3">The type of the 3rd buffer.</typeparam>
+    /// <typeparam name="T1">The type of the 1st attribute buffer.</typeparam>
+    /// <typeparam name="T2">The type of the 2nd attribute buffer.</typeparam>
+    /// <typeparam name="T3">The type of the 3rd attribute buffer.</typeparam>
     public sealed class GlVertexArrayObject<T1, T2, T3> : IVertexArrayObject<T1, T2, T3>, IDisposable
         where T1 : struct
         where T2 : struct

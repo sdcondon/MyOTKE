@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MyOTKE.Core
+﻿namespace MyOTKE.Core
 {
     /// <summary>
     /// Extension methods for <see cref="IVertexArrayObject{}"> instances.

@@ -6,6 +6,8 @@ namespace MyOTKE.Core
 {
     /// <summary>
     /// A OpenGL vertex buffer object.
+    /// <para/>
+    /// See https://www.khronos.org/opengl/wiki/Vertex_Specification#Vertex_Buffer_Object.
     /// </summary>
     /// <typeparam name="T">The .NET type of the data to be stored in the buffer. The type must be a blittable value type (or an exception will be thrown on type initialization).</typeparam>
     internal sealed class GlVertexBufferObject<T> : IVertexBufferObject<T>, IDisposable
