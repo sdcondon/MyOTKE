@@ -11,8 +11,7 @@ in vec3 PointLightDirection_cameraspace;
 // Ouput data
 out vec4 color;
 
-// Values that stay constant for the whole mesh.
-//uniform mat4 MV;
+// Uniforms - values that stay constant for the whole mesh
 uniform vec3 AmbientLightColor;
 uniform vec3 DirectedLightDirection;
 uniform vec3 DirectedLightColor;

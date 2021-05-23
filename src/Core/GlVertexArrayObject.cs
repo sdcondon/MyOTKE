@@ -138,7 +138,7 @@ namespace MyOTKE.Core
                 GC.SuppressFinalize(this);
             }
 
-            GL.DeleteVertexArrays(1, new[] { this.id });
+            GL.DeleteVertexArray(this.id);
             GlDebug.ThrowIfGlError("deleting vertex array");
         }
     }
@@ -287,7 +287,7 @@ namespace MyOTKE.Core
                 GC.SuppressFinalize(this);
             }
 
-            GL.DeleteVertexArrays(1, new[] { this.id });
+            GL.DeleteVertexArray(this.id);
             GlDebug.ThrowIfGlError("deleting vertex array");
         }
     }
@@ -446,7 +446,7 @@ namespace MyOTKE.Core
                 GC.SuppressFinalize(this);
             }
 
-            GL.DeleteVertexArrays(1, new[] { this.id });
+            GL.DeleteVertexArray(this.id);
             GlDebug.ThrowIfGlError("deleting vertex array");
         }
     }

@@ -3,7 +3,7 @@
 <#@ import namespace="System.Linq" #><#+
 
 const int MaxVertexBufferCount = 3;
-const int MaxUniformBufferBlocks = 0;
+const int MaxUniformBufferBlocks = 1;
 
 void WriteLines(int count, Func<int, string> writeLine, int indent = 0)
 {
@@ -14,7 +14,7 @@ void WriteLines(int count, Func<int, string> writeLine, int indent = 0)
     }
 }
 
-void WriteLineIf(bool predicate, string line, int indent = 0)
+void WriteLineIf(bool predicate, string line = "", int indent = 0)
 {
     if (predicate)
     {

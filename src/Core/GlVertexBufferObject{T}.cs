@@ -94,7 +94,7 @@ namespace MyOTKE.Core
         /// AsBufferOf&lt;byte&gt;(),
         /// AsBufferOf&lt;int&gt;(t => t.MyIntProp) (would need to calculate stride - and modify this class to account for it in getter and setter),
         /// perhaps even AsBufferOf&lt;T&gt;(attributeinfo) (not safe, but empowering).
-        /// Losing the 1-1 relationship between object and buffer means don't necessarily want to delete buffer in finalizer - could resolve by changing Id to a SafeHandle..
+        /// Losing the 1-1 relationship between object and buffer means don't necessarily want to delete buffer in finalizer.
         /// </summary>
         /// <typeparam name="TElement">The type to interpret the buffer as containing.</typeparam>
         /// <returns>A buffer object of the appropriate type.</returns>

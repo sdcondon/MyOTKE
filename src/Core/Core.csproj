@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="VaoDecorators\SynchronizedVertexArrayObjectBuilder.cs">
+    <None Include="Decorators\SynchronizedVertexArrayObjectBuilder.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>SynchronizedVertexArrayObjectBuilder.tt</DependentUpon>
@@ -63,12 +63,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>MemoryVertexArrayObject.tt</DependentUpon>
     </Compile>
-    <Compile Update="VaoDecorators\SynchronizedVertexArrayObject.cs">
+    <Compile Update="Decorators\SynchronizedVertexArrayObject.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>SynchronizedVertexArrayObject.tt</DependentUpon>
     </Compile>
-    <Compile Update="VaoDecorators\SynchronizedVertexArrayObjectBuilder.cs">
+    <Compile Update="Decorators\SynchronizedVertexArrayObjectBuilder.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>SynchronizedVertexArrayObjectBuilder.tt</DependentUpon>
@@ -105,11 +105,11 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>MemoryVertexArrayObject.cs</LastGenOutput>
     </None>
-    <None Update="VaoDecorators\SynchronizedVertexArrayObject.tt">
+    <None Update="Decorators\SynchronizedVertexArrayObject.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>SynchronizedVertexArrayObject.cs</LastGenOutput>
     </None>
-    <None Update="VaoDecorators\SynchronizedVertexArrayObjectBuilder.tt">
+    <None Update="Decorators\SynchronizedVertexArrayObjectBuilder.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>SynchronizedVertexArrayObjectBuilder.cs</LastGenOutput>
     </None>

@@ -42,12 +42,13 @@ namespace MyOTKE.Core
         }
 
         /// <summary>
-        /// Throws an exception if the OpenGL error flag is set (and clears the error).
+        /// Throws an exception if the OpenGL error queue is non-empty (and clears the error).
         /// </summary>
         /// <param name="action">The action that was just carried out (use the present participle to make the message read correctly - e.g. "doing the thing").</param>
         [Conditional("DEBUG")]
         public static void ThrowIfGlError(string action)
         {
+            // TODO: There may be many - consume them all (i.e. use a while, not an if) and throw an aggregate if there are multiple?
             var errorCode = GL.GetError();
             if (errorCode != ErrorCode.NoError)
             {

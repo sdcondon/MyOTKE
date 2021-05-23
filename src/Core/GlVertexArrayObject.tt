@@ -11,7 +11,7 @@ using System;
 namespace MyOTKE.Core
 {
 <# for(int i = 1; i <= MaxVertexBufferCount; i++) { #>
-<# WriteLineIf(i > 1, ""); #>
+<# WriteLineIf(i > 1); #>
     /// <summary>
     /// Represents an OpenGL vertex array object.
     /// <para />
@@ -148,7 +148,7 @@ namespace MyOTKE.Core
                 GC.SuppressFinalize(this);
             }
 
-            GL.DeleteVertexArrays(1, new[] { this.id });
+            GL.DeleteVertexArray(this.id);
             GlDebug.ThrowIfGlError("deleting vertex array");
         }
     }

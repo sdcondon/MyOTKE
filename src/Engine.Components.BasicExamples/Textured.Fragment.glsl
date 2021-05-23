@@ -10,7 +10,7 @@ in vec3 LightDirection_cameraspace;
 // Ouput data
 out vec4 color;
 
-// Values that stay constant for the whole mesh.
+// Uniforms - values that stay constant for the whole mesh
 uniform sampler2D TextureSampler;
 uniform vec3 LightPosition;
 uniform vec3 LightColor;

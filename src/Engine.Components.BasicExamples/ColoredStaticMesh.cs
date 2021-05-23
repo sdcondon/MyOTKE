@@ -13,8 +13,8 @@ namespace MyOTKE.Engine.Components.BasicExamples
     public class ColoredStaticMesh : IComponent
     {
         private static readonly object ProgramStateLock = new object();
-        private static GlProgramWithDUBBuilder<Uniforms> programBuilder;
-        private static GlProgramWithDUB<Uniforms> program;
+        private static GlProgramWithDUBBuilder<DefaultUniformBlock, CameraUniformBlock> programBuilder;
+        private static GlProgramWithDUB<DefaultUniformBlock, CameraUniformBlock> program;
 
         private readonly IViewProjection viewProjection;
 
@@ -44,7 +44,8 @@ namespace MyOTKE.Engine.Components.BasicExamples
                         programBuilder = new GlProgramBuilder()
                             .WithVertexShaderFromEmbeddedResource("Colored.Vertex.glsl")
                             .WithFragmentShaderFromEmbeddedResource("Colored.Fragment.glsl")
-                            .WithDefaultUniformBlock<Uniforms>();
+                            .WithDefaultUniformBlock<DefaultUniformBlock>()
+                            .WithSharedUniformBufferObject<CameraUniformBlock>("Camera", BufferUsageHint.DynamicDraw, 1);
                     }
                 }
             }
@@ -120,10 +121,16 @@ namespace MyOTKE.Engine.Components.BasicExamples
         {
             ThrowIfDisposed();
 
-            this.vertexArrayObject.Draw(program, new Uniforms
+            // TODO: Don't need to set this every time - only when it changes.
+            // ..which is somewhat at odds with the pattern of these being pulled into, not pushed into this class..
+            program.UniformBuffer1[0] = new CameraUniformBlock
             {
-                MVP = this.Model * this.viewProjection.View * this.viewProjection.Projection,
                 V = this.viewProjection.View,
+                P = this.viewProjection.Projection,
+            };
+
+            this.vertexArrayObject.Draw(program, new DefaultUniformBlock
+            {
                 M = this.Model,
                 AmbientLightColor = AmbientLightColor,
                 DirectedLightDirection = DirectedLightDirection,
@@ -183,10 +190,14 @@ namespace MyOTKE.Engine.Components.BasicExamples
             }
         }
 
-        private struct Uniforms
+        private struct CameraUniformBlock
         {
-            public Matrix4 MVP;
             public Matrix4 V;
+            public Matrix4 P;
+        }
+
+        private struct DefaultUniformBlock
+        {
             public Matrix4 M;
             public Vector3 AmbientLightColor;
             public Vector3 DirectedLightDirection;

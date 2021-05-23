@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace MyOTKE.Engine
 {
     /// <summary>
-    /// Base class for <see cref="IComponent"/> instances that are composed of sub-components.
+    /// Base class for <see cref="IComponent"/> implementations that are composed of sub-components.
     /// </summary>
     public abstract class CompositeComponent : IComponent, IDisposable
     {

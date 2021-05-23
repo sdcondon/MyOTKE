@@ -249,6 +249,11 @@ namespace MyOTKE.ExampleApp
                 if (view.IsKeyReleased(Keys.Space))
                 {
                     view.LockCursor = !view.LockCursor;
+
+                    // BUG: is this a OTK bug? First update after switching back to mouse aim registers large
+                    // centeroffset if mouse was away from center - despite LockCursor being set between cam updates.
+                    // view direction thus jumps..
+                    ////view.MousePosition = view.ClientRectangle.Center; // Doesn't work, perhaps unsurprisingly
                 }
 
                 if (view.IsKeyReleased(Keys.Q))

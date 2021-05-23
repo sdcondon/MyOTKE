@@ -11,7 +11,7 @@ using System;
 namespace MyOTKE.Core
 {
 <# for(int i = 1; i <= MaxVertexBufferCount; i++) { #>
-<# WriteLineIf(i > 1, ""); #>
+<# WriteLineIf(i > 1); #>
     /// <summary>
     /// Implementation of <see cref="IVertexArrayObject{<#= TList(i) #>}"/> that just stores buffer content in memory, for testing purposes.
     /// </summary>

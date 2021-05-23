@@ -12,9 +12,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-#    - name: Setup .NET Core
-#      uses: actions/setup-dotnet@v1
+    - uses: actions/setup-dotnet@v1
 
-    - name: Build
+    - name: Run Tests
       working-directory: ./src
-      run: msbuild -r MyOTKE.sln
+      run: dotnet test

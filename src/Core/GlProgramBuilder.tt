@@ -4,6 +4,37 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
 <#@ include file="_Common.t4" #>
+<#
+
+string CtorName(bool hasDub)
+{
+    return hasDub ? "GlProgramWithDUBBuilder" : "GlProgramBuilder";
+}
+
+string ClassName(bool hasDub, int uniformBlockCount, bool useBraces = false)
+{
+    var open = useBraces ? "{" : "<";
+    var close = useBraces ? "}" : ">";
+    return hasDub
+        ? $"{CtorName(true)}{open}TDefaultUniformBlock{TList(uniformBlockCount, ", ")}{close}"
+        : $"{CtorName(false)}{TList(uniformBlockCount, open, close)}";
+}
+
+string ProgCtorName(bool hasDub)
+{
+    return hasDub ? "GlProgramWithDUB" : "GlProgram";
+}
+
+string ProgClassName(bool hasDub, int uniformBlockCount, bool useBraces = false)
+{
+    var open = useBraces ? "{" : "<";
+    var close = useBraces ? "}" : ">";
+    return hasDub
+        ? $"{ProgCtorName(true)}{open}TDefaultUniformBlock{TList(uniformBlockCount, ", ")}{close}"
+        : $"{ProgCtorName(false)}{TList(uniformBlockCount, open, close)}";
+}
+
+#>
 #pragma warning disable SA1402
 using OpenTK.Graphics.OpenGL;
 using System;
@@ -13,23 +44,42 @@ using System.Reflection;
 
 namespace MyOTKE.Core
 {
+<# foreach(var hasDub in new[] { false, true }) { #>
 <# for(int i = 0; i <= MaxUniformBufferBlocks; i++) { #>
-<# WriteLineIf(i > 0, ""); #>
+<# WriteLineIf(i > 0); #>
     /// <summary>
-    /// Builder class for <see cref="GlProgram<#= TList(i, "{", "}") #>"/> objects that presents a fluent-ish interface.
+    /// Builder class for <see cref="<#= ProgClassName(hasDub, i, true) #>"/> objects that presents a fluent-ish interface.
     /// </summary>
+<# WriteLineIf(hasDub, "/// <typeparam name=\"TDefaultUniformBlock\">The type of the container used for default block uniforms.</typeparam>", 1); #>
 <# WriteTypeParamDocs(i, i => $"The type of the { Ordinal(i) } uniform buffer object."); #>
-    public sealed class GlProgramBuilder<#= TList(i, "<", ">") #>
+    public sealed class <#= ClassName(hasDub, i) #>
+<# WriteLineIf(hasDub, "where TDefaultUniformBlock : struct", 2); #>
 <# WriteLines(i, i => $"where T{i} : struct", 2); #>
     {
+<# WriteLines(i, i => $"private readonly (string BlockName, BufferUsageHint Usage, int Capacity, T{i}[] Data) uboSpec{i};", 2); #>
         private readonly List<(ShaderType Type, string Source)> shaderSpecs = new List<(ShaderType, string)>();
+<# if (hasDub || i > 0) { #>
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<#= ClassName(hasDub, i, true) #>"/> class.
+        /// </summary>
+<# WriteLines(i, i => $"/// <param name=\"uboSpec{i}\">Specification for the { Ordinal(i) } uniform buffer object.</param>", 2); #>
+        /// <param name="shaderSpecs">Specifications for each of the shaders used by this program.</param>
+        <# Write(i == 0 && !hasDub ? "public" : "internal"); #> <#= CtorName(hasDub) #>(
+<# WriteLines(i, j => $"(string BlockName, BufferUsageHint Usage, int Capacity, T{j}[] Data) uboSpec{j},", 3); #>
+            List<(ShaderType Type, string Source)> shaderSpecs)
+        {
+<# WriteLines(i, j => $"this.uboSpec{j} = uboSpec{j};", 3); #>
+            this.shaderSpecs.AddRange(shaderSpecs);
+        }
+<# } #>
 
         /// <summary>
         /// Adds a vertex shader to be included in the built program, reading the source from a <see cref="Stream"/> object.
         /// </summary>
         /// <param name="sourceStream">The stream containing the source of the shader (in UTF-8).</param>
         /// <returns>The updated builder.</returns>
-        public GlProgramBuilder<#= TList(i, "<", ">") #> WithVertexShaderFromStream(Stream sourceStream)
+        public <#= ClassName(hasDub, i) #> WithVertexShaderFromStream(Stream sourceStream)
         {
             return WithShaderFromStream(ShaderType.VertexShader, sourceStream);
         }
@@ -39,7 +89,7 @@ namespace MyOTKE.Core
         /// </summary>
         /// <param name="sourceStream">The stream containing the source of the shader (in UTF-8).</param>
         /// <returns>The updated builder.</returns>
-        public GlProgramBuilder<#= TList(i, "<", ">") #> WithFragmentShaderFromStream(Stream sourceStream)
+        public <#= ClassName(hasDub, i) #> WithFragmentShaderFromStream(Stream sourceStream)
         {
             return WithShaderFromStream(ShaderType.FragmentShader, sourceStream);
         }
@@ -49,7 +99,7 @@ namespace MyOTKE.Core
         /// </summary>
         /// <param name="filePath">The path of the file containing the source of the shader (in UTF-8).</param>
         /// <returns>The updated builder.</returns>
-        public GlProgramBuilder<#= TList(i, "<", ">") #> WithVertexShaderFromFile(string filePath)
+        public <#= ClassName(hasDub, i) #> WithVertexShaderFromFile(string filePath)
         {
             using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
@@ -62,7 +112,7 @@ namespace MyOTKE.Core
         /// </summary>
         /// <param name="filePath">The path of the file containing the source of the shader (in UTF-8).</param>
         /// <returns>The updated builder.</returns>
-        public GlProgramBuilder<#= TList(i, "<", ">") #> WithFragmentShaderFromFile(string filePath)
+        public <#= ClassName(hasDub, i) #> WithFragmentShaderFromFile(string filePath)
         {
             using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
@@ -75,7 +125,7 @@ namespace MyOTKE.Core
         /// </summary>
         /// <param name="resourceName">The name of the resource containing the source of the shader (in UTF-8).</param>
         /// <returns>The updated builder.</returns>
-        public GlProgramBuilder<#= TList(i, "<", ">") #> WithVertexShaderFromEmbeddedResource(string resourceName)
+        public <#= ClassName(hasDub, i) #> WithVertexShaderFromEmbeddedResource(string resourceName)
         {
             var assembly = Assembly.GetCallingAssembly();
             using (var stream = assembly.GetManifestResourceStream(resourceName))
@@ -94,7 +144,7 @@ namespace MyOTKE.Core
         /// </summary>
         /// <param name="resourceName">The name of the resource containing the source of the shader (in UTF-8).</param>
         /// <returns>The updated builder.</returns>
-        public GlProgramBuilder<#= TList(i, "<", ">") #> WithFragmentShaderFromEmbeddedResource(string resourceName)
+        public <#= ClassName(hasDub, i) #> WithFragmentShaderFromEmbeddedResource(string resourceName)
         {
             var assembly = Assembly.GetCallingAssembly();
             using (var stream = assembly.GetManifestResourceStream(resourceName))
@@ -107,28 +157,70 @@ namespace MyOTKE.Core
                 return WithShaderFromStream(ShaderType.FragmentShader, stream);
             }
         }
+<# if (!hasDub) { #>
 
         /// <summary>
         /// Registers the set of uniforms required by the program.
         /// </summary>
-        /// <typeparam name="T">The type of the container used for default block uniforms.</typeparam>
+        /// <typeparam name="TDefaultUniformBlock">The type of the container used for default block uniforms.</typeparam>
         /// <returns>The updated builder.</returns>
-        public GlProgramWithDUBBuilder<T<#= TList(i, ", ") #>> WithDefaultUniformBlock<T>()
-            where T : struct
+        public <#= ClassName(true, i) #> WithDefaultUniformBlock<TDefaultUniformBlock>()
+            where TDefaultUniformBlock : struct
         {
-            return new GlProgramWithDUBBuilder<T<#= TList(i, ", ") #>>(shaderSpecs);
+            return new <#= ClassName(true, i) #>(
+<# WriteLines(i, j => $"uboSpec{j},", 4); #>
+                shaderSpecs);
+        }
+<# } #>
+<# if (i < MaxUniformBufferBlocks) { #>
+
+        /// <summary>
+        /// Registers a uniform buffer object used by the program - shared with other programs via block name.
+        /// </summary>
+        /// <typeparam name="T<#= i + 1 #>">The type of the container used for block content.</typeparam>
+        /// <returns>The updated builder.</returns>
+        /// <remarks>
+        /// NB: No checks carried out that the data stored in the buffer object is of the same format as other programs using it. There probably should be..
+        /// </remarks>
+        public <#= ClassName(hasDub, i + 1) #> WithSharedUniformBufferObject<T<#= i + 1 #>>(string blockName, BufferUsageHint usage, T<#= i + 1 #>[] data)
+            where T<#= i + 1 #> : struct
+        {
+            return new <#= ClassName(hasDub, i + 1) #>(
+<# WriteLines(i, j => $"uboSpec{j},", 4); #>
+                (blockName, usage, data.Length, data),
+                shaderSpecs);
         }
 
         /// <summary>
-        /// Builds a new <see cref="GlProgram<#= TList(i, "{", "}") #>"/> instance based on the state of the builder.
+        /// Registers a uniform buffer object used by the program - shared with other programs via block name.
+        /// </summary>
+        /// <typeparam name="T<#= i + 1 #>">The type of the container used for block content.</typeparam>
+        /// <returns>The updated builder.</returns>
+        /// <remarks>
+        /// NB: No checks carried out that the data stored in the buffer object is of the same format as other programs using it. There probably should be..
+        /// </remarks>
+        public <#= ClassName(hasDub, i + 1) #> WithSharedUniformBufferObject<T<#= i + 1 #>>(string blockName, BufferUsageHint usage, int capacity)
+            where T<#= i + 1 #> : struct
+        {
+            return new <#= ClassName(hasDub, i + 1) #>(
+<# WriteLines(i, j => $"uboSpec{j},", 4); #>
+                (blockName, usage, capacity, null),
+                shaderSpecs);
+        }
+<# } #>
+
+        /// <summary>
+        /// Builds a new <see cref="<#= ProgClassName(hasDub, i, true) #>"/> instance based on the state of the builder.
         /// </summary>
         /// <returns>The built program.</returns>
-        public GlProgram<#= TList(i, "<", ">") #> Build()
+        public <#= ProgClassName(hasDub, i) #> Build()
         {
-            return new GlProgram<#= TList(i, "<", ">") #>(shaderSpecs);
+            return new <#= ProgClassName(hasDub, i) #>(
+<# WriteLines(i, j => $"uboSpec{j},", 4); #>
+                shaderSpecs);
         }
 
-        private GlProgramBuilder<#= TList(i, "<", ">") #> WithShaderFromStream(ShaderType shaderType, Stream sourceStream)
+        private <#= ClassName(hasDub, i) #> WithShaderFromStream(ShaderType shaderType, Stream sourceStream)
         {
             using (var reader = new StreamReader(sourceStream))
             {
@@ -139,110 +231,6 @@ namespace MyOTKE.Core
         }
     }
 <# } #>
-<# for(int i = 0; i <= MaxUniformBufferBlocks; i++) { #>
-
-    /// <summary>
-    /// Builder class for <see cref="GlProgramWithDUB{T}"/> objects that presents a fluent-ish interface.
-    /// </summary>
-    /// <typeparam name="TDefaultUniformBlock">The type of the container used for default block uniforms.</typeparam>
-<# WriteTypeParamDocs(i, i => $"The type of the { Ordinal(i) } uniform buffer object."); #>
-    public class GlProgramWithDUBBuilder<TDefaultUniformBlock<#= TList(i, ", ") #>>
-        where TDefaultUniformBlock : struct
-<# WriteLines(i, i => $"where T{i} : struct", 2); #>
-    {
-        private readonly List<(ShaderType Type, string Source)> shaderSpecs = new List<(ShaderType, string)>();
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GlProgramWithDUBBuilder{TDefaultUniformBlock<#= TList(i, ", ") #>}"/> class.
-        /// </summary>
-        /// <param name="shaderSpecs">Initial specifications for each shader in the program.</param>
-        internal GlProgramWithDUBBuilder(List<(ShaderType Type, string Source)> shaderSpecs)
-        {
-            this.shaderSpecs = shaderSpecs;
-        }
-
-        /// <summary>
-        /// Adds a vertex shader to be included in the built program, reading the source from a file.
-        /// </summary>
-        /// <param name="filePath">The path of the file containing the source of the shader (in UTF-8).</param>
-        /// <returns>The updated builder.</returns>
-        public GlProgramWithDUBBuilder<TDefaultUniformBlock<#= TList(i, ", ") #>> WithVertexShaderFromFile(string filePath)
-        {
-            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            {
-                return WithShaderFromStream(ShaderType.VertexShader, stream);
-            }
-        }
-
-        /// <summary>
-        /// Adds a fragment shader to be included in the built program, reading the source from a file.
-        /// </summary>
-        /// <param name="filePath">The path of the file containing the source of the shader (in UTF-8).</param>
-        /// <returns>The updated builder.</returns>
-        public GlProgramWithDUBBuilder<TDefaultUniformBlock<#= TList(i, ", ") #>> WithFragmentShaderFromFile(string filePath)
-        {
-            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            {
-                return WithShaderFromStream(ShaderType.FragmentShader, stream);
-            }
-        }
-
-        /// <summary>
-        /// Adds a vertex shader to be included in the built program, reading the source from a resource embedded in the calling assembly.
-        /// </summary>
-        /// <param name="resourceName">The name of the resource containing the source of the shader (in UTF-8).</param>
-        /// <returns>The updated builder.</returns>
-        public GlProgramWithDUBBuilder<TDefaultUniformBlock<#= TList(i, ", ") #>> WithVertexShaderFromEmbeddedResource(string resourceName)
-        {
-            var assembly = Assembly.GetCallingAssembly();
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                if (stream == null)
-                {
-                    throw new ArgumentException($"Resource '{resourceName}' not found");
-                }
-
-                return WithShaderFromStream(ShaderType.VertexShader, stream);
-            }
-        }
-
-        /// <summary>
-        /// Adds a fragment shader to be included in the built program, reading the source from a resource embedded in the calling assembly.
-        /// </summary>
-        /// <param name="resourceName">The name of the resource containing the source of the shader (in UTF-8).</param>
-        /// <returns>The updated builder.</returns>
-        public GlProgramWithDUBBuilder<TDefaultUniformBlock<#= TList(i, ", ") #>> WithFragmentShaderFromEmbeddedResource(string resourceName)
-        {
-            var assembly = Assembly.GetCallingAssembly();
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                if (stream == null)
-                {
-                    throw new ArgumentException($"Resource '{resourceName}' not found");
-                }
-
-                return WithShaderFromStream(ShaderType.FragmentShader, stream);
-            }
-        }
-
-        /// <summary>
-        /// Builds a new <see cref="GlProgram"/> instance based on the state of the builder.
-        /// </summary>
-        /// <returns>The built program.</returns>
-        public GlProgramWithDUB<TDefaultUniformBlock> Build()
-        {
-            return new GlProgramWithDUB<TDefaultUniformBlock>(shaderSpecs);
-        }
-
-        private GlProgramWithDUBBuilder<TDefaultUniformBlock<#= TList(i, ", ") #>> WithShaderFromStream(ShaderType shaderType, Stream sourceStream)
-        {
-            using (var reader = new StreamReader(sourceStream))
-            {
-                shaderSpecs.Add((shaderType, reader.ReadToEnd()));
-            }
-
-            return this;
-        }
-    }
-<# } #>}
+<# } #>
+}
 #pragma warning restore SA1402
