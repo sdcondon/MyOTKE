@@ -9,11 +9,6 @@ namespace MyOTKE.Engine
     public interface ICamera : IViewProjection
     {
         /// <summary>
-        /// Gets the current position of the camera.
-        /// </summary>
-        Vector3 Position { get; }
-
-        /// <summary>
         /// Updates the state of the camera.
         /// </summary>
         /// <param name="elapsed">The elapsed time since the last update.</param>

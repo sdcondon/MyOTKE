@@ -91,7 +91,9 @@ namespace MyOTKE.Engine
         /// </summary>
         public float Distance => (float)(ZoomDefaultDistance * Math.Pow(ZoomBase, zoomLevel));
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the current position of the camera.
+        /// </summary>
         public Vector3 Position => target + Vector3.TransformPosition(Vector3.UnitZ * Distance, Matrix4.CreateRotationZ(HorizontalAngle) * Matrix4.CreateRotationX(VerticalAngle));
 
         /// <inheritdoc />

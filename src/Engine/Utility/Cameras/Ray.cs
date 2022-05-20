@@ -15,22 +15,22 @@ namespace MyOTKE.Engine
         /// </summary>
         /// <param name="camera">The camera to project the ray from.</param>
         /// <param name="view">The view from which to retrieve the mouse position to determine the ray's direction.</param>
+        /// <remarks>
+        /// Explanation can be found at http://antongerdelan.net/opengl/raycasting.html.
+        /// </remarks>
         public Ray(ICamera camera, MyOTKEWindow view)
         {
-            // http://antongerdelan.net/opengl/raycasting.html
-            float x = (2.0f * view.CenterOffset.X) / view.ClientSize.X;
-            float y = -(2.0f * view.CenterOffset.Y) / view.ClientSize.Y;
-            var ray_clip = new Vector4(x, y, -1.0f, 0f);
+            float x = (2.0f * view.MouseCenterOffset.X) / view.ClientSize.X;
+            float y = -(2.0f * view.MouseCenterOffset.Y) / view.ClientSize.Y;
+            var ray_clip = new Vector4(x, y, -1.0f, 1.0f);
 
-            Matrix4.Invert(camera.Projection, out var projInverse);
-            var ray_eye = projInverse * ray_clip;
-            ray_eye = new Vector4(ray_eye.X, ray_eye.Y, -1.0f, 0.0f);
+            var ray_eye = ray_clip * camera.Projection.Inverted();
+            ray_eye = new Vector4(ray_eye.X, ray_eye.Y, -1.0f, 0f);
 
-            Matrix4.Invert(camera.View, out var viewInverse);
-            var ray_wor = viewInverse * ray_eye;
-            Direction = Vector3.Normalize(new Vector3(ray_wor.X, ray_wor.Y, ray_wor.Z));
+            var ray_world = (ray_eye * camera.View.Inverted()).Xyz;
 
-            Origin = camera.Position; // todo: do we really need a camera position?
+            Direction = ray_world.Normalized();
+            Origin = (new Vector4(Vector3.Zero, 1f) * camera.View.Inverted()).Xyz;
         }
 
         /// <summary>

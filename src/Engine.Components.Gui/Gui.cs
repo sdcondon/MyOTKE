@@ -100,7 +100,7 @@ namespace MyOTKE.Engine.Components.Gui
 
             if (view.IsMouseButtonReleased(MouseButton.Left))
             {
-                Clicked?.Invoke(this, new Vector2(view.CenterOffset.X, -view.CenterOffset.Y));
+                Clicked?.Invoke(this, new Vector2(view.MouseCenterOffset.X, -view.MouseCenterOffset.Y));
             }
         }
 

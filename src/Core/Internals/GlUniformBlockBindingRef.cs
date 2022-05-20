@@ -110,8 +110,9 @@ namespace MyOTKE.Core
                     // Otherwise assign a brand new one.
                     if (!BindingsByBlockName.TryGetValue(blockName, out binding))
                     {
-                        // TODO: Not right. should also skip bindings already in use in OpenGL (because theyre specified in shaders)
+                        // TODO: Not right. should also skip bindings already in use in OpenGL (because they're specified in shaders)
                         // that we aren't aware of yet. might be better to not maintain a record ourselves and always just query opengl
+                        // (but I can't see an obvious way to do that..)
                         int firstUnusedBindingPoint = 1;
                         while (BindingsByBindingPoint.ContainsKey(firstUnusedBindingPoint))
                         {

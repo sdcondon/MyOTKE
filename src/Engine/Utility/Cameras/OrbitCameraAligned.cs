@@ -70,7 +70,9 @@ namespace MyOTKE.Engine
         /// </summary>
         public float RotationSpeed => RotationSpeedBase * (Distance - ZoomMinDistance) / ZoomDefaultDistance;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the current position of the camera.
+        /// </summary>
         public Vector3 Position => -forward * Distance;
 
         /// <inheritdoc />

@@ -64,7 +64,7 @@ namespace MyOTKE.Engine
         /// <summary>
         /// Gets the offset to the current mouse position from the center of the view.
         /// </summary>
-        public System.Numerics.Vector2 CenterOffset => new System.Numerics.Vector2(MousePosition.X, MousePosition.Y) - Center;
+        public System.Numerics.Vector2 MouseCenterOffset => new System.Numerics.Vector2(MousePosition.X, MousePosition.Y) - Center;
 
         /// <summary>
         /// Gets or sets the root component of the view.

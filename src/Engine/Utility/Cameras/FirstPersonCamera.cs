@@ -10,6 +10,7 @@ namespace MyOTKE.Engine
     public class FirstPersonCamera : ICamera
     {
         private readonly MyOTKEWindow view;
+        private Vector3 position;
         private float horizontalAngle;
         private float verticalAngle;
 
@@ -42,7 +43,7 @@ namespace MyOTKE.Engine
             this.FieldOfViewRadians = fieldOfViewRadians;
             this.NearPlaneDistance = nearPlaneDistance;
             this.FarPlaneDistance = farPlaneDistance;
-            this.Position = initialPosition;
+            this.position = initialPosition;
             this.horizontalAngle = initialHorizontalAngleRadians;
             this.verticalAngle = initialVerticalAngleRadians;
         }
@@ -61,10 +62,6 @@ namespace MyOTKE.Engine
         /// Gets or sets the field of view of the camera, in radians.
         /// </summary>
         public float FieldOfViewRadians { get; set; } // = (float)Math.PI / 4.0f;
-
-        /// <inheritdoc />
-        /// <remarks>Should be private, but used by Ray..</remarks>
-        public Vector3 Position { get; private set; } // = new Vector3(0, 0, -300);
 
         /// <inheritdoc />
         public Matrix4 View { get; private set; }
@@ -88,11 +85,11 @@ namespace MyOTKE.Engine
             if (view.LockCursor)
             {
                 // Compute new orientation
-                var xDiff = view.CenterOffset.X;
+                var xDiff = view.MouseCenterOffset.X;
                 xDiff = Math.Abs(xDiff) < 2 ? 0 : xDiff;
                 horizontalAngle -= RotationSpeed * xDiff;
 
-                var yDiff = view.CenterOffset.Y;
+                var yDiff = view.MouseCenterOffset.Y;
                 yDiff = Math.Abs(yDiff) < 2 ? 0 : yDiff;
                 verticalAngle -= RotationSpeed * yDiff;
                 verticalAngle = Math.Max(-(float)Math.PI / 2, Math.Min(verticalAngle, (float)Math.PI / 2));
@@ -116,22 +113,22 @@ namespace MyOTKE.Engine
             //// Move forward
             if (view.IsKeyDown(Keys.W))
             {
-                Position += direction * (float)elapsed.TotalSeconds * MovementSpeed;
+                position += direction * (float)elapsed.TotalSeconds * MovementSpeed;
             }
             //// Move backward
             if (view.IsKeyDown(Keys.S))
             {
-                Position -= direction * (float)elapsed.TotalSeconds * MovementSpeed;
+                position -= direction * (float)elapsed.TotalSeconds * MovementSpeed;
             }
             //// Strafe right
             if (view.IsKeyDown(Keys.D))
             {
-                Position += right * (float)elapsed.TotalSeconds * MovementSpeed;
+                position += right * (float)elapsed.TotalSeconds * MovementSpeed;
             }
             //// Strafe left
             if (view.IsKeyDown(Keys.A))
             {
-                Position -= right * (float)elapsed.TotalSeconds * MovementSpeed;
+                position -= right * (float)elapsed.TotalSeconds * MovementSpeed;
             }
 
             Projection = Matrix4.CreatePerspectiveFieldOfView(
@@ -142,8 +139,8 @@ namespace MyOTKE.Engine
 
             // Camera matrix
             View = Matrix4.LookAt(
-                Position,             // Camera is here
-                Position + direction, // and looks here : at the same position, plus "direction"
+                position,             // Camera is here
+                position + direction, // and looks here : at the same position, plus "direction"
                 up);                  // Head is up (set to 0,-1,0 to look upside-down)
         }
     }

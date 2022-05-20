@@ -226,10 +226,11 @@ namespace MyOTKE.ExampleApp
 
                 // Avoid GC pressure for string unless needed - would be better to do this reactively though
                 // (e.g. reactive linq to take at intervals or debounce)
-                if (camera.Position != lastCamPosition)
+                var cameraPosition = camera.GetPosition();
+                if (cameraPosition != lastCamPosition)
                 {
-                    camTextElement.Content = $"Cam@{camera.Position:F2}\n\nUse WASD to move the camera\nClick LMB to add a ray\nPress SPACE to toggle cam mode\nPress q to quit";
-                    lastCamPosition = camera.Position;
+                    camTextElement.Content = $"Cam@{cameraPosition:F2}\n\nUse WASD to move the camera\nClick LMB to add a ray\nPress SPACE to toggle cam mode\nPress q to quit";
+                    lastCamPosition = cameraPosition;
                 }
 
                 // NB: No new heap allocations each time to avoid GC pressure - same array, same primitive.
@@ -331,10 +332,11 @@ namespace MyOTKE.ExampleApp
 
                 // Avoid GC pressure for string unless needed - would be better to do this reactively though
                 // (e.g. reactive linq to take at intervals or debounce)
-                if (camera.Position != lastCamPosition)
+                var cameraPosition = camera.GetPosition();
+                if (camera.GetPosition() != lastCamPosition)
                 {
-                    camTextElement.Content = $"Cam@{camera.Position:F2}\n\nUse WASD to move the camera\nClick LMB to add a ray\nPress SPACE to toggle cam mode\nPress q to quit";
-                    lastCamPosition = camera.Position;
+                    camTextElement.Content = $"Cam@{cameraPosition:F2}\n\nUse WASD to move the camera\nClick LMB to add a ray\nPress SPACE to toggle cam mode\nPress q to quit";
+                    lastCamPosition = cameraPosition;
                 }
 
                 if (view.IsKeyReleased(Keys.Q))
