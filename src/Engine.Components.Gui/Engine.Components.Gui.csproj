@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>MyOTKE.Engine.Components.Gui</AssemblyName>
     <RootNamespace>MyOTKE.Engine.Components.Gui</RootNamespace>
 	<DocumentationFile>MyOTKE.Engine.Components.Gui.xml</DocumentationFile>
@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Engine.Components.BasicExamples\Engine.Components.BasicExamples.csproj" />
 	<ProjectReference Include="..\Engine\Engine.csproj" />
     <ProjectReference Include="..\ReactiveBuffers\ReactiveBuffers.csproj" />
   </ItemGroup>

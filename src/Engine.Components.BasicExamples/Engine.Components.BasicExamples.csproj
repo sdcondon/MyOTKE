@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>MyOTKE.Engine.Components.BasicExamples</AssemblyName>
     <RootNamespace>MyOTKE.Engine.Components.BasicExamples</RootNamespace>
 	<DocumentationFile>MyOTKE.Engine.Components.BasicExamples.xml</DocumentationFile>

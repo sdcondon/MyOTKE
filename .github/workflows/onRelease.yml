@@ -4,27 +4,55 @@ on:
   release:
     types: [published]
 
+env:
+  NUGET_SOURCE: https://nuget.pkg.github.com/${{ github.repository_owner }}
+  NUGET_KEY: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  push-packages:
+    runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@master
+    - name: Checkout
+      uses: actions/checkout@v4
 
-    - uses: actions/setup-dotnet@v1
+    - name: Set up dotnet
+      uses: actions/setup-dotnet@v3
 
-    - uses: nuget/setup-nuget@v1
+    - name: Set up Nuget
+      uses: nuget/setup-nuget@v1
       with:
-        nuget-api-key: ${{ secrets.NUGET_API_KEY }}
+        nuget-api-key: $NUGET_KEY
+        nuget-api-key-source: $NUGET_SOURCE
 
-    - name: Get release tag
-      id: getReleaseTag
-      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+    - name: Get package version
+      id: getPackageVersion
+      shell: bash
+      run: echo VERSION=${GITHUB_REF/refs\/tags\//} >> $GITHUB_OUTPUT
 
     - name: Build
+      run: dotnet build -c Release -p:Version=${{ steps.getPackageVersion.outputs.VERSION }}
       working-directory: ./src
-      run: dotnet build -c Release -p:Version=${{ steps.getReleaseTag.outputs.VERSION }}
 
     - name: Push packages
+      run: nuget push "**/*.nupkg" -Source $NUGET_SOURCE
       working-directory: ./src
-      run: nuget push "**/*.nupkg" -Source nuget.org
+
+    - name: Update 'latest-release' tag
+      uses: actions/github-script@v5
+      with:
+        script: |
+          github.rest.git.updateRef({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            ref: 'tags/latest-release',
+            sha: context.sha
+          }).catch(err => {
+            if (err.status !== 422) throw err;
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/latest-release',
+              sha: context.sha
+            });
+          });
