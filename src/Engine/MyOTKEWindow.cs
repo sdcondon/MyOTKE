@@ -46,7 +46,8 @@ namespace MyOTKE.Engine
             get => lockCursor;
             set
             {
-                CursorVisible = !value;
+                // todo(!): opentk can now do all the recentering for you - with cursordisabled state.
+                CursorState = value ? CursorState.Hidden : CursorState.Normal;
                 lockCursor = value;
             }
         }
