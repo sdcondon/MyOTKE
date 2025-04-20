@@ -4,10 +4,6 @@ on:
   release:
     types: [published]
 
-env:
-  NUGET_SOURCE: https://nuget.pkg.github.com/${{ github.repository_owner }}
-  NUGET_KEY: ${{ secrets.GITHUB_TOKEN }}
-
 jobs:
   push-packages:
     runs-on: windows-latest
@@ -22,8 +18,8 @@ jobs:
     - name: Set up Nuget
       uses: nuget/setup-nuget@v1
       with:
-        nuget-api-key: $NUGET_KEY
-        nuget-api-key-source: $NUGET_SOURCE
+        nuget-api-key: ${{ secrets.GITHUB_TOKEN }}
+        nuget-api-key-source: https://nuget.pkg.github.com/${{ github.repository_owner }}
 
     - name: Get package version
       id: getPackageVersion
@@ -35,7 +31,7 @@ jobs:
       working-directory: ./src
 
     - name: Push packages
-      run: nuget push "**/*.nupkg" -Source $NUGET_SOURCE
+      run: nuget push "**/*.nupkg" -Source https://nuget.pkg.github.com/${{ github.repository_owner }}
       working-directory: ./src
 
     - name: Update 'latest-release' tag
