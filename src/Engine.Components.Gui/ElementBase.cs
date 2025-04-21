@@ -8,19 +8,11 @@ namespace MyOTKE.Engine.Components.Gui;
 /// <summary>
 /// Base class for GUI elements. Provides for a nested element hierarchy, with elements being placed relative to their parents.
 /// </summary>
-public abstract class ElementBase : INotifyPropertyChanged, IDisposable
+/// <param name="layout">The layout that the element should use.</param>
+public abstract class ElementBase(Layout layout) : INotifyPropertyChanged, IDisposable
 {
     private IElementParent parent;
-    private Layout layout;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ElementBase"/> class.
-    /// </summary>
-    /// <param name="layout">The layout that the element should use.</param>
-    public ElementBase(Layout layout)
-    {
-        this.layout = layout;
-    }
+    private Layout layout = layout;
 
     /// <inheritdoc /> from INotifyPropertyChanged
     public event PropertyChangedEventHandler PropertyChanged;

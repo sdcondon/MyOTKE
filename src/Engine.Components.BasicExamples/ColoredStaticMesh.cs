@@ -153,35 +153,25 @@ public class ColoredStaticMesh : IComponent
     /// <summary>
     /// Container struct for the attributes of a vertex.
     /// </summary>
-    public readonly struct Vertex
+    /// <param name="position">The position of the vertex.</param>
+    /// <param name="color">The color of the vertex.</param>
+    /// <param name="normal">The normal vector of the vertex.</param>
+    public readonly struct Vertex(Vector3 position, Vector3 color, Vector3 normal)
     {
         /// <summary>
         /// Gets the position of the vertex.
         /// </summary>
-        public readonly Vector3 Position;
+        public readonly Vector3 Position = position;
 
         /// <summary>
         /// Gets the color of the vertex.
         /// </summary>
-        public readonly Vector3 Color;
+        public readonly Vector3 Color = color;
 
         /// <summary>
         /// Gets the normal vector of the vertex.
         /// </summary>
-        public readonly Vector3 Normal;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Vertex"/> struct.
-        /// </summary>
-        /// <param name="position">The position of the vertex.</param>
-        /// <param name="color">The color of the vertex.</param>
-        /// <param name="normal">The normal vector of the vertex.</param>
-        public Vertex(Vector3 position, Vector3 color, Vector3 normal)
-        {
-            Position = position;
-            Color = color;
-            Normal = normal;
-        }
+        public readonly Vector3 Normal = normal;
     }
 
     private struct CameraUniformBlock

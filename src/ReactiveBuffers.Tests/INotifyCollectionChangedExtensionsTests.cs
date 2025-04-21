@@ -82,14 +82,9 @@ public class INotifyCollectionChangedExtensionsTests
         }
     }
 
-    public class In : INotifyPropertyChanged
+    public class In(int value) : INotifyPropertyChanged
     {
-        private int value;
-
-        public In(int value)
-        {
-            this.value = value;
-        }
+        private int value = value;
 
         public event PropertyChangedEventHandler PropertyChanged;
 

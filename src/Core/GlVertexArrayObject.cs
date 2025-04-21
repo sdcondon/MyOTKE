@@ -130,10 +130,7 @@ public sealed class GlVertexArrayObject<T1> : IVertexArrayObject<T1>, IDisposabl
         {
             attributeBuffer1.Dispose();
 
-            if (indexBuffer != null)
-            {
-                indexBuffer.Dispose();
-            }
+            indexBuffer?.Dispose();
 
             GC.SuppressFinalize(this);
         }
@@ -279,10 +276,7 @@ public sealed class GlVertexArrayObject<T1, T2> : IVertexArrayObject<T1, T2>, ID
             attributeBuffer1.Dispose();
             attributeBuffer2.Dispose();
 
-            if (indexBuffer != null)
-            {
-                indexBuffer.Dispose();
-            }
+            indexBuffer?.Dispose();
 
             GC.SuppressFinalize(this);
         }
@@ -438,10 +432,7 @@ public sealed class GlVertexArrayObject<T1, T2, T3> : IVertexArrayObject<T1, T2,
             attributeBuffer2.Dispose();
             attributeBuffer3.Dispose();
 
-            if (indexBuffer != null)
-            {
-                indexBuffer.Dispose();
-            }
+            indexBuffer?.Dispose();
 
             GC.SuppressFinalize(this);
         }

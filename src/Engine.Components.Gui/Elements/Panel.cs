@@ -6,20 +6,11 @@ namespace MyOTKE.Engine.Components.Gui.Elements;
 /// <summary>
 /// GUI element that is a colored panel - and can contain other elements.
 /// </summary>
-public class Panel : ContainerElementBase
+/// <param name="layout">The layout of the of the panel in relation to its parent.</param>
+/// <param name="color">The color of the panel.</param>
+public class Panel(Layout layout, Vector4 color) : ContainerElementBase(layout)
 {
-    private Vector4 color;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Panel"/> class.
-    /// </summary>
-    /// <param name="layout">The layout of the of the panel in relation to its parent.</param>
-    /// <param name="color">The color of the panel.</param>
-    public Panel(Layout layout, Vector4 color)
-        : base(layout)
-    {
-        this.color = color;
-    }
+    private Vector4 color = color;
 
     /// <summary>
     /// Gets or sets the background color of the element.

@@ -140,10 +140,7 @@ public sealed class GlVertexArrayObject<<#= TList(i) #>> : IVertexArrayObject<<#
         {
 <# WriteLines(i, i => $"attributeBuffer{i}.Dispose();", 3); #>
 
-            if (indexBuffer != null)
-            {
-                indexBuffer.Dispose();
-            }
+            indexBuffer?.Dispose();
 
             GC.SuppressFinalize(this);
         }

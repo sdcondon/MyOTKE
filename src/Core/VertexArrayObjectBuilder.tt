@@ -4,6 +4,7 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
 <#@ include file="_Common.t4" #>
+#pragma warning disable IDE0290
 using OpenTK.Graphics.OpenGL;
 
 namespace MyOTKE.Core;
@@ -112,3 +113,4 @@ public sealed class VertexArrayObjectBuilder<#= TList(i, "<", ">") #>
 <# } #>
 }
 <# } #>
+#pragma warning restore IDE0290

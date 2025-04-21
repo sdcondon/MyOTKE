@@ -180,18 +180,11 @@ public class ColoredLines : IComponent
         public float PointLightPower;
     }
 
-    private readonly struct Vertex
+    private readonly struct Vertex(Vector3 position, Vector3 color, Vector3 normal)
     {
-        public readonly Vector3 Position;
-        public readonly Vector3 Color;
-        public readonly Vector3 Normal;
-
-        public Vertex(Vector3 position, Vector3 color, Vector3 normal)
-        {
-            this.Position = position;
-            this.Color = color;
-            this.Normal = normal;
-        }
+        public readonly Vector3 Position = position;
+        public readonly Vector3 Color = color;
+        public readonly Vector3 Normal = normal;
     }
 
     private class Line : INotifyPropertyChanged

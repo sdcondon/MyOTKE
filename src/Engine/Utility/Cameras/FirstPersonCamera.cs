@@ -2,66 +2,50 @@
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 
-namespace MyOTKE.Engine;
+namespace MyOTKE.Engine.Utility.Cameras;
 
 /// <summary>
 /// An <see cref="ICamera"/> implementation that uses an "FPS"-style control scheme.
 /// </summary>
-public class FirstPersonCamera : ICamera
+/// <param name="view">The view from which to retrieve user input.</param>
+/// <param name="movementSpeed">The movement speed of the camera, in units per second.</param>
+/// <param name="rotationSpeed">The "rotation speed" of the camera - the multiplicand of the mouse cursor offset to radians.</param>
+/// <param name="fieldOfViewRadians">The field of view of the camera, in radians.</param>
+/// <param name="nearPlaneDistance">The distance of the near plane from the camera.</param>
+/// <param name="farPlaneDistance">The distance of the far plane from the camera.</param>
+/// <param name="initialPosition">The initial position of the camera.</param>
+/// <param name="initialHorizontalAngleRadians">The initial angle between the camera direction and the Y axis, in radians.</param>
+/// <param name="initialVerticalAngleRadians">The initial angle between between the camera direction and the X axis, in radians.</param>
+public class FirstPersonCamera(
+    MyOTKEWindow view,
+    float movementSpeed,
+    float rotationSpeed,
+    float fieldOfViewRadians,
+    float nearPlaneDistance,
+    float farPlaneDistance,
+    Vector3 initialPosition,
+    float initialHorizontalAngleRadians,
+    float initialVerticalAngleRadians) : ICamera
 {
-    private readonly MyOTKEWindow view;
-    private Vector3 position;
-    private float horizontalAngle;
-    private float verticalAngle;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="FirstPersonCamera"/> class.
-    /// </summary>
-    /// <param name="view">The view from which to retrieve user input.</param>
-    /// <param name="movementSpeed">The movement speed of the camera, in units per second.</param>
-    /// <param name="rotationSpeed">The "rotation speed" of the camera - the multiplicand of the mouse cursor offset to radians.</param>
-    /// <param name="fieldOfViewRadians">The field of view of the camera, in radians.</param>
-    /// <param name="nearPlaneDistance">The distance of the near plane from the camera.</param>
-    /// <param name="farPlaneDistance">The distance of the far plane from the camera.</param>
-    /// <param name="initialPosition">The initial position of the camera.</param>
-    /// <param name="initialHorizontalAngleRadians">The initial angle between the camera direction and the Y axis, in radians.</param>
-    /// <param name="initialVerticalAngleRadians">The initial angle between between the camera direction and the X axis, in radians.</param>
-    public FirstPersonCamera(
-        MyOTKEWindow view,
-        float movementSpeed,
-        float rotationSpeed,
-        float fieldOfViewRadians,
-        float nearPlaneDistance,
-        float farPlaneDistance,
-        Vector3 initialPosition,
-        float initialHorizontalAngleRadians,
-        float initialVerticalAngleRadians)
-    {
-        this.view = view;
-        this.MovementSpeed = movementSpeed;
-        this.RotationSpeed = rotationSpeed;
-        this.FieldOfViewRadians = fieldOfViewRadians;
-        this.NearPlaneDistance = nearPlaneDistance;
-        this.FarPlaneDistance = farPlaneDistance;
-        this.position = initialPosition;
-        this.horizontalAngle = initialHorizontalAngleRadians;
-        this.verticalAngle = initialVerticalAngleRadians;
-    }
+    private readonly MyOTKEWindow view = view;
+    private Vector3 position = initialPosition;
+    private float horizontalAngle = initialHorizontalAngleRadians;
+    private float verticalAngle = initialVerticalAngleRadians;
 
     /// <summary>
     /// Gets or sets the movement speed of the camera, in units per second.
     /// </summary>
-    public float MovementSpeed { get; set; } // = 3.0f;
+    public float MovementSpeed { get; set; } = movementSpeed;
 
     /// <summary>
     /// Gets or sets the "rotation speed" of the camera - the multiplicand of the mouse cursor offset to radians.
     /// </summary>
-    public float RotationSpeed { get; set; } // = 0.005f;
+    public float RotationSpeed { get; set; } = rotationSpeed;
 
     /// <summary>
     /// Gets or sets the field of view of the camera, in radians.
     /// </summary>
-    public float FieldOfViewRadians { get; set; } // = (float)Math.PI / 4.0f;
+    public float FieldOfViewRadians { get; set; } = fieldOfViewRadians;
 
     /// <inheritdoc />
     public Matrix4 View { get; private set; }
@@ -72,12 +56,12 @@ public class FirstPersonCamera : ICamera
     /// <summary>
     /// Gets or sets the distance of the near plane from the camera.
     /// </summary>
-    private float NearPlaneDistance { get; set; } // = 0.1f;
+    private float NearPlaneDistance { get; set; } = nearPlaneDistance;
 
     /// <summary>
     /// Gets or sets the distance of the far plane from the camera.
     /// </summary>
-    private float FarPlaneDistance { get; set; } // = 100f;
+    private float FarPlaneDistance { get; set; } = farPlaneDistance;
 
     /// <inheritdoc />
     public void Update(TimeSpan elapsed)

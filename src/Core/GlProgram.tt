@@ -21,7 +21,6 @@ string ClassName(bool hasDub, int uniformBlockCount, bool useBraces = false)
 }
 
 #>
-#pragma warning disable SA1402
 using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
@@ -167,4 +166,3 @@ public sealed class <#= ClassName(hasDub, i) #> : IDisposable
 }
 <# } #>
 <# } #>
-#pragma warning restore SA1402

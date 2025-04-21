@@ -2,14 +2,24 @@
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 
-namespace MyOTKE.Engine;
+namespace MyOTKE.Engine.Utility.Cameras;
 
 /// <summary>
 /// Implementation of <see cref="ICamera"/> that rotates around the origin.
 /// </summary>
-public class OrbitCameraAligned : ICamera
+/// <param name="view">The view from which to retrieve input and aspect ratio.</param>
+/// <param name="rotationSpeedBase">The base (i.e. at default zoom distance) rotation speed of the camera, in radians per per update.</param>
+/// <param name="fieldOfViewRadians">The camera's field of view, in radians.</param>
+/// <param name="nearPlaneDistance">The distance of the near plane from the camera.</param>
+/// <param name="farPlaneDistance">The ditance of the far plane from the camera.</param>
+public class OrbitCameraAligned(
+    MyOTKEWindow view,
+    float rotationSpeedBase,
+    float fieldOfViewRadians,
+    float nearPlaneDistance,
+    float farPlaneDistance) : ICamera
 {
-    private readonly MyOTKEWindow view;
+    private readonly MyOTKEWindow view = view;
 
     private float longitude = 0f;
     private float latitude = 0f;
@@ -19,46 +29,24 @@ public class OrbitCameraAligned : ICamera
     private int zoomLevel = 0;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="OrbitCameraAligned"/> class.
-    /// </summary>
-    /// <param name="view">The view from which to retrieve input and aspect ratio.</param>
-    /// <param name="rotationSpeedBase">The base (i.e. at default zoom distance) rotation speed of the camera, in radians per per update.</param>
-    /// <param name="fieldOfViewRadians">The camera's field of view, in radians.</param>
-    /// <param name="nearPlaneDistance">The distance of the near plane from the camera.</param>
-    /// <param name="farPlaneDistance">The ditance of the far plane from the camera.</param>
-    public OrbitCameraAligned(
-        MyOTKEWindow view,
-        float rotationSpeedBase,
-        float fieldOfViewRadians,
-        float nearPlaneDistance,
-        float farPlaneDistance)
-    {
-        this.view = view;
-        RotationSpeedBase = rotationSpeedBase;
-        FieldOfViewRadians = fieldOfViewRadians;
-        NearPlaneDistance = nearPlaneDistance;
-        FarPlaneDistance = farPlaneDistance;
-    }
-
-    /// <summary>
     /// Gets or sets the base (i.e. at default zoom distance) rotation speed of the camera in radians per second.
     /// </summary>
-    public float RotationSpeedBase { get; set; } // = 0.01f;
+    public float RotationSpeedBase { get; set; } = rotationSpeedBase;
 
     /// <summary>
     /// Gets or sets the camera's field of view, in radians.
     /// </summary>
-    public float FieldOfViewRadians { get; set; } // = (float)Math.PI / 4.0f;
+    public float FieldOfViewRadians { get; set; } = fieldOfViewRadians;
 
     /// <summary>
     /// Gets or sets the distance of the near plane from the camera.
     /// </summary>
-    public float NearPlaneDistance { get; set; } // = 0.01f;
+    public float NearPlaneDistance { get; set; } = nearPlaneDistance;
 
     /// <summary>
     /// Gets or sets the distance of the far plane from the camera.
     /// </summary>
-    public float FarPlaneDistance { get; set; } // = 100f;
+    public float FarPlaneDistance { get; set; } = farPlaneDistance;
 
     /// <summary>
     /// Gets the current distance between the camera and the origin.
@@ -106,13 +94,13 @@ public class OrbitCameraAligned : ICamera
         if (view.IsKeyDown(Keys.D))
         {
             longitude += RotationSpeed * (float)elapsed.TotalSeconds;
-            longitude = longitude % (float)(2f * Math.PI);
+            longitude %= (float)(2f * Math.PI);
         }
         //// Pan left - rotate forward around up
         if (view.IsKeyDown(Keys.A))
         {
             longitude -= RotationSpeed * (float)elapsed.TotalSeconds;
-            longitude = longitude % (float)(2f * Math.PI);
+            longitude %= (float)(2f * Math.PI);
         }
         //// Zoom
         zoomLevel += (int)view.MouseState.ScrollDelta.Y;

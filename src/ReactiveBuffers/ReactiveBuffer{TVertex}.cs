@@ -67,15 +67,10 @@ public class ReactiveBuffer<TVertex> : IDisposable
         this.vao.Draw(linksByBufferIndex.Count * indices.Count);
     }
 
-    private class ItemObserver : IObserver<IList<TVertex>>
+    private class ItemObserver(ReactiveBuffer<TVertex> parent) : IObserver<IList<TVertex>>
     {
-        private readonly ReactiveBuffer<TVertex> parent;
+        private readonly ReactiveBuffer<TVertex> parent = parent;
         private readonly SortedList<int, int> bufferIndices = [];
-
-        public ItemObserver(ReactiveBuffer<TVertex> parent)
-        {
-            this.parent = parent;
-        }
 
         public void OnNext(IList<TVertex> vertices)
         {

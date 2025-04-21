@@ -4,7 +4,7 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
 <#@ include file="../_Common.t4" #>
-
+#pragma warning disable IDE0290
 namespace MyOTKE.Core.Decorators;
 
 <# for(int i = 1; i <= MaxVertexBufferCount; i++) { #>
@@ -60,3 +60,4 @@ public static class VertexArrayObjectBuilderExtensions<#= i #>
     }
 }
 <# } #>
+#pragma warning restore IDE0290

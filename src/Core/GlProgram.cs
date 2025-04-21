@@ -1,5 +1,4 @@
-﻿#pragma warning disable SA1402
-using OpenTK.Graphics.OpenGL;
+﻿using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 
@@ -428,4 +427,3 @@ public sealed class GlProgramWithDUB<TDefaultUniformBlock, T1> : IDisposable
         GlDebug.ThrowIfGlError("deleting program");
     }
 }
-#pragma warning restore SA1402

@@ -1,7 +1,7 @@
 ﻿namespace MyOTKE.Core;
 
 /// <summary>
-/// Extension methods for <see cref="IVertexArrayObject{}"> instances.
+/// Extension methods for IVertexArrayObject instances.
 /// </summary>
 public static class IVertexArrayObjectExtensions
 {

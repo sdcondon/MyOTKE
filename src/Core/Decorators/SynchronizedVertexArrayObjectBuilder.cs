@@ -1,4 +1,4 @@
-﻿
+﻿#pragma warning disable IDE0290
 namespace MyOTKE.Core.Decorators;
 
 /// <summary>
@@ -165,3 +165,4 @@ public static class VertexArrayObjectBuilderExtensions3
         return new SynchronizedVertexArrayObjectBuilder<T1, T2, T3>(builder);
     }
 }
+#pragma warning restore IDE0290

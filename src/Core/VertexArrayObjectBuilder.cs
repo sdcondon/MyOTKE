@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL;
+﻿#pragma warning disable IDE0290
+using OpenTK.Graphics.OpenGL;
 
 namespace MyOTKE.Core;
 
@@ -359,3 +360,4 @@ public sealed class VertexArrayObjectBuilder<T1, T2, T3>
             indexSpec);
     }
 }
+#pragma warning restore IDE0290

@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL;
+﻿#pragma warning disable IDE0290
+using OpenTK.Graphics.OpenGL;
 using System;
 
 namespace MyOTKE.Core.Decorators;
@@ -224,3 +225,4 @@ public sealed class SynchronizedVertexArrayObject<T1, T2, T3> : IVertexArrayObje
         vertexArrayObject.Draw(count);
     }
 }
+#pragma warning restore IDE0290

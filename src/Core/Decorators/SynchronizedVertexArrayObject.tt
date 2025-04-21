@@ -4,6 +4,7 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
 <#@ include file="../_Common.t4" #>
+#pragma warning disable IDE0290
 using OpenTK.Graphics.OpenGL;
 using System;
 
@@ -74,3 +75,4 @@ public sealed class SynchronizedVertexArrayObject<<#= TList(i) #>> : IVertexArra
     }
 }
 <# } #>
+#pragma warning restore IDE0290
