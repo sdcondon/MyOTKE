@@ -2,8 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MyOTKE.Core;
-
+namespace MyOTKE.Core.Internals;
 internal class GlUniformBlockBindingRef : IDisposable
 {
     private readonly GlUniformBlockBinding binding;

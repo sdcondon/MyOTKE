@@ -1,9 +1,8 @@
-﻿using MyOTKE.Engine.Components.Gui.Elements;
-using MyOTKE.Engine.Utility;
+﻿using MyOTKE.Engine.Utility;
 using OpenTK.Mathematics;
 using System;
 
-namespace MyOTKE.Engine.Components.Gui;
+namespace MyOTKE.Engine.Components.Gui.Elements;
 
 /// <summary>
 /// A clickable GUI button consisting of some text on a colored panel.

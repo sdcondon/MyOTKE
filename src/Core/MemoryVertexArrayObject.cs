@@ -1,4 +1,4 @@
-﻿#pragma warning disable SA1402
+﻿#pragma warning disable IDE0290
 using OpenTK.Graphics.OpenGL;
 using System;
 
@@ -162,4 +162,4 @@ public class MemoryVertexArrayObject<T1, T2, T3> : IVertexArrayObject<T1, T2, T3
     /// <inheritdoc />
     public void Draw(int count) => throw new NotImplementedException();
 }
-#pragma warning restore SA1402
+#pragma warning restore IDE0290

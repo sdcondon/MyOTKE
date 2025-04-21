@@ -21,6 +21,7 @@ string ClassName(bool hasDub, int uniformBlockCount, bool useBraces = false)
 }
 
 #>
+using MyOTKE.Core.Internals;
 using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;

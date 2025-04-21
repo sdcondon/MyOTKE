@@ -1,5 +1,4 @@
-﻿#pragma warning disable SA1402
-using OpenTK.Graphics.OpenGL;
+﻿using OpenTK.Graphics.OpenGL;
 using System;
 
 namespace MyOTKE.Core;
@@ -441,4 +440,3 @@ public sealed class GlVertexArrayObject<T1, T2, T3> : IVertexArrayObject<T1, T2,
         GlDebug.ThrowIfGlError("deleting vertex array");
     }
 }
-#pragma warning restore SA1402

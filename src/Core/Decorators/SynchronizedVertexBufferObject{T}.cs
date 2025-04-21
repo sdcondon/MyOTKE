@@ -1,4 +1,5 @@
-﻿namespace MyOTKE.Core.Decorators;
+﻿#pragma warning disable IDE0290
+namespace MyOTKE.Core.Decorators;
 
 /// <summary>
 /// Decorator for <see cref="IVertexBufferObject{T}"/> that explicitly synchronizes with OpenGL (making it simple but slow..).
@@ -24,3 +25,4 @@ public class SynchronizedVertexBufferObject<T> : SynchronizedBufferObject<T>, IV
     /// <inheritdoc />
     public GlVertexAttributeInfo[] Attributes => vertexBufferObject.Attributes;
 }
+#pragma warning restore IDE0290

@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL;
+﻿using MyOTKE.Core.Internals;
+using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 

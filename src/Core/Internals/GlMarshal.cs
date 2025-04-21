@@ -6,7 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 
-namespace MyOTKE.Core;
+namespace MyOTKE.Core.Internals;
 
 /// <summary>
 /// Utility methods for marshalling data between .NET and Open GL.

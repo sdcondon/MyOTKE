@@ -1,7 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using System;
 
-namespace MyOTKE.Core;
+namespace MyOTKE.Core.Internals;
 
 /// <summary>
 /// Managed reference to an OpenGL uniform buffer object.
