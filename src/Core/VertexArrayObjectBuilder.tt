@@ -6,110 +6,109 @@
 <#@ include file="_Common.t4" #>
 using OpenTK.Graphics.OpenGL;
 
-namespace MyOTKE.Core
-{
+namespace MyOTKE.Core;
+
 <# for(int i = 0; i <= MaxVertexBufferCount; i++) { #>
 <# WriteLineIf(i > 0, ""); #>
-    /// <summary>
-    /// Builder class for <see cref="GlVertexArrayObject<#= TList(i, "{", "}") #>"/> objects that presents a fluent-ish interface.
-    /// </summary>
+/// <summary>
+/// Builder class for <see cref="GlVertexArrayObject<#= TList(i, "{", "}") #>"/> objects that presents a fluent-ish interface.
+/// </summary>
 <# WriteTypeParamDocs(i, i => $"The type of data to be stored in the { Ordinal(i) } buffer."); #>
-    public sealed class VertexArrayObjectBuilder<#= TList(i, "<", ">") #>
-<# WriteLines(i, i => $"where T{i} : struct", 2); #>
-    {
-        private readonly PrimitiveType primitiveType;
-<# WriteLines(i, i => $"private readonly (BufferUsageHint usage, int elementCount, T{i}[] data) bufferSpec{i};", 2); #>
-        private (BufferUsageHint usage, int count, uint[] data) indexSpec;
+public sealed class VertexArrayObjectBuilder<#= TList(i, "<", ">") #>
+<# WriteLines(i, i => $"where T{i} : struct", 1); #>
+{
+    private readonly PrimitiveType primitiveType;
+<# WriteLines(i, i => $"private readonly (BufferUsageHint usage, int elementCount, T{i}[] data) bufferSpec{i};", 1); #>
+    private (BufferUsageHint usage, int count, uint[] data) indexSpec;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VertexArrayObjectBuilder<#= TList(i, "{", "}") #>"/> class.
-        /// </summary>
-        /// <param name="primitiveType">The type of primitive data to be stored in the built VAO.</param>
-<# WriteLineIf(i > 0, $"/// <param name=\"indexSpec\">Specification for the index buffer.</param>", 2); #>
-<# WriteLines(i, i => $"/// <param name=\"bufferSpec{i}\">Specification for the { Ordinal(i) } buffer.</param>", 2); #>
-        <# Write(i == 0 ? "public" : "internal"); #> VertexArrayObjectBuilder(
-            PrimitiveType primitiveType<# WriteLine(i > 0 ? "," : ")"); #>
-<# WriteLineIf(i > 0, $"(BufferUsageHint usage, int count, uint[] data) indexSpec,", 3); #>
-<# WriteLines(i, j => $"(BufferUsageHint usage, int elementCount, T{j}[] data) bufferSpec{j}{(j < i ? "," : ")")}", 3); #>
-        {
-            this.primitiveType = primitiveType;
-<# WriteLineIf(i > 0, $"this.indexSpec = indexSpec;", 3); #>
-<# WriteLines(i, j => $"this.bufferSpec{j} = bufferSpec{j};", 3); #>
-        }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="VertexArrayObjectBuilder<#= TList(i, "{", "}") #>"/> class.
+    /// </summary>
+    /// <param name="primitiveType">The type of primitive data to be stored in the built VAO.</param>
+<# WriteLineIf(i > 0, $"/// <param name=\"indexSpec\">Specification for the index buffer.</param>", 1); #>
+<# WriteLines(i, i => $"/// <param name=\"bufferSpec{i}\">Specification for the { Ordinal(i) } buffer.</param>", 1); #>
+    <# Write(i == 0 ? "public" : "internal"); #> VertexArrayObjectBuilder(
+        PrimitiveType primitiveType<# WriteLine(i > 0 ? "," : ")"); #>
+<# WriteLineIf(i > 0, $"(BufferUsageHint usage, int count, uint[] data) indexSpec,", 2); #>
+<# WriteLines(i, j => $"(BufferUsageHint usage, int elementCount, T{j}[] data) bufferSpec{j}{(j < i ? "," : ")")}", 2); #>
+    {
+        this.primitiveType = primitiveType;
+<# WriteLineIf(i > 0, $"this.indexSpec = indexSpec;", 2); #>
+<# WriteLines(i, j => $"this.bufferSpec{j} = bufferSpec{j};", 2); #>
+    }
 <# if(i < MaxVertexBufferCount) { #>
 
-        /// <summary>
-        /// Adds a new populated attribute buffer to be included in the built VAO.
-        /// </summary>
-        /// <typeparam name="T">The type of data to be stored in the buffer.</typeparam>
-        /// <param name="bufferUsage">The usage type for the buffer.</param>
-        /// <param name="data">The data with which to populate the buffer.</param>
-        /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<<#= TList(i, "", ", ") #>T> WithNewAttributeBuffer<T>(BufferUsageHint bufferUsage, T[] data)
-            where T : struct
-        {
-            return new VertexArrayObjectBuilder<<#= TList(i, "", ", ") #>T>(
-                primitiveType,
-                indexSpec,
-<# WriteLines(i, i => $"bufferSpec{i},", 4); #>
-                (bufferUsage, data.Length, data));
-        }
+    /// <summary>
+    /// Adds a new populated attribute buffer to be included in the built VAO.
+    /// </summary>
+    /// <typeparam name="T">The type of data to be stored in the buffer.</typeparam>
+    /// <param name="bufferUsage">The usage type for the buffer.</param>
+    /// <param name="data">The data with which to populate the buffer.</param>
+    /// <returns>The updated builder.</returns>
+    public VertexArrayObjectBuilder<<#= TList(i, "", ", ") #>T> WithNewAttributeBuffer<T>(BufferUsageHint bufferUsage, T[] data)
+        where T : struct
+    {
+        return new VertexArrayObjectBuilder<<#= TList(i, "", ", ") #>T>(
+            primitiveType,
+            indexSpec,
+<# WriteLines(i, i => $"bufferSpec{i},", 3); #>
+            (bufferUsage, data.Length, data));
+    }
 
-        /// <summary>
-        /// Adds a new empty attribute buffer to be included in the built VAO.
-        /// </summary>
-        /// <typeparam name="T">The type of data to be stored in the buffer.</typeparam>
-        /// <param name="bufferUsage">The usage type for the buffer.</param>
-        /// <param name="size">The size of the buffer, in instances of <see typeparamref="T"/>.</param>
-        /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<<#= TList(i, "", ", ") #>T> WithNewAttributeBuffer<T>(BufferUsageHint bufferUsage, int size)
-            where T : struct
-        {
-            return new VertexArrayObjectBuilder<<#= TList(i, "", ", ") #>T>(
-                primitiveType,
-                indexSpec,
-<# WriteLines(i, i => $"bufferSpec{i},", 4); #>
-                (bufferUsage, size, null));
-        }
+    /// <summary>
+    /// Adds a new empty attribute buffer to be included in the built VAO.
+    /// </summary>
+    /// <typeparam name="T">The type of data to be stored in the buffer.</typeparam>
+    /// <param name="bufferUsage">The usage type for the buffer.</param>
+    /// <param name="size">The size of the buffer, in instances of <see typeparamref="T"/>.</param>
+    /// <returns>The updated builder.</returns>
+    public VertexArrayObjectBuilder<<#= TList(i, "", ", ") #>T> WithNewAttributeBuffer<T>(BufferUsageHint bufferUsage, int size)
+        where T : struct
+    {
+        return new VertexArrayObjectBuilder<<#= TList(i, "", ", ") #>T>(
+            primitiveType,
+            indexSpec,
+<# WriteLines(i, i => $"bufferSpec{i},", 3); #>
+            (bufferUsage, size, null));
+    }
 <# } #>
 
-        /// <summary>
-        /// Sets the index buffer to be included in the built VAO.
-        /// </summary>
-        /// <param name="bufferUsage">The usage type for the buffer.</param>
-        /// <param name="data">The data with which to populate the buffer.</param>
-        /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<#= TList(i, "<", ">") #> WithNewIndexBuffer(BufferUsageHint bufferUsage, uint[] data)
-        {
-            this.indexSpec = (bufferUsage, data.Length, data);
-            return this;
-        }
+    /// <summary>
+    /// Sets the index buffer to be included in the built VAO.
+    /// </summary>
+    /// <param name="bufferUsage">The usage type for the buffer.</param>
+    /// <param name="data">The data with which to populate the buffer.</param>
+    /// <returns>The updated builder.</returns>
+    public VertexArrayObjectBuilder<#= TList(i, "<", ">") #> WithNewIndexBuffer(BufferUsageHint bufferUsage, uint[] data)
+    {
+        this.indexSpec = (bufferUsage, data.Length, data);
+        return this;
+    }
 
-        /// <summary>
-        /// Sets the index buffer to be included in the built VAO.
-        /// </summary>
-        /// <param name="bufferUsage">The usage type for the buffer.</param>
-        /// <param name="capacity">The size of the index buffer.</param>
-        /// <returns>The updated builder.</returns>
-        public VertexArrayObjectBuilder<#= TList(i, "<", ">") #> WithNewIndexBuffer(BufferUsageHint bufferUsage, int capacity)
-        {
-            this.indexSpec = (bufferUsage, capacity, null);
-            return this;
-        }
+    /// <summary>
+    /// Sets the index buffer to be included in the built VAO.
+    /// </summary>
+    /// <param name="bufferUsage">The usage type for the buffer.</param>
+    /// <param name="capacity">The size of the index buffer.</param>
+    /// <returns>The updated builder.</returns>
+    public VertexArrayObjectBuilder<#= TList(i, "<", ">") #> WithNewIndexBuffer(BufferUsageHint bufferUsage, int capacity)
+    {
+        this.indexSpec = (bufferUsage, capacity, null);
+        return this;
+    }
 <# if (i > 0) { #>
 
-        /// <summary>
-        /// Builds a new <see cref="IVertexArrayObject{<#= TList(i) #>}"/> instance based on the state of the builder.
-        /// </summary>
-        /// <returns>The built VAO.</returns>
-        public IVertexArrayObject<<#= TList(i) #>> Build()
-        {
-            return new GlVertexArrayObject<<#= TList(i) #>>(
-                primitiveType,
-<# WriteLines(i, i => $"bufferSpec{i},", 4); #>
-                indexSpec);
-        }
-<# } #>
+    /// <summary>
+    /// Builds a new <see cref="IVertexArrayObject{<#= TList(i) #>}"/> instance based on the state of the builder.
+    /// </summary>
+    /// <returns>The built VAO.</returns>
+    public IVertexArrayObject<<#= TList(i) #>> Build()
+    {
+        return new GlVertexArrayObject<<#= TList(i) #>>(
+            primitiveType,
+<# WriteLines(i, i => $"bufferSpec{i},", 3); #>
+            indexSpec);
     }
 <# } #>
 }
+<# } #>

@@ -4,35 +4,35 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
 <#@ include file="_Common.t4" #>
-namespace MyOTKE.Core
-{
+namespace MyOTKE.Core;
+
 <# for(int i = 1; i <= MaxVertexBufferCount; i++) { #>
 <# WriteLineIf(i > 1); #>
-    /// <summary>
-    /// Interface for types representing an OpenGL vertex array object.
-    /// <para />
-    /// See https://www.khronos.org/opengl/wiki/Vertex_Specification#Vertex_Array_Object.
-    /// </summary>
+/// <summary>
+/// Interface for types representing an OpenGL vertex array object.
+/// <para />
+/// See https://www.khronos.org/opengl/wiki/Vertex_Specification#Vertex_Array_Object.
+/// </summary>
 <# WriteTypeParamDocs(i, i => $"The type of the { Ordinal(i) } attribute buffer."); #>
-    public interface IVertexArrayObject<<#= TList(i) #>>
-<# WriteLines(i, i => $"where T{i} : struct", 2); #>
-    {
-        /// <summary>
-        /// Gets the index buffer object for this VAO, if there is one.
-        /// </summary>
-        IVertexBufferObject<uint> IndexBuffer { get; }
+public interface IVertexArrayObject<<#= TList(i) #>>
+<# WriteLines(i, i => $"where T{i} : struct", 1); #>
+{
+    /// <summary>
+    /// Gets the index buffer object for this VAO, if there is one.
+    /// </summary>
+    IVertexBufferObject<uint> IndexBuffer { get; }
 <# for(int j = 1; j <= i; j++) { #>
 
-        /// <summary>
-        /// Gets the <#= Ordinal(j) #> attribute buffer object referenced by this VAO.
-        /// </summary>
-        IVertexBufferObject<T<#= j #>> AttributeBuffer<#= j #> { get; }
+    /// <summary>
+    /// Gets the <#= Ordinal(j) #> attribute buffer object referenced by this VAO.
+    /// </summary>
+    IVertexBufferObject<T<#= j #>> AttributeBuffer<#= j #> { get; }
 <# } #>
 
-        /// <summary>
-        /// Draw with the active program.
-        /// </summary>
-        /// <param name="count">The number of vertices to draw, or -1 to draw all vertices.</param>
-        void Draw(int count);
-    }
-<# } #>}
+    /// <summary>
+    /// Draw with the active program.
+    /// </summary>
+    /// <param name="count">The number of vertices to draw, or -1 to draw all vertices.</param>
+    void Draw(int count);
+}
+<# } #>

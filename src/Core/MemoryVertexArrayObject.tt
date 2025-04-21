@@ -8,54 +8,54 @@
 using OpenTK.Graphics.OpenGL;
 using System;
 
-namespace MyOTKE.Core
-{
+namespace MyOTKE.Core;
+
 <# for(int i = 1; i <= MaxVertexBufferCount; i++) { #>
 <# WriteLineIf(i > 1); #>
-    /// <summary>
-    /// Implementation of <see cref="IVertexArrayObject{<#= TList(i) #>}"/> that just stores buffer content in memory, for testing purposes.
-    /// </summary>
+/// <summary>
+/// Implementation of <see cref="IVertexArrayObject{<#= TList(i) #>}"/> that just stores buffer content in memory, for testing purposes.
+/// </summary>
 <# WriteTypeParamDocs(i, i => $"The type of the { Ordinal(i) } buffer."); #>
-    public class MemoryVertexArrayObject<<#= TList(i) #>> : IVertexArrayObject<<#= TList(i) #>>
-<# WriteLines(i, i => $"where T{i} : struct", 2); #>
+public class MemoryVertexArrayObject<<#= TList(i) #>> : IVertexArrayObject<<#= TList(i) #>>
+<# WriteLines(i, i => $"where T{i} : struct", 1); #>
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MemoryVertexArrayObject{<#= TList(i) #>}"/> class.
+    /// </summary>
+<# WriteLines(i, i => $"/// <param name=\"attributeBufferSpec{i}\">Spec for the { Ordinal(i) } buffer in this VAO.</param>", 1); #>
+    /// <param name="indexSpec">Spec for the index of this VAO.</param>
+    public MemoryVertexArrayObject(
+<# for(int j = 1; j <= i; j++) { #>
+        (BufferUsageHint usage, int capacity, T<#= j #>[] data) attributeBufferSpec<#= j #>,
+<# } #>
+        (int capacity, uint[] data) indexSpec)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MemoryVertexArrayObject{<#= TList(i) #>}"/> class.
-        /// </summary>
-<# WriteLines(i, i => $"/// <param name=\"attributeBufferSpec{i}\">Spec for the { Ordinal(i) } buffer in this VAO.</param>", 2); #>
-        /// <param name="indexSpec">Spec for the index of this VAO.</param>
-        public MemoryVertexArrayObject(
 <# for(int j = 1; j <= i; j++) { #>
-            (BufferUsageHint usage, int capacity, T<#= j #>[] data) attributeBufferSpec<#= j #>,
+        AttributeBuffer<#= j #> = new MemoryVertexBufferObject<T<#= j #>>(attributeBufferSpec<#= j #>.capacity, attributeBufferSpec<#= j #>.data);
 <# } #>
-            (int capacity, uint[] data) indexSpec)
-        {
-<# for(int j = 1; j <= i; j++) { #>
-            AttributeBuffer<#= j #> = new MemoryVertexBufferObject<T<#= j #>>(attributeBufferSpec<#= j #>.capacity, attributeBufferSpec<#= j #>.data);
-<# } #>
-            IndexBuffer = new MemoryVertexBufferObject<uint>(indexSpec.capacity, indexSpec.data);
-        }
-
-        /// <inheritdoc />
-        IVertexBufferObject<uint> IVertexArrayObject<<#= TList(i) #>>.IndexBuffer => IndexBuffer;
-
-        /// <summary>
-        /// Gets the index buffer of this VAO.
-        /// </summary>
-        public MemoryVertexBufferObject<uint> IndexBuffer { get; }
-<# for(int j = 1; j <= i; j++) { #>
-
-        /// <inheritdoc />
-        IVertexBufferObject<T<#= j #>> IVertexArrayObject<<#= TList(i) #>>.AttributeBuffer<#= j #> => AttributeBuffer<#= j #>;
-
-        /// <summary>
-        /// Gets the <#= Ordinal(j) #> attribute buffer of this VAO.
-        /// </summary>
-        public MemoryVertexBufferObject<T<#= j #>> AttributeBuffer<#= j #> { get; }
-<# } #>
-
-        /// <inheritdoc />
-        public void Draw(int count) => throw new NotImplementedException();
+        IndexBuffer = new MemoryVertexBufferObject<uint>(indexSpec.capacity, indexSpec.data);
     }
-<# } #>}
+
+    /// <inheritdoc />
+    IVertexBufferObject<uint> IVertexArrayObject<<#= TList(i) #>>.IndexBuffer => IndexBuffer;
+
+    /// <summary>
+    /// Gets the index buffer of this VAO.
+    /// </summary>
+    public MemoryVertexBufferObject<uint> IndexBuffer { get; }
+<# for(int j = 1; j <= i; j++) { #>
+
+    /// <inheritdoc />
+    IVertexBufferObject<T<#= j #>> IVertexArrayObject<<#= TList(i) #>>.AttributeBuffer<#= j #> => AttributeBuffer<#= j #>;
+
+    /// <summary>
+    /// Gets the <#= Ordinal(j) #> attribute buffer of this VAO.
+    /// </summary>
+    public MemoryVertexBufferObject<T<#= j #>> AttributeBuffer<#= j #> { get; }
+<# } #>
+
+    /// <inheritdoc />
+    public void Draw(int count) => throw new NotImplementedException();
+}
+<# } #>
 #pragma warning restore SA1402

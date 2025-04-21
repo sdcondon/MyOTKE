@@ -26,146 +26,145 @@ using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 
-namespace MyOTKE.Core
-{
+namespace MyOTKE.Core;
+
 <# foreach(var hasDub in new[] { false, true }) { #>
 <# for(int i = 0; i <= MaxUniformBufferBlocks; i++) { #>
 <# WriteLineIf(i > 0 || hasDub); #>
-    /// <summary>
-<# WriteLineIf(hasDub, "/// Represents a compiled OpenGL program that makes use of the default uniform block.", 1); #>
-<# WriteLineIf(!hasDub, "/// Represents a compiled OpenGL program.", 1); #>
-    /// </summary>
-<# WriteLineIf(hasDub, "/// <typeparam name=\"TDefaultUniformBlock\">The type of the container used for default block uniforms.</typeparam>", 1); #>
+/// <summary>
+<# WriteLineIf(hasDub, "/// Represents a compiled OpenGL program that makes use of the default uniform block.", 0); #>
+<# WriteLineIf(!hasDub, "/// Represents a compiled OpenGL program.", 0); #>
+/// </summary>
+<# WriteLineIf(hasDub, "/// <typeparam name=\"TDefaultUniformBlock\">The type of the container used for default block uniforms.</typeparam>", 0); #>
 <# WriteTypeParamDocs(i, i => $"The type of the { Ordinal(i) } uniform buffer object."); #>
-    public sealed class <#= ClassName(hasDub, i) #> : IDisposable
-<# WriteLineIf(hasDub, "where TDefaultUniformBlock : struct", 2); #>
-<# WriteLines(i, i => $"where T{i} : struct", 2); #>
-    {
-<# WriteLineIf(hasDub, "private readonly Action<TDefaultUniformBlock> setDefaultUniformBlock;", 2); #>
+public sealed class <#= ClassName(hasDub, i) #> : IDisposable
+<# WriteLineIf(hasDub, "where TDefaultUniformBlock : struct", 1); #>
+<# WriteLines(i, i => $"where T{i} : struct", 1); #>
+{
+<# WriteLineIf(hasDub, "private readonly Action<TDefaultUniformBlock> setDefaultUniformBlock;", 1); #>
 <# WriteLineIf(hasDub); #>
-        /// <summary>
-        /// Initializes a new instance of the <see cref="<#= ClassName(hasDub, i, true) #>"/> class.
-        /// </summary>
-<# WriteLines(i, i => $"/// <param name=\"uboSpec{i}\">Spec for the { Ordinal(i) } uniform buffer.</param>", 2); #>
-        /// <param name="shaderSpecs">Specifications for each of the shaders to be included in the program.</param>
-        internal <#= CtorName(hasDub) #>(
-<# WriteLines(i, i => $"(string BlockName, BufferUsageHint Usage, int Capacity, T{i}[] Data) uboSpec{i},", 3); #>
-            IEnumerable<(ShaderType Type, string Source)> shaderSpecs)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="<#= ClassName(hasDub, i, true) #>"/> class.
+    /// </summary>
+<# WriteLines(i, i => $"/// <param name=\"uboSpec{i}\">Spec for the { Ordinal(i) } uniform buffer.</param>", 1); #>
+    /// <param name="shaderSpecs">Specifications for each of the shaders to be included in the program.</param>
+    internal <#= CtorName(hasDub) #>(
+<# WriteLines(i, i => $"(string BlockName, BufferUsageHint Usage, int Capacity, T{i}[] Data) uboSpec{i},", 2); #>
+        IEnumerable<(ShaderType Type, string Source)> shaderSpecs)
+    {
+        // Create program
+        this.Id = GL.CreateProgram();
+        GlDebug.ThrowIfGlError("creating program");
+
+        // Compile shaders
+        var shaderIds = new List<int>();
+        foreach (var shaderSpec in shaderSpecs)
         {
-            // Create program
-            this.Id = GL.CreateProgram();
-            GlDebug.ThrowIfGlError("creating program");
+            // Create shader
+            var shaderId = GL.CreateShader(shaderSpec.Type);
 
-            // Compile shaders
-            var shaderIds = new List<int>();
-            foreach (var shaderSpec in shaderSpecs)
+            // Compile shader
+            GL.ShaderSource(shaderId, shaderSpec.Source);
+            GlDebug.ThrowIfGlError("setting shader source");
+            GL.CompileShader(shaderId);
+            GlDebug.ThrowIfGlError("compiling shader");
+
+            // Check shader
+            GL.GetShader(shaderId, ShaderParameter.CompileStatus, out var compileStatus);
+            if (compileStatus != (int)OpenTK.Graphics.OpenGL.Boolean.True)
             {
-                // Create shader
-                var shaderId = GL.CreateShader(shaderSpec.Type);
-
-                // Compile shader
-                GL.ShaderSource(shaderId, shaderSpec.Source);
-                GlDebug.ThrowIfGlError("setting shader source");
-                GL.CompileShader(shaderId);
-                GlDebug.ThrowIfGlError("compiling shader");
-
-                // Check shader
-                GL.GetShader(shaderId, ShaderParameter.CompileStatus, out var compileStatus);
-                if (compileStatus != (int)OpenTK.Graphics.OpenGL.Boolean.True)
-                {
-                    throw new ArgumentException("Shader compilation failed: " + GL.GetShaderInfoLog(shaderId), nameof(shaderSpecs));
-                }
-
-                GL.AttachShader(this.Id, shaderId);
-                GlDebug.ThrowIfGlError("attaching shader");
-                shaderIds.Add(shaderId);
+                throw new ArgumentException("Shader compilation failed: " + GL.GetShaderInfoLog(shaderId), nameof(shaderSpecs));
             }
 
-            // Link & check program
-            GL.LinkProgram(this.Id);
-            GlDebug.ThrowIfGlError("linking program");
-            GL.GetProgram(this.Id, GetProgramParameterName.LinkStatus, out var linkStatus);
-            GlDebug.ThrowIfGlError("getting program link status");
-            if (linkStatus != (int)OpenTK.Graphics.OpenGL.Boolean.True)
-            {
-                throw new ArgumentException("Program linking failed: " + GL.GetProgramInfoLog(this.Id), nameof(shaderSpecs));
-            }
+            GL.AttachShader(this.Id, shaderId);
+            GlDebug.ThrowIfGlError("attaching shader");
+            shaderIds.Add(shaderId);
+        }
+
+        // Link & check program
+        GL.LinkProgram(this.Id);
+        GlDebug.ThrowIfGlError("linking program");
+        GL.GetProgram(this.Id, GetProgramParameterName.LinkStatus, out var linkStatus);
+        GlDebug.ThrowIfGlError("getting program link status");
+        if (linkStatus != (int)OpenTK.Graphics.OpenGL.Boolean.True)
+        {
+            throw new ArgumentException("Program linking failed: " + GL.GetProgramInfoLog(this.Id), nameof(shaderSpecs));
+        }
 <# if (hasDub) { #>
 
-            // Build default uniform block setter
-            this.setDefaultUniformBlock = GlMarshal.MakeDefaultUniformBlockSetter<TDefaultUniformBlock>(this.Id);
+        // Build default uniform block setter
+        this.setDefaultUniformBlock = GlMarshal.MakeDefaultUniformBlockSetter<TDefaultUniformBlock>(this.Id);
 <# } #>
 <# if (i > 0) { #>
 
-            // Create uniform buffers
-<# WriteLines(i, i => $"UniformBuffer{i} = new GlUniformBufferObject<T{i}>(Id, uboSpec{i}.BlockName, uboSpec{i}.Usage, uboSpec{i}.Capacity, uboSpec{i}.Data);", 3); #>
+        // Create uniform buffers
+<# WriteLines(i, i => $"UniformBuffer{i} = new GlUniformBufferObject<T{i}>(Id, uboSpec{i}.BlockName, uboSpec{i}.Usage, uboSpec{i}.Capacity, uboSpec{i}.Data);", 2); #>
 <# } #>
 
-            // Detach and delete shaders
-            foreach (var shaderId in shaderIds)
-            {
-                GL.DetachShader(this.Id, shaderId); // Line not in superbible?
-                GlDebug.ThrowIfGlError("detaching shader");
-                GL.DeleteShader(shaderId);
-                GlDebug.ThrowIfGlError("deleting shader");
-            }
+        // Detach and delete shaders
+        foreach (var shaderId in shaderIds)
+        {
+            GL.DetachShader(this.Id, shaderId); // Line not in superbible?
+            GlDebug.ThrowIfGlError("detaching shader");
+            GL.DeleteShader(shaderId);
+            GlDebug.ThrowIfGlError("deleting shader");
         }
+    }
 
-        /// <summary>
-        /// Finalizes an instance of the <see cref="<#= ClassName(hasDub, i, true) #>"/> class.
-        /// </summary>
-        ~<#= CtorName(hasDub) #>() => Dispose(false);
+    /// <summary>
+    /// Finalizes an instance of the <see cref="<#= ClassName(hasDub, i, true) #>"/> class.
+    /// </summary>
+    ~<#= CtorName(hasDub) #>() => Dispose(false);
 
-        /// <summary>
-        /// Gets the OpenGL identifier for this program.
-        /// </summary>
-        public int Id { get; }
+    /// <summary>
+    /// Gets the OpenGL identifier for this program.
+    /// </summary>
+    public int Id { get; }
 <# for(int j = 1; j <= i; j++) { #>
 
-        /// <summary>
-        /// Gets the <#= Ordinal(j) #> uniform buffer object used by this program.
-        /// </summary>
-        public GlUniformBufferObject<T<#= j #>> UniformBuffer<#= j #> { get; }
+    /// <summary>
+    /// Gets the <#= Ordinal(j) #> uniform buffer object used by this program.
+    /// </summary>
+    public GlUniformBufferObject<T<#= j #>> UniformBuffer<#= j #> { get; }
 <# } #>
 
 <# if (hasDub) { #>
-        /// <summary>
-        /// Installs the program as part of the current rendering state and sets the value of the uniforms in the default block.
-        /// </summary>
-        /// <param name="defaultUniformBlock">The values for the uniforms in the default block.</param>
-        public void UseWithDefaultUniformBlock(TDefaultUniformBlock defaultUniformBlock)
-        {
-            GL.UseProgram(this.Id);
-            GlDebug.ThrowIfGlError("using program");
-            setDefaultUniformBlock(defaultUniformBlock);
-        }
+    /// <summary>
+    /// Installs the program as part of the current rendering state and sets the value of the uniforms in the default block.
+    /// </summary>
+    /// <param name="defaultUniformBlock">The values for the uniforms in the default block.</param>
+    public void UseWithDefaultUniformBlock(TDefaultUniformBlock defaultUniformBlock)
+    {
+        GL.UseProgram(this.Id);
+        GlDebug.ThrowIfGlError("using program");
+        setDefaultUniformBlock(defaultUniformBlock);
+    }
 <# } else { #>
-        /// <summary>
-        /// Installs the program as part of the current rendering state.
-        /// </summary>
-        public void Use()
-        {
-            GL.UseProgram(this.Id);
-            GlDebug.ThrowIfGlError("using program");
-        }
-<# } #>
-
-        /// <inheritdoc />
-        public void Dispose() => Dispose(true);
-
-        private void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                GC.SuppressFinalize(this);
-<# WriteLines(i, i => $"UniformBuffer{i}.Dispose();", 4); #>
-            }
-
-            GL.DeleteProgram(this.Id);
-            GlDebug.ThrowIfGlError("deleting program");
-        }
+    /// <summary>
+    /// Installs the program as part of the current rendering state.
+    /// </summary>
+    public void Use()
+    {
+        GL.UseProgram(this.Id);
+        GlDebug.ThrowIfGlError("using program");
     }
 <# } #>
-<# } #>
+
+    /// <inheritdoc />
+    public void Dispose() => Dispose(true);
+
+    private void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            GC.SuppressFinalize(this);
+<# WriteLines(i, i => $"UniformBuffer{i}.Dispose();", 3); #>
+        }
+
+        GL.DeleteProgram(this.Id);
+        GlDebug.ThrowIfGlError("deleting program");
+    }
 }
+<# } #>
+<# } #>
 #pragma warning restore SA1402

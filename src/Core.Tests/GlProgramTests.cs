@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MyOTKE.Core
+namespace MyOTKE.Core;
+
+public class GlProgramTests
 {
-    public class GlProgramTests
-    {
-        //// TODO: When program that is the only program using a binding point is removed
-    }
+    //// TODO: When program that is the only program using a binding point is removed
 }

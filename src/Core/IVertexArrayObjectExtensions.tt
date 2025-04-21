@@ -4,58 +4,57 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
 <#@ include file="_Common.t4" #>
-namespace MyOTKE.Core
+namespace MyOTKE.Core;
+
+/// <summary>
+/// Extension methods for <see cref="IVertexArrayObject{}"> instances.
+/// </summary>
+public static class IVertexArrayObjectExtensions
 {
-    /// <summary>
-    /// Extension methods for <see cref="IVertexArrayObject{}"> instances.
-    /// </summary>
-    public static class IVertexArrayObjectExtensions
-    {
 <# for(int i = 1; i <= MaxVertexBufferCount; i++) { #>
 <# for(int j = 0; j <= MaxUniformBufferBlocks; j++) { #>
 <# WriteLineIf(i > 1 || j > 0, ""); #>
-        /// <summary>
-        /// Installs a given program as part of the current rendering state, then draws this array object.
-        /// </summary>
-<# WriteTypeParamDocs(i, i => $"TAttr{i}", i => $"The type of the { Ordinal(i) } attribute buffer object of the VAO.", 2); #>
-<# WriteTypeParamDocs(j, j => $"TUbo{j}", j => $"The type of the { Ordinal(j) } uniform buffer object of the program.", 2); #>
-        /// <param name="vao">The VAO to use.</param>
-        /// <param name="program">The program to use.</param>
-        /// <param name="count">The number of vertices to draw, or -1 to draw all vertices.</param>
-        public static void Draw<<#= List(i, i => $"TAttr{i}") #><#= List(j, j => $"TUbo{j}", ", ") #>>(
-            this IVertexArrayObject<<#= List(i, i => $"TAttr{i}") #>> vao,
-            GlProgram<#= List(j, j => $"TUbo{j}", "<", ">") #> program,
-            int count = -1)
-<# WriteLines(i, i => $"where TAttr{i} : struct", 3); #>
-<# WriteLines(j, j => $"where TUbo{j} : struct", 3); #>
-        {
-            program.Use();
-            vao.Draw(count);
-        }
-
-        /// <summary>
-        /// Installs a given program as part of the current rendering state, then draws this array object.
-        /// </summary>
-<# WriteTypeParamDocs(i, i => $"TAttr{i}", i => $"The type of the { Ordinal(i) } attribute buffer object of the VAO.", 2); #>
-        /// <typeparam name="TDefaultUniformBlock">The type of the container used for default block uniforms for the given program.</typeparam>
-<# WriteTypeParamDocs(j, j => $"TUbo{j}", j => $"The type of the { Ordinal(j) } uniform buffer object of the program.", 2); #>
-        /// <param name="vao">The VAO to use.</param>
-        /// <param name="program">The program to use.</param>
-        /// <param name="defaultUniformBlock">The values for the uniforms in the default block.</param>
-        /// <param name="count">The number of vertices to draw, or -1 to draw all vertices.</param>
-        public static void Draw<<#= List(i, i => $"TAttr{i}") #>, TDefaultUniformBlock<#= List(j, j => $"TUbo{j}", ", ") #>>(
-            this IVertexArrayObject<<#= List(i, i => $"TAttr{i}") #>> vao,
-            GlProgramWithDUB<TDefaultUniformBlock<#= List(j, j => $"TUbo{j}", ", ") #>> program,
-            TDefaultUniformBlock defaultUniformBlock,
-            int count = -1)
-<# WriteLines(i, i => $"where TAttr{i} : struct", 3); #>
-            where TDefaultUniformBlock : struct
-<# WriteLines(j, j => $"where TUbo{j} : struct", 3); #>
-        {
-            program.UseWithDefaultUniformBlock(defaultUniformBlock);
-            vao.Draw(count);
-        }
-<# } #>
-<# } #>
+    /// <summary>
+    /// Installs a given program as part of the current rendering state, then draws this array object.
+    /// </summary>
+<# WriteTypeParamDocs(i, i => $"TAttr{i}", i => $"The type of the { Ordinal(i) } attribute buffer object of the VAO.", 1); #>
+<# WriteTypeParamDocs(j, j => $"TUbo{j}", j => $"The type of the { Ordinal(j) } uniform buffer object of the program.", 1); #>
+    /// <param name="vao">The VAO to use.</param>
+    /// <param name="program">The program to use.</param>
+    /// <param name="count">The number of vertices to draw, or -1 to draw all vertices.</param>
+    public static void Draw<<#= List(i, i => $"TAttr{i}") #><#= List(j, j => $"TUbo{j}", ", ") #>>(
+        this IVertexArrayObject<<#= List(i, i => $"TAttr{i}") #>> vao,
+        GlProgram<#= List(j, j => $"TUbo{j}", "<", ">") #> program,
+        int count = -1)
+<# WriteLines(i, i => $"where TAttr{i} : struct", 2); #>
+<# WriteLines(j, j => $"where TUbo{j} : struct", 2); #>
+    {
+        program.Use();
+        vao.Draw(count);
     }
+
+    /// <summary>
+    /// Installs a given program as part of the current rendering state, then draws this array object.
+    /// </summary>
+<# WriteTypeParamDocs(i, i => $"TAttr{i}", i => $"The type of the { Ordinal(i) } attribute buffer object of the VAO.", 1); #>
+    /// <typeparam name="TDefaultUniformBlock">The type of the container used for default block uniforms for the given program.</typeparam>
+<# WriteTypeParamDocs(j, j => $"TUbo{j}", j => $"The type of the { Ordinal(j) } uniform buffer object of the program.", 1); #>
+    /// <param name="vao">The VAO to use.</param>
+    /// <param name="program">The program to use.</param>
+    /// <param name="defaultUniformBlock">The values for the uniforms in the default block.</param>
+    /// <param name="count">The number of vertices to draw, or -1 to draw all vertices.</param>
+    public static void Draw<<#= List(i, i => $"TAttr{i}") #>, TDefaultUniformBlock<#= List(j, j => $"TUbo{j}", ", ") #>>(
+        this IVertexArrayObject<<#= List(i, i => $"TAttr{i}") #>> vao,
+        GlProgramWithDUB<TDefaultUniformBlock<#= List(j, j => $"TUbo{j}", ", ") #>> program,
+        TDefaultUniformBlock defaultUniformBlock,
+        int count = -1)
+<# WriteLines(i, i => $"where TAttr{i} : struct", 2); #>
+        where TDefaultUniformBlock : struct
+<# WriteLines(j, j => $"where TUbo{j} : struct", 2); #>
+    {
+        program.UseWithDefaultUniformBlock(defaultUniformBlock);
+        vao.Draw(count);
+    }
+<# } #>
+<# } #>
 }

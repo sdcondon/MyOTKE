@@ -8,139 +8,138 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 using System.ComponentModel;
 
-namespace MyOTKE.Engine.Components.Gui
+namespace MyOTKE.Engine.Components.Gui;
+
+/// <summary>
+/// Component class for a set of graphical user interface elements.
+/// </summary>
+public class Gui : IComponent, IElementParent
 {
+    private static readonly object ProgramStateLock = new();
+    private static GlProgramWithDUBBuilder<Uniforms> programBuilder;
+    private static GlProgramWithDUB<Uniforms> program;
+
+    private readonly MyOTKEWindow view;
+
+    private ReactiveBufferBuilder<Vertex> vertexBufferBuilder;
+    private ReactiveBuffer<Vertex> vertexBuffer;
+    private bool isDisposed;
+
     /// <summary>
-    /// Component class for a set of graphical user interface elements.
+    /// Initializes a new instance of the <see cref="Gui"/> class.
     /// </summary>
-    public class Gui : IComponent, IElementParent
+    /// <param name="view">The view from which to derive size and input.</param>
+    /// <param name="initialCapacity">Initial capacity of the GUI, in vertices.</param>
+    public Gui(MyOTKEWindow view, int initialCapacity)
     {
-        private static readonly object ProgramStateLock = new();
-        private static GlProgramWithDUBBuilder<Uniforms> programBuilder;
-        private static GlProgramWithDUB<Uniforms> program;
+        this.view = view;
+        this.view.Resize += View_Resized;
 
-        private readonly MyOTKEWindow view;
+        this.SubElements = new ElementCollection(this);
 
-        private ReactiveBufferBuilder<Vertex> vertexBufferBuilder;
-        private ReactiveBuffer<Vertex> vertexBuffer;
-        private bool isDisposed;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Gui"/> class.
-        /// </summary>
-        /// <param name="view">The view from which to derive size and input.</param>
-        /// <param name="initialCapacity">Initial capacity of the GUI, in vertices.</param>
-        public Gui(MyOTKEWindow view, int initialCapacity)
+        if (program == null && programBuilder == null)
         {
-            this.view = view;
-            this.view.Resize += View_Resized;
-
-            this.SubElements = new ElementCollection(this);
-
-            if (program == null && programBuilder == null)
+            lock (ProgramStateLock)
             {
-                lock (ProgramStateLock)
+                if (program == null && programBuilder == null)
                 {
-                    if (program == null && programBuilder == null)
-                    {
-                        programBuilder = new GlProgramBuilder()
-                            .WithVertexShaderFromEmbeddedResource("Gui.Vertex.glsl")
-                            .WithFragmentShaderFromEmbeddedResource("Gui.Fragment.glsl")
-                            .WithDefaultUniformBlock<Uniforms>();
-                    }
+                    programBuilder = new GlProgramBuilder()
+                        .WithVertexShaderFromEmbeddedResource("Gui.Vertex.glsl")
+                        .WithFragmentShaderFromEmbeddedResource("Gui.Fragment.glsl")
+                        .WithDefaultUniformBlock<Uniforms>();
                 }
             }
-
-            this.vertexBufferBuilder = new ReactiveBufferBuilder<Vertex>(
-                PrimitiveType.Triangles,
-                initialCapacity,
-                [0, 2, 3, 0, 3, 1],
-                this.SubElements.Flatten());
         }
 
-        /// <inheritdoc />
-        public event PropertyChangedEventHandler PropertyChanged;
+        this.vertexBufferBuilder = new ReactiveBufferBuilder<Vertex>(
+            PrimitiveType.Triangles,
+            initialCapacity,
+            [0, 2, 3, 0, 3, 1],
+            this.SubElements.Flatten());
+    }
 
-        /// <inheritdoc />
-        public event EventHandler<Vector2> Clicked;
+    /// <inheritdoc />
+    public event PropertyChangedEventHandler PropertyChanged;
 
-        /// <inheritdoc /> from IElementParent
-        public ElementCollection SubElements { get; }
+    /// <inheritdoc />
+    public event EventHandler<Vector2> Clicked;
 
-        /// <inheritdoc /> from IElementParent
-        public Vector2 Center => Vector2.Zero;
+    /// <inheritdoc /> from IElementParent
+    public ElementCollection SubElements { get; }
 
-        /// <inheritdoc /> from IElementParent
-        public Vector2 Size => new(view.ClientSize.X, view.ClientSize.Y);
+    /// <inheritdoc /> from IElementParent
+    public Vector2 Center => Vector2.Zero;
 
-        /// <inheritdoc /> from IComponent
-        public void Load()
+    /// <inheritdoc /> from IElementParent
+    public Vector2 Size => new(view.ClientSize.X, view.ClientSize.Y);
+
+    /// <inheritdoc /> from IComponent
+    public void Load()
+    {
+        ObjectDisposedException.ThrowIf(isDisposed, this);
+
+        if (program == null)
         {
-            ObjectDisposedException.ThrowIf(isDisposed, this);
-
-            if (program == null)
+            lock (ProgramStateLock)
             {
-                lock (ProgramStateLock)
+                if (program == null)
                 {
-                    if (program == null)
-                    {
-                        program = programBuilder.Build();
-                        programBuilder = null;
-                    }
+                    program = programBuilder.Build();
+                    programBuilder = null;
                 }
             }
-
-            this.vertexBuffer = this.vertexBufferBuilder.Build();
-            this.vertexBufferBuilder = null;
         }
 
-        /// <inheritdoc />
-        public void Update(TimeSpan elapsed)
+        this.vertexBuffer = this.vertexBufferBuilder.Build();
+        this.vertexBufferBuilder = null;
+    }
+
+    /// <inheritdoc />
+    public void Update(TimeSpan elapsed)
+    {
+        ObjectDisposedException.ThrowIf(isDisposed, this);
+
+        if (view.IsMouseButtonReleased(MouseButton.Left))
         {
-            ObjectDisposedException.ThrowIf(isDisposed, this);
-
-            if (view.IsMouseButtonReleased(MouseButton.Left))
-            {
-                Clicked?.Invoke(this, new Vector2(view.MouseCenterOffset.X, -view.MouseCenterOffset.Y));
-            }
+            Clicked?.Invoke(this, new Vector2(view.MouseCenterOffset.X, -view.MouseCenterOffset.Y));
         }
+    }
 
-        /// <inheritdoc /> from IComponent
-        public void Render()
+    /// <inheritdoc /> from IComponent
+    public void Render()
+    {
+        ObjectDisposedException.ThrowIf(isDisposed, this);
+
+        // Assume the GUI is drawn last and is independent - goes on top of everything drawn already - so clear the depth buffer
+        GL.Clear(ClearBufferMask.DepthBufferBit);
+
+        program.UseWithDefaultUniformBlock(new Uniforms
         {
-            ObjectDisposedException.ThrowIf(isDisposed, this);
+            P = Matrix4.Transpose(Matrix4.CreateOrthographic(Size.X, Size.Y, 1f, -1f)),
+            text = 0,
+        });
+        GL.ActiveTexture(TextureUnit.Texture0);
+        GL.BindTexture(TextureTarget.Texture2DArray, Text.Font.TextureId);
+        this.vertexBuffer.Draw();
+    }
 
-            // Assume the GUI is drawn last and is independent - goes on top of everything drawn already - so clear the depth buffer
-            GL.Clear(ClearBufferMask.DepthBufferBit);
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        this.view.Resize -= View_Resized;
+        this.vertexBuffer?.Dispose();
+        GC.SuppressFinalize(this);
+        this.isDisposed = true;
+    }
 
-            program.UseWithDefaultUniformBlock(new Uniforms
-            {
-                P = Matrix4.Transpose(Matrix4.CreateOrthographic(Size.X, Size.Y, 1f, -1f)),
-                text = 0,
-            });
-            GL.ActiveTexture(TextureUnit.Texture0);
-            GL.BindTexture(TextureTarget.Texture2DArray, Text.Font.TextureId);
-            this.vertexBuffer.Draw();
-        }
+    private void View_Resized(ResizeEventArgs e)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Size)));
+    }
 
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            this.view.Resize -= View_Resized;
-            this.vertexBuffer?.Dispose();
-            GC.SuppressFinalize(this);
-            this.isDisposed = true;
-        }
-
-        private void View_Resized(ResizeEventArgs e)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Size)));
-        }
-
-        private struct Uniforms
-        {
-            public Matrix4 P;
-            public int text;
-        }
+    private struct Uniforms
+    {
+        public Matrix4 P;
+        public int text;
     }
 }

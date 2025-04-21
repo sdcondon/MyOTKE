@@ -5,59 +5,58 @@
 <#@ output extension=".cs" #>
 <#@ include file="../_Common.t4" #>
 
-namespace MyOTKE.Core.Decorators
-{
+namespace MyOTKE.Core.Decorators;
+
 <# for(int i = 1; i <= MaxVertexBufferCount; i++) { #>
 <# WriteLineIf(i > 1, ""); #>
-    /// <summary>
-    /// Builder class for <see cref="GlVertexArrayObject<#= TList(i, "{", "}") #>"/> objects that presents a fluent-ish interface.
-    /// </summary>
+/// <summary>
+/// Builder class for <see cref="GlVertexArrayObject<#= TList(i, "{", "}") #>"/> objects that presents a fluent-ish interface.
+/// </summary>
 <# WriteTypeParamDocs(i, i => $"The type of data to be stored in the { Ordinal(i) } buffer."); #>
-    /// <remarks>
-    /// Useful for setting up a VAO before the OpenGL context has initialized.
-    /// </remarks>
-    public sealed class SynchronizedVertexArrayObjectBuilder<#= TList(i, "<", ">") #>
+/// <remarks>
+/// Useful for setting up a VAO before the OpenGL context has initialized.
+/// </remarks>
+public sealed class SynchronizedVertexArrayObjectBuilder<#= TList(i, "<", ">") #>
+<# WriteLines(i, i => $"where T{i} : struct", 1); #>
+{
+    private readonly VertexArrayObjectBuilder<#= TList(i, "<", ">") #> innerBuilder;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SynchronizedVertexArrayObjectBuilder<#= TList(i, "{", "}") #>"/> class.
+    /// </summary>
+    /// <param name="innerBuilder">The builder wrapped by this builder.</param>
+    public SynchronizedVertexArrayObjectBuilder(VertexArrayObjectBuilder<#= TList(i, "<", ">") #> innerBuilder)
+    {
+        this.innerBuilder = innerBuilder;
+    }
+
+    /// <summary>
+    /// Builds a new <see cref="IVertexArrayObject{<#= TList(i) #>}"/> instance based on the state of the builder.
+    /// </summary>
+    /// <returns>The built VAO.</returns>
+    public IVertexArrayObject<<#= TList(i) #>> Build()
+    {
+        return new SynchronizedVertexArrayObject<<#= TList(i) #>>(innerBuilder.Build());
+    }
+}
+
+/// <summary>
+/// Extension methods for the <see cref="VertexArrayObjectBuilder{<#= TList(i) #>}"/> class.
+/// </summary>
+public static class VertexArrayObjectBuilderExtensions<#= i #>
+{
+    /// <summary>
+    /// Specifies that the built VAO should be explicitly synchronized, with any pending changes flushed on each draw call.
+    /// <para/>
+    /// Specifically, means that the created VAO will be a <see cref="SynchronizedVertexArrayObject{<#= TList(i) #>}"/> instance.
+    /// </summary>
+<# WriteTypeParamDocs(i, i => $"The type of data to be stored in the { Ordinal(i) } buffer.", 1); #>
+    /// <param name="builder">The builder to act on.</param>
+    /// <returns>The updated builder.</returns>
+    public static SynchronizedVertexArrayObjectBuilder<<#= TList(i) #>> Synchronized<<#= TList(i) #>>(this VertexArrayObjectBuilder<<#= TList(i) #>> builder)
 <# WriteLines(i, i => $"where T{i} : struct", 2); #>
     {
-        private readonly VertexArrayObjectBuilder<#= TList(i, "<", ">") #> innerBuilder;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SynchronizedVertexArrayObjectBuilder<#= TList(i, "{", "}") #>"/> class.
-        /// </summary>
-        /// <param name="innerBuilder">The builder wrapped by this builder.</param>
-        public SynchronizedVertexArrayObjectBuilder(VertexArrayObjectBuilder<#= TList(i, "<", ">") #> innerBuilder)
-        {
-            this.innerBuilder = innerBuilder;
-        }
-
-        /// <summary>
-        /// Builds a new <see cref="IVertexArrayObject{<#= TList(i) #>}"/> instance based on the state of the builder.
-        /// </summary>
-        /// <returns>The built VAO.</returns>
-        public IVertexArrayObject<<#= TList(i) #>> Build()
-        {
-            return new SynchronizedVertexArrayObject<<#= TList(i) #>>(innerBuilder.Build());
-        }
+        return new SynchronizedVertexArrayObjectBuilder<<#= TList(i) #>>(builder);
     }
-
-    /// <summary>
-    /// Extension methods for the <see cref="VertexArrayObjectBuilder{<#= TList(i) #>}"/> class.
-    /// </summary>
-    public static class VertexArrayObjectBuilderExtensions<#= i #>
-    {
-        /// <summary>
-        /// Specifies that the built VAO should be explicitly synchronized, with any pending changes flushed on each draw call.
-        /// <para/>
-        /// Specifically, means that the created VAO will be a <see cref="SynchronizedVertexArrayObject{<#= TList(i) #>}"/> instance.
-        /// </summary>
-<# WriteTypeParamDocs(i, i => $"The type of data to be stored in the { Ordinal(i) } buffer.", 2); #>
-        /// <param name="builder">The builder to act on.</param>
-        /// <returns>The updated builder.</returns>
-        public static SynchronizedVertexArrayObjectBuilder<<#= TList(i) #>> Synchronized<<#= TList(i) #>>(this VertexArrayObjectBuilder<<#= TList(i) #>> builder)
-<# WriteLines(i, i => $"where T{i} : struct", 3); #>
-        {
-            return new SynchronizedVertexArrayObjectBuilder<<#= TList(i) #>>(builder);
-        }
-    }
-<# } #>
 }
+<# } #>
