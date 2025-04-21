@@ -2,68 +2,58 @@
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 
-namespace MyOTKE.Engine
+namespace MyOTKE.Engine.Utility.Cameras
 {
     /// <summary>
     /// Implementation of <see cref="ICamera"/> that rotates around the origin.
     /// </summary>
-    public class OrbitCamera : ICamera
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="OrbitCamera"/> class.
+    /// </remarks>
+    /// <param name="view">The view from which to retrieve input and aspect ratio.</param>
+    /// <param name="rotationSpeedBase">The base (i.e. at default zoom distance) rotation speed of the camera, in radians per per update.</param>
+    /// <param name="rollSpeed">The roll speed of the camera, in radians per update.</param>
+    /// <param name="fieldOfViewRadians">The camera's field of view, in radians.</param>
+    /// <param name="nearPlaneDistance">The distance of the near plane from the camera.</param>
+    /// <param name="farPlaneDistance">The ditance of the far plane from the camera.</param>
+    public class OrbitCamera(
+        MyOTKEWindow view,
+        float rotationSpeedBase,
+        float rollSpeed,
+        float fieldOfViewRadians,
+        float nearPlaneDistance,
+        float farPlaneDistance) : ICamera
     {
-        private readonly MyOTKEWindow view;
+        private readonly MyOTKEWindow view = view;
 
-        private Vector3 forward = new Vector3(0f, 0f, 1f);
-        private Vector3 up = new Vector3(0f, 1f, 0f);
+        private Vector3 forward = new(0f, 0f, 1f);
+        private Vector3 up = new(0f, 1f, 0f);
         private int zoomLevel = 0;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OrbitCamera"/> class.
-        /// </summary>
-        /// <param name="view">The view from which to retrieve input and aspect ratio.</param>
-        /// <param name="rotationSpeedBase">The base (i.e. at default zoom distance) rotation speed of the camera, in radians per per update.</param>
-        /// <param name="rollSpeed">The roll speed of the camera, in radians per update.</param>
-        /// <param name="fieldOfViewRadians">The camera's field of view, in radians.</param>
-        /// <param name="nearPlaneDistance">The distance of the near plane from the camera.</param>
-        /// <param name="farPlaneDistance">The ditance of the far plane from the camera.</param>
-        public OrbitCamera(
-            MyOTKEWindow view,
-            float rotationSpeedBase,
-            float rollSpeed,
-            float fieldOfViewRadians,
-            float nearPlaneDistance,
-            float farPlaneDistance)
-        {
-            this.view = view;
-            RotationSpeedBase = rotationSpeedBase;
-            RollSpeed = rollSpeed;
-            FieldOfViewRadians = fieldOfViewRadians;
-            NearPlaneDistance = nearPlaneDistance;
-            FarPlaneDistance = farPlaneDistance;
-        }
 
         /// <summary>
         /// Gets or sets the base (i.e. at default zoom distance) rotation speed of the camera in radians per update.
         /// </summary>
-        public float RotationSpeedBase { get; set; } // = 0.01f;
+        public float RotationSpeedBase { get; set; } = rotationSpeedBase;
 
         /// <summary>
         /// Gets or sets the roll speed of the camera, in radians per update.
         /// </summary>
-        public float RollSpeed { get; set; } // = 0.01f;
+        public float RollSpeed { get; set; } = rollSpeed;
 
         /// <summary>
         /// Gets or sets the camera's field of view, in radians.
         /// </summary>
-        public float FieldOfViewRadians { get; set; } // = (float)Math.PI / 4.0f;
+        public float FieldOfViewRadians { get; set; } = fieldOfViewRadians;
 
         /// <summary>
         /// Gets or sets the distance of the near plane from the camera.
         /// </summary>
-        public float NearPlaneDistance { get; set; } // = 0.01f;
+        public float NearPlaneDistance { get; set; } = nearPlaneDistance;
 
         /// <summary>
         /// Gets or sets the distance of the far plane from the camera.
         /// </summary>
-        public float FarPlaneDistance { get; set; } // = 100f;
+        public float FarPlaneDistance { get; set; } = farPlaneDistance;
 
         /// <summary>
         /// Gets the current distance between the camera and the origin.

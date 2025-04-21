@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace MyOTKE.Core
+namespace MyOTKE.Core.IO
 {
     /// <summary>
     /// Simple texture loader nabbed from an OpenGL tutorial.
     /// </summary>
     public static class TextureLoader
     {
-        private static readonly Dictionary<string, InternalFormat> DDSPixelFormats = new Dictionary<string, InternalFormat>()
+        private static readonly Dictionary<string, InternalFormat> DDSPixelFormats = new()
         {
             { "DXT1", InternalFormat.CompressedRgbaS3tcDxt1Ext },
             { "DXT3", InternalFormat.CompressedRgbaS3tcDxt3Ext },
@@ -25,39 +25,33 @@ namespace MyOTKE.Core
         /// <returns>The OpenGL texture ID that the image has been loaded into.</returns>
         public static int LoadDDS(string filePath)
         {
-            uint height;
-            uint width;
-            uint mipMapCount;
-            InternalFormat format;
-            byte[] buffer;
-            using (var file = File.Open(filePath, FileMode.Open))
+            using var file = File.Open(filePath, FileMode.Open);
+
+            // Read file header
+            var header = new byte[128];
+            file.Read(header, 0, 128);
+
+            if (Encoding.ASCII.GetString(header, 0, 4) != "DDS ")
             {
-                // Read file header
-                var header = new byte[128];
-                file.Read(header, 0, 128);
-
-                if (Encoding.ASCII.GetString(header, 0, 4) != "DDS ")
-                {
-                    throw new ArgumentException("Specified file is not a DDS file", nameof(filePath));
-                }
-
-                height = BitConverter.ToUInt32(header, 12);
-                width = BitConverter.ToUInt32(header, 16);
-                var linearSize = BitConverter.ToUInt32(header, 20);
-                mipMapCount = BitConverter.ToUInt32(header, 28);
-                var fourCC = Encoding.ASCII.GetString(header, 84, 4);
-                if (!DDSPixelFormats.TryGetValue(Encoding.ASCII.GetString(header, 84, 4), out format))
-                {
-                    throw new ArgumentException($"Specified file uses unsupported internal format {fourCC}", nameof(filePath));
-                }
-
-                ////uint components = (fourCC == FOURCC_DXT1) ? 3u : 4u;
-
-                // Read the rest of the file
-                var bufferSize = (int)(mipMapCount > 1 ? linearSize * 2 : linearSize);
-                buffer = new byte[bufferSize];
-                file.Read(buffer, 0, bufferSize);
+                throw new ArgumentException("Specified file is not a DDS file", nameof(filePath));
             }
+
+            var height = BitConverter.ToUInt32(header, 12);
+            var width = BitConverter.ToUInt32(header, 16);
+            var linearSize = BitConverter.ToUInt32(header, 20);
+            var mipMapCount = BitConverter.ToUInt32(header, 28);
+            var fourCC = Encoding.ASCII.GetString(header, 84, 4);
+            if (!DDSPixelFormats.TryGetValue(Encoding.ASCII.GetString(header, 84, 4), out InternalFormat format))
+            {
+                throw new ArgumentException($"Specified file uses unsupported internal format {fourCC}", nameof(filePath));
+            }
+
+            ////uint components = (fourCC == FOURCC_DXT1) ? 3u : 4u;
+
+            // Read the rest of the file
+            var bufferSize = (int)(mipMapCount > 1 ? linearSize * 2 : linearSize);
+            var buffer = new byte[bufferSize];
+            file.Read(buffer, 0, bufferSize);
 
             // Create OpenGL texture
             var textureId = GL.GenTexture();

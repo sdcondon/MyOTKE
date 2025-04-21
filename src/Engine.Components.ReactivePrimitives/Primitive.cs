@@ -1,4 +1,5 @@
-﻿using OpenTK.Mathematics;
+﻿using MyOTKE.Engine.Utility;
+using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 
@@ -12,7 +13,7 @@ namespace MyOTKE.Engine.Components.ReactivePrimitives
     /// </remarks>
     public sealed class Primitive
     {
-        private readonly List<PrimitiveVertex> vertices = new List<PrimitiveVertex>();
+        private readonly List<PrimitiveVertex> vertices = [];
 
         private Primitive(Action<Primitive> initialize)
         {
@@ -33,7 +34,7 @@ namespace MyOTKE.Engine.Components.ReactivePrimitives
         /// Creates an empty primitive.
         /// </summary>
         /// <returns>The created primitive.</returns>
-        public static Primitive Empty() => new Primitive(null);
+        public static Primitive Empty() => new(null);
 
         /// <summary>
         /// Creates a cuboid primitive.
@@ -42,7 +43,7 @@ namespace MyOTKE.Engine.Components.ReactivePrimitives
         /// <param name="worldTransform">The world transform of the cuboid.</param>
         /// <param name="color">The color of the cuboid.</param>
         /// <returns>The created primitive.</returns>
-        public static Primitive Cuboid(Vector3 size, Matrix4 worldTransform, Color color) => new Primitive(p => p.SetCuboid(size, worldTransform, color));
+        public static Primitive Cuboid(Vector3 size, Matrix4 worldTransform, Color color) => new(p => p.SetCuboid(size, worldTransform, color));
 
         /// <summary>
         /// Creates a quad primitive.
@@ -51,7 +52,7 @@ namespace MyOTKE.Engine.Components.ReactivePrimitives
         /// <param name="worldTransform">The world transform of the quad.</param>
         /// <param name="color">The color of the quad.</param>
         /// <returns>The created primitive.</returns>
-        public static Primitive Quad(Vector2 size, Matrix4 worldTransform, Color color) => new Primitive(p => p.SetQuad(size, worldTransform, color));
+        public static Primitive Quad(Vector2 size, Matrix4 worldTransform, Color color) => new(p => p.SetQuad(size, worldTransform, color));
 
         /// <summary>
         /// Creates a line primitive of constant color.
@@ -60,7 +61,7 @@ namespace MyOTKE.Engine.Components.ReactivePrimitives
         /// <param name="to">The position of the other end of the line.</param>
         /// <param name="color">The color of the line.</param>
         /// <returns>The created primitive.</returns>
-        public static Primitive Line(Vector3 from, Vector3 to, Color color) => new Primitive(p => p.SetLine(from, to, color));
+        public static Primitive Line(Vector3 from, Vector3 to, Color color) => new(p => p.SetLine(from, to, color));
 
         /// <summary>
         /// Creates a line primitive of graduated color.
@@ -70,7 +71,7 @@ namespace MyOTKE.Engine.Components.ReactivePrimitives
         /// <param name="colorFrom">The color of one end of the line.</param>
         /// <param name="colorTo">The color of the other end of the line.</param>
         /// <returns>The created primitive.</returns>
-        public static Primitive Line(Vector3 from, Vector3 to, Color colorFrom, Color colorTo) => new Primitive(p => p.SetLine(from, to, colorFrom, colorTo));
+        public static Primitive Line(Vector3 from, Vector3 to, Color colorFrom, Color colorTo) => new(p => p.SetLine(from, to, colorFrom, colorTo));
 
         /// <summary>
         /// Creates a line circle primitive.
@@ -89,7 +90,7 @@ namespace MyOTKE.Engine.Components.ReactivePrimitives
         /// <param name="worldTransform">The world transform of the ellipse.</param>
         /// <param name="color">The color of the ellipse.</param>
         /// <returns>The created primitive.</returns>
-        public static Primitive LineEllipse(float radiusX, float radiusY, Matrix4 worldTransform, Color color) => new Primitive(p => p.SetLineEllipse(radiusX, radiusY, worldTransform, color));
+        public static Primitive LineEllipse(float radiusX, float radiusY, Matrix4 worldTransform, Color color) => new(p => p.SetLineEllipse(radiusX, radiusY, worldTransform, color));
 
         /// <summary>
         /// Creates a line square primitive.
@@ -98,7 +99,7 @@ namespace MyOTKE.Engine.Components.ReactivePrimitives
         /// <param name="worldTransform">The world transform of the square.</param>
         /// <param name="color">The color of the square.</param>
         /// <returns>The created primitive.</returns>
-        public static Primitive LineSquare(float sideLength, Matrix4 worldTransform, Color color) => new Primitive(p => p.SetLineSquare(sideLength, worldTransform, color));
+        public static Primitive LineSquare(float sideLength, Matrix4 worldTransform, Color color) => new(p => p.SetLineSquare(sideLength, worldTransform, color));
 
         /// <summary>
         /// Creates a line polygon primitive.
@@ -107,7 +108,7 @@ namespace MyOTKE.Engine.Components.ReactivePrimitives
         /// <param name="worldTransform">The world transform of the polygon.</param>
         /// <param name="color">The color of the polygon.</param>
         /// <returns>The created primitive.</returns>
-        public static Primitive LinePolygon(Vector2[] positions, Matrix4 worldTransform, Color color) => new Primitive(p => p.SetLinePolygon(positions, worldTransform, color));
+        public static Primitive LinePolygon(Vector2[] positions, Matrix4 worldTransform, Color color) => new(p => p.SetLinePolygon(positions, worldTransform, color));
 
         /// <summary>
         /// Sets primitive as a cuboid.

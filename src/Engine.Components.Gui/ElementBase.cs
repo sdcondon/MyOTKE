@@ -78,12 +78,12 @@ namespace MyOTKE.Engine.Components.Gui
         /// <summary>
         /// Gets the position of the bottom-right corner of the element, in screen space.
         /// </summary>
-        public Vector2 PosBR => new Vector2(this.Center.X + this.Size.X / 2, this.Center.Y - this.Size.Y / 2);
+        public Vector2 PosBR => new(this.Center.X + this.Size.X / 2, this.Center.Y - this.Size.Y / 2);
 
         /// <summary>
         /// Gets the position of the top-left corner of the element, in screen space.
         /// </summary>
-        public Vector2 PosTL => new Vector2(this.Center.X - this.Size.X / 2, this.Center.Y + this.Size.Y / 2);
+        public Vector2 PosTL => new(this.Center.X - this.Size.X / 2, this.Center.Y + this.Size.Y / 2);
 
         /// <summary>
         /// Gets the position of the top-right corner of the element, in screen space.
@@ -93,7 +93,7 @@ namespace MyOTKE.Engine.Components.Gui
         /// <summary>
         /// Gets the list of vertices to be rendered for this GUI element (not including any children).
         /// </summary>
-        public virtual IList<Vertex> Vertices { get; } = new Vertex[0];
+        public virtual IList<Vertex> Vertices { get; } = [];
 
         /// <inheritdoc />
         public virtual void Dispose()

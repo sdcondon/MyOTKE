@@ -4,11 +4,8 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
 <#@ include file="../_Common.t4" #>
-#pragma warning disable SA1204
-#pragma warning disable SA1402
-using MyOTKE.Core.VaoDecorators;
 
-namespace MyOTKE.Core
+namespace MyOTKE.Core.Decorators
 {
 <# for(int i = 1; i <= MaxVertexBufferCount; i++) { #>
 <# WriteLineIf(i > 1, ""); #>
@@ -64,5 +61,3 @@ namespace MyOTKE.Core
     }
 <# } #>
 }
-#pragma warning restore SA1402
-#pragma warning restore SA1204

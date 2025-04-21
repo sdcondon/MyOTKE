@@ -9,12 +9,12 @@ namespace MyOTKE.Core
     /// <summary>
     /// Container for information about an OpenGL vertex attribute.
     /// </summary>
-    public struct GlVertexAttributeInfo
+    public readonly struct GlVertexAttributeInfo
     {
         /// <summary>
         /// A mapping of .NET types to appropriate primitive OpenGL attribute info for them.
         /// </summary>
-        private static readonly Dictionary<Type, (VertexAttribPointerType type, int count)> KnownTypes = new Dictionary<Type, (VertexAttribPointerType, int)>()
+        private static readonly Dictionary<Type, (VertexAttribPointerType type, int count)> KnownTypes = new()
         {
             [typeof(Vector4)] = (VertexAttribPointerType.Float, 4),
             [typeof(Vector3)] = (VertexAttribPointerType.Float, 3),
@@ -78,7 +78,7 @@ namespace MyOTKE.Core
         {
             var attributes = new List<GlVertexAttributeInfo>();
             ForType(t, attributes, 0, Marshal.SizeOf(t));
-            return attributes.ToArray();
+            return [.. attributes];
         }
 
         private static void ForType(Type t, List<GlVertexAttributeInfo> attributes, int offset, int stride)

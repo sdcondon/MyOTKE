@@ -1,4 +1,6 @@
 ﻿using MyOTKE.Core;
+using MyOTKE.Core.IO;
+using MyOTKE.Engine.Utility;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using System;
@@ -13,7 +15,7 @@ namespace MyOTKE.Engine.Components.BasicExamples
     /// </summary>
     public sealed class TexturedStaticMesh : IComponent
     {
-        private static readonly object ProgramStateLock = new object();
+        private static readonly object ProgramStateLock = new();
         private static GlProgramWithDUBBuilder<DefaultUniformBlock, CameraUniformBlock> programBuilder;
         private static GlProgramWithDUB<DefaultUniformBlock, CameraUniformBlock> program;
 
@@ -57,7 +59,7 @@ namespace MyOTKE.Engine.Components.BasicExamples
 
             this.vertexArrayObjectBuilder = new VertexArrayObjectBuilder(PrimitiveType.Triangles)
                 .WithNewAttributeBuffer(BufferUsageHint.StaticDraw, vertices.ToArray())
-                .WithNewIndexBuffer(BufferUsageHint.StaticDraw, indices.ToArray());
+                .WithNewIndexBuffer(BufferUsageHint.StaticDraw, [.. indices]);
 
             this.textureFilePath = textureFilePath;
         }
@@ -95,7 +97,7 @@ namespace MyOTKE.Engine.Components.BasicExamples
         /// <inheritdoc />
         public void Load()
         {
-            ThrowIfDisposed();
+            ObjectDisposedException.ThrowIf(isDisposed, this);
 
             this.textures = new int[1];
             this.textures[0] = Path.GetExtension(textureFilePath) == ".DDS" ? TextureLoader.LoadDDS(textureFilePath) : TextureLoader.LoadBMP(textureFilePath);
@@ -124,7 +126,7 @@ namespace MyOTKE.Engine.Components.BasicExamples
         /// <inheritdoc />
         public void Render()
         {
-            ThrowIfDisposed();
+            ObjectDisposedException.ThrowIf(isDisposed, this);
 
             // TODO: Don't need to set this every time - only when it changes.
             // ..which is somewhat at odds with the pattern of these being pulled into, not pushed into this class..
@@ -165,18 +167,10 @@ namespace MyOTKE.Engine.Components.BasicExamples
             }
         }
 
-        private void ThrowIfDisposed()
-        {
-            if (isDisposed)
-            {
-                throw new ObjectDisposedException(GetType().FullName);
-            }
-        }
-
         /// <summary>
         /// Container struct for the attributes of a vertex.
         /// </summary>
-        public struct Vertex
+        public readonly struct Vertex
         {
             /// <summary>
             /// Gets the position of the vertex.

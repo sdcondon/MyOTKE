@@ -1,5 +1,4 @@
-﻿#pragma warning disable SA1402
-using OpenTK.Graphics.OpenGL;
+﻿using OpenTK.Graphics.OpenGL;
 
 namespace MyOTKE.Core
 {
@@ -361,4 +360,3 @@ namespace MyOTKE.Core
         }
     }
 }
-#pragma warning restore SA1402

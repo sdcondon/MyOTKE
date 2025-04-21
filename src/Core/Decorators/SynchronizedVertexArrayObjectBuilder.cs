@@ -1,8 +1,5 @@
-﻿#pragma warning disable SA1204
-#pragma warning disable SA1402
-using MyOTKE.Core.VaoDecorators;
-
-namespace MyOTKE.Core
+﻿
+namespace MyOTKE.Core.Decorators
 {
     /// <summary>
     /// Builder class for <see cref="GlVertexArrayObject{T1}"/> objects that presents a fluent-ish interface.
@@ -169,5 +166,3 @@ namespace MyOTKE.Core
         }
     }
 }
-#pragma warning restore SA1402
-#pragma warning restore SA1204

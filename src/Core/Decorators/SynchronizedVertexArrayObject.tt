@@ -4,11 +4,10 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
 <#@ include file="../_Common.t4" #>
-#pragma warning disable SA1402
 using OpenTK.Graphics.OpenGL;
 using System;
 
-namespace MyOTKE.Core.VaoDecorators
+namespace MyOTKE.Core.Decorators
 {
 <# for(int i = 1; i <= MaxVertexBufferCount; i++) { #>
 <# WriteLineIf(i > 1, ""); #>
@@ -75,4 +74,3 @@ namespace MyOTKE.Core.VaoDecorators
         }
     }
 <# } #>}
-#pragma warning restore SA1402

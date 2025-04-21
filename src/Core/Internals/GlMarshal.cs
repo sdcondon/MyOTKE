@@ -15,7 +15,7 @@ namespace MyOTKE.Core
     {
         // TODO: These as lambdas is probably less efficient than it could be. Would be nice to be able to use just Call()..
         // Then again, the fact that some args need to be transformed first..
-        private static readonly Dictionary<Type, Expression> DefaultBlockUniformSettersByType = new Dictionary<Type, Expression>
+        private static readonly Dictionary<Type, Expression> DefaultBlockUniformSettersByType = new()
         {
             [typeof(Matrix4)] = (Expression<Action<int, Matrix4>>)((i, m) => GL.UniformMatrix4(i, false, ref m)),
             [typeof(Vector3)] = (Expression<Action<int, Vector3>>)((i, v) => GL.Uniform3(i, v)),
@@ -110,7 +110,7 @@ namespace MyOTKE.Core
                 //// TODO: the below is the default for non-array, non-matrix types (but should work when stride is zero?)
                 //// if an array or matrix type, need to copy it in pieces, paying attention to strides.. How to tell..
                 var structureToPtrMethod = typeof(Marshal)
-                    .GetMethod(nameof(Marshal.StructureToPtr), 1, new[] { Type.MakeGenericMethodParameter(0), typeof(IntPtr), typeof(bool) })
+                    .GetMethod(nameof(Marshal.StructureToPtr), 1, [ Type.MakeGenericMethodParameter(0), typeof(IntPtr), typeof(bool) ])
                     .MakeGenericMethod(publicFields[i].FieldType);
 
                 blockExpressions.Add(Expression.Call(

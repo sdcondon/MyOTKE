@@ -12,11 +12,12 @@ namespace MyOTKE.Engine.Components.Gui
     /// </summary>
     public sealed class Font : IDisposable
     {
-        private static readonly Library SharpFont = new Library();
+        private static readonly Library SharpFont = new();
 
+        private readonly Dictionary<char, uint> glyphIndicesByChar = [];
+        private readonly object glyphsLock = new();
         private readonly Face face;
-        private readonly Dictionary<char, uint> glyphIndicesByChar = new Dictionary<char, uint>();
-        private readonly object glyphsLock = new object();
+
         private GlyphInfo[] glyphs;
 
         /// <summary>
@@ -67,12 +68,12 @@ namespace MyOTKE.Engine.Components.Gui
 
                 // Apparently some fonts have char entries for a LOT of characters,
                 // so do this lazily rather than looping at ctor time
-                if (!glyphIndicesByChar.ContainsKey(c))
+                if (!glyphIndicesByChar.TryGetValue(c, out uint value))
                 {
-                    glyphIndicesByChar[c] = face.GetCharIndex(c);
+                    glyphIndicesByChar[c] = value = face.GetCharIndex(c);
                 }
 
-                return glyphs[glyphIndicesByChar[c]];
+                return glyphs[value];
             }
         }
 
@@ -141,23 +142,15 @@ namespace MyOTKE.Engine.Components.Gui
         /// <summary>
         /// Container for information about a particular glyph.
         /// </summary>
-        public struct GlyphInfo
+        public readonly struct GlyphInfo(uint zOffset, Vector2 size, Vector2 bearing, uint advance)
         {
-            public GlyphInfo(uint zOffset, Vector2 size, Vector2 bearing, uint advance)
-            {
-                ZOffset = zOffset;
-                Size = size;
-                Bearing = bearing;
-                Advance = advance;
-            }
+            public uint ZOffset { get; } = zOffset;
 
-            public uint ZOffset { get; }
+            public Vector2 Size { get; } = size;
 
-            public Vector2 Size { get; }
+            public Vector2 Bearing { get; } = bearing;
 
-            public Vector2 Bearing { get; }
-
-            public uint Advance { get; }
+            public uint Advance { get; } = advance;
         }
     }
 }

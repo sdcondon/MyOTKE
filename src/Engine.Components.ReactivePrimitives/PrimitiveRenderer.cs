@@ -1,4 +1,5 @@
 ﻿using MyOTKE.Core;
+using MyOTKE.Engine.Utility;
 using MyOTKE.ReactiveBuffers;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
@@ -14,7 +15,7 @@ namespace MyOTKE.Engine.Components.ReactivePrimitives
     /// </summary>
     public class PrimitiveRenderer : IComponent
     {
-        private static readonly object ProgramStateLock = new object();
+        private static readonly object ProgramStateLock = new();
         private static GlProgramWithDUBBuilder<Uniforms> programBuilder;
         private static GlProgramWithDUB<Uniforms> program;
 
@@ -60,7 +61,7 @@ namespace MyOTKE.Engine.Components.ReactivePrimitives
             this.coloredTriangleBufferBuilder = new ReactiveBufferBuilder<PrimitiveVertex>(
                 PrimitiveType.Triangles,
                 capacity,
-                new[] { 0, 1, 2 },
+                [0, 1, 2],
                 this.source.Select(pso => pso.Select(ps =>
                 {
                     triangleVertexList.Clear();
@@ -80,7 +81,7 @@ namespace MyOTKE.Engine.Components.ReactivePrimitives
             this.coloredLineBufferBuilder = new ReactiveBufferBuilder<PrimitiveVertex>(
                 PrimitiveType.Lines,
                 capacity,
-                new[] { 0, 1 },
+                [0, 1],
                 this.source.Select(pso => pso.Select(ps =>
                 {
                     lineVertexList.Clear();
@@ -181,15 +182,13 @@ namespace MyOTKE.Engine.Components.ReactivePrimitives
         {
             coloredTriangleBuffer.Dispose();
             coloredLineBuffer.Dispose();
+            GC.SuppressFinalize(this);
             isDisposed = true;
         }
 
         private void ThrowIfDisposed()
         {
-            if (isDisposed)
-            {
-                throw new ObjectDisposedException(GetType().FullName);
-            }
+            ObjectDisposedException.ThrowIf(isDisposed, this);
         }
 
         private struct Uniforms

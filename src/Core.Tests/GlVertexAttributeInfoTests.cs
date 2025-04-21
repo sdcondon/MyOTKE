@@ -13,11 +13,10 @@ namespace MyOTKE.Core
         {
             get
             {
-                object[] MakeTestCase(Type type, params GlVertexAttributeInfo[] expectedAttributeInfo)
-                    => new object[] { type, expectedAttributeInfo };
+                static object[] MakeTestCase(Type type, params GlVertexAttributeInfo[] expectedAttributeInfo) => [type, expectedAttributeInfo];
 
-                return new[]
-                {
+                return
+                [
                     MakeTestCase(
                         type: typeof(Vector4),
                         expectedAttributeInfo: new GlVertexAttributeInfo(VertexAttribPointerType.Float, 4, 0, 16)),
@@ -33,7 +32,7 @@ namespace MyOTKE.Core
                     MakeTestCase(
                         type: typeof(uint),
                         expectedAttributeInfo: new GlVertexAttributeInfo(VertexAttribPointerType.UnsignedInt, 1, 0, 4)),
-                };
+                ];
             }
         }
 

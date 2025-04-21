@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MyOTKE.Engine.Components.Gui
+namespace MyOTKE.Engine.Components.Gui.Elements
 {
     /// <summary>
     /// A GUI element consisting of some text.
@@ -125,7 +125,7 @@ namespace MyOTKE.Engine.Components.Gui
                     }
                 }
 
-                return vertices.ToArray();
+                return [.. vertices];
             }
         }
 
@@ -136,7 +136,7 @@ namespace MyOTKE.Engine.Components.Gui
 
             void StartNewLine()
             {
-                currentLine = new List<Vertex>();
+                currentLine = [];
                 lineLength = 0f;
             }
 
@@ -174,13 +174,13 @@ namespace MyOTKE.Engine.Components.Gui
             var charPosTL = charPosBL + Vector2.UnitY * charSize.Y;
             var charPosTR = charPosBL + charSize;
 
-            vertices.AddRange(new[]
-            {
+            vertices.AddRange(
+            [
                 new Vertex(charPosTL, Color, (int)glyphInfo.ZOffset, Vector2.Zero),
                 new Vertex(charPosTR, Color, (int)glyphInfo.ZOffset, relativeCharSize.X * Vector2.UnitX),
                 new Vertex(charPosBL, Color, (int)glyphInfo.ZOffset, relativeCharSize.Y * Vector2.UnitY),
                 new Vertex(charPosBR, Color, (int)glyphInfo.ZOffset, relativeCharSize),
-            });
+            ]);
         }
     }
 }

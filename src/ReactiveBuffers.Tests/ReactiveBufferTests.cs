@@ -16,53 +16,51 @@ namespace MyOTKE.ReactiveBuffers
         {
             get
             {
-                object[] MakeTestCase(Action<TestSource> action, ICollection<(int, int)> expectedVertices) =>
-                    new object[] { action, expectedVertices, Enumerable.Range(0, expectedVertices.Count).ToArray() };
+                static object[] MakeTestCase(Action<TestSource> action, ICollection<(int, int)> expectedVertices) =>
+                    [action, expectedVertices, Enumerable.Range(0, expectedVertices.Count).ToArray()];
 
-#pragma warning disable SA1107
-                return new List<object[]>()
-                {
+                return
+                [
                     MakeTestCase( // addition, const size
                         a => { a.Add(1, 2); a.Add(2, 2); },
-                        new[] { (1, 1), (1, 2), (2, 1), (2, 2) }),
+                        [(1, 1), (1, 2), (2, 1), (2, 2)]),
 
                     MakeTestCase( // removal from middle, const size
                         a => { a.Add(1, 2); a.Add(2, 2); a.RemoveAt(0); },
-                        new[] { (2, 1), (2, 2) }),
+                        [(2, 1), (2, 2)]),
 
                     MakeTestCase( // removal from end, const size
                         a => { a.Add(1, 2); a.Add(2, 2); a.RemoveAt(1); },
-                        new[] { (1, 1), (1, 2) }),
+                        [(1, 1), (1, 2)]),
 
                     MakeTestCase( // replacement, const size
                         a => { a.Add(1, 2); a.Add(2, 2); a[0] = (3, 2); },
-                        new[] { (3, 1), (3, 2), (2, 1), (2, 2) }),
+                        [(3, 1), (3, 2), (2, 1), (2, 2)]),
 
                     MakeTestCase( // clear
                         a => { a.Add(1, 2); a.Add(2, 2); a.Clear(); a.Add(3, 2); },
-                        new[] { (3, 1), (3, 2) }),
+                        [(3, 1), (3, 2)]),
 
                     MakeTestCase( // addition, varying sizes
                         a => { a.Add(1, 4); a.Add(2, 2); },
-                        new[] { (1, 1), (1, 2), (1, 3), (1, 4), (2, 1), (2, 2) }),
+                        [(1, 1), (1, 2), (1, 3), (1, 4), (2, 1), (2, 2)]),
 
                     MakeTestCase( // removal, varying sizes
                         a => { a.Add(1, 2); a.Add(2, 4); a.RemoveAt(0); },
-                        new[] { (2, 3), (2, 4), (2, 1), (2, 2) }),
+                        [(2, 3), (2, 4), (2, 1), (2, 2)]),
 
                     MakeTestCase( // replacement, varying sizes - bigger
                         a => { a.Add(1, 2); a.Add(2, 2); a[0] = (3, 4); },
-                        new[] { (3, 1), (3, 2), (2, 1), (2, 2), (3, 3), (3, 4) }),
+                        [(3, 1), (3, 2), (2, 1), (2, 2), (3, 3), (3, 4)]),
 
                     MakeTestCase( // replacement, varying sizes - smaller
                         a => { a.Add(1, 4); a.Add(2, 2); a[0] = (3, 2); },
-                        new[] { (3, 1), (3, 2), (2, 1), (2, 2) }),
+                        [(3, 1), (3, 2), (2, 1), (2, 2)]),
 
                     MakeTestCase( // replacement at end, varying sizes - smaller
                         a => { a.Add(1, 2); a.Add(2, 4); a[1] = (3, 2); },
-                        new[] { (1, 1), (1, 2), (3, 1), (3, 2) }),
-                };
-#pragma warning restore SA1107
+                        [(1, 1), (1, 2), (3, 1), (3, 2)]),
+                ];
             }
         }
 
@@ -79,7 +77,7 @@ namespace MyOTKE.ReactiveBuffers
                 (BufferUsageHint.DynamicDraw, 100, null),
                 (100, null));
 
-            using (var sut = new ReactiveBuffer<(int, int)>(targetVao, sourceObservable, new[] { 0, 1 }))
+            using (var sut = new ReactiveBuffer<(int, int)>(targetVao, sourceObservable, [0, 1]))
             {
                 // Act
                 action(sourceObservable);
@@ -92,15 +90,15 @@ namespace MyOTKE.ReactiveBuffers
 
         public class TestSource : IObservable<IObservable<IList<(int, int)>>>
         {
-            private readonly Subject<Subject<IList<(int, int)>>> outerSubject = new Subject<Subject<IList<(int, int)>>>();
-            private readonly List<Subject<IList<(int, int)>>> innerSubjects = new List<Subject<IList<(int, int)>>>();
+            private readonly Subject<Subject<IList<(int, int)>>> outerSubject = new();
+            private readonly List<Subject<IList<(int, int)>>> innerSubjects = [];
 
             public (int, int) this[int index]
             {
                 set
                 {
                     innerSubjects[index].OnNext(
-                        Enumerable.Range(1, value.Item2).Select(i => (value.Item1, i)).ToArray());
+                        [.. Enumerable.Range(1, value.Item2).Select(i => (value.Item1, i))]);
                 }
             }
 

@@ -22,7 +22,7 @@ namespace MyOTKE.Core
             ////KhronosApi.LogEnabled = true;
             ////KhronosApi.Log += KhronosApi_Log;
 
-            void OnGlDebugMessage(
+            static void OnGlDebugMessage(
                 DebugSource source,
                 DebugType type,
                 int id,

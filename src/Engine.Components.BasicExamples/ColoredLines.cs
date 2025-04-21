@@ -1,4 +1,5 @@
 ﻿using MyOTKE.Core;
+using MyOTKE.Engine.Utility;
 using MyOTKE.ReactiveBuffers;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
@@ -15,7 +16,7 @@ namespace MyOTKE.Engine.Components.BasicExamples
     /// </summary>
     public class ColoredLines : IComponent
     {
-        private static readonly object ProgramStateLock = new object();
+        private static readonly object ProgramStateLock = new();
         private static GlProgramWithDUBBuilder<DefaultUniformBlock, CameraUniformBlock> programBuilder;
         private static GlProgramWithDUB<DefaultUniformBlock, CameraUniformBlock> program;
 
@@ -33,7 +34,7 @@ namespace MyOTKE.Engine.Components.BasicExamples
         public ColoredLines(IViewProjection viewProjection)
         {
             this.viewProjection = viewProjection;
-            this.lines = new ObservableCollection<Line>();
+            this.lines = [];
 
             if (program == null && programBuilder == null)
             {
@@ -53,7 +54,7 @@ namespace MyOTKE.Engine.Components.BasicExamples
             this.linesBufferBuilder = new ReactiveBufferBuilder<Vertex>(
                 primitiveType: PrimitiveType.Lines,
                 atomCapacity: 100,
-                atomIndices: new[] { 0, 1 },
+                atomIndices: [ 0, 1 ],
                 atomSource: ((INotifyCollectionChanged)lines).ToObservable<Line>()
                     .Select(o => o
                         .Select(i => new[]
@@ -90,7 +91,7 @@ namespace MyOTKE.Engine.Components.BasicExamples
         /// <param name="to">The position of the end of the line.</param>
         public void AddLine(Vector3 from, Vector3 to)
         {
-            ThrowIfDisposed();
+            ObjectDisposedException.ThrowIf(isDisposed, this);
 
             this.lines.Add(new Line(from, to));
         }
@@ -100,7 +101,7 @@ namespace MyOTKE.Engine.Components.BasicExamples
         /// </summary>
         public void ClearLines()
         {
-            ThrowIfDisposed();
+            ObjectDisposedException.ThrowIf(isDisposed, this);
 
             this.lines.Clear();
         }
@@ -108,7 +109,7 @@ namespace MyOTKE.Engine.Components.BasicExamples
         /// <inheritdoc />
         public void Load()
         {
-            ThrowIfDisposed();
+            ObjectDisposedException.ThrowIf(isDisposed, this);
 
             if (program == null)
             {
@@ -134,7 +135,7 @@ namespace MyOTKE.Engine.Components.BasicExamples
         /// <inheritdoc />
         public void Render()
         {
-            ThrowIfDisposed();
+            ObjectDisposedException.ThrowIf(isDisposed, this);
 
             // TODO: Don't need to set this every time - only when it changes.
             // ..which is somewhat at odds with the pattern of these being pulled into, not pushed into this class..
@@ -160,15 +161,8 @@ namespace MyOTKE.Engine.Components.BasicExamples
         public void Dispose()
         {
             this.linesBuffer?.Dispose();
+            GC.SuppressFinalize(this);
             isDisposed = true;
-        }
-
-        private void ThrowIfDisposed()
-        {
-            if (isDisposed)
-            {
-                throw new ObjectDisposedException(GetType().FullName);
-            }
         }
 
         private struct CameraUniformBlock
@@ -186,7 +180,7 @@ namespace MyOTKE.Engine.Components.BasicExamples
             public float PointLightPower;
         }
 
-        private struct Vertex
+        private readonly struct Vertex
         {
             public readonly Vector3 Position;
             public readonly Vector3 Color;

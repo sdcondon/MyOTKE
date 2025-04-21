@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using OpenTK.Mathematics;
 
-namespace MyOTKE.Core
+namespace MyOTKE.Core.IO
 {
     /// <summary>
     /// Very, VERY simple OBJ loader (nabbed from an OpenGL tutorial)
@@ -42,68 +42,67 @@ namespace MyOTKE.Core
             var temp_uvs = new List<Vector2>();
             var temp_normals = new List<Vector3>();
 
-            using (var file = File.Open(path, FileMode.Open, FileAccess.Read))
-            using (var fileReader = new StreamReader(file))
+            using var file = File.Open(path, FileMode.Open, FileAccess.Read);
+            using var fileReader = new StreamReader(file);
+
+            while (!fileReader.EndOfStream)
             {
-                while (!fileReader.EndOfStream)
+                var line = fileReader.ReadLine();
+
+                if (line.StartsWith("v "))
                 {
-                    var line = fileReader.ReadLine();
-
-                    if (line.StartsWith("v "))
-                    {
-                        var coords = line.Split(' ').Skip(1).Select(f => float.Parse(f)).ToArray();
-                        temp_vertices.Add(new Vector3(coords[0], coords[1], coords[2]));
-                    }
-                    else if (line.StartsWith("vt "))
-                    {
-                        var coords = line.Split(' ').Skip(1).Select(f => float.Parse(f)).ToArray();
-                        //// Invert V coordinate since we will only use DDS texture, which are inverted. Remove if you want to use TGA or BMP loaders.
-                        temp_uvs.Add(new Vector2(coords[0], -coords[1]));
-                    }
-                    else if (line.StartsWith("vn "))
-                    {
-                        var coords = line.Split(' ').Skip(1).Select(f => float.Parse(f)).ToArray();
-                        temp_normals.Add(new Vector3(coords[0], coords[1], coords[2]));
-                    }
-                    else if (line.StartsWith("f "))
-                    {
-                        var vertexIndex = new int[3];
-                        var uvIndex = new int[3];
-                        var normalIndex = new int[3];
-
-                        var values = line.Split(' ').Skip(1).Select(s => s.Split('/').Select(d => int.Parse(d)).ToArray()).ToArray();
-
-                        vertexIndices.Add(values[0][0]);
-                        vertexIndices.Add(values[1][0]);
-                        vertexIndices.Add(values[2][0]);
-                        uvIndices.Add(values[0][1]);
-                        uvIndices.Add(values[1][1]);
-                        uvIndices.Add(values[2][1]);
-                        normalIndices.Add(values[0][2]);
-                        normalIndices.Add(values[1][2]);
-                        normalIndices.Add(values[2][2]);
-                    }
-                    //// Else probably a comment, just ignore
+                    var coords = line.Split(' ').Skip(1).Select(f => float.Parse(f)).ToArray();
+                    temp_vertices.Add(new Vector3(coords[0], coords[1], coords[2]));
                 }
-
-                // For each vertex of each triangle
-                for (int i = 0; i < vertexIndices.Count; i++)
+                else if (line.StartsWith("vt "))
                 {
-                    // Get the indices of its attributes
-                    var vertexIndex = vertexIndices[i];
-                    var uvIndex = uvIndices[i];
-                    var normalIndex = normalIndices[i];
-
-                    // Get the attributes thanks to the index
-                    var vertex = temp_vertices[vertexIndex - 1];
-                    var uv = temp_uvs[uvIndex - 1];
-                    var normal = temp_normals[normalIndex - 1];
-
-                    // Put the attributes in buffers
-                    vertexPositions.Add(vertex);
-                    vertexUvs.Add(uv);
-                    vertexNormals.Add(normal);
+                    var coords = line.Split(' ').Skip(1).Select(f => float.Parse(f)).ToArray();
+                    //// Invert V coordinate since we will only use DDS texture, which are inverted. Remove if you want to use TGA or BMP loaders.
+                    temp_uvs.Add(new Vector2(coords[0], -coords[1]));
                 }
+                else if (line.StartsWith("vn "))
+                {
+                    var coords = line.Split(' ').Skip(1).Select(f => float.Parse(f)).ToArray();
+                    temp_normals.Add(new Vector3(coords[0], coords[1], coords[2]));
+                }
+                else if (line.StartsWith("f "))
+                {
+                    var vertexIndex = new int[3];
+                    var uvIndex = new int[3];
+                    var normalIndex = new int[3];
+
+                    var values = line.Split(' ').Skip(1).Select(s => s.Split('/').Select(d => int.Parse(d)).ToArray()).ToArray();
+
+                    vertexIndices.Add(values[0][0]);
+                    vertexIndices.Add(values[1][0]);
+                    vertexIndices.Add(values[2][0]);
+                    uvIndices.Add(values[0][1]);
+                    uvIndices.Add(values[1][1]);
+                    uvIndices.Add(values[2][1]);
+                    normalIndices.Add(values[0][2]);
+                    normalIndices.Add(values[1][2]);
+                    normalIndices.Add(values[2][2]);
+                }
+                //// Else probably a comment, just ignore
+            }
+
+            // For each vertex of each triangle
+            for (int i = 0; i < vertexIndices.Count; i++)
+            {
+                // Get the indices of its attributes
+                var vertexIndex = vertexIndices[i];
+                var uvIndex = uvIndices[i];
+                var normalIndex = normalIndices[i];
+
+                // Get the attributes thanks to the index
+                var vertex = temp_vertices[vertexIndex - 1];
+                var uv = temp_uvs[uvIndex - 1];
+                var normal = temp_normals[normalIndex - 1];
+
+                // Put the attributes in buffers
+                vertexPositions.Add(vertex);
+                vertexUvs.Add(uv);
+                vertexNormals.Add(normal);
             }
 
             return true;

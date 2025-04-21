@@ -1,8 +1,7 @@
-﻿#pragma warning disable SA1402
-using OpenTK.Graphics.OpenGL;
+﻿using OpenTK.Graphics.OpenGL;
 using System;
 
-namespace MyOTKE.Core.VaoDecorators
+namespace MyOTKE.Core.Decorators
 {
     /// <summary>
     /// Decorator for <see cref="IVertexArrayObject{T1}"/> that explicitly synchronizes with OpenGL (making it simple but slow..).
@@ -226,4 +225,3 @@ namespace MyOTKE.Core.VaoDecorators
         }
     }
 }
-#pragma warning restore SA1402

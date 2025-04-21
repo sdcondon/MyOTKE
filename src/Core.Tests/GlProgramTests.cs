@@ -4,8 +4,8 @@ using System.Text;
 
 namespace MyOTKE.Core
 {
-    class GlProgramTests
+    public class GlProgramTests
     {
-        //// TODO: When program that is the onlny program using a binding point is removed
+        //// TODO: When program that is the only program using a binding point is removed
     }
 }

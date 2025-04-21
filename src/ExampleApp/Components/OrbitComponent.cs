@@ -1,6 +1,8 @@
 ﻿using MyOTKE.Engine;
 using MyOTKE.Engine.Components.Gui;
+using MyOTKE.Engine.Components.Gui.Elements;
 using MyOTKE.Engine.Components.ReactivePrimitives;
+using MyOTKE.Engine.Utility;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
@@ -13,12 +15,12 @@ namespace MyOTKE.ExampleApp.Components;
 public class OrbitComponent : CompositeComponent
 {
     private readonly MyOTKEWindow view;
-    private readonly ICamera camera;
+    private readonly OrbitCameraAligned camera;
 
     private readonly Text camTextElement;
     private readonly TextStream logElement;
 
-    private readonly Subject<IList<Primitive>> cubeSubject = new Subject<IList<Primitive>>();
+    private readonly Subject<IList<Primitive>> cubeSubject = new();
     private readonly Primitive[] cubePrimitives = [Primitive.Cuboid(Vector3.One, Matrix4.Identity, Color.Red())];
     private Vector3 lastCamPosition = Vector3.Zero;
 
@@ -66,6 +68,7 @@ public class OrbitComponent : CompositeComponent
         });
     }
 
+    /// <inheritdoc />
     public override void Update(TimeSpan elapsed)
     {
         base.Update(elapsed);

@@ -2,7 +2,7 @@
 using System;
 using Plane = System.Numerics.Plane;
 
-namespace MyOTKE.Engine
+namespace MyOTKE.Engine.Utility.Cameras
 {
     /// <summary>
     /// Represents a semi-infinite 3D ray, that has a start point and a direction.
@@ -59,17 +59,17 @@ namespace MyOTKE.Engine
 
             if (discriminant < 0)
             {
-                return new Vector3[0];
+                return [];
             }
             else if (discriminant > 0)
             {
                 var t = new[] { -b + (float)Math.Sqrt(discriminant), -b - (float)Math.Sqrt(discriminant) };
                 Array.Sort(t);
-                return new[] { ray.Origin + t[0] * ray.Direction, ray.Origin + t[1] * ray.Direction };
+                return [ ray.Origin + t[0] * ray.Direction, ray.Origin + t[1] * ray.Direction ];
             }
             else
             {
-                return new[] { ray.Origin + -b * ray.Direction };
+                return [ ray.Origin + -b * ray.Direction ];
             }
         }
 

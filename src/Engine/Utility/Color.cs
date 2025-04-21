@@ -1,11 +1,11 @@
 ﻿using OpenTK.Mathematics;
 
-namespace MyOTKE.Engine
+namespace MyOTKE.Engine.Utility
 {
     /// <summary>
     /// Structure that represents a color. Can be implicitly converted to a RGB <see cref="Vector3"/> or RGBA <see cref="Vector4"/>.
     /// </summary>
-    public struct Color
+    public readonly struct Color
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Color"/> struct.
@@ -58,21 +58,21 @@ namespace MyOTKE.Engine
         /// Gets a completely transparent 'color'.
         /// </summary>
         /// <returns>An appropriate <see cref="Color"/> instance.</returns>
-        public static Color Transparent() => new Color(0, 0, 0, 0);
+        public static Color Transparent() => new(0, 0, 0, 0);
 
         /// <summary>
         /// Returns white.
         /// </summary>
         /// <param name="alpha">The alpha of the returned color.</param>
         /// <returns>An appropriate <see cref="Color"/> instance.</returns>
-        public static Color White(float alpha = 1) => new Color(1, 1, 1, alpha);
+        public static Color White(float alpha = 1) => new(1, 1, 1, alpha);
 
         /// <summary>
         /// Returns black.
         /// </summary>
         /// <param name="alpha">The alpha of the returned color.</param>
         /// <returns>An appropriate <see cref="Color"/> instance.</returns>
-        public static Color Black(float alpha = 1) => new Color(0, 0, 0, alpha);
+        public static Color Black(float alpha = 1) => new(0, 0, 0, alpha);
 
         /// <summary>
         /// Returns a color that is a shade of grey.
@@ -80,7 +80,7 @@ namespace MyOTKE.Engine
         /// <param name="brightness">The brightness of the returned color.</param>
         /// <param name="alpha">The alpha of the returned color.</param>
         /// <returns>An appropriate <see cref="Color"/> instance.</returns>
-        public static Color Grey(float brightness = 0.5f, float alpha = 1) => new Color(brightness, brightness, brightness, alpha);
+        public static Color Grey(float brightness = 0.5f, float alpha = 1) => new(brightness, brightness, brightness, alpha);
 
         /// <summary>
         /// Returns pure red.
@@ -88,7 +88,7 @@ namespace MyOTKE.Engine
         /// <param name="brightness">The brightness of the returned color.</param>
         /// <param name="alpha">The alpha of the returned color.</param>
         /// <returns>An appropriate <see cref="Color"/> instance.</returns>
-        public static Color Red(float brightness = 1, float alpha = 1) => new Color(brightness, 0, 0, alpha);
+        public static Color Red(float brightness = 1, float alpha = 1) => new(brightness, 0, 0, alpha);
 
         /// <summary>
         /// Returns pure green.
@@ -96,7 +96,7 @@ namespace MyOTKE.Engine
         /// <param name="brightness">The brightness of the returned color.</param>
         /// <param name="alpha">The alpha of the returned color.</param>
         /// <returns>An appropriate <see cref="Color"/> instance.</returns>
-        public static Color Green(float brightness = 1, float alpha = 1) => new Color(0, brightness, 0, alpha);
+        public static Color Green(float brightness = 1, float alpha = 1) => new(0, brightness, 0, alpha);
 
         /// <summary>
         /// Returns pure blue.
@@ -104,7 +104,7 @@ namespace MyOTKE.Engine
         /// <param name="brightness">The brightness of the returned color.</param>
         /// <param name="alpha">The alpha of the returned color.</param>
         /// <returns>An appropriate <see cref="Color"/> instance.</returns>
-        public static Color Blue(float brightness = 1, float alpha = 1) => new Color(0, 0, brightness, alpha);
+        public static Color Blue(float brightness = 1, float alpha = 1) => new(0, 0, brightness, alpha);
 
         /// <summary>
         /// Returns yellow.
@@ -112,7 +112,7 @@ namespace MyOTKE.Engine
         /// <param name="brightness">The brightness of the returned color.</param>
         /// <param name="alpha">The alpha of the returned color.</param>
         /// <returns>An appropriate <see cref="Color"/> instance.</returns>
-        public static Color Yellow(float brightness = 1, float alpha = 1) => new Color(brightness, brightness, 0, alpha);
+        public static Color Yellow(float brightness = 1, float alpha = 1) => new(brightness, brightness, 0, alpha);
 
         /// <summary>
         /// Returns cyan.
@@ -120,7 +120,7 @@ namespace MyOTKE.Engine
         /// <param name="brightness">The brightness of the returned color.</param>
         /// <param name="alpha">The alpha of the returned color.</param>
         /// <returns>An appropriate <see cref="Color"/> instance.</returns>
-        public static Color Cyan(float brightness = 1, float alpha = 1) => new Color(0, brightness, brightness, alpha);
+        public static Color Cyan(float brightness = 1, float alpha = 1) => new(0, brightness, brightness, alpha);
 
         /// <summary>
         /// Returns magenta.
@@ -128,7 +128,7 @@ namespace MyOTKE.Engine
         /// <param name="brightness">The brightness of the returned color.</param>
         /// <param name="alpha">The alpha of the returned color.</param>
         /// <returns>An appropriate <see cref="Color"/> instance.</returns>
-        public static Color Magenta(float brightness = 1, float alpha = 1) => new Color(brightness, 0, brightness, alpha);
+        public static Color Magenta(float brightness = 1, float alpha = 1) => new(brightness, 0, brightness, alpha);
 
         /// <summary>
         /// Returns brown.
@@ -136,7 +136,7 @@ namespace MyOTKE.Engine
         /// <param name="brightness">The brightness of the returned color.</param>
         /// <param name="alpha">The alpha of the returned color.</param>
         /// <returns>An appropriate <see cref="Color"/> instance.</returns>
-        public static Color Brown(float brightness = 1, float alpha = 1) => new Color(0.65f * brightness, 0.16f * brightness, 0.16f * brightness, alpha);
+        public static Color Brown(float brightness = 1, float alpha = 1) => new(0.65f * brightness, 0.16f * brightness, 0.16f * brightness, alpha);
 
         /// <summary>
         /// Returns orange.
@@ -144,6 +144,6 @@ namespace MyOTKE.Engine
         /// <param name="brightness">The brightness of the returned color.</param>
         /// <param name="alpha">The alpha of the returned color.</param>
         /// <returns>An appropriate <see cref="Color"/> instance.</returns>
-        public static Color Orange(float brightness = 1, float alpha = 1) => new Color(brightness, 0.65f * brightness, 0, alpha);
+        public static Color Orange(float brightness = 1, float alpha = 1) => new(brightness, 0.65f * brightness, 0, alpha);
     }
 }

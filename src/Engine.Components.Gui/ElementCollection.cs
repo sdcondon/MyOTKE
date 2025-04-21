@@ -12,7 +12,7 @@ namespace MyOTKE.Engine.Components.Gui
     {
         private readonly IElementParent owner;
         private readonly ObservableComposite<IList<Vertex>> composite;
-        private readonly Dictionary<ElementBase, Action> removalCallbacks = new Dictionary<ElementBase, Action>();
+        private readonly Dictionary<ElementBase, Action> removalCallbacks = [];
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ElementCollection"/> class.
@@ -86,7 +86,7 @@ namespace MyOTKE.Engine.Components.Gui
         }
 
         /// <inheritdoc />
-        public bool Contains(ElementBase item) => removalCallbacks.Keys.Contains(item);
+        public bool Contains(ElementBase item) => removalCallbacks.ContainsKey(item);
 
         /// <inheritdoc />
         public void CopyTo(ElementBase[] array, int arrayIndex) => removalCallbacks.Keys.CopyTo(array, arrayIndex);

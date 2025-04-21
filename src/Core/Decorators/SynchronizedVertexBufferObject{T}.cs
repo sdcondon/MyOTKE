@@ -1,4 +1,6 @@
-﻿namespace MyOTKE.Core.VaoDecorators
+﻿using MyOTKE.Core.Decorators;
+
+namespace MyOTKE.Core.Decorators
 {
     /// <summary>
     /// Decorator for <see cref="IVertexBufferObject{T}"/> that explicitly synchronizes with OpenGL (making it simple but slow..).

@@ -86,11 +86,7 @@ namespace MyOTKE.Core
                 // Might be fun to try to do this locklessly at some point..
                 lock (this)
                 {
-                    if (refCount == 0)
-                    {
-                        throw new ObjectDisposedException(GetType().FullName);
-                    }
-
+                    ObjectDisposedException.ThrowIf(refCount == 0, this);
                     refCount++;
                 }
             }

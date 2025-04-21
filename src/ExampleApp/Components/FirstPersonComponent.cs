@@ -1,7 +1,10 @@
 ﻿using MyOTKE.Engine;
 using MyOTKE.Engine.Components.BasicExamples;
 using MyOTKE.Engine.Components.Gui;
+using MyOTKE.Engine.Components.Gui.Elements;
 using MyOTKE.Engine.Components.ReactivePrimitives;
+using MyOTKE.Engine.Utility;
+using MyOTKE.Engine.Utility.Cameras;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
@@ -14,13 +17,13 @@ namespace MyOTKE.ExampleApp.Components;
 public class FirstPersonComponent : CompositeComponent
 {
     private readonly MyOTKEWindow view;
-    private readonly ICamera camera;
+    private readonly FirstPersonCamera camera;
 
     private readonly ColoredLines lines;
     private readonly Text camTextElement;
     private readonly TextStream logElement;
 
-    private readonly Subject<IList<Primitive>> cubeSubject = new Subject<IList<Primitive>>();
+    private readonly Subject<IList<Primitive>> cubeSubject = new();
     private readonly Primitive[] cubePrimitives = [Primitive.Empty()];
     private Matrix4 cubeWorldMatrix = Matrix4.Identity;
     private Vector3 lastCamPosition = Vector3.Zero;
@@ -57,7 +60,7 @@ public class FirstPersonComponent : CompositeComponent
         AddComponent(new TexturedStaticMesh(
             camera,
             texturedTriangleVertices,
-            new uint[] { 0, 1, 2 },
+            [ 0, 1, 2 ],
             @"Assets\Textures\foo.bmp")
         {
             AmbientLightColor = Color.Grey(),
@@ -81,7 +84,7 @@ public class FirstPersonComponent : CompositeComponent
         AddComponent(new ColoredStaticMesh(
             camera,
             coloredTriangleVertices,
-            new uint[] { 0, 1, 2 })
+            [ 0, 1, 2 ])
         {
             AmbientLightColor = Color.Grey(),
         });

@@ -1,5 +1,4 @@
-﻿#pragma warning disable SA1402
-using OpenTK.Graphics.OpenGL;
+﻿using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +11,7 @@ namespace MyOTKE.Core
     /// </summary>
     public sealed class GlProgramBuilder
     {
-        private readonly List<(ShaderType Type, string Source)> shaderSpecs = new List<(ShaderType, string)>();
+        private readonly List<(ShaderType Type, string Source)> shaderSpecs = [];
 
         /// <summary>
         /// Adds a vertex shader to be included in the built program, reading the source from a <see cref="Stream"/> object.
@@ -41,10 +40,8 @@ namespace MyOTKE.Core
         /// <returns>The updated builder.</returns>
         public GlProgramBuilder WithVertexShaderFromFile(string filePath)
         {
-            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            {
-                return WithShaderFromStream(ShaderType.VertexShader, stream);
-            }
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return WithShaderFromStream(ShaderType.VertexShader, stream);
         }
 
         /// <summary>
@@ -54,10 +51,8 @@ namespace MyOTKE.Core
         /// <returns>The updated builder.</returns>
         public GlProgramBuilder WithFragmentShaderFromFile(string filePath)
         {
-            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            {
-                return WithShaderFromStream(ShaderType.FragmentShader, stream);
-            }
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return WithShaderFromStream(ShaderType.FragmentShader, stream);
         }
 
         /// <summary>
@@ -68,15 +63,9 @@ namespace MyOTKE.Core
         public GlProgramBuilder WithVertexShaderFromEmbeddedResource(string resourceName)
         {
             var assembly = Assembly.GetCallingAssembly();
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                if (stream == null)
-                {
-                    throw new ArgumentException($"Resource '{resourceName}' not found");
-                }
+            using var stream = assembly.GetManifestResourceStream(resourceName) ?? throw new ArgumentException($"Resource '{resourceName}' not found");
 
-                return WithShaderFromStream(ShaderType.VertexShader, stream);
-            }
+            return WithShaderFromStream(ShaderType.VertexShader, stream);
         }
 
         /// <summary>
@@ -87,15 +76,9 @@ namespace MyOTKE.Core
         public GlProgramBuilder WithFragmentShaderFromEmbeddedResource(string resourceName)
         {
             var assembly = Assembly.GetCallingAssembly();
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                if (stream == null)
-                {
-                    throw new ArgumentException($"Resource '{resourceName}' not found");
-                }
+            using var stream = assembly.GetManifestResourceStream(resourceName) ?? throw new ArgumentException($"Resource '{resourceName}' not found");
 
-                return WithShaderFromStream(ShaderType.FragmentShader, stream);
-            }
+            return WithShaderFromStream(ShaderType.FragmentShader, stream);
         }
 
         /// <summary>
@@ -154,10 +137,8 @@ namespace MyOTKE.Core
 
         private GlProgramBuilder WithShaderFromStream(ShaderType shaderType, Stream sourceStream)
         {
-            using (var reader = new StreamReader(sourceStream))
-            {
-                shaderSpecs.Add((shaderType, reader.ReadToEnd()));
-            }
+            using var reader = new StreamReader(sourceStream);
+            shaderSpecs.Add((shaderType, reader.ReadToEnd()));
 
             return this;
         }
@@ -171,7 +152,7 @@ namespace MyOTKE.Core
         where T1 : struct
     {
         private readonly (string BlockName, BufferUsageHint Usage, int Capacity, T1[] Data) uboSpec1;
-        private readonly List<(ShaderType Type, string Source)> shaderSpecs = new List<(ShaderType, string)>();
+        private readonly List<(ShaderType Type, string Source)> shaderSpecs = [];
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GlProgramBuilder{T1}"/> class.
@@ -213,10 +194,8 @@ namespace MyOTKE.Core
         /// <returns>The updated builder.</returns>
         public GlProgramBuilder<T1> WithVertexShaderFromFile(string filePath)
         {
-            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            {
-                return WithShaderFromStream(ShaderType.VertexShader, stream);
-            }
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return WithShaderFromStream(ShaderType.VertexShader, stream);
         }
 
         /// <summary>
@@ -226,10 +205,8 @@ namespace MyOTKE.Core
         /// <returns>The updated builder.</returns>
         public GlProgramBuilder<T1> WithFragmentShaderFromFile(string filePath)
         {
-            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            {
-                return WithShaderFromStream(ShaderType.FragmentShader, stream);
-            }
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return WithShaderFromStream(ShaderType.FragmentShader, stream);
         }
 
         /// <summary>
@@ -240,15 +217,9 @@ namespace MyOTKE.Core
         public GlProgramBuilder<T1> WithVertexShaderFromEmbeddedResource(string resourceName)
         {
             var assembly = Assembly.GetCallingAssembly();
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                if (stream == null)
-                {
-                    throw new ArgumentException($"Resource '{resourceName}' not found");
-                }
+            using var stream = assembly.GetManifestResourceStream(resourceName) ?? throw new ArgumentException($"Resource '{resourceName}' not found");
 
-                return WithShaderFromStream(ShaderType.VertexShader, stream);
-            }
+            return WithShaderFromStream(ShaderType.VertexShader, stream);
         }
 
         /// <summary>
@@ -259,15 +230,9 @@ namespace MyOTKE.Core
         public GlProgramBuilder<T1> WithFragmentShaderFromEmbeddedResource(string resourceName)
         {
             var assembly = Assembly.GetCallingAssembly();
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                if (stream == null)
-                {
-                    throw new ArgumentException($"Resource '{resourceName}' not found");
-                }
+            using var stream = assembly.GetManifestResourceStream(resourceName) ?? throw new ArgumentException($"Resource '{resourceName}' not found");
 
-                return WithShaderFromStream(ShaderType.FragmentShader, stream);
-            }
+            return WithShaderFromStream(ShaderType.FragmentShader, stream);
         }
 
         /// <summary>
@@ -296,10 +261,8 @@ namespace MyOTKE.Core
 
         private GlProgramBuilder<T1> WithShaderFromStream(ShaderType shaderType, Stream sourceStream)
         {
-            using (var reader = new StreamReader(sourceStream))
-            {
-                shaderSpecs.Add((shaderType, reader.ReadToEnd()));
-            }
+            using var reader = new StreamReader(sourceStream);
+            shaderSpecs.Add((shaderType, reader.ReadToEnd()));
 
             return this;
         }
@@ -311,7 +274,7 @@ namespace MyOTKE.Core
     public sealed class GlProgramWithDUBBuilder<TDefaultUniformBlock>
         where TDefaultUniformBlock : struct
     {
-        private readonly List<(ShaderType Type, string Source)> shaderSpecs = new List<(ShaderType, string)>();
+        private readonly List<(ShaderType Type, string Source)> shaderSpecs = [];
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GlProgramWithDUBBuilder{TDefaultUniformBlock}"/> class.
@@ -350,10 +313,8 @@ namespace MyOTKE.Core
         /// <returns>The updated builder.</returns>
         public GlProgramWithDUBBuilder<TDefaultUniformBlock> WithVertexShaderFromFile(string filePath)
         {
-            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            {
-                return WithShaderFromStream(ShaderType.VertexShader, stream);
-            }
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return WithShaderFromStream(ShaderType.VertexShader, stream);
         }
 
         /// <summary>
@@ -363,10 +324,8 @@ namespace MyOTKE.Core
         /// <returns>The updated builder.</returns>
         public GlProgramWithDUBBuilder<TDefaultUniformBlock> WithFragmentShaderFromFile(string filePath)
         {
-            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            {
-                return WithShaderFromStream(ShaderType.FragmentShader, stream);
-            }
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return WithShaderFromStream(ShaderType.FragmentShader, stream);
         }
 
         /// <summary>
@@ -377,15 +336,9 @@ namespace MyOTKE.Core
         public GlProgramWithDUBBuilder<TDefaultUniformBlock> WithVertexShaderFromEmbeddedResource(string resourceName)
         {
             var assembly = Assembly.GetCallingAssembly();
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                if (stream == null)
-                {
-                    throw new ArgumentException($"Resource '{resourceName}' not found");
-                }
+            using var stream = assembly.GetManifestResourceStream(resourceName) ?? throw new ArgumentException($"Resource '{resourceName}' not found");
 
-                return WithShaderFromStream(ShaderType.VertexShader, stream);
-            }
+            return WithShaderFromStream(ShaderType.VertexShader, stream);
         }
 
         /// <summary>
@@ -396,15 +349,9 @@ namespace MyOTKE.Core
         public GlProgramWithDUBBuilder<TDefaultUniformBlock> WithFragmentShaderFromEmbeddedResource(string resourceName)
         {
             var assembly = Assembly.GetCallingAssembly();
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                if (stream == null)
-                {
-                    throw new ArgumentException($"Resource '{resourceName}' not found");
-                }
+            using var stream = assembly.GetManifestResourceStream(resourceName) ?? throw new ArgumentException($"Resource '{resourceName}' not found");
 
-                return WithShaderFromStream(ShaderType.FragmentShader, stream);
-            }
+            return WithShaderFromStream(ShaderType.FragmentShader, stream);
         }
 
         /// <summary>
@@ -451,10 +398,8 @@ namespace MyOTKE.Core
 
         private GlProgramWithDUBBuilder<TDefaultUniformBlock> WithShaderFromStream(ShaderType shaderType, Stream sourceStream)
         {
-            using (var reader = new StreamReader(sourceStream))
-            {
-                shaderSpecs.Add((shaderType, reader.ReadToEnd()));
-            }
+            using var reader = new StreamReader(sourceStream);
+            shaderSpecs.Add((shaderType, reader.ReadToEnd()));
 
             return this;
         }
@@ -470,7 +415,7 @@ namespace MyOTKE.Core
         where T1 : struct
     {
         private readonly (string BlockName, BufferUsageHint Usage, int Capacity, T1[] Data) uboSpec1;
-        private readonly List<(ShaderType Type, string Source)> shaderSpecs = new List<(ShaderType, string)>();
+        private readonly List<(ShaderType Type, string Source)> shaderSpecs = [];
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GlProgramWithDUBBuilder{TDefaultUniformBlock, T1}"/> class.
@@ -512,10 +457,8 @@ namespace MyOTKE.Core
         /// <returns>The updated builder.</returns>
         public GlProgramWithDUBBuilder<TDefaultUniformBlock, T1> WithVertexShaderFromFile(string filePath)
         {
-            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            {
-                return WithShaderFromStream(ShaderType.VertexShader, stream);
-            }
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return WithShaderFromStream(ShaderType.VertexShader, stream);
         }
 
         /// <summary>
@@ -525,10 +468,8 @@ namespace MyOTKE.Core
         /// <returns>The updated builder.</returns>
         public GlProgramWithDUBBuilder<TDefaultUniformBlock, T1> WithFragmentShaderFromFile(string filePath)
         {
-            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            {
-                return WithShaderFromStream(ShaderType.FragmentShader, stream);
-            }
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return WithShaderFromStream(ShaderType.FragmentShader, stream);
         }
 
         /// <summary>
@@ -539,15 +480,9 @@ namespace MyOTKE.Core
         public GlProgramWithDUBBuilder<TDefaultUniformBlock, T1> WithVertexShaderFromEmbeddedResource(string resourceName)
         {
             var assembly = Assembly.GetCallingAssembly();
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                if (stream == null)
-                {
-                    throw new ArgumentException($"Resource '{resourceName}' not found");
-                }
+            using var stream = assembly.GetManifestResourceStream(resourceName) ?? throw new ArgumentException($"Resource '{resourceName}' not found");
 
-                return WithShaderFromStream(ShaderType.VertexShader, stream);
-            }
+            return WithShaderFromStream(ShaderType.VertexShader, stream);
         }
 
         /// <summary>
@@ -558,15 +493,9 @@ namespace MyOTKE.Core
         public GlProgramWithDUBBuilder<TDefaultUniformBlock, T1> WithFragmentShaderFromEmbeddedResource(string resourceName)
         {
             var assembly = Assembly.GetCallingAssembly();
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                if (stream == null)
-                {
-                    throw new ArgumentException($"Resource '{resourceName}' not found");
-                }
+            using var stream = assembly.GetManifestResourceStream(resourceName) ?? throw new ArgumentException($"Resource '{resourceName}' not found");
 
-                return WithShaderFromStream(ShaderType.FragmentShader, stream);
-            }
+            return WithShaderFromStream(ShaderType.FragmentShader, stream);
         }
 
         /// <summary>
@@ -582,13 +511,10 @@ namespace MyOTKE.Core
 
         private GlProgramWithDUBBuilder<TDefaultUniformBlock, T1> WithShaderFromStream(ShaderType shaderType, Stream sourceStream)
         {
-            using (var reader = new StreamReader(sourceStream))
-            {
-                shaderSpecs.Add((shaderType, reader.ReadToEnd()));
-            }
+            using var reader = new StreamReader(sourceStream);
+            shaderSpecs.Add((shaderType, reader.ReadToEnd()));
 
             return this;
         }
     }
 }
-#pragma warning restore SA1402

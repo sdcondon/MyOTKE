@@ -14,37 +14,34 @@ namespace MyOTKE.ReactiveBuffers
         {
             get
             {
-                object[] MakeTestCase(Action<ObservableCollection<In>> action, ICollection<string> expectedObservations) =>
-                    new object[] { action, expectedObservations };
+                static object[] MakeTestCase(Action<ObservableCollection<In>> action, ICollection<string> expectedObservations) => [action, expectedObservations];
 
-#pragma warning disable SA1107
-                return new List<object[]>()
-                {
+                return
+                [
                     MakeTestCase( // addition
                         a => { a.Add(new In(1)); a.Add(new In(2)); },
-                        new[] { "new:1", "val:1:1", "new:2", "val:2:2" }),
+                        ["new:1", "val:1:1", "new:2", "val:2:2"]),
 
                     MakeTestCase( // update
                         a => { var i = new In(1); a.Add(i); i.Value = 2; },
-                        new[] { "new:1", "val:1:1", "val:1:2" }),
+                        ["new:1", "val:1:1", "val:1:2"]),
 
                     MakeTestCase( // removal at start
                         a => { a.Add(new In(1)); a.Add(new In(2)); a.RemoveAt(0); },
-                        new[] { "new:1", "val:1:1", "new:2", "val:2:2", "del:1" }),
+                        ["new:1", "val:1:1", "new:2", "val:2:2", "del:1"]),
 
                     MakeTestCase( // removal at end
                         a => { a.Add(new In(1)); a.Add(new In(2)); a.RemoveAt(1); },
-                        new[] { "new:1", "val:1:1", "new:2", "val:2:2", "del:2" }),
+                        ["new:1", "val:1:1", "new:2", "val:2:2", "del:2"]),
 
                     MakeTestCase( // replacement
                         a => { a.Add(new In(1)); a.Add(new In(2)); a[0] = new In(3); },
-                        new[] { "new:1", "val:1:1", "new:2", "val:2:2", "del:1", "new:3", "val:3:3" }),
+                        ["new:1", "val:1:1", "new:2", "val:2:2", "del:1", "new:3", "val:3:3"]),
 
                     MakeTestCase( // clear
                         a => { a.Add(new In(1)); a.Add(new In(2)); a.Clear(); a.Add(new In(3)); },
-                        new[] { "new:1", "val:1:1", "new:2", "val:2:2", "del:1", "del:2", "new:3", "val:3:3" }),
-                };
-#pragma warning restore SA1107
+                        ["new:1", "val:1:1", "new:2", "val:2:2", "del:1", "del:2", "new:3", "val:3:3"]),
+                ];
             }
         }
 

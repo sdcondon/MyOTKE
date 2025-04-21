@@ -5,27 +5,16 @@ namespace MyOTKE.Engine.Components.Gui
     /// <summary>
     /// Container for positioning data for an element (relative to its parent).
     /// </summary>
-    public class Layout
+    /// <param name="parentOrigin">the position in parent-space of the local origin.</param>
+    /// <param name="localOrigin">the position relative to the center of the element that will be placed at the parent origin.</param>
+    /// <param name="relativeSize">the size of the element in relation to its parent.</param>
+    /// <param name="offset">The offset to apply when placing the local origin at the parent origin.</param>
+    public class Layout(Layout.Dimensions parentOrigin, Layout.Dimensions localOrigin, Layout.Dimensions relativeSize, Vector2 offset)
     {
-        private readonly Dimensions parentOrigin;
-        private readonly Dimensions localOrigin;
-        private readonly Dimensions relativeSize;
-        private readonly Vector2 offset;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Layout"/> class.
-        /// </summary>
-        /// <param name="parentOrigin">the position in parent-space of the local origin.</param>
-        /// <param name="localOrigin">the position relative to the center of the element that will be placed at the parent origin.</param>
-        /// <param name="relativeSize">the size of the element in relation to its parent.</param>
-        /// <param name="offset">The offset to apply when placing the local origin at the parent origin.</param>
-        public Layout(Dimensions parentOrigin, Dimensions localOrigin, Dimensions relativeSize, Vector2 offset)
-        {
-            this.parentOrigin = parentOrigin;
-            this.localOrigin = localOrigin;
-            this.relativeSize = relativeSize;
-            this.offset = offset;
-        }
+        private readonly Dimensions parentOrigin = parentOrigin;
+        private readonly Dimensions localOrigin = localOrigin;
+        private readonly Dimensions relativeSize = relativeSize;
+        private readonly Vector2 offset = offset;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Layout"/> class.
@@ -106,21 +95,21 @@ namespace MyOTKE.Engine.Components.Gui
                 IsYRelative = true;
             }
 
-            public float X => value.X;
+            public readonly float X => value.X;
 
-            public float Y => value.Y;
+            public readonly float Y => value.Y;
 
             public bool IsXRelative { get; }
 
             public bool IsYRelative { get; }
 
-            public static implicit operator Dimensions((int absoluteX, int absoluteY) tuple) => new Dimensions(tuple.absoluteX, tuple.absoluteY);
+            public static implicit operator Dimensions((int absoluteX, int absoluteY) tuple) => new(tuple.absoluteX, tuple.absoluteY);
 
-            public static implicit operator Dimensions((int absoluteX, float relativeY) tuple) => new Dimensions(tuple.absoluteX, tuple.relativeY);
+            public static implicit operator Dimensions((int absoluteX, float relativeY) tuple) => new(tuple.absoluteX, tuple.relativeY);
 
-            public static implicit operator Dimensions((float relativeX, int absoluteY) tuple) => new Dimensions(tuple.relativeX, tuple.absoluteY);
+            public static implicit operator Dimensions((float relativeX, int absoluteY) tuple) => new(tuple.relativeX, tuple.absoluteY);
 
-            public static implicit operator Dimensions((float relativeX, float relativeY) tuple) => new Dimensions(tuple.relativeX, tuple.relativeY);
+            public static implicit operator Dimensions((float relativeX, float relativeY) tuple) => new(tuple.relativeX, tuple.relativeY);
         }
     }
 }

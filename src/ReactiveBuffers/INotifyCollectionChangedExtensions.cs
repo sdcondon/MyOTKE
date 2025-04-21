@@ -65,7 +65,7 @@ namespace MyOTKE.ReactiveBuffers
 
                         case NotifyCollectionChangedAction.Remove:
                             RemoveItems(e.EventArgs);
-                            return new IObservable<T>[0];
+                            return [];
 
                         case NotifyCollectionChangedAction.Replace:
                             RemoveItems(e.EventArgs);
@@ -74,10 +74,10 @@ namespace MyOTKE.ReactiveBuffers
                         case NotifyCollectionChangedAction.Reset:
                             removalCallbacks.ForEach(c => c());
                             removalCallbacks.Clear();
-                            return new IObservable<T>[0];
+                            return [];
 
                         default:
-                            return new IObservable<T>[0];
+                            return [];
                     }
                 });
         }

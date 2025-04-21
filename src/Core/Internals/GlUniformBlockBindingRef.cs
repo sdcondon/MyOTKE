@@ -43,8 +43,8 @@ namespace MyOTKE.Core
         /// </remarks>
         private class GlUniformBlockBinding
         {
-            private static readonly Dictionary<string, GlUniformBlockBinding> BindingsByBlockName = new Dictionary<string, GlUniformBlockBinding>();
-            private static readonly Dictionary<int, GlUniformBlockBinding> BindingsByBindingPoint = new Dictionary<int, GlUniformBlockBinding>();
+            private static readonly Dictionary<string, GlUniformBlockBinding> BindingsByBlockName = [];
+            private static readonly Dictionary<int, GlUniformBlockBinding> BindingsByBindingPoint = [];
 
             private bool isDeleted = false;
             private int refCount = 0;
@@ -135,11 +135,7 @@ namespace MyOTKE.Core
                 // Might be fun to try to do this locklessly at some point..
                 lock (this)
                 {
-                    if (isDeleted)
-                    {
-                        throw new ObjectDisposedException(GetType().FullName);
-                    }
-
+                    ObjectDisposedException.ThrowIf(isDeleted, this);
                     refCount++;
                 }
             }

@@ -1,4 +1,5 @@
 ﻿using MyOTKE.Core;
+using MyOTKE.Engine.Utility;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
@@ -16,7 +17,7 @@ namespace MyOTKE.Engine
     public sealed class MyOTKEWindow : GameWindow
     {
         private readonly Color clearColor;
-        private readonly Stopwatch modelUpdateIntervalStopwatch = new Stopwatch();
+        private readonly Stopwatch modelUpdateIntervalStopwatch = new();
 
         private IComponent rootComponent;
         private bool lockCursor;
@@ -60,7 +61,7 @@ namespace MyOTKE.Engine
         /// <summary>
         /// Gets the position of the center of a view, given its size.
         /// </summary>
-        public System.Numerics.Vector2 Center => new System.Numerics.Vector2(ClientSize.X / 2, ClientSize.Y / 2);
+        public System.Numerics.Vector2 Center => new(ClientSize.X / 2, ClientSize.Y / 2);
 
         /// <summary>
         /// Gets the offset to the current mouse position from the center of the view.

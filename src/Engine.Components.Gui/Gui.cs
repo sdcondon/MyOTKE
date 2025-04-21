@@ -1,4 +1,5 @@
 ﻿using MyOTKE.Core;
+using MyOTKE.Engine.Components.Gui.Elements;
 using MyOTKE.ReactiveBuffers;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
@@ -14,7 +15,7 @@ namespace MyOTKE.Engine.Components.Gui
     /// </summary>
     public class Gui : IComponent, IElementParent
     {
-        private static readonly object ProgramStateLock = new object();
+        private static readonly object ProgramStateLock = new();
         private static GlProgramWithDUBBuilder<Uniforms> programBuilder;
         private static GlProgramWithDUB<Uniforms> program;
 
@@ -53,7 +54,7 @@ namespace MyOTKE.Engine.Components.Gui
             this.vertexBufferBuilder = new ReactiveBufferBuilder<Vertex>(
                 PrimitiveType.Triangles,
                 initialCapacity,
-                new[] { 0, 2, 3, 0, 3, 1 },
+                [0, 2, 3, 0, 3, 1],
                 this.SubElements.Flatten());
         }
 
@@ -70,12 +71,12 @@ namespace MyOTKE.Engine.Components.Gui
         public Vector2 Center => Vector2.Zero;
 
         /// <inheritdoc /> from IElementParent
-        public Vector2 Size => new Vector2(view.ClientSize.X, view.ClientSize.Y);
+        public Vector2 Size => new(view.ClientSize.X, view.ClientSize.Y);
 
         /// <inheritdoc /> from IComponent
         public void Load()
         {
-            ThrowIfDisposed();
+            ObjectDisposedException.ThrowIf(isDisposed, this);
 
             if (program == null)
             {
@@ -96,7 +97,7 @@ namespace MyOTKE.Engine.Components.Gui
         /// <inheritdoc />
         public void Update(TimeSpan elapsed)
         {
-            ThrowIfDisposed();
+            ObjectDisposedException.ThrowIf(isDisposed, this);
 
             if (view.IsMouseButtonReleased(MouseButton.Left))
             {
@@ -107,7 +108,7 @@ namespace MyOTKE.Engine.Components.Gui
         /// <inheritdoc /> from IComponent
         public void Render()
         {
-            ThrowIfDisposed();
+            ObjectDisposedException.ThrowIf(isDisposed, this);
 
             // Assume the GUI is drawn last and is independent - goes on top of everything drawn already - so clear the depth buffer
             GL.Clear(ClearBufferMask.DepthBufferBit);
@@ -127,15 +128,8 @@ namespace MyOTKE.Engine.Components.Gui
         {
             this.view.Resize -= View_Resized;
             this.vertexBuffer?.Dispose();
+            GC.SuppressFinalize(this);
             this.isDisposed = true;
-        }
-
-        private void ThrowIfDisposed()
-        {
-            if (isDisposed)
-            {
-                throw new ObjectDisposedException(GetType().FullName);
-            }
         }
 
         private void View_Resized(ResizeEventArgs e)

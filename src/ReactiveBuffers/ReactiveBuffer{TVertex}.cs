@@ -20,7 +20,7 @@ namespace MyOTKE.ReactiveBuffers
         private readonly int verticesPerAtom;
         private readonly IList<int> indices;
         private readonly IVertexArrayObject<TVertex> vao;
-        private readonly List<ItemObserver> linksByBufferIndex = new List<ItemObserver>();
+        private readonly List<ItemObserver> linksByBufferIndex = [];
 
         private readonly int atomCapacity;
 
@@ -70,7 +70,7 @@ namespace MyOTKE.ReactiveBuffers
         private class ItemObserver : IObserver<IList<TVertex>>
         {
             private readonly ReactiveBuffer<TVertex> parent;
-            private readonly SortedList<int, int> bufferIndices = new SortedList<int, int>();
+            private readonly SortedList<int, int> bufferIndices = [];
 
             public ItemObserver(ReactiveBuffer<TVertex> parent)
             {

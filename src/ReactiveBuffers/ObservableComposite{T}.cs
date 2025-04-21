@@ -32,10 +32,10 @@ namespace MyOTKE.ReactiveBuffers
 
             Values = values.TakeUntil(removed);
 
-            currentChildren = new HashSet<ObservableComposite<T>>();
+            currentChildren = [];
             children = new Subject<ObservableComposite<T>>();
             Children = Observable.Defer(() => children
-                .StartWith(currentChildren.ToArray())
+                .StartWith([..currentChildren])
                 .TakeUntil(removed));
         }
 

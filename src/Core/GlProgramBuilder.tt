@@ -57,7 +57,7 @@ namespace MyOTKE.Core
 <# WriteLines(i, i => $"where T{i} : struct", 2); #>
     {
 <# WriteLines(i, i => $"private readonly (string BlockName, BufferUsageHint Usage, int Capacity, T{i}[] Data) uboSpec{i};", 2); #>
-        private readonly List<(ShaderType Type, string Source)> shaderSpecs = new List<(ShaderType, string)>();
+        private readonly List<(ShaderType Type, string Source)> shaderSpecs = [];
 <# if (hasDub || i > 0) { #>
 
         /// <summary>
@@ -101,10 +101,8 @@ namespace MyOTKE.Core
         /// <returns>The updated builder.</returns>
         public <#= ClassName(hasDub, i) #> WithVertexShaderFromFile(string filePath)
         {
-            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            {
-                return WithShaderFromStream(ShaderType.VertexShader, stream);
-            }
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return WithShaderFromStream(ShaderType.VertexShader, stream);
         }
 
         /// <summary>
@@ -114,10 +112,8 @@ namespace MyOTKE.Core
         /// <returns>The updated builder.</returns>
         public <#= ClassName(hasDub, i) #> WithFragmentShaderFromFile(string filePath)
         {
-            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            {
-                return WithShaderFromStream(ShaderType.FragmentShader, stream);
-            }
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return WithShaderFromStream(ShaderType.FragmentShader, stream);
         }
 
         /// <summary>
@@ -128,15 +124,9 @@ namespace MyOTKE.Core
         public <#= ClassName(hasDub, i) #> WithVertexShaderFromEmbeddedResource(string resourceName)
         {
             var assembly = Assembly.GetCallingAssembly();
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                if (stream == null)
-                {
-                    throw new ArgumentException($"Resource '{resourceName}' not found");
-                }
+            using var stream = assembly.GetManifestResourceStream(resourceName) ?? throw new ArgumentException($"Resource '{resourceName}' not found");
 
-                return WithShaderFromStream(ShaderType.VertexShader, stream);
-            }
+            return WithShaderFromStream(ShaderType.VertexShader, stream);
         }
 
         /// <summary>
@@ -147,15 +137,9 @@ namespace MyOTKE.Core
         public <#= ClassName(hasDub, i) #> WithFragmentShaderFromEmbeddedResource(string resourceName)
         {
             var assembly = Assembly.GetCallingAssembly();
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                if (stream == null)
-                {
-                    throw new ArgumentException($"Resource '{resourceName}' not found");
-                }
+            using var stream = assembly.GetManifestResourceStream(resourceName) ?? throw new ArgumentException($"Resource '{resourceName}' not found");
 
-                return WithShaderFromStream(ShaderType.FragmentShader, stream);
-            }
+            return WithShaderFromStream(ShaderType.FragmentShader, stream);
         }
 <# if (!hasDub) { #>
 
@@ -222,10 +206,8 @@ namespace MyOTKE.Core
 
         private <#= ClassName(hasDub, i) #> WithShaderFromStream(ShaderType shaderType, Stream sourceStream)
         {
-            using (var reader = new StreamReader(sourceStream))
-            {
-                shaderSpecs.Add((shaderType, reader.ReadToEnd()));
-            }
+            using var reader = new StreamReader(sourceStream);
+            shaderSpecs.Add((shaderType, reader.ReadToEnd()));
 
             return this;
         }

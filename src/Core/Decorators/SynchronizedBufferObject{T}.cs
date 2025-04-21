@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 
-namespace MyOTKE.Core.VaoDecorators
+namespace MyOTKE.Core.Decorators
 {
     /// <summary>
     /// Decorator for <see cref="IBufferObject{T}"/> that explicitly synchronizes with OpenGL (making it simple but slow..).
@@ -9,20 +9,12 @@ namespace MyOTKE.Core.VaoDecorators
     /// See https://www.khronos.org/opengl/wiki/Synchronization#Implicit_synchronization for some info.
     /// </summary>
     /// <typeparam name="T">The .NET type of data to be stored in the buffer.</typeparam>
-    public class SynchronizedBufferObject<T> : IBufferObject<T>
+    /// <param name="bufferObject">The <see cref="IBufferObject{T}"/> to wrap.</param>
+    public class SynchronizedBufferObject<T>(IVertexBufferObject<T> bufferObject) : IBufferObject<T>
         where T : struct
     {
-        private readonly IBufferObject<T> bufferObject;
-        private readonly ConcurrentQueue<Action> actions = new ConcurrentQueue<Action>();
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SynchronizedBufferObject{T}" /> class.
-        /// </summary>
-        /// <param name="bufferObject">The <see cref="IBufferObject{T}"/> to wrap.</param>
-        public SynchronizedBufferObject(IVertexBufferObject<T> bufferObject)
-        {
-            this.bufferObject = bufferObject;
-        }
+        private readonly IBufferObject<T> bufferObject = bufferObject;
+        private readonly ConcurrentQueue<Action> actions = new();
 
         /// <inheritdoc />
         public int Id => bufferObject.Id;

@@ -8,7 +8,7 @@ namespace MyOTKE.Engine
     /// </summary>
     public abstract class CompositeComponent : IComponent, IDisposable
     {
-        private readonly List<IComponent> components = new List<IComponent>();
+        private readonly List<IComponent> components = [];
 
         private bool contextCreated;
 
@@ -62,6 +62,8 @@ namespace MyOTKE.Engine
             {
                 components[i].Dispose();
             }
+
+            GC.SuppressFinalize(this);
         }
     }
 }

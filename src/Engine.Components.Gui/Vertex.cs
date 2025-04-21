@@ -5,7 +5,7 @@ namespace MyOTKE.Engine.Components.Gui
     /// <summary>
     /// Container for information about a GUI element vertex.
     /// </summary>
-    public struct Vertex
+    public readonly struct Vertex
     {
         /// <summary>
         /// The position of the vertex.
