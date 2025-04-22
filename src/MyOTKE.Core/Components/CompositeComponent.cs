@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MyOTKE.Engine;
+namespace MyOTKE.Components;
 
 /// <summary>
 /// Base class for <see cref="IComponent"/> implementations that are composed of sub-components.

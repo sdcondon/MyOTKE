@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MyOTKE.Engine;
+namespace MyOTKE;
 
 /// <summary>
 /// A discrete renderable part of a <see cref="MyOTKEWindow"/>. Typically will encapsulate everything

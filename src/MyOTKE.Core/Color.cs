@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace MyOTKE.Engine.Utility;
+namespace MyOTKE;
 
 /// <summary>
 /// Structure that represents a color. Can be implicitly converted to a RGB <see cref="Vector3"/> or RGBA <see cref="Vector4"/>.

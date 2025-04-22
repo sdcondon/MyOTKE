@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace MyOTKE.Engine.Utility;
+namespace MyOTKE.Engine.Utility.Cameras;
 
 /// <summary>
 /// A source of view and projection matrices. Used by some <see cref="IComponent"/> implementations.

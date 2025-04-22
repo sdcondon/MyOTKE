@@ -1,12 +1,11 @@
 ﻿using MyOTKE.Core;
-using MyOTKE.Engine.Utility;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using System;
 using System.Diagnostics;
 
-namespace MyOTKE.Engine;
+namespace MyOTKE;
 
 /// <summary>
 /// Encapsulates an interactive view rendered with OpenGl.

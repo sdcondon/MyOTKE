@@ -14,8 +14,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE", "MyOTKE.Core\MyOTK
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.Tests", "MyOTKE.Core.Tests\MyOTKE.Tests.csproj", "{84FE1865-9CB8-49C1-9626-CFAE68EA7BCF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.Engine", "MyOTKE.Engine\MyOTKE.Engine.csproj", "{A2286415-CD5D-4DE1-8B2E-73B94434F1CD}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.Engine.Components.Reactive", "MyOTKE.Engine.Components.ReactivePrimitives\MyOTKE.Engine.Components.Reactive.csproj", "{B87E758F-EC42-4E06-9A7F-78F0B2CB4ACA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.Engine.Components.Reactive.Tests", "MyOTKE.ReactiveBuffers.Tests\MyOTKE.Engine.Components.Reactive.Tests.csproj", "{3D0EB427-93E7-4915-A9E5-AF4243F4A447}"
@@ -36,10 +34,6 @@ Global
 		{84FE1865-9CB8-49C1-9626-CFAE68EA7BCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84FE1865-9CB8-49C1-9626-CFAE68EA7BCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84FE1865-9CB8-49C1-9626-CFAE68EA7BCF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A2286415-CD5D-4DE1-8B2E-73B94434F1CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A2286415-CD5D-4DE1-8B2E-73B94434F1CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A2286415-CD5D-4DE1-8B2E-73B94434F1CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A2286415-CD5D-4DE1-8B2E-73B94434F1CD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B87E758F-EC42-4E06-9A7F-78F0B2CB4ACA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B87E758F-EC42-4E06-9A7F-78F0B2CB4ACA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B87E758F-EC42-4E06-9A7F-78F0B2CB4ACA}.Release|Any CPU.ActiveCfg = Release|Any CPU

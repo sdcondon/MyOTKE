@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MyOTKE.Engine.Components.ReactivePrimitives\MyOTKE.Engine.Components.Reactive.csproj" />
-    <ProjectReference Include="..\MyOTKE.Engine\MyOTKE.Engine.csproj" />
   </ItemGroup>
   
 </Project>
