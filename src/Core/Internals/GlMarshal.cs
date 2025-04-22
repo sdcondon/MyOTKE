@@ -83,7 +83,7 @@ internal static class GlMarshal
         var publicFields = typeof(T).GetFields();
         GlDebug.WriteLine($"{typeof(T).FullName} public fields that will be mapped to uniforms by name: {string.Join(", ", publicFields.Select(f => f.Name))}");
 
-        var uniformNames = publicFields.Select(fi => $"{blockName}.{fi.Name}").ToArray();
+        var uniformNames = publicFields.Select(fi => $"{fi.Name}").ToArray();
         var uniformIndices = new int[uniformNames.Length];
         GL.GetUniformIndices(programId, uniformNames.Length, uniformNames, uniformIndices);
         GlDebug.ThrowIfGlError("getting uniform indices");

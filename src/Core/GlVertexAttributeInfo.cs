@@ -89,7 +89,7 @@ public readonly struct GlVertexAttributeInfo
         }
         else if (!t.IsValueType || t.IsAutoLayout)
         {
-            throw new ArgumentException($"Unsupported type {t} - passed type must be blittable", nameof(t));
+            throw new ArgumentException($"Unsupported type {t} - passed type must be blittable", t.FullName);
         }
         else
         {
