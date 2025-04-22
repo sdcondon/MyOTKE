@@ -24,8 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj" />
-    <ProjectReference Include="..\ReactiveBuffers\ReactiveBuffers.csproj" />
+    <ProjectReference Include="..\Core\MyOTKE.Core.csproj" />
+    <ProjectReference Include="..\ReactiveBuffers\MyOTKE.ReactiveBuffers.csproj" />
   </ItemGroup>
 
 </Project>

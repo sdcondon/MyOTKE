@@ -1,32 +1,32 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30011.22
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{14D6E92A-2CA8-4DB0-A1B2-538753183369}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Tests", "Core.Tests\Core.Tests.csproj", "{84FE1865-9CB8-49C1-9626-CFAE68EA7BCF}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Engine", "Engine\Engine.csproj", "{A2286415-CD5D-4DE1-8B2E-73B94434F1CD}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Engine.Components.BasicExamples", "Engine.Components.BasicExamples\Engine.Components.BasicExamples.csproj", "{C1710E1D-65AC-48E4-A6C9-40832721C736}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Engine.Components.Gui", "Engine.Components.Gui\Engine.Components.Gui.csproj", "{A58A14DB-0A5E-459A-8970-F89D212DA025}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Engine.Components.ReactivePrimitives", "Engine.Components.ReactivePrimitives\Engine.Components.ReactivePrimitives.csproj", "{B87E758F-EC42-4E06-9A7F-78F0B2CB4ACA}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleApp", "ExampleApp\ExampleApp.csproj", "{8D0D323E-9803-4D85-B4BC-01317B74DB1A}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveBuffers", "ReactiveBuffers\ReactiveBuffers.csproj", "{158CC0BA-1BDA-4650-BD6F-279BBA540C94}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveBuffers.Tests", "ReactiveBuffers.Tests\ReactiveBuffers.Tests.csproj", "{3D0EB427-93E7-4915-A9E5-AF4243F4A447}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CA7E2348-93C1-48D9-ABD6-A5F79F267500}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.Core", "MyOTKE.Core\MyOTKE.Core.csproj", "{14D6E92A-2CA8-4DB0-A1B2-538753183369}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.Core.Tests", "MyOTKE.Core.Tests\MyOTKE.Core.Tests.csproj", "{84FE1865-9CB8-49C1-9626-CFAE68EA7BCF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.Engine", "MyOTKE.Engine\MyOTKE.Engine.csproj", "{A2286415-CD5D-4DE1-8B2E-73B94434F1CD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.Engine.Components.BasicExamples", "MyOTKE.Engine.Components.BasicExamples\MyOTKE.Engine.Components.BasicExamples.csproj", "{C1710E1D-65AC-48E4-A6C9-40832721C736}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.Engine.Components.Gui", "MyOTKE.Engine.Components.Gui\MyOTKE.Engine.Components.Gui.csproj", "{A58A14DB-0A5E-459A-8970-F89D212DA025}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.Engine.Components.ReactivePrimitives", "MyOTKE.Engine.Components.ReactivePrimitives\MyOTKE.Engine.Components.ReactivePrimitives.csproj", "{B87E758F-EC42-4E06-9A7F-78F0B2CB4ACA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.ReactiveBuffers", "MyOTKE.ReactiveBuffers\MyOTKE.ReactiveBuffers.csproj", "{158CC0BA-1BDA-4650-BD6F-279BBA540C94}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.ReactiveBuffers.Tests", "MyOTKE.ReactiveBuffers.Tests\MyOTKE.ReactiveBuffers.Tests.csproj", "{3D0EB427-93E7-4915-A9E5-AF4243F4A447}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.ExampleApp", "MyOTKE.ExampleApp\MyOTKE.ExampleApp.csproj", "{8D0D323E-9803-4D85-B4BC-01317B74DB1A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,10 +58,6 @@ Global
 		{B87E758F-EC42-4E06-9A7F-78F0B2CB4ACA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B87E758F-EC42-4E06-9A7F-78F0B2CB4ACA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B87E758F-EC42-4E06-9A7F-78F0B2CB4ACA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8D0D323E-9803-4D85-B4BC-01317B74DB1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8D0D323E-9803-4D85-B4BC-01317B74DB1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8D0D323E-9803-4D85-B4BC-01317B74DB1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8D0D323E-9803-4D85-B4BC-01317B74DB1A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{158CC0BA-1BDA-4650-BD6F-279BBA540C94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{158CC0BA-1BDA-4650-BD6F-279BBA540C94}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{158CC0BA-1BDA-4650-BD6F-279BBA540C94}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -70,6 +66,10 @@ Global
 		{3D0EB427-93E7-4915-A9E5-AF4243F4A447}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D0EB427-93E7-4915-A9E5-AF4243F4A447}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D0EB427-93E7-4915-A9E5-AF4243F4A447}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D0D323E-9803-4D85-B4BC-01317B74DB1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D0D323E-9803-4D85-B4BC-01317B74DB1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D0D323E-9803-4D85-B4BC-01317B74DB1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D0D323E-9803-4D85-B4BC-01317B74DB1A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
