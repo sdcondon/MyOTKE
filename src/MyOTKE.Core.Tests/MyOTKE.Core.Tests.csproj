@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core\MyOTKE.Core.csproj" />
+    <ProjectReference Include="..\MyOTKE.Core\MyOTKE.Core.csproj" />
   </ItemGroup>
 
 </Project>

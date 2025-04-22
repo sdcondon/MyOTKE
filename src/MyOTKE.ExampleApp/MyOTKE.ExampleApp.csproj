@@ -26,10 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Engine.Components.BasicExamples\MyOTKE.Engine.Components.BasicExamples.csproj" />
-    <ProjectReference Include="..\Engine.Components.Gui\MyOTKE.Engine.Components.Gui.csproj" />
-    <ProjectReference Include="..\Engine.Components.ReactivePrimitives\MyOTKE.Engine.Components.ReactivePrimitives.csproj" />
-    <ProjectReference Include="..\Engine\MyOTKE.Engine.csproj" />
+    <ProjectReference Include="..\MyOTKE.Engine.Components.BasicExamples\MyOTKE.Engine.Components.BasicExamples.csproj" />
+    <ProjectReference Include="..\MyOTKE.Engine.Components.Gui\MyOTKE.Engine.Components.Gui.csproj" />
+    <ProjectReference Include="..\MyOTKE.Engine.Components.ReactivePrimitives\MyOTKE.Engine.Components.ReactivePrimitives.csproj" />
+    <ProjectReference Include="..\MyOTKE.Engine\MyOTKE.Engine.csproj" />
   </ItemGroup>
   
 </Project>
