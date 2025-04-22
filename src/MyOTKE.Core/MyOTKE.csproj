@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <AssemblyName>MyOTKE.Core</AssemblyName>
-    <RootNamespace>MyOTKE.Core</RootNamespace>
+    <AssemblyName>MyOTKE</AssemblyName>
+    <RootNamespace>MyOTKE</RootNamespace>
 	<DocumentationFile>MyOTKE.Core.xml</DocumentationFile>
   </PropertyGroup>
   
@@ -17,14 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Decorators\SynchronizedVertexArrayObjectBuilder.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SynchronizedVertexArrayObjectBuilder.tt</DependentUpon>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="OpenTK" Version="4.9.4" />
   </ItemGroup>
 
@@ -33,47 +25,47 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="GlProgram.cs">
+    <Compile Update="Core\GlProgram.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>GlProgram.tt</DependentUpon>
     </Compile>
-    <Compile Update="GlProgramBuilder.cs">
+    <Compile Update="Core\GlProgramBuilder.cs">
 	  <DesignTime>True</DesignTime>
 	  <AutoGen>True</AutoGen>
 	  <DependentUpon>GlProgramBuilder.tt</DependentUpon>
     </Compile>
-    <Compile Update="GlVertexArrayObject.cs">
+    <Compile Update="Core\GlVertexArrayObject.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>GlVertexArrayObject.tt</DependentUpon>
     </Compile>
-    <Compile Update="IVertexArrayObject.cs">
+    <Compile Update="Core\IVertexArrayObject.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>IVertexArrayObject.tt</DependentUpon>
     </Compile>
-    <Compile Update="IVertexArrayObjectExtensions.cs">
+    <Compile Update="Core\IVertexArrayObjectExtensions.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>IVertexArrayObjectExtensions.tt</DependentUpon>
     </Compile>
-    <Compile Update="MemoryVertexArrayObject.cs">
+    <Compile Update="Core\MemoryVertexArrayObject.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>MemoryVertexArrayObject.tt</DependentUpon>
     </Compile>
-    <Compile Update="Decorators\SynchronizedVertexArrayObject.cs">
+    <Compile Update="Core\Decorators\SynchronizedVertexArrayObject.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>SynchronizedVertexArrayObject.tt</DependentUpon>
     </Compile>
-    <Compile Update="Decorators\SynchronizedVertexArrayObjectBuilder.cs">
+    <Compile Update="Core\Decorators\SynchronizedVertexArrayObjectBuilder.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>SynchronizedVertexArrayObjectBuilder.tt</DependentUpon>
     </Compile>
-	<Compile Update="VertexArrayObjectBuilder.cs">
+	<Compile Update="Core\VertexArrayObjectBuilder.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>VertexArrayObjectBuilder.tt</DependentUpon>
@@ -81,39 +73,39 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="GlProgram.tt">
+    <None Update="Core\GlProgram.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>GlProgram.cs</LastGenOutput>
     </None>
-    <None Update="GlProgramBuilder.tt">
+    <None Update="Core\GlProgramBuilder.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>GlProgramBuilder.cs</LastGenOutput>
     </None>
-    <None Update="GlVertexArrayObject.tt">
+    <None Update="Core\GlVertexArrayObject.tt">
       <LastGenOutput>GlVertexArrayObject.cs</LastGenOutput>
       <Generator>TextTemplatingFileGenerator</Generator>
     </None>
-    <None Update="IVertexArrayObject.tt">
+    <None Update="Core\IVertexArrayObject.tt">
       <LastGenOutput>IVertexArrayObject.cs</LastGenOutput>
       <Generator>TextTemplatingFileGenerator</Generator>
     </None>
-    <None Update="IVertexArrayObjectExtensions.tt">
+    <None Update="Core\IVertexArrayObjectExtensions.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>IVertexArrayObjectExtensions.cs</LastGenOutput>
     </None>
-    <None Update="MemoryVertexArrayObject.tt">
+    <None Update="Core\MemoryVertexArrayObject.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>MemoryVertexArrayObject.cs</LastGenOutput>
     </None>
-    <None Update="Decorators\SynchronizedVertexArrayObject.tt">
+    <None Update="Core\Decorators\SynchronizedVertexArrayObject.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>SynchronizedVertexArrayObject.cs</LastGenOutput>
     </None>
-    <None Update="Decorators\SynchronizedVertexArrayObjectBuilder.tt">
+    <None Update="Core\Decorators\SynchronizedVertexArrayObjectBuilder.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>SynchronizedVertexArrayObjectBuilder.cs</LastGenOutput>
     </None>
-    <None Update="VertexArrayObjectBuilder.tt">
+    <None Update="Core\VertexArrayObjectBuilder.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VertexArrayObjectBuilder.cs</LastGenOutput>
     </None>

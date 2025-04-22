@@ -10,9 +10,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.targets = Directory.Build.targets
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.Core", "MyOTKE.Core\MyOTKE.Core.csproj", "{14D6E92A-2CA8-4DB0-A1B2-538753183369}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE", "MyOTKE.Core\MyOTKE.csproj", "{14D6E92A-2CA8-4DB0-A1B2-538753183369}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.Core.Tests", "MyOTKE.Core.Tests\MyOTKE.Core.Tests.csproj", "{84FE1865-9CB8-49C1-9626-CFAE68EA7BCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.Tests", "MyOTKE.Core.Tests\MyOTKE.Tests.csproj", "{84FE1865-9CB8-49C1-9626-CFAE68EA7BCF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.Engine", "MyOTKE.Engine\MyOTKE.Engine.csproj", "{A2286415-CD5D-4DE1-8B2E-73B94434F1CD}"
 EndProject
