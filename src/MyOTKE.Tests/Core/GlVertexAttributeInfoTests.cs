@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace MyOTKE.Core;
+namespace MyOTKE.Core.Core;
 
 public class GlVertexAttributeInfoTests
 {

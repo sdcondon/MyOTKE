@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MyOTKE.Engine.Components.Gui.Elements;
+namespace MyOTKE.Components.Reactive.Gui.Elements;
 
 /// <summary>
 /// A GUI element consisting of some text.

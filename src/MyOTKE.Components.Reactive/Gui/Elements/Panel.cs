@@ -1,7 +1,7 @@
 ﻿using OpenTK.Mathematics;
 using System.Collections.Generic;
 
-namespace MyOTKE.Engine.Components.Gui.Elements;
+namespace MyOTKE.Components.Reactive.Gui.Elements;
 
 /// <summary>
 /// GUI element that is a colored panel - and can contain other elements.

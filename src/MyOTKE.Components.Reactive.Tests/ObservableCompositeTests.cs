@@ -7,7 +7,7 @@ using System.Reactive.Subjects;
 using System.Text;
 using Xunit;
 
-namespace MyOTKE.ReactiveBuffers;
+namespace MyOTKE.Components.Reactive;
 
 public class ObservableCompositeTests
 {

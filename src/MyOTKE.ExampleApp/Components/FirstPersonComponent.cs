@@ -1,16 +1,15 @@
-﻿using MyOTKE.Components;
-using MyOTKE.Engine.Components.BasicExamples;
-using MyOTKE.Engine.Components.Gui;
-using MyOTKE.Engine.Components.Gui.Elements;
-using MyOTKE.Engine.Components.ReactivePrimitives.Primitives;
-using MyOTKE.Cameras;
+﻿using MyOTKE.Cameras;
+using MyOTKE.Components;
+using MyOTKE.Components.Reactive.BasicExamples;
+using MyOTKE.Components.Reactive.Gui;
+using MyOTKE.Components.Reactive.Gui.Elements;
+using MyOTKE.Components.Reactive.Primitives;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using MyOTKE.Components.Reactive.BasicExamples;
 
 namespace MyOTKE.ExampleApp.Components;
 

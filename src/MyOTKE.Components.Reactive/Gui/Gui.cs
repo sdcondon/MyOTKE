@@ -1,6 +1,5 @@
-﻿using MyOTKE.Core;
-using MyOTKE.Engine.Components.Gui.Elements;
-using MyOTKE.ReactiveBuffers;
+﻿using MyOTKE.Components.Reactive.Gui.Elements;
+using MyOTKE.Core;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -8,7 +7,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 using System.ComponentModel;
 
-namespace MyOTKE.Engine.Components.Gui;
+namespace MyOTKE.Components.Reactive.Gui;
 
 /// <summary>
 /// Component class for a set of graphical user interface elements.

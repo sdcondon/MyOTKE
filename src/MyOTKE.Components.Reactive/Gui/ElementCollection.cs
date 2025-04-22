@@ -1,12 +1,11 @@
-﻿using MyOTKE.ReactiveBuffers;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Linq;
 
-namespace MyOTKE.Engine.Components.Gui;
+namespace MyOTKE.Components.Reactive.Gui;
 
 public class ElementCollection : ICollection<ElementBase>
 {

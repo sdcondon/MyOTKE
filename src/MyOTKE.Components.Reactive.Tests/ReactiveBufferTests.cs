@@ -8,7 +8,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Xunit;
 
-namespace MyOTKE.ReactiveBuffers;
+namespace MyOTKE.Components.Reactive;
 
 public class ReactiveBufferTests
 {

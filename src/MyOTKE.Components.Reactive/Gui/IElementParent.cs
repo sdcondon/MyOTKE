@@ -2,7 +2,7 @@
 using System;
 using System.ComponentModel;
 
-namespace MyOTKE.Engine.Components.Gui;
+namespace MyOTKE.Components.Reactive.Gui;
 
 /// <summary>
 /// Interface for types that contain GUI elements. This includes parent elements and the root GUI object.

@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace MyOTKE.Engine.Components.Gui.Elements;
+namespace MyOTKE.Components.Reactive.Gui.Elements;
 
 /// <summary>
 /// A GUI element that is a stream of text. New messages can be pushed, old messages will eventually disappear.

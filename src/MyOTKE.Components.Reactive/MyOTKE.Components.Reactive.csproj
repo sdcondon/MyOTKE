@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <AssemblyName>MyOTKE.Engine.Components.ReactivePrimitives</AssemblyName>
-    <RootNamespace>MyOTKE.Engine.Components.ReactivePrimitives</RootNamespace>
+    <AssemblyName>MyOTKE.Components.Reactive</AssemblyName>
+    <RootNamespace>MyOTKE.Components.Reactive</RootNamespace>
 	<DocumentationFile>MyOTKE.Engine.Components.ReactivePrimitives.xml</DocumentationFile>
     
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

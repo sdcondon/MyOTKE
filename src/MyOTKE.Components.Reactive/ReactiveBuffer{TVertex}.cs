@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MyOTKE.ReactiveBuffers;
+namespace MyOTKE.Components.Reactive;
 
 /// <summary>
 /// Logic for creating and managing an Open GL buffer for a (observable) set of (observable) items that change over time,

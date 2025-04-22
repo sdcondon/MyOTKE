@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace MyOTKE.Engine.Components.Gui;
+namespace MyOTKE.Components.Reactive.Gui;
 
 /// <summary>
 /// Container for positioning data for an element (relative to its parent).

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace MyOTKE.Engine.Components.BasicExamples;
+namespace MyOTKE.Components.Reactive.BasicExamples;
 
 /// <summary>
 /// Simple component class that draws static 3D geometry.

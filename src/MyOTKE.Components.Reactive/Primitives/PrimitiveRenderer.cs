@@ -1,6 +1,5 @@
 ﻿using MyOTKE.Core;
 using MyOTKE.Cameras;
-using MyOTKE.ReactiveBuffers;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using System;
@@ -8,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 
-namespace MyOTKE.Engine.Components.ReactivePrimitives.Primitives;
+namespace MyOTKE.Components.Reactive.Primitives;
 
 /// <summary>
 /// Implementation of <see cref="IComponent" /> that renders a set of primitive shapes from an observable sequence of source data.

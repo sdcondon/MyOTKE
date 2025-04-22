@@ -1,7 +1,7 @@
 ﻿using OpenTK.Mathematics;
 using System;
 
-namespace MyOTKE.Engine.Components.Gui;
+namespace MyOTKE.Components.Reactive.Gui;
 
 /// <summary>
 /// Base class for GUI elements that can contain other elements.

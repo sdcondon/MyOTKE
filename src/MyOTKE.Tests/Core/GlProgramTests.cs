@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MyOTKE.Core;
+namespace MyOTKE.Core.Core;
 
 public class GlProgramTests
 {

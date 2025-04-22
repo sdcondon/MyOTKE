@@ -4,7 +4,7 @@ using SharpFont;
 using System;
 using System.Collections.Generic;
 
-namespace MyOTKE.Engine.Components.Gui;
+namespace MyOTKE.Components.Reactive.Gui;
 
 /// <summary>
 /// See https://www.freetype.org/freetype2/docs/tutorial/step1.html and

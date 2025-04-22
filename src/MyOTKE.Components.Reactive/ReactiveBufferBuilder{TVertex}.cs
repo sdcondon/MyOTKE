@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MyOTKE.ReactiveBuffers;
+namespace MyOTKE.Components.Reactive;
 
 /// <summary>
 /// Builder for <see cref="ReactiveBuffer{TVertex}"/> instances.

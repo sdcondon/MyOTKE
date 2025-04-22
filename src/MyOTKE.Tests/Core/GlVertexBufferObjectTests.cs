@@ -2,7 +2,7 @@
 using System;
 using Xunit;
 
-namespace MyOTKE.Core;
+namespace MyOTKE.Core.Core;
 
 public class GlVertexBufferObjectTests
 {
