@@ -1,0 +1,58 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>MyOTKE.Engine.Components.ReactivePrimitives</AssemblyName>
+    <RootNamespace>MyOTKE.Engine.Components.ReactivePrimitives</RootNamespace>
+	<DocumentationFile>MyOTKE.Engine.Components.ReactivePrimitives.xml</DocumentationFile>
+    
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>My Open Toolkit Engine - the engine itself: Component for ReactiveX-managed primitives</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<None Remove="$(DocumentationFile)" />
+    <None Remove="Colored.Fragment.glsl" />
+    <None Remove="Colored.Vertex.glsl" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<EmbeddedResource Include="BasicExamples\Colored.Fragment.glsl">
+	  <LogicalName>BasicExamples.Colored.Fragment.glsl</LogicalName>
+	</EmbeddedResource>
+	<EmbeddedResource Include="BasicExamples\Colored.Vertex.glsl">
+	  <LogicalName>BasicExamples.Colored.Vertex.glsl</LogicalName>
+	</EmbeddedResource>
+	<EmbeddedResource Include="BasicExamples\Textured.Fragment.glsl">
+	  <LogicalName>BasicExamples.Textured.Fragment.glsl</LogicalName>
+	</EmbeddedResource>
+	<EmbeddedResource Include="BasicExamples\Textured.Vertex.glsl">
+	  <LogicalName>BasicExamples.Textured.Vertex.glsl</LogicalName>
+	</EmbeddedResource>
+	<EmbeddedResource Include="Gui\Shaders\Gui.Fragment.glsl">
+	  <LogicalName>Gui.Fragment.glsl</LogicalName>
+	</EmbeddedResource>
+	<EmbeddedResource Include="Gui\Shaders\Gui.Vertex.glsl">
+	  <LogicalName>Gui.Vertex.glsl</LogicalName>
+	</EmbeddedResource>
+	<EmbeddedResource Include="Primitives\Colored.Fragment.glsl">
+      <LogicalName>Primitives.Colored.Fragment.glsl</LogicalName>
+	</EmbeddedResource>
+    <EmbeddedResource Include="Primitives\Colored.Vertex.glsl">
+	  <LogicalName>Primitives.Colored.Vertex.glsl</LogicalName>
+	</EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SharpFontStandard" Version="4.0.1" />
+    <PackageReference Include="SharpFontStandard.Runtimes.WindowsOnly" Version="2.6.0" />
+    <PackageReference Include="System.Reactive" Version="6.0.1" />
+    <PackageReference Include="System.Reactive.Linq" Version="6.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<ProjectReference Include="..\MyOTKE.Core\MyOTKE.Core.csproj" />
+	<ProjectReference Include="..\MyOTKE.Engine\MyOTKE.Engine.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 
-namespace MyOTKE.Engine.Components.ReactivePrimitives;
+namespace MyOTKE.Engine.Components.ReactivePrimitives.Primitives;
 
 /// <summary>
 /// Implementation of <see cref="IComponent" /> that renders a set of primitive shapes from an observable sequence of source data.
@@ -49,8 +49,8 @@ public class PrimitiveRenderer : IComponent
                 if (program == null && programBuilder == null)
                 {
                     programBuilder = new GlProgramBuilder()
-                        .WithVertexShaderFromEmbeddedResource("Colored.Vertex.glsl")
-                        .WithFragmentShaderFromEmbeddedResource("Colored.Fragment.glsl")
+                        .WithVertexShaderFromEmbeddedResource("Primitives.Colored.Vertex.glsl")
+                        .WithFragmentShaderFromEmbeddedResource("Primitives.Colored.Fragment.glsl")
                         .WithDefaultUniformBlock<Uniforms>();
                 }
             }
@@ -58,7 +58,7 @@ public class PrimitiveRenderer : IComponent
 
         // Re-use a single vertex list for every primitive to reduce GC burden - NB not re-entrant
         var triangleVertexList = new List<PrimitiveVertex>();
-        this.coloredTriangleBufferBuilder = new ReactiveBufferBuilder<PrimitiveVertex>(
+        coloredTriangleBufferBuilder = new ReactiveBufferBuilder<PrimitiveVertex>(
             PrimitiveType.Triangles,
             capacity,
             [0, 1, 2],
@@ -78,7 +78,7 @@ public class PrimitiveRenderer : IComponent
 
         // Re-use a single vertex list for every primitive to reduce GC burden - NB not re-entrant
         var lineVertexList = new List<PrimitiveVertex>();
-        this.coloredLineBufferBuilder = new ReactiveBufferBuilder<PrimitiveVertex>(
+        coloredLineBufferBuilder = new ReactiveBufferBuilder<PrimitiveVertex>(
             PrimitiveType.Lines,
             capacity,
             [0, 1],
@@ -144,11 +144,11 @@ public class PrimitiveRenderer : IComponent
             }
         }
 
-        this.coloredTriangleBuffer = coloredTriangleBufferBuilder.Build();
-        this.coloredTriangleBufferBuilder = null;
+        coloredTriangleBuffer = coloredTriangleBufferBuilder.Build();
+        coloredTriangleBufferBuilder = null;
 
-        this.coloredLineBuffer = coloredLineBufferBuilder.Build();
-        this.coloredLineBufferBuilder = null;
+        coloredLineBuffer = coloredLineBufferBuilder.Build();
+        coloredLineBufferBuilder = null;
     }
 
     /// <inheritdoc />
@@ -163,8 +163,8 @@ public class PrimitiveRenderer : IComponent
 
         program.UseWithDefaultUniformBlock(new Uniforms
         {
-            MVP = this.camera.View * this.camera.Projection,
-            V = this.camera.View,
+            MVP = camera.View * camera.Projection,
+            V = camera.View,
             M = Matrix4.Identity,
             AmbientLightColor = AmbientLightColor,
             DirectedLightDirection = DirectedLightDirection,
@@ -173,8 +173,8 @@ public class PrimitiveRenderer : IComponent
             PointLightColor = PointLightColor,
             PointLightPower = PointLightPower,
         });
-        this.coloredTriangleBuffer.Draw();
-        this.coloredLineBuffer.Draw();
+        coloredTriangleBuffer.Draw();
+        coloredLineBuffer.Draw();
     }
 
     /// <inheritdoc />

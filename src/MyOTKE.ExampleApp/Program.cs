@@ -31,7 +31,7 @@ public static class Program
             clearColor: Color.Black())
         {
             Title = "MyOTKE Example",
-            WindowState = WindowState.Fullscreen,
+            WindowState = WindowState.Normal,
             WindowBorder = WindowBorder.Resizable,
         };
 

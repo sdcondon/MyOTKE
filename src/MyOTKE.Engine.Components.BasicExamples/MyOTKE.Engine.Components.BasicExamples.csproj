@@ -12,31 +12,11 @@
 
   <ItemGroup>
 	<None Remove="$(DocumentationFile)" />
-    <None Remove="Colored.Fragment.glsl" />
-    <None Remove="Colored.Vertex.glsl" />
-    <None Remove="Textured.Fragment.glsl" />
-    <None Remove="Textured.Vertex.glsl" />
-  </ItemGroup>
-
-  <ItemGroup>
-	<EmbeddedResource Include="Colored.Fragment.glsl">
-	  <LogicalName>Colored.Fragment.glsl</LogicalName>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Colored.Vertex.glsl">
-	  <LogicalName>Colored.Vertex.glsl</LogicalName>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Textured.Fragment.glsl">
-	  <LogicalName>Textured.Fragment.glsl</LogicalName>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Textured.Vertex.glsl">
-	  <LogicalName>Textured.Vertex.glsl</LogicalName>
-	</EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
 	<ProjectReference Include="..\MyOTKE.Core\MyOTKE.Core.csproj" />
 	<ProjectReference Include="..\MyOTKE.Engine\MyOTKE.Engine.csproj" />
-	<ProjectReference Include="..\MyOTKE.ReactiveBuffers\MyOTKE.ReactiveBuffers.csproj" />
   </ItemGroup>
 
 </Project>

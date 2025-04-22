@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <IsPackable>false</IsPackable>
-    <AssemblyName>MyOTKE.ReactiveBuffers.Tests</AssemblyName>
-    <RootNamespace>MyOTKE.ReactiveBuffers</RootNamespace>
+    <AssemblyName>MyOTKE.Engine.Components.Reactive.Tests</AssemblyName>
+    <RootNamespace>MyOTKE.Engine.Components.Reactive.Tests</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -24,8 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MyOTKE.Core\MyOTKE.Core.csproj" />
-    <ProjectReference Include="..\MyOTKE.ReactiveBuffers\MyOTKE.ReactiveBuffers.csproj" />
+    <ProjectReference Include="..\MyOTKE.Engine.Components.ReactivePrimitives\MyOTKE.Engine.Components.Reactive.csproj" />
   </ItemGroup>
 
 </Project>

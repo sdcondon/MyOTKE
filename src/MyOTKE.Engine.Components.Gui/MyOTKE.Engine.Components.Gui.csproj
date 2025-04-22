@@ -17,15 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-	<EmbeddedResource Include="Shaders\Gui.Fragment.glsl">
-      <LogicalName>Gui.Fragment.glsl</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Shaders\Gui.Vertex.glsl">
-      <LogicalName>Gui.Vertex.glsl</LogicalName>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="SharpFontStandard" Version="4.0.1" />
     <PackageReference Include="SharpFontStandard.Runtimes.WindowsOnly" Version="2.6.0" />
   </ItemGroup>

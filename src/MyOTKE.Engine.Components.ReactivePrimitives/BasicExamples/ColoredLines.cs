@@ -1,40 +1,40 @@
 ﻿using MyOTKE.Core;
 using MyOTKE.Engine.Utility;
+using MyOTKE.ReactiveBuffers;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Reactive.Linq;
 
 namespace MyOTKE.Engine.Components.BasicExamples;
 
 /// <summary>
-/// Simple component class that draws static 3D geometry.
+/// Simple component class that draws a set of 3D lines.
 /// </summary>
-public class ColoredStaticMesh : IComponent
+public class ColoredLines : IComponent
 {
     private static readonly object ProgramStateLock = new();
     private static GlProgramWithDUBBuilder<DefaultUniformBlock, CameraUniformBlock> programBuilder;
     private static GlProgramWithDUB<DefaultUniformBlock, CameraUniformBlock> program;
 
     private readonly IViewProjection viewProjection;
+    private readonly ObservableCollection<Line> lines;
 
-    private VertexArrayObjectBuilder<Vertex> vertexArrayObjectBuilder;
-    private GlVertexArrayObject<Vertex> vertexArrayObject;
+    private ReactiveBufferBuilder<Vertex> linesBufferBuilder;
+    private ReactiveBuffer<Vertex> linesBuffer;
     private bool isDisposed;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ColoredStaticMesh"/> class.
+    /// Initializes a new instance of the <see cref="ColoredLines"/> class.
     /// </summary>
-    /// <param name="viewProjection">The provider for the view and projection matrices to use when rendering.</param>
-    /// <param name="vertices">The vertices of the mesh.</param>
-    /// <param name="indices">The indices (into the provided vertices) to use for actually rendering the mesh.</param>
-    public ColoredStaticMesh(
-        IViewProjection viewProjection,
-        IEnumerable<Vertex> vertices,
-        IEnumerable<uint> indices)
+    /// <param name="viewProjection">The view and projection matrices to use when rendering.</param>
+    public ColoredLines(IViewProjection viewProjection)
     {
         this.viewProjection = viewProjection;
+        this.lines = [];
 
         if (program == null && programBuilder == null)
         {
@@ -43,38 +43,31 @@ public class ColoredStaticMesh : IComponent
                 if (program == null && programBuilder == null)
                 {
                     programBuilder = new GlProgramBuilder()
-                        .WithVertexShaderFromEmbeddedResource("Colored.Vertex.glsl")
-                        .WithFragmentShaderFromEmbeddedResource("Colored.Fragment.glsl")
+                        .WithVertexShaderFromEmbeddedResource("BasicExamples.Colored.Vertex.glsl")
+                        .WithFragmentShaderFromEmbeddedResource("BasicExamples.Colored.Fragment.glsl")
                         .WithDefaultUniformBlock<DefaultUniformBlock>()
                         .WithSharedUniformBufferObject<CameraUniformBlock>("Camera", BufferUsageHint.DynamicDraw, 1);
                 }
             }
         }
 
-        this.vertexArrayObjectBuilder = new VertexArrayObjectBuilder(PrimitiveType.Triangles)
-            .WithNewAttributeBuffer(BufferUsageHint.StaticDraw, vertices.ToArray())
-            .WithNewIndexBuffer(BufferUsageHint.StaticDraw, [.. indices]);
+        this.linesBufferBuilder = new ReactiveBufferBuilder<Vertex>(
+            primitiveType: PrimitiveType.Lines,
+            atomCapacity: 100,
+            atomIndices: [ 0, 1 ],
+            atomSource: ((INotifyCollectionChanged)lines).ToObservable<Line>()
+                .Select(o => o
+                    .Select(i => new[]
+                    {
+                        new Vertex(i.From, Color.White(), i.From),
+                        new Vertex(i.To, Color.White(), i.To),
+                    })));
     }
-
-    /// <summary>
-    /// Gets or sets the model transform for this mesh.
-    /// </summary>
-    public Matrix4 Model { get; set; } = Matrix4.Identity;
 
     /// <summary>
     /// Gets or sets the lighting applied as a minimum to every fragment.
     /// </summary>
     public Color AmbientLightColor { get; set; } = Color.Transparent();
-
-    /// <summary>
-    /// Gets or sets the directed light direction. Fragments facing this direction are lit with the directed light color.
-    /// </summary>
-    public Vector3 DirectedLightDirection { get; set; } = Vector3.Zero;
-
-    /// <summary>
-    /// Gets or sets the directed light color, applied to fragments facing the directed light direction.
-    /// </summary>
-    public Color DirectedLightColor { get; set; } = Color.Transparent();
 
     /// <summary>
     /// Gets or sets the point light position. Fragments facing this position are lit with the point light color.
@@ -90,6 +83,28 @@ public class ColoredStaticMesh : IComponent
     /// Gets or sets the point light power. Affects the intensity with which fragments are lit by the point light.
     /// </summary>
     public float PointLightPower { get; set; } = 0f;
+
+    /// <summary>
+    /// Adds a line to be rendered.
+    /// </summary>
+    /// <param name="from">The position of the start of the line.</param>
+    /// <param name="to">The position of the end of the line.</param>
+    public void AddLine(Vector3 from, Vector3 to)
+    {
+        ObjectDisposedException.ThrowIf(isDisposed, this);
+
+        this.lines.Add(new Line(from, to));
+    }
+
+    /// <summary>
+    /// Clears all of the lines.
+    /// </summary>
+    public void ClearLines()
+    {
+        ObjectDisposedException.ThrowIf(isDisposed, this);
+
+        this.lines.Clear();
+    }
 
     /// <inheritdoc />
     public void Load()
@@ -108,8 +123,8 @@ public class ColoredStaticMesh : IComponent
             }
         }
 
-        this.vertexArrayObject = (GlVertexArrayObject<Vertex>)this.vertexArrayObjectBuilder.Build();
-        this.vertexArrayObjectBuilder = null;
+        this.linesBuffer = linesBufferBuilder.Build();
+        this.linesBufferBuilder = null;
     }
 
     /// <inheritdoc />
@@ -130,48 +145,24 @@ public class ColoredStaticMesh : IComponent
             P = this.viewProjection.Projection,
         };
 
-        this.vertexArrayObject.Draw(program, new DefaultUniformBlock
+        program.UseWithDefaultUniformBlock(new DefaultUniformBlock
         {
-            M = this.Model,
+            M = Matrix4.Identity,
             AmbientLightColor = AmbientLightColor,
-            DirectedLightDirection = DirectedLightDirection,
-            DirectedLightColor = DirectedLightColor,
             PointLightPosition = PointLightPosition,
             PointLightColor = PointLightColor,
             PointLightPower = PointLightPower,
         });
+
+        this.linesBuffer.Draw();
     }
 
     /// <inheritdoc />
     public void Dispose()
     {
-        this.vertexArrayObject?.Dispose();
+        this.linesBuffer?.Dispose();
         GC.SuppressFinalize(this);
         isDisposed = true;
-    }
-
-    /// <summary>
-    /// Container struct for the attributes of a vertex.
-    /// </summary>
-    /// <param name="position">The position of the vertex.</param>
-    /// <param name="color">The color of the vertex.</param>
-    /// <param name="normal">The normal vector of the vertex.</param>
-    public readonly struct Vertex(Vector3 position, Vector3 color, Vector3 normal)
-    {
-        /// <summary>
-        /// Gets the position of the vertex.
-        /// </summary>
-        public readonly Vector3 Position = position;
-
-        /// <summary>
-        /// Gets the color of the vertex.
-        /// </summary>
-        public readonly Vector3 Color = color;
-
-        /// <summary>
-        /// Gets the normal vector of the vertex.
-        /// </summary>
-        public readonly Vector3 Normal = normal;
     }
 
     private struct CameraUniformBlock
@@ -184,10 +175,49 @@ public class ColoredStaticMesh : IComponent
     {
         public Matrix4 M;
         public Vector3 AmbientLightColor;
-        public Vector3 DirectedLightDirection;
-        public Vector3 DirectedLightColor;
         public Vector3 PointLightPosition;
         public Vector3 PointLightColor;
         public float PointLightPower;
+    }
+
+    private readonly struct Vertex(Vector3 position, Vector3 color, Vector3 normal)
+    {
+        public readonly Vector3 Position = position;
+        public readonly Vector3 Color = color;
+        public readonly Vector3 Normal = normal;
+    }
+
+    private class Line : INotifyPropertyChanged
+    {
+        private Vector3 from;
+        private Vector3 to;
+
+        public Line(Vector3 from, Vector3 to)
+        {
+            this.From = from;
+            this.To = to;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public Vector3 From
+        {
+            get => from;
+            set
+            {
+                this.from = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(From)));
+            }
+        }
+
+        public Vector3 To
+        {
+            get => to;
+            set
+            {
+                this.to = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(To)));
+            }
+        }
     }
 }

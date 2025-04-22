@@ -3,7 +3,7 @@ using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 
-namespace MyOTKE.Engine.Components.ReactivePrimitives;
+namespace MyOTKE.Engine.Components.ReactivePrimitives.Primitives;
 
 /// <summary>
 /// Container for primitive vertex data.
@@ -204,7 +204,7 @@ public sealed class Primitive
 
         Vector3 GetPos(int i)
         {
-            var rads = (i % segments) * 2 * Math.PI / segments;
+            var rads = i % segments * 2 * Math.PI / segments;
             return new Vector3((float)Math.Sin(rads) * radiusX, (float)Math.Cos(rads) * radiusY, 0);
         }
 
