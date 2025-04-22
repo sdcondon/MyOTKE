@@ -1,5 +1,4 @@
-﻿using MyOTKE.Engine.Utility;
-using OpenTK.Mathematics;
+﻿using OpenTK.Mathematics;
 using System;
 
 namespace MyOTKE.Engine.Components.Gui.Elements;

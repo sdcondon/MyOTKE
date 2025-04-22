@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <IsPackable>false</IsPackable>
-    <AssemblyName>MyOTKE.Engine.Components.Reactive.Tests</AssemblyName>
-    <RootNamespace>MyOTKE.Engine.Components.Reactive.Tests</RootNamespace>
+    <AssemblyName>MyOTKE.Core.Tests</AssemblyName>
+    <RootNamespace>MyOTKE.Core</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MyOTKE.Engine.Components.ReactivePrimitives\MyOTKE.Engine.Components.Reactive.csproj" />
+    <ProjectReference Include="..\MyOTKE\MyOTKE.csproj" />
   </ItemGroup>
 
 </Project>

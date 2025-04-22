@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace MyOTKE.Engine.Utility.Cameras;
+namespace MyOTKE.Cameras;
 
 /// <summary>
 /// Interface for types that provide view and projection matrices, and can change over time (e.g. in reponse to user input).

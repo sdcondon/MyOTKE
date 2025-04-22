@@ -10,13 +10,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.targets = Directory.Build.targets
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE", "MyOTKE.Core\MyOTKE.csproj", "{14D6E92A-2CA8-4DB0-A1B2-538753183369}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE", "MyOTKE\MyOTKE.csproj", "{14D6E92A-2CA8-4DB0-A1B2-538753183369}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.Tests", "MyOTKE.Core.Tests\MyOTKE.Tests.csproj", "{84FE1865-9CB8-49C1-9626-CFAE68EA7BCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.Tests", "MyOTKE.Tests\MyOTKE.Tests.csproj", "{84FE1865-9CB8-49C1-9626-CFAE68EA7BCF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.Engine.Components.Reactive", "MyOTKE.Engine.Components.ReactivePrimitives\MyOTKE.Engine.Components.Reactive.csproj", "{B87E758F-EC42-4E06-9A7F-78F0B2CB4ACA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.Components.Reactive", "MyOTKE.Components.Reactive\MyOTKE.Components.Reactive.csproj", "{B87E758F-EC42-4E06-9A7F-78F0B2CB4ACA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.Engine.Components.Reactive.Tests", "MyOTKE.ReactiveBuffers.Tests\MyOTKE.Engine.Components.Reactive.Tests.csproj", "{3D0EB427-93E7-4915-A9E5-AF4243F4A447}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.Components.Reactive.Tests", "MyOTKE.Components.Reactive.Tests\MyOTKE.Components.Reactive.Tests.csproj", "{3D0EB427-93E7-4915-A9E5-AF4243F4A447}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOTKE.ExampleApp", "MyOTKE.ExampleApp\MyOTKE.ExampleApp.csproj", "{8D0D323E-9803-4D85-B4BC-01317B74DB1A}"
 EndProject

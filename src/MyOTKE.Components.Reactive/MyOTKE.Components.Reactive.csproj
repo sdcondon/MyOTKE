@@ -51,8 +51,7 @@
   </ItemGroup>
 
   <ItemGroup>
-	<ProjectReference Include="..\MyOTKE.Core\MyOTKE.Core.csproj" />
-	<ProjectReference Include="..\MyOTKE.Engine\MyOTKE.Engine.csproj" />
+	<ProjectReference Include="..\MyOTKE\MyOTKE.csproj" />
   </ItemGroup>
 
 </Project>

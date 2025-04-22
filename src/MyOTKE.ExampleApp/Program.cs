@@ -1,7 +1,5 @@
-﻿using MyOTKE.Engine;
-using MyOTKE.Engine.Components.Gui;
+﻿using MyOTKE.Engine.Components.Gui;
 using MyOTKE.Engine.Components.Gui.Elements;
-using MyOTKE.Engine.Utility;
 using MyOTKE.ExampleApp.Components;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;

@@ -1,5 +1,4 @@
-﻿using MyOTKE.Engine.Utility;
-using OpenTK.Mathematics;
+﻿using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 

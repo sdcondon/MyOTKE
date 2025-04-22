@@ -2,7 +2,7 @@
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 
-namespace MyOTKE.Engine.Utility.Cameras;
+namespace MyOTKE.Cameras;
 
 /// <summary>
 /// An <see cref="ICamera"/> implementation that uses an "FPS"-style control scheme.

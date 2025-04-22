@@ -1,5 +1,4 @@
-﻿using MyOTKE.Engine.Utility;
-using OpenTK.Mathematics;
+﻿using OpenTK.Mathematics;
 using System.Collections.Generic;
 
 namespace MyOTKE.Engine.Components.ReactivePrimitives.Primitives;

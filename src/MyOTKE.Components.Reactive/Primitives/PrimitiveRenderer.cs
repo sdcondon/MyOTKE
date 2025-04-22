@@ -1,6 +1,5 @@
 ﻿using MyOTKE.Core;
-using MyOTKE.Engine.Utility;
-using MyOTKE.Engine.Utility.Cameras;
+using MyOTKE.Cameras;
 using MyOTKE.ReactiveBuffers;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;

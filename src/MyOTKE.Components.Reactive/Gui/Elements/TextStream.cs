@@ -1,5 +1,4 @@
-﻿using MyOTKE.Engine.Utility;
-using System.Text;
+﻿using System.Text;
 
 namespace MyOTKE.Engine.Components.Gui.Elements;
 

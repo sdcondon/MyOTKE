@@ -2,43 +2,36 @@
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 
-namespace MyOTKE.Engine.Utility.Cameras;
+namespace MyOTKE.Cameras;
 
 /// <summary>
 /// Implementation of <see cref="ICamera"/> that rotates around the origin.
 /// </summary>
-/// <remarks>
-/// Initializes a new instance of the <see cref="OrbitCamera"/> class.
-/// </remarks>
 /// <param name="view">The view from which to retrieve input and aspect ratio.</param>
 /// <param name="rotationSpeedBase">The base (i.e. at default zoom distance) rotation speed of the camera, in radians per per update.</param>
-/// <param name="rollSpeed">The roll speed of the camera, in radians per update.</param>
 /// <param name="fieldOfViewRadians">The camera's field of view, in radians.</param>
 /// <param name="nearPlaneDistance">The distance of the near plane from the camera.</param>
 /// <param name="farPlaneDistance">The ditance of the far plane from the camera.</param>
-public class OrbitCamera(
+public class OrbitCameraAligned(
     MyOTKEWindow view,
     float rotationSpeedBase,
-    float rollSpeed,
     float fieldOfViewRadians,
     float nearPlaneDistance,
     float farPlaneDistance) : ICamera
 {
     private readonly MyOTKEWindow view = view;
 
-    private Vector3 forward = new(0f, 0f, 1f);
-    private Vector3 up = new(0f, 1f, 0f);
+    private float longitude = 0f;
+    private float latitude = 0f;
+
+    private Vector3 forward = Vector3.UnitZ;
+    private Vector3 up = Vector3.UnitY;
     private int zoomLevel = 0;
 
     /// <summary>
-    /// Gets or sets the base (i.e. at default zoom distance) rotation speed of the camera in radians per update.
+    /// Gets or sets the base (i.e. at default zoom distance) rotation speed of the camera in radians per second.
     /// </summary>
     public float RotationSpeedBase { get; set; } = rotationSpeedBase;
-
-    /// <summary>
-    /// Gets or sets the roll speed of the camera, in radians per update.
-    /// </summary>
-    public float RollSpeed { get; set; } = rollSpeed;
 
     /// <summary>
     /// Gets or sets the camera's field of view, in radians.
@@ -61,7 +54,7 @@ public class OrbitCamera(
     public float Distance => (float)(ZoomMinDistance + ZoomDefaultDistance * Math.Pow(ZoomBase, zoomLevel));
 
     /// <summary>
-    /// Gets the current rotation speed of the camera, in radians per update.
+    /// Gets the current rotation speed of the camera, in radians per second.
     /// </summary>
     public float RotationSpeed => RotationSpeedBase * (Distance - ZoomMinDistance) / ZoomDefaultDistance;
 
@@ -88,36 +81,26 @@ public class OrbitCamera(
         //// Pan up - rotate forward and up around their cross product
         if (view.IsKeyDown(Keys.W))
         {
-            var t = Quaternion.FromAxisAngle(Vector3.Cross(forward, up), -RotationSpeed);
-            forward = Vector3.Transform(forward, t);
-            up = Vector3.Transform(up, t);
+            latitude += RotationSpeed * (float)elapsed.TotalSeconds;
+            latitude = (float)Math.Min(latitude, Math.PI / 2f);
         }
         //// Pan down - rotate forward and up around their cross product
         if (view.IsKeyDown(Keys.S))
         {
-            var t = Quaternion.FromAxisAngle(Vector3.Cross(forward, up), RotationSpeed);
-            forward = Vector3.Normalize(Vector3.Transform(forward, t));
-            up = Vector3.Normalize(Vector3.Transform(up, t));
+            latitude -= RotationSpeed * (float)elapsed.TotalSeconds;
+            latitude = (float)Math.Max(latitude, -Math.PI / 2f);
         }
         //// Pan right - rotate forward around up
         if (view.IsKeyDown(Keys.D))
         {
-            forward = Vector3.Normalize(Vector3.Transform(forward, Quaternion.FromAxisAngle(up, RotationSpeed)));
+            longitude += RotationSpeed * (float)elapsed.TotalSeconds;
+            longitude %= (float)(2f * Math.PI);
         }
         //// Pan left - rotate forward around up
         if (view.IsKeyDown(Keys.A))
         {
-            forward = Vector3.Normalize(Vector3.Transform(forward, Quaternion.FromAxisAngle(up, -RotationSpeed)));
-        }
-        //// Roll right - rotate up around forward
-        if (view.IsKeyDown(Keys.Q))
-        {
-            up = Vector3.Normalize(Vector3.Transform(up, Quaternion.FromAxisAngle(forward, -RollSpeed)));
-        }
-        //// Roll left - rotate up around forward
-        if (view.IsKeyDown(Keys.E))
-        {
-            up = Vector3.Normalize(Vector3.Transform(up, Quaternion.FromAxisAngle(forward, RollSpeed)));
+            longitude -= RotationSpeed * (float)elapsed.TotalSeconds;
+            longitude %= (float)(2f * Math.PI);
         }
         //// Zoom
         zoomLevel += (int)view.MouseState.ScrollDelta.Y;
@@ -130,6 +113,12 @@ public class OrbitCamera(
             FarPlaneDistance);
 
         // Camera matrix
+        var longitudeRot = Quaternion.FromAxisAngle(Vector3.UnitY, longitude);
+        var x = Vector3.Transform(Vector3.UnitX, longitudeRot);
+        var latitudeRot = Quaternion.FromAxisAngle(Vector3.Cross(x, Vector3.UnitY), latitude);
+        this.forward = -Vector3.Transform(x, latitudeRot);
+        this.up = Vector3.Transform(Vector3.UnitY, latitudeRot);
+
         View = Matrix4.LookAt(Position, Vector3.Zero, up);
     }
 }
