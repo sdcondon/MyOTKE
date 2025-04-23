@@ -1,5 +1,6 @@
 ﻿using MyOTKE.Cameras;
 using MyOTKE.Components;
+using MyOTKE.Components.Primitives;
 using MyOTKE.Components.Reactive.BasicExamples;
 using MyOTKE.Components.Reactive.Gui;
 using MyOTKE.Components.Reactive.Gui.Elements;
@@ -80,6 +81,7 @@ public class FirstPersonComponent : CompositeComponent
                 Color.Blue(),
                 new Vector3(0f, 0f, 1f)),
         };
+
         AddComponent(new ColoredStaticMesh(
             camera,
             coloredTriangleVertices,

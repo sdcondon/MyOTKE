@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace MyOTKE.Components.Reactive.BasicExamples;
+namespace MyOTKE.Components.Primitives;
 
 /// <summary>
 /// Simple component class that draws static 3D geometry.
@@ -49,8 +49,8 @@ public sealed class TexturedStaticMesh : IComponent
                 if (program == null && programBuilder == null)
                 {
                     programBuilder = new GlProgramBuilder()
-                        .WithVertexShaderFromEmbeddedResource("BasicExamples.Textured.Vertex.glsl")
-                        .WithFragmentShaderFromEmbeddedResource("BasicExamples.Textured.Fragment.glsl")
+                        .WithVertexShaderFromEmbeddedResource("Primitives.Textured.Vertex.glsl")
+                        .WithFragmentShaderFromEmbeddedResource("Primitives.Textured.Fragment.glsl")
                         .WithDefaultUniformBlock<DefaultUniformBlock>()
                         .WithSharedUniformBufferObject<CameraUniformBlock>("Camera", BufferUsageHint.DynamicDraw, 1);
                 }

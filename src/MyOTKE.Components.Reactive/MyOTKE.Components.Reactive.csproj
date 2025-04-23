@@ -23,12 +23,6 @@
 	<EmbeddedResource Include="BasicExamples\Colored.Vertex.glsl">
 	  <LogicalName>BasicExamples.Colored.Vertex.glsl</LogicalName>
 	</EmbeddedResource>
-	<EmbeddedResource Include="BasicExamples\Textured.Fragment.glsl">
-	  <LogicalName>BasicExamples.Textured.Fragment.glsl</LogicalName>
-	</EmbeddedResource>
-	<EmbeddedResource Include="BasicExamples\Textured.Vertex.glsl">
-	  <LogicalName>BasicExamples.Textured.Vertex.glsl</LogicalName>
-	</EmbeddedResource>
 	<EmbeddedResource Include="Gui\Shaders\Gui.Fragment.glsl">
 	  <LogicalName>Gui.Fragment.glsl</LogicalName>
 	</EmbeddedResource>

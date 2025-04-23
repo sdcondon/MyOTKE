@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MyOTKE.Components.Reactive.BasicExamples;
+namespace MyOTKE.Components.Primitives;
 
 /// <summary>
 /// Simple component class that draws static 3D geometry.
@@ -43,8 +43,8 @@ public class ColoredStaticMesh : IComponent
                 if (program == null && programBuilder == null)
                 {
                     programBuilder = new GlProgramBuilder()
-                        .WithVertexShaderFromEmbeddedResource("BasicExamples.Colored.Vertex.glsl")
-                        .WithFragmentShaderFromEmbeddedResource("BasicExamples.Colored.Fragment.glsl")
+                        .WithVertexShaderFromEmbeddedResource("Primitives.Colored.Vertex.glsl")
+                        .WithFragmentShaderFromEmbeddedResource("Primitives.Colored.Fragment.glsl")
                         .WithDefaultUniformBlock<DefaultUniformBlock>()
                         .WithSharedUniformBufferObject<CameraUniformBlock>("Camera", BufferUsageHint.DynamicDraw, 1);
                 }
@@ -135,10 +135,10 @@ public class ColoredStaticMesh : IComponent
             M = this.Model,
             AmbientLightColor = AmbientLightColor,
             DirectedLightDirection = DirectedLightDirection,
-            DirectedLightColor = DirectedLightColor,
+            DirectedLightColor =  DirectedLightColor,
             PointLightPosition = PointLightPosition,
             PointLightColor = PointLightColor,
-            PointLightPower = PointLightPower,
+            PointLightPower = PointLightPower
         });
     }
 
@@ -159,17 +159,17 @@ public class ColoredStaticMesh : IComponent
     public readonly struct Vertex(Vector3 position, Vector3 color, Vector3 normal)
     {
         /// <summary>
-        /// Gets the position of the vertex.
+        /// The position of the vertex.
         /// </summary>
         public readonly Vector3 Position = position;
 
         /// <summary>
-        /// Gets the color of the vertex.
+        /// The color of the vertex.
         /// </summary>
         public readonly Vector3 Color = color;
 
         /// <summary>
-        /// Gets the normal vector of the vertex.
+        /// The normal vector of the vertex.
         /// </summary>
         public readonly Vector3 Normal = normal;
     }

@@ -14,6 +14,25 @@
 
   <ItemGroup>
     <None Remove="$(DocumentationFile)" />
+    <None Remove="Components\Primitives\Colored.Fragment.glsl" />
+    <None Remove="Components\Primitives\Colored.Vertex.glsl" />
+    <None Remove="Components\Primitives\Textured.Fragment.glsl" />
+    <None Remove="Components\Primitives\Textured.Vertex.glsl" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Components\Primitives\Colored.Fragment.glsl">
+      <LogicalName>Primitives.Colored.Fragment.glsl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Primitives\Colored.Vertex.glsl">
+      <LogicalName>Primitives.Colored.Vertex.glsl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Primitives\Textured.Fragment.glsl">
+      <LogicalName>Primitives.Textured.Fragment.glsl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Primitives\Textured.Vertex.glsl">
+      <LogicalName>Primitives.Textured.Vertex.glsl</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
