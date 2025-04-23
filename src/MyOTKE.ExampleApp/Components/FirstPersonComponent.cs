@@ -34,7 +34,7 @@ public class FirstPersonComponent : CompositeComponent
         camera = new FirstPersonCamera(
             view,
             movementSpeed: 3.0f,
-            rotationSpeed: 0.005f,
+            rotationSpeed: (float)Math.PI / 2.0f,
             fieldOfViewRadians: (float)Math.PI / 4.0f,
             nearPlaneDistance: 0.1f,
             farPlaneDistance: 100f,

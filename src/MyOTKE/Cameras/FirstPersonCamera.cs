@@ -71,10 +71,12 @@ public class FirstPersonCamera(
             // Compute new orientation
             var xDiff = view.MouseCenterOffset.X;
             xDiff = Math.Abs(xDiff) < 2 ? 0 : xDiff;
+            xDiff /= ((float)view.CurrentMonitor.HorizontalResolution / 2);
             horizontalAngle -= RotationSpeed * xDiff;
 
             var yDiff = view.MouseCenterOffset.Y;
             yDiff = Math.Abs(yDiff) < 2 ? 0 : yDiff;
+            yDiff /= ((float)view.CurrentMonitor.VerticalResolution / 2);
             verticalAngle -= RotationSpeed * yDiff;
             verticalAngle = Math.Max(-(float)Math.PI / 2, Math.Min(verticalAngle, (float)Math.PI / 2));
         }
