@@ -128,8 +128,7 @@ public sealed class TexturedStaticMesh : IComponent
     {
         ObjectDisposedException.ThrowIf(isDisposed, this);
 
-        // TODO: Don't need to set this every time - only when it changes.
-        // ..which is somewhat at odds with the pattern of these being pulled into, not pushed into this class..
+        // camera should be managing this.
         program.UniformBuffer1[0] = new CameraUniformBlock
         {
             V = viewProjection.View,

@@ -148,7 +148,7 @@ public class Primitives : IComponent
         {
             if (coloredLineBuffer != null)
             {
-                lines.AddToBuffer(coloredTriangleBuffer);
+                lines.AddToBuffer(coloredLineBuffer);
             }
             else
             {
@@ -177,7 +177,8 @@ public class Primitives : IComponent
     {
         ThrowIfDisposed();
 
-        program.UseWithDefaultUniformBlock(new Uniforms
+        // TODO: camera should manage this..
+        program.UniformBuffer1[0] = new CameraUniformBlock
         {
             MVP = camera.View * camera.Projection,
             V = camera.View,
