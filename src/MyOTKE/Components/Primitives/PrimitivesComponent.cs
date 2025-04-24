@@ -11,7 +11,7 @@ namespace MyOTKE.Components.Primitives;
 /// <summary>
 /// Implementation of <see cref="IComponent" /> that renders a set of primitive shapes from an observable sequence of source data.
 /// </summary>
-public class Primitives : IComponent
+public class PrimitivesComponent : IComponent
 {
     private static readonly object ProgramStateLock = new();
     private static GlProgramWithDUBBuilder<Uniforms> programBuilder;
@@ -27,12 +27,12 @@ public class Primitives : IComponent
     private bool isDisposed;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Primitives"/> class.
+    /// Initializes a new instance of the <see cref="PrimitivesComponent"/> class.
     /// </summary>
     /// <param name="camera">Provider for view and projection matrices.</param>
     /// <param name="initialPrimitives">The initial primitives to display.</param>
     /// <param name="capacity">The maximum number of triangles and lines that can be rendered at once.</param>
-    public Primitives(
+    public PrimitivesComponent(
         IViewProjection camera,
         IEnumerable<Primitive> initialPrimitives,
         int capacity)
@@ -161,10 +161,31 @@ public class Primitives : IComponent
     /// Removes a primitive.
     /// </summary>
     /// <param name="primitive">The primitive to remove.</param>
-    public void Remove(TrianglesPrimitive primitive)
+    public void Remove(Primitive primitive)
     {
-        // code smell: will be removed from whatever buffer it is in, even if its not this one.
-        primitive.RemoveFromBuffer();
+        // meh, thread-safety
+        if (primitive is TrianglesPrimitive triangles)
+        {
+            if (coloredTriangleBuffer != null)
+            {
+                triangles.RemoveFromBuffer(coloredTriangleBuffer);
+            }
+            else
+            {
+                // todo: find and remove from initial primitives, i guess
+            }
+        }
+        else if (primitive is LinesPrimitive lines)
+        {
+            if (coloredLineBuffer != null)
+            {
+                lines.RemoveFromBuffer(coloredLineBuffer);
+            }
+            else
+            {
+                // todo: find and remove from initial primitives, i guess
+            }
+        }
     }
 
     /// <inheritdoc />

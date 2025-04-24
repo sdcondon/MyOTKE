@@ -36,7 +36,7 @@ public sealed class LinesPrimitive : Primitive
     public static LinesPrimitive SingleLine(Vector3 from, Vector3 to, Color colorFrom, Color colorTo)
     {
         LinesPrimitive p = new();
-        p.SetSingleLine(from, to, colorFrom, colorTo); 
+        p.SetAsSingleLine(from, to, colorFrom, colorTo); 
         return p;
     }
 
@@ -63,7 +63,7 @@ public sealed class LinesPrimitive : Primitive
     public static LinesPrimitive Ellipse(float radiusX, float radiusY, Matrix4 worldTransform, Color color)
     {
         LinesPrimitive p = new();
-        p.SetEllipse(radiusX, radiusY, worldTransform, color);
+        p.SetAsEllipse(radiusX, radiusY, worldTransform, color);
         return p;
     }
 
@@ -77,7 +77,7 @@ public sealed class LinesPrimitive : Primitive
     public static LinesPrimitive Square(float sideLength, Matrix4 worldTransform, Color color)
     {
         LinesPrimitive p = new();
-        p.SetSquare(sideLength, worldTransform, color);
+        p.SetAsSquare(sideLength, worldTransform, color);
         return p;
     }
 
@@ -91,7 +91,7 @@ public sealed class LinesPrimitive : Primitive
     public static LinesPrimitive Polygon(Vector2[] positions, Matrix4 worldTransform, Color color)
     {
         LinesPrimitive p = new();
-        p.SetPolygon(positions, worldTransform, color);
+        p.SetAsPolygon(positions, worldTransform, color);
         return p;
     }
 
@@ -101,9 +101,9 @@ public sealed class LinesPrimitive : Primitive
     /// <param name="from">The position of one end of the line.</param>
     /// <param name="to">The position of the other end of the line.</param>
     /// <param name="color">The color of the line.</param>
-    public void SetSingleLine(Vector3 from, Vector3 to, Color color)
+    public void SetAsSingleLine(Vector3 from, Vector3 to, Color color)
     {
-        SetSingleLine(from, to, color, color);
+        SetAsSingleLine(from, to, color, color);
     }
 
     /// <summary>
@@ -113,7 +113,7 @@ public sealed class LinesPrimitive : Primitive
     /// <param name="to">The position of the other end of the line.</param>
     /// <param name="colorFrom">The color of one end of the line.</param>
     /// <param name="colorTo">The color of the other end of the line.</param>
-    public void SetSingleLine(Vector3 from, Vector3 to, Color colorFrom, Color colorTo)
+    public void SetAsSingleLine(Vector3 from, Vector3 to, Color colorFrom, Color colorTo)
     {
         ClearVertices();
 
@@ -129,9 +129,9 @@ public sealed class LinesPrimitive : Primitive
     /// <param name="radius">The radius of the circle.</param>
     /// <param name="worldTransform">The world transform of the circle.</param>
     /// <param name="color">The color of the circle.</param>
-    public void SetCircle(float radius, Matrix4 worldTransform, Color color)
+    public void SetAsCircle(float radius, Matrix4 worldTransform, Color color)
     {
-        SetEllipse(radius, radius, worldTransform, color);
+        SetAsEllipse(radius, radius, worldTransform, color);
     }
 
     /// <summary>
@@ -141,7 +141,7 @@ public sealed class LinesPrimitive : Primitive
     /// <param name="radiusY">The Y-axis radius of the ellipse.</param>
     /// <param name="worldTransform">The world transform of the ellipse.</param>
     /// <param name="color">The color of the ellipse.</param>
-    public void SetEllipse(float radiusX, float radiusY, Matrix4 worldTransform, Color color)
+    public void SetAsEllipse(float radiusX, float radiusY, Matrix4 worldTransform, Color color)
     {
         ClearVertices();
 
@@ -168,7 +168,7 @@ public sealed class LinesPrimitive : Primitive
     /// <param name="sideLength">The side length the square.</param>
     /// <param name="worldTransform">The world transform of the square.</param>
     /// <param name="color">The color of the square.</param>
-    public void SetSquare(float sideLength, Matrix4 worldTransform, Color color)
+    public void SetAsSquare(float sideLength, Matrix4 worldTransform, Color color)
     {
         ClearVertices();
 
@@ -190,7 +190,7 @@ public sealed class LinesPrimitive : Primitive
     /// <param name="positions">The positions of the vertices of the polygon.</param>
     /// <param name="worldTransform">The world transform of the polygon.</param>
     /// <param name="color">The color of the polygon.</param>
-    public void SetPolygon(Vector2[] positions, Matrix4 worldTransform, Color color)
+    public void SetAsPolygon(Vector2[] positions, Matrix4 worldTransform, Color color)
     {
         ClearVertices();
 

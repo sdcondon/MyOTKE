@@ -21,7 +21,7 @@ public sealed class TrianglesPrimitive : Primitive
     public static TrianglesPrimitive Cuboid(Vector3 size, Matrix4 worldTransform, Color color)
     {
         TrianglesPrimitive p = new();
-        p.SetCuboid(size, worldTransform, color);
+        p.SetAsCuboid(size, worldTransform, color);
         return p;
     }
 
@@ -35,7 +35,7 @@ public sealed class TrianglesPrimitive : Primitive
     public static TrianglesPrimitive Quad(Vector2 size, Matrix4 worldTransform, Color color)
     {
         TrianglesPrimitive p = new();
-        p.SetQuad(size, worldTransform, color);
+        p.SetAsQuad(size, worldTransform, color);
         return p;
     }
 
@@ -45,7 +45,7 @@ public sealed class TrianglesPrimitive : Primitive
     /// <param name="size">The dimensions of the cuboid.</param>
     /// <param name="worldTransform">The world transform of the cuboid.</param>
     /// <param name="color">The color of the cuboid.</param>
-    public void SetCuboid(Vector3 size, Matrix4 worldTransform, Color color)
+    public void SetAsCuboid(Vector3 size, Matrix4 worldTransform, Color color)
     {
         ClearVertices();
 
@@ -72,7 +72,7 @@ public sealed class TrianglesPrimitive : Primitive
     /// <param name="size">The dimensions of the quad.</param>
     /// <param name="worldTransform">The world transform of the quad.</param>
     /// <param name="color">The color of the quad.</param>
-    public void SetQuad(Vector2 size, Matrix4 worldTransform, Color color)
+    public void SetAsQuad(Vector2 size, Matrix4 worldTransform, Color color)
     {
         ClearVertices();
 

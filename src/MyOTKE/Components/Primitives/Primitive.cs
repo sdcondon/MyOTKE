@@ -7,9 +7,6 @@ namespace MyOTKE.Components.Primitives;
 /// <summary>
 /// Container for primitive vertex data.
 /// </summary>
-/// <remarks>
-/// TODO: Perhaps should be an immutable struct instead to discourage heap allocations..
-/// </remarks>
 public abstract class Primitive
 {
     private readonly List<PrimitiveVertex> vertices = [];
@@ -26,10 +23,16 @@ public abstract class Primitive
         SetBufferItem();
     }
 
-    internal void RemoveFromBuffer()
+    internal bool RemoveFromBuffer(ListBuffer<PrimitiveVertex> buffer)
     {
+        if (!object.ReferenceEquals(buffer, bufferItem.Parent))
+        {
+            return false;
+        }
+
         bufferItem.Dispose();
         bufferItem = null;
+        return true;
     }
 
     protected void AddVertex(Vector3 position, Color color, Vector3 normal)
@@ -44,9 +47,6 @@ public abstract class Primitive
 
     protected void SetBufferItem()
     {
-        if (bufferItem != null)
-        {
-            bufferItem.Set(vertices);
-        }
+        bufferItem?.Set(vertices);
     }
 }

@@ -30,7 +30,7 @@ public class OrbitComponent : CompositeComponent
             nearPlaneDistance: 0.1f,
             farPlaneDistance: 100f);
 
-        AddComponent(new Primitives(camera, [cube], 12)
+        AddComponent(new PrimitivesComponent(camera, [cube], 12)
         {
             AmbientLightColor = Color.Grey(0.1f),
             DirectedLightDirection = new Vector3(.2f, .4f, .6f),

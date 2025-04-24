@@ -44,8 +44,6 @@ public class ListBuffer<TVertex> : IDisposable
     /// <inheritdoc />
     public void Dispose()
     {
-        // TODO: Dispose vertexSource subscription
-
         // TODO LIFETIME MGMT: aggregated, not component - thus ideally not our responsibility to Dispose
         if (vao is IDisposable disposable)
         {
@@ -63,47 +61,46 @@ public class ListBuffer<TVertex> : IDisposable
 
     private class ListBufferItem(ListBuffer<TVertex> parent) : IListBufferItem<TVertex>
     {
-        private readonly ListBuffer<TVertex> parent = parent;
         private readonly SortedList<int, int> bufferIndices = [];
 
-        public TVertex this[int index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public ListBuffer<TVertex> Parent { get; } = parent;
 
         public void Set(IList<TVertex> vertices)
         {
-            if (vertices.Count % parent.verticesPerAtom != 0)
+            if (vertices.Count % Parent.verticesPerAtom != 0)
             {
-                throw new InvalidOperationException($"Attribute getter must return multiple of correct number of vertices ({parent.verticesPerAtom}), but actually returned {vertices.Count}.");
+                throw new InvalidOperationException($"Attribute getter must return multiple of correct number of vertices ({Parent.verticesPerAtom}), but actually returned {vertices.Count}.");
             }
 
             var atomIndex = 0;
-            for (; atomIndex < vertices.Count / parent.verticesPerAtom; atomIndex++)
+            for (; atomIndex < vertices.Count / Parent.verticesPerAtom; atomIndex++)
             {
                 // Add a buffer index to the list if we need to
                 if (atomIndex >= bufferIndices.Count)
                 {
-                    if (parent.linksByBufferIndex.Count >= parent.atomCapacity)
+                    if (Parent.linksByBufferIndex.Count >= Parent.atomCapacity)
                     {
                         throw new InvalidOperationException("Buffer is full");
                     }
 
-                    bufferIndices.Add(parent.linksByBufferIndex.Count, parent.linksByBufferIndex.Count);
-                    parent.linksByBufferIndex.Add(this);
+                    bufferIndices.Add(Parent.linksByBufferIndex.Count, Parent.linksByBufferIndex.Count);
+                    Parent.linksByBufferIndex.Add(this);
                 }
 
                 // Establish buffer index to write to
                 var bufferIndex = bufferIndices.Values[atomIndex];
 
                 // Set vertex attributes
-                for (int i = 0; i < parent.verticesPerAtom; i++)
+                for (int i = 0; i < Parent.verticesPerAtom; i++)
                 {
-                    parent.vao.AttributeBuffer1[bufferIndex * parent.verticesPerAtom + i] = vertices[atomIndex * parent.verticesPerAtom + i];
+                    Parent.vao.AttributeBuffer1[bufferIndex * Parent.verticesPerAtom + i] = vertices[atomIndex * Parent.verticesPerAtom + i];
                 }
 
                 // Update the index
-                for (int i = 0; i < parent.atomIndices.Count; i++)
+                for (int i = 0; i < Parent.atomIndices.Count; i++)
                 {
-                    parent.vao.IndexBuffer[bufferIndex * parent.atomIndices.Count + i] =
-                        (uint)(bufferIndex * parent.verticesPerAtom + parent.atomIndices[i]);
+                    Parent.vao.IndexBuffer[bufferIndex * Parent.atomIndices.Count + i] =
+                        (uint)(bufferIndex * Parent.verticesPerAtom + Parent.atomIndices[i]);
                 }
             }
 
@@ -127,10 +124,10 @@ public class ListBuffer<TVertex> : IDisposable
             var index = bufferIndices.Values[atomIndex];
 
             // Grab the last link by buffer index, remove its last
-            var finalBufferIndex = parent.linksByBufferIndex.Count - 1;
-            var lastLink = parent.linksByBufferIndex[finalBufferIndex];
+            var finalBufferIndex = Parent.linksByBufferIndex.Count - 1;
+            var lastLink = Parent.linksByBufferIndex[finalBufferIndex];
             lastLink.bufferIndices.RemoveAt(lastLink.bufferIndices.Count - 1);
-            parent.linksByBufferIndex.RemoveAt(finalBufferIndex);
+            Parent.linksByBufferIndex.RemoveAt(finalBufferIndex);
 
             // If last one in the buffer isn't the one being removed, move it
             // to replace the one being removed so that the buffer stays contiguous
@@ -138,11 +135,11 @@ public class ListBuffer<TVertex> : IDisposable
             {
                 bufferIndices.Remove(index);
                 lastLink.bufferIndices.Add(index, index);
-                parent.vao.AttributeBuffer1.Copy(
-                    finalBufferIndex * parent.verticesPerAtom,
-                    index * parent.verticesPerAtom,
-                    parent.verticesPerAtom);
-                parent.linksByBufferIndex[index] = lastLink;
+                Parent.vao.AttributeBuffer1.Copy(
+                    finalBufferIndex * Parent.verticesPerAtom,
+                    index * Parent.verticesPerAtom,
+                    Parent.verticesPerAtom);
+                Parent.linksByBufferIndex[index] = lastLink;
             }
         }
     }

@@ -85,7 +85,7 @@ public class FirstPersonComponent : CompositeComponent
             AmbientLightColor = Color.Grey(),
         });
 
-        AddComponent(new Primitives(camera, [cube], 12)
+        AddComponent(new PrimitivesComponent(camera, [cube], 12)
         {
             AmbientLightColor = Color.Grey(0.1f),
             DirectedLightDirection = new Vector3(0, 1f, 0f),
@@ -143,7 +143,7 @@ public class FirstPersonComponent : CompositeComponent
         // Could do with more helpers to make this easier. Perhaps Primitive should be a struct after all..
         cubeWorldMatrix *= Matrix4.CreateRotationZ((float)elapsed.TotalSeconds);
         cubeWorldMatrix *= Matrix4.CreateRotationY((float)elapsed.TotalSeconds / 2);
-        cube.SetCuboid(new Vector3(.5f, 1f, 0.75f), cubeWorldMatrix, Color.Red());
+        cube.SetAsCuboid(new Vector3(.5f, 1f, 0.75f), cubeWorldMatrix, Color.Red());
 
         if (view.IsMouseButtonReleased(MouseButton.Left))
         {

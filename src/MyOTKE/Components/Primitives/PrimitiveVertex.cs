@@ -11,17 +11,17 @@ namespace MyOTKE.Components.Primitives;
 public readonly struct PrimitiveVertex(Vector3 position, Vector4 color, Vector3 normal)
 {
     /// <summary>
-    /// Gets the position of the vertex.
+    /// The position of the vertex.
     /// </summary>
     public readonly Vector3 Position = position;
 
     /// <summary>
-    /// Gets the color of the vertex.
+    /// The color of the vertex.
     /// </summary>
     public readonly Vector4 Color = color;
 
     /// <summary>
-    /// Gets the normal vector of the vertex.
+    /// The normal vector of the vertex.
     /// </summary>
     public readonly Vector3 Normal = normal;
 }
