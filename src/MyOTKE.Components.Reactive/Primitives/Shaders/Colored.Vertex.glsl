@@ -14,15 +14,18 @@ out vec3 EyeDirection_cameraspace;
 out vec3 PointLightDirection_cameraspace;
 
 // Values that stay constant for the whole mesh.
-uniform mat4 MVP;
-uniform mat4 V;
-uniform mat4 M;
 uniform vec3 PointLightPosition;
+uniform mat4 M;
+layout (std140) uniform Camera
+{
+    mat4 V;
+	mat4 P;
+};
 
 void main(){
 
 	// Output position of the vertex, in clip space : MVP * position
-	gl_Position =  MVP * vec4(vertexPosition_modelspace, 1);
+	gl_Position =  P * V * M * vec4(vertexPosition_modelspace, 1);
 	
 	// Position of the vertex, in worldspace : M * position
 	Position_worldspace = (M * vec4(vertexPosition_modelspace, 1)).xyz;
@@ -44,4 +47,3 @@ void main(){
 	// Color of the vertex. No special space for this one.
 	matColor = vertexColor;
 }
-
