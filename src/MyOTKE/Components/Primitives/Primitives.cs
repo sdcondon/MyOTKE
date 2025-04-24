@@ -177,8 +177,7 @@ public class Primitives : IComponent
     {
         ThrowIfDisposed();
 
-        // TODO: camera should manage this..
-        program.UniformBuffer1[0] = new CameraUniformBlock
+        program.UseWithDefaultUniformBlock(new Uniforms
         {
             MVP = camera.View * camera.Projection,
             V = camera.View,

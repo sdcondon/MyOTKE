@@ -21,16 +21,16 @@
 	<EmbeddedResource Include="Gui\Shaders\Gui.Vertex.glsl">
 	  <LogicalName>Gui.Vertex.glsl</LogicalName>
 	</EmbeddedResource>
-	<EmbeddedResource Include="Primitives\Colored.Fragment.glsl">
+	<EmbeddedResource Include="Primitives\Shaders\Colored.Fragment.glsl">
       <LogicalName>Primitives.Colored.Fragment.glsl</LogicalName>
 	</EmbeddedResource>
-    <EmbeddedResource Include="Primitives\Colored.Vertex.glsl">
+    <EmbeddedResource Include="Primitives\Shaders\Colored.Vertex.glsl">
 	  <LogicalName>Primitives.Colored.Vertex.glsl</LogicalName>
 	</EmbeddedResource>
-    <EmbeddedResource Include="Primitives\ColoredLines.Fragment.glsl">
+    <EmbeddedResource Include="Primitives\Shaders\ColoredLines.Fragment.glsl">
       <LogicalName>Primitives.ColoredLines.Fragment.glsl</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Primitives\ColoredLines.Vertex.glsl">
+    <EmbeddedResource Include="Primitives\Shaders\ColoredLines.Vertex.glsl">
       <LogicalName>Primitives.ColoredLines.Vertex.glsl</LogicalName>
     </EmbeddedResource>
   </ItemGroup>

@@ -21,28 +21,28 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Components\Primitives\Colored.Fragment.glsl">
+    <EmbeddedResource Include="Components\Primitives\Shaders\Colored.Fragment.glsl">
       <LogicalName>Primitives.Colored.Fragment.glsl</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Components\Primitives\Colored.Vertex.glsl">
+    <EmbeddedResource Include="Components\Primitives\Shaders\Colored.Vertex.glsl">
       <LogicalName>Primitives.Colored.Vertex.glsl</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Components\Primitives\ColoredLines.Fragment.glsl">
+    <EmbeddedResource Include="Components\Primitives\Shaders\ColoredLines.Fragment.glsl">
       <LogicalName>Primitives.ColoredLines.Fragment.glsl</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Components\Primitives\ColoredLines.Vertex.glsl">
+    <EmbeddedResource Include="Components\Primitives\Shaders\ColoredLines.Vertex.glsl">
       <LogicalName>Primitives.ColoredLines.Vertex.glsl</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Components\StaticMeshes\Colored.Fragment.glsl">
+    <EmbeddedResource Include="Components\StaticMeshes\Shaders\Colored.Fragment.glsl">
       <LogicalName>StaticMeshes.Colored.Fragment.glsl</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Components\StaticMeshes\Colored.Vertex.glsl">
+    <EmbeddedResource Include="Components\StaticMeshes\Shaders\Colored.Vertex.glsl">
       <LogicalName>StaticMeshes.Colored.Vertex.glsl</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Components\StaticMeshes\Textured.Fragment.glsl">
+    <EmbeddedResource Include="Components\StaticMeshes\Shaders\Textured.Fragment.glsl">
       <LogicalName>StaticMeshes.Textured.Fragment.glsl</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Components\StaticMeshes\Textured.Vertex.glsl">
+    <EmbeddedResource Include="Components\StaticMeshes\Shaders\Textured.Vertex.glsl">
       <LogicalName>StaticMeshes.Textured.Vertex.glsl</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
