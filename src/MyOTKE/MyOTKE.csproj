@@ -27,12 +27,6 @@
     <EmbeddedResource Include="Components\Primitives\Shaders\Colored.Vertex.glsl">
       <LogicalName>Primitives.Colored.Vertex.glsl</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Components\Primitives\Shaders\ColoredLines.Fragment.glsl">
-      <LogicalName>Primitives.ColoredLines.Fragment.glsl</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Components\Primitives\Shaders\ColoredLines.Vertex.glsl">
-      <LogicalName>Primitives.ColoredLines.Vertex.glsl</LogicalName>
-    </EmbeddedResource>
     <EmbeddedResource Include="Components\StaticMeshes\Shaders\Colored.Fragment.glsl">
       <LogicalName>StaticMeshes.Colored.Fragment.glsl</LogicalName>
     </EmbeddedResource>

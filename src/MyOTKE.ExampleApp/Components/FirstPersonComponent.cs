@@ -15,7 +15,7 @@ public class FirstPersonComponent : CompositeComponent
     private readonly MyOTKEWindow view;
     private readonly FirstPersonCamera camera;
 
-    private readonly ColoredLines lines;
+    private readonly PrimitivesComponent lines;
     private readonly Text camTextElement;
     private readonly TextStream logElement;
 
@@ -92,7 +92,7 @@ public class FirstPersonComponent : CompositeComponent
             DirectedLightColor = Color.Grey(),
         });
 
-        AddComponent(lines = new(camera)
+        AddComponent(lines = new PrimitivesComponent(camera, [], 100)
         {
             AmbientLightColor = Color.Grey(),
         });
@@ -148,7 +148,7 @@ public class FirstPersonComponent : CompositeComponent
         if (view.IsMouseButtonReleased(MouseButton.Left))
         {
             var ray = new Ray(camera, view);
-            lines.AddLine(ray.Origin, ray.Origin + ray.Direction * 10);
+            lines.Add(LinesPrimitive.SingleLine(ray.Origin, ray.Origin + ray.Direction * 10, Color.White()));
             logElement.PushMessage($"RAY FROM {ray.Origin:F2}");
         }
 

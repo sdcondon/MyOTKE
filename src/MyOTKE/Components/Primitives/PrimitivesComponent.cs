@@ -14,8 +14,8 @@ namespace MyOTKE.Components.Primitives;
 public class PrimitivesComponent : IComponent
 {
     private static readonly object ProgramStateLock = new();
-    private static GlProgramWithDUBBuilder<Uniforms> programBuilder;
-    private static GlProgramWithDUB<Uniforms> program;
+    private static GlProgramWithDUBBuilder<DefaultUniformBlock, CameraUniformBlock> programBuilder;
+    private static GlProgramWithDUB<DefaultUniformBlock, CameraUniformBlock> program;
 
     private readonly IViewProjection camera;
     private readonly Queue<Primitive> initialPrimitives;
@@ -49,7 +49,8 @@ public class PrimitivesComponent : IComponent
                     programBuilder = new GlProgramBuilder()
                         .WithVertexShaderFromEmbeddedResource("Primitives.Colored.Vertex.glsl")
                         .WithFragmentShaderFromEmbeddedResource("Primitives.Colored.Fragment.glsl")
-                        .WithDefaultUniformBlock<Uniforms>();
+                        .WithDefaultUniformBlock<DefaultUniformBlock>()
+                        .WithSharedUniformBufferObject<CameraUniformBlock>("Camera", BufferUsageHint.DynamicDraw, 1);
                 }
             }
         }
@@ -100,7 +101,7 @@ public class PrimitivesComponent : IComponent
     /// <inheritdoc />
     public void Load()
     {
-        ThrowIfDisposed();
+        ObjectDisposedException.ThrowIf(isDisposed, this);
 
         if (program == null)
         {
@@ -132,7 +133,9 @@ public class PrimitivesComponent : IComponent
     /// <param name="primitive">The primitive to add.</param>
     public void Add(Primitive primitive)
     {
-        // meh, thread-safety
+        ObjectDisposedException.ThrowIf(isDisposed, this);
+
+        // thread-safety! meh..
         if (primitive is TrianglesPrimitive triangles)
         {
             if (coloredTriangleBuffer != null)
@@ -163,7 +166,9 @@ public class PrimitivesComponent : IComponent
     /// <param name="primitive">The primitive to remove.</param>
     public void Remove(Primitive primitive)
     {
-        // meh, thread-safety
+        ObjectDisposedException.ThrowIf(isDisposed, this);
+
+        // thread-safety! meh..
         if (primitive is TrianglesPrimitive triangles)
         {
             if (coloredTriangleBuffer != null)
@@ -196,20 +201,26 @@ public class PrimitivesComponent : IComponent
     /// <inheritdoc />
     public void Render()
     {
-        ThrowIfDisposed();
+        ObjectDisposedException.ThrowIf(isDisposed, this);
 
-        program.UseWithDefaultUniformBlock(new Uniforms
+        // TODO: camera should manage this..
+        program.UniformBuffer1[0] = new CameraUniformBlock
         {
-            MVP = camera.View * camera.Projection,
             V = camera.View,
+            P = camera.Projection,
+        };
+
+        program.UseWithDefaultUniformBlock(new DefaultUniformBlock
+        {
             M = Matrix4.Identity,
             AmbientLightColor = AmbientLightColor,
             DirectedLightDirection = DirectedLightDirection,
             DirectedLightColor = DirectedLightColor,
             PointLightPosition = PointLightPosition,
             PointLightColor = PointLightColor,
-            PointLightPower = PointLightPower,
+            PointLightPower = PointLightPower
         });
+
         coloredTriangleBuffer.Draw();
         coloredLineBuffer.Draw();
     }
@@ -223,15 +234,14 @@ public class PrimitivesComponent : IComponent
         isDisposed = true;
     }
 
-    private void ThrowIfDisposed()
+    private struct CameraUniformBlock
     {
-        ObjectDisposedException.ThrowIf(isDisposed, this);
+        public Matrix4 V;
+        public Matrix4 P;
     }
 
-    private struct Uniforms
+    private struct DefaultUniformBlock
     {
-        public Matrix4 MVP;
-        public Matrix4 V;
         public Matrix4 M;
         public Vector3 AmbientLightColor;
         public Vector3 DirectedLightDirection;
