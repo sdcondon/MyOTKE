@@ -1,7 +1,5 @@
-﻿using MyOTKE.BufferManagement;
-using OpenTK.Mathematics;
+﻿using OpenTK.Mathematics;
 using System;
-using System.Collections.Generic;
 
 namespace MyOTKE.Components.Primitives;
 
