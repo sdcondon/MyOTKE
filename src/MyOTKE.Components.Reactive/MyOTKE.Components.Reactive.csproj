@@ -46,8 +46,4 @@
 	<ProjectReference Include="..\MyOTKE\MyOTKE.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="BasicExamples\" />
-  </ItemGroup>
-
 </Project>

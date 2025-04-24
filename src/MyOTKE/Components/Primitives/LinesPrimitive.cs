@@ -11,16 +11,8 @@ namespace MyOTKE.Components.Primitives;
 /// <remarks>
 /// TODO: Perhaps should be an immutable struct instead to discourage heap allocations..
 /// </remarks>
-public sealed class LinesPrimitive
+public sealed class LinesPrimitive : Primitive
 {
-    private readonly List<PrimitiveVertex> vertices = [];
-    private IListBufferItem<PrimitiveVertex>? bufferItem;
-
-    /// <summary>
-    /// Gets the list of vertices that comprise the primitive.
-    /// </summary>
-    public IReadOnlyList<PrimitiveVertex> Vertices => vertices;
-
     /// <summary>
     /// Creates a line primitive of constant color.
     /// </summary>
@@ -123,7 +115,7 @@ public sealed class LinesPrimitive
     /// <param name="colorTo">The color of the other end of the line.</param>
     public void SetSingleLine(Vector3 from, Vector3 to, Color colorFrom, Color colorTo)
     {
-        vertices.Clear();
+        ClearVertices();
 
         AddVertex(from, colorFrom, Vector3.Zero);
         AddVertex(to, colorTo, Vector3.Zero);
@@ -151,7 +143,7 @@ public sealed class LinesPrimitive
     /// <param name="color">The color of the ellipse.</param>
     public void SetEllipse(float radiusX, float radiusY, Matrix4 worldTransform, Color color)
     {
-        vertices.Clear();
+        ClearVertices();
 
         var segments = 16;
 
@@ -178,7 +170,7 @@ public sealed class LinesPrimitive
     /// <param name="color">The color of the square.</param>
     public void SetSquare(float sideLength, Matrix4 worldTransform, Color color)
     {
-        vertices.Clear();
+        ClearVertices();
 
         AddVertex(Vector3.TransformPosition(new Vector3(-sideLength / 2, -sideLength / 2, 0), worldTransform), color, Vector3.Zero);
         AddVertex(Vector3.TransformPosition(new Vector3(-sideLength / 2, +sideLength / 2, 0), worldTransform), color, Vector3.Zero);
@@ -200,7 +192,7 @@ public sealed class LinesPrimitive
     /// <param name="color">The color of the polygon.</param>
     public void SetPolygon(Vector2[] positions, Matrix4 worldTransform, Color color)
     {
-        vertices.Clear();
+        ClearVertices();
 
         for (int i = 0; i < positions.Length; i++)
         {
@@ -209,27 +201,5 @@ public sealed class LinesPrimitive
         }
 
         SetBufferItem();
-    }
-
-    internal void AddToBuffer(ListBuffer<PrimitiveVertex> buffer)
-    {
-        bufferItem = buffer.Add();
-        SetBufferItem();
-    }
-
-    internal void RemoveFromBuffer()
-    {
-        bufferItem.Dispose();
-        bufferItem = null;
-    }
-
-    private void AddVertex(Vector3 position, Color color, Vector3 normal)
-    {
-        vertices.Add(new PrimitiveVertex(position, color, normal));
-    }
-
-    private void SetBufferItem()
-    {
-        bufferItem?.Set(vertices);
     }
 }

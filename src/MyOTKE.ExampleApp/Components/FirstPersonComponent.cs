@@ -1,15 +1,12 @@
 ﻿using MyOTKE.Cameras;
 using MyOTKE.Components;
+using MyOTKE.Components.Primitives;
 using MyOTKE.Components.Reactive.Gui;
 using MyOTKE.Components.Reactive.Gui.Elements;
-using MyOTKE.Components.Reactive.Primitives;
 using MyOTKE.Components.StaticMeshes;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
-using System.Collections.Generic;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 
 namespace MyOTKE.ExampleApp.Components;
 
@@ -18,12 +15,11 @@ public class FirstPersonComponent : CompositeComponent
     private readonly MyOTKEWindow view;
     private readonly FirstPersonCamera camera;
 
-    private readonly MyOTKE.Components.Primitives.ColoredLines lines;
+    private readonly ColoredLines lines;
     private readonly Text camTextElement;
     private readonly TextStream logElement;
 
-    private readonly Subject<IList<Primitive>> cubeSubject = new();
-    private readonly Primitive[] cubePrimitives = [Primitive.Empty()];
+    private readonly TrianglesPrimitive cube = new();
     private Matrix4 cubeWorldMatrix = Matrix4.Identity;
     private Vector3 lastCamPosition = Vector3.Zero;
 
@@ -89,7 +85,7 @@ public class FirstPersonComponent : CompositeComponent
             AmbientLightColor = Color.Grey(),
         });
 
-        AddComponent(new PrimitiveRenderer(camera, Observable.Return(cubeSubject), 12)
+        AddComponent(new Primitives(camera, [cube], 12)
         {
             AmbientLightColor = Color.Grey(0.1f),
             DirectedLightDirection = new Vector3(0, 1f, 0f),
@@ -147,8 +143,7 @@ public class FirstPersonComponent : CompositeComponent
         // Could do with more helpers to make this easier. Perhaps Primitive should be a struct after all..
         cubeWorldMatrix *= Matrix4.CreateRotationZ((float)elapsed.TotalSeconds);
         cubeWorldMatrix *= Matrix4.CreateRotationY((float)elapsed.TotalSeconds / 2);
-        cubePrimitives[0].SetCuboid(new Vector3(.5f, 1f, 0.75f), cubeWorldMatrix, Color.Red());
-        cubeSubject.OnNext(cubePrimitives);
+        cube.SetCuboid(new Vector3(.5f, 1f, 0.75f), cubeWorldMatrix, Color.Red());
 
         if (view.IsMouseButtonReleased(MouseButton.Left))
         {

@@ -18,6 +18,7 @@ public class Primitives : IComponent
     private static GlProgramWithDUB<Uniforms> program;
 
     private readonly IViewProjection camera;
+    private readonly Queue<Primitive> initialPrimitives;
 
     private ListBufferBuilder<PrimitiveVertex> coloredTriangleBufferBuilder;
     private ListBuffer<PrimitiveVertex> coloredTriangleBuffer;
@@ -29,13 +30,15 @@ public class Primitives : IComponent
     /// Initializes a new instance of the <see cref="Primitives"/> class.
     /// </summary>
     /// <param name="camera">Provider for view and projection matrices.</param>
-    /// <param name="source">Source data. Outer sequence pushes different renderable entities, each of which pushes each time its state changes.</param>
+    /// <param name="initialPrimitives">The initial primitives to display.</param>
     /// <param name="capacity">The maximum number of triangles and lines that can be rendered at once.</param>
     public Primitives(
         IViewProjection camera,
+        IEnumerable<Primitive> initialPrimitives,
         int capacity)
     {
         this.camera = camera;
+        this.initialPrimitives = new(initialPrimitives);
 
         if (program == null && programBuilder == null)
         {
@@ -116,25 +119,49 @@ public class Primitives : IComponent
 
         coloredLineBuffer = coloredLineBufferBuilder.Build();
         coloredLineBufferBuilder = null;
+
+        foreach (var primitive in initialPrimitives)
+        {
+            Add(primitive);
+        }
     }
 
-    public void Add(TrianglesPrimitive primitive)
+    /// <summary>
+    /// Adds a primitive.
+    /// </summary>
+    /// <param name="primitive">The primitive to add.</param>
+    public void Add(Primitive primitive)
     {
-        primitive.AddToBuffer(coloredTriangleBuffer);
+        // meh, thread-safety
+        if (primitive is TrianglesPrimitive triangles)
+        {
+            if (coloredTriangleBuffer != null)
+            {
+                triangles.AddToBuffer(coloredTriangleBuffer);
+            }
+            else
+            {
+                initialPrimitives.Enqueue(triangles);
+            }
+        }
+        else if (primitive is LinesPrimitive lines)
+        {
+            if (coloredLineBuffer != null)
+            {
+                lines.AddToBuffer(coloredTriangleBuffer);
+            }
+            else
+            {
+                initialPrimitives.Enqueue(lines);
+            }
+        }
     }
 
-    public void Add(LinesPrimitive primitive)
-    {
-        primitive.AddToBuffer(coloredTriangleBuffer);
-    }
-
+    /// <summary>
+    /// Removes a primitive.
+    /// </summary>
+    /// <param name="primitive">The primitive to remove.</param>
     public void Remove(TrianglesPrimitive primitive)
-    {
-        // code smell: will be removed from whatever buffer it is in, even if its not this one.
-        primitive.RemoveFromBuffer();
-    }
-
-    public void Remove(LinesPrimitive primitive)
     {
         // code smell: will be removed from whatever buffer it is in, even if its not this one.
         primitive.RemoveFromBuffer();

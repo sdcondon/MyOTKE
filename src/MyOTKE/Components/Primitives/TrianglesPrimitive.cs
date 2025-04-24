@@ -1,7 +1,5 @@
-﻿using MyOTKE.BufferManagement;
-using OpenTK.Mathematics;
+﻿using OpenTK.Mathematics;
 using System;
-using System.Collections.Generic;
 
 namespace MyOTKE.Components.Primitives;
 
@@ -11,16 +9,8 @@ namespace MyOTKE.Components.Primitives;
 /// <remarks>
 /// TODO: Perhaps should be an immutable struct instead to discourage heap allocations..
 /// </remarks>
-public sealed class TrianglesPrimitive
+public sealed class TrianglesPrimitive : Primitive
 {
-    private readonly List<PrimitiveVertex> vertices = [];
-    private IListBufferItem<PrimitiveVertex>? bufferItem;
-
-    /// <summary>
-    /// Gets the list of vertices that comprise the primitive.
-    /// </summary>
-    public IReadOnlyList<PrimitiveVertex> Vertices => vertices;
-
     /// <summary>
     /// Creates a cuboid primitive.
     /// </summary>
@@ -57,7 +47,7 @@ public sealed class TrianglesPrimitive
     /// <param name="color">The color of the cuboid.</param>
     public void SetCuboid(Vector3 size, Matrix4 worldTransform, Color color)
     {
-        vertices.Clear();
+        ClearVertices();
 
         var xy = new Vector2(size.X, size.Y);
         var xz = new Vector2(size.X, size.Z);
@@ -84,23 +74,11 @@ public sealed class TrianglesPrimitive
     /// <param name="color">The color of the quad.</param>
     public void SetQuad(Vector2 size, Matrix4 worldTransform, Color color)
     {
-        vertices.Clear();
+        ClearVertices();
 
         AddQuad(size, worldTransform, color);
 
         SetBufferItem();
-    }
-
-    internal void AddToBuffer(ListBuffer<PrimitiveVertex> buffer)
-    {
-        bufferItem = buffer.Add();
-        SetBufferItem();
-    }
-
-    internal void RemoveFromBuffer()
-    {
-        bufferItem.Dispose();
-        bufferItem = null;
     }
 
     private void AddQuad(Vector2 size, Matrix4 worldTransform, Color color)
@@ -113,18 +91,5 @@ public sealed class TrianglesPrimitive
         AddVertex(Vector3.TransformPosition(new Vector3(+size.X / 2, +size.Y / 2, 0), worldTransform), color, normal);
         AddVertex(Vector3.TransformPosition(new Vector3(-size.X / 2, +size.Y / 2, 0), worldTransform), color, normal);
         AddVertex(Vector3.TransformPosition(new Vector3(+size.X / 2, -size.Y / 2, 0), worldTransform), color, normal);
-    }
-
-    private void AddVertex(Vector3 position, Color color, Vector3 normal)
-    {
-        vertices.Add(new PrimitiveVertex(position, color, normal));
-    }
-
-    private void SetBufferItem()
-    {
-        if (bufferItem != null)
-        {
-            bufferItem.Set(vertices);
-        }
     }
 }
