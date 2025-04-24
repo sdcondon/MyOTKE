@@ -29,7 +29,7 @@ public static class Program
             clearColor: Color.Black())
         {
             Title = "MyOTKE Example",
-            WindowState = WindowState.Normal,
+            WindowState = WindowState.Maximized,
             WindowBorder = WindowBorder.Resizable,
         };
 

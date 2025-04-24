@@ -1,7 +1,6 @@
 ﻿using MyOTKE.Cameras;
 using MyOTKE.Components;
 using MyOTKE.Components.Primitives;
-using MyOTKE.Components.Reactive.BasicExamples;
 using MyOTKE.Components.Reactive.Gui;
 using MyOTKE.Components.Reactive.Gui.Elements;
 using MyOTKE.Components.Reactive.Primitives;
@@ -19,7 +18,7 @@ public class FirstPersonComponent : CompositeComponent
     private readonly MyOTKEWindow view;
     private readonly FirstPersonCamera camera;
 
-    private readonly ColoredLines lines;
+    private readonly MyOTKE.Components.Primitives.ColoredLines lines;
     private readonly Text camTextElement;
     private readonly TextStream logElement;
 
@@ -97,7 +96,7 @@ public class FirstPersonComponent : CompositeComponent
             DirectedLightColor = Color.Grey(),
         });
 
-        AddComponent(lines = new ColoredLines(camera)
+        AddComponent(lines = new(camera)
         {
             AmbientLightColor = Color.Grey(),
         });
