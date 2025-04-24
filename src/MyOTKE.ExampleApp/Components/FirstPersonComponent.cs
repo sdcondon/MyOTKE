@@ -1,9 +1,9 @@
 ﻿using MyOTKE.Cameras;
 using MyOTKE.Components;
-using MyOTKE.Components.Primitives;
 using MyOTKE.Components.Reactive.Gui;
 using MyOTKE.Components.Reactive.Gui.Elements;
 using MyOTKE.Components.Reactive.Primitives;
+using MyOTKE.Components.StaticMeshes;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
