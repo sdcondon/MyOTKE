@@ -12,17 +12,9 @@
 
   <ItemGroup>
 	<None Remove="$(DocumentationFile)" />
-    <None Remove="Colored.Fragment.glsl" />
-    <None Remove="Colored.Vertex.glsl" />
   </ItemGroup>
 
   <ItemGroup>
-	<EmbeddedResource Include="BasicExamples\Colored.Fragment.glsl">
-	  <LogicalName>BasicExamples.Colored.Fragment.glsl</LogicalName>
-	</EmbeddedResource>
-	<EmbeddedResource Include="BasicExamples\Colored.Vertex.glsl">
-	  <LogicalName>BasicExamples.Colored.Vertex.glsl</LogicalName>
-	</EmbeddedResource>
 	<EmbeddedResource Include="Gui\Shaders\Gui.Fragment.glsl">
 	  <LogicalName>Gui.Fragment.glsl</LogicalName>
 	</EmbeddedResource>
@@ -35,6 +27,12 @@
     <EmbeddedResource Include="Primitives\Colored.Vertex.glsl">
 	  <LogicalName>Primitives.Colored.Vertex.glsl</LogicalName>
 	</EmbeddedResource>
+    <EmbeddedResource Include="Primitives\ColoredLines.Fragment.glsl">
+      <LogicalName>Primitives.ColoredLines.Fragment.glsl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Primitives\ColoredLines.Vertex.glsl">
+      <LogicalName>Primitives.ColoredLines.Vertex.glsl</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -46,6 +44,10 @@
 
   <ItemGroup>
 	<ProjectReference Include="..\MyOTKE\MyOTKE.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="BasicExamples\" />
   </ItemGroup>
 
 </Project>

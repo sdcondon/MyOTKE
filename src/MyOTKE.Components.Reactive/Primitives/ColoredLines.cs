@@ -4,11 +4,10 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using System;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Reactive.Linq;
 
-namespace MyOTKE.Components.Reactive.BasicExamples;
+namespace MyOTKE.Components.Reactive.Primitives;
 
 /// <summary>
 /// Simple component class that draws a set of 3D lines.
@@ -33,7 +32,7 @@ public class ColoredLines : IComponent
     public ColoredLines(IViewProjection viewProjection)
     {
         this.viewProjection = viewProjection;
-        this.lines = [];
+        lines = [];
 
         if (program == null && programBuilder == null)
         {
@@ -42,19 +41,19 @@ public class ColoredLines : IComponent
                 if (program == null && programBuilder == null)
                 {
                     programBuilder = new GlProgramBuilder()
-                        .WithVertexShaderFromEmbeddedResource("BasicExamples.Colored.Vertex.glsl")
-                        .WithFragmentShaderFromEmbeddedResource("BasicExamples.Colored.Fragment.glsl")
+                        .WithVertexShaderFromEmbeddedResource("Primitives.ColoredLines.Vertex.glsl")
+                        .WithFragmentShaderFromEmbeddedResource("Primitives.ColoredLines.Fragment.glsl")
                         .WithDefaultUniformBlock<DefaultUniformBlock>()
                         .WithSharedUniformBufferObject<CameraUniformBlock>("Camera", BufferUsageHint.DynamicDraw, 1);
                 }
             }
         }
 
-        this.linesBufferBuilder = new ReactiveBufferBuilder<Vertex>(
+        linesBufferBuilder = new ReactiveBufferBuilder<Vertex>(
             primitiveType: PrimitiveType.Lines,
             atomCapacity: 100,
             atomIndices: [ 0, 1 ],
-            atomSource: ((INotifyCollectionChanged)lines).ToObservable<Line>()
+            atomSource: lines.ToObservable<Line>()
                 .Select(o => o
                     .Select(i => new[]
                     {
@@ -92,7 +91,7 @@ public class ColoredLines : IComponent
     {
         ObjectDisposedException.ThrowIf(isDisposed, this);
 
-        this.lines.Add(new Line(from, to));
+        lines.Add(new Line(from, to));
     }
 
     /// <summary>
@@ -102,7 +101,7 @@ public class ColoredLines : IComponent
     {
         ObjectDisposedException.ThrowIf(isDisposed, this);
 
-        this.lines.Clear();
+        lines.Clear();
     }
 
     /// <inheritdoc />
@@ -122,8 +121,8 @@ public class ColoredLines : IComponent
             }
         }
 
-        this.linesBuffer = linesBufferBuilder.Build();
-        this.linesBufferBuilder = null;
+        linesBuffer = linesBufferBuilder.Build();
+        linesBufferBuilder = null;
     }
 
     /// <inheritdoc />
@@ -140,8 +139,8 @@ public class ColoredLines : IComponent
         // ..which is somewhat at odds with the pattern of these being pulled into, not pushed into this class..
         program.UniformBuffer1[0] = new CameraUniformBlock
         {
-            V = this.viewProjection.View,
-            P = this.viewProjection.Projection,
+            V = viewProjection.View,
+            P = viewProjection.Projection,
         };
 
         program.UseWithDefaultUniformBlock(new DefaultUniformBlock
@@ -153,13 +152,13 @@ public class ColoredLines : IComponent
             PointLightPower = PointLightPower,
         });
 
-        this.linesBuffer.Draw();
+        linesBuffer.Draw();
     }
 
     /// <inheritdoc />
     public void Dispose()
     {
-        this.linesBuffer?.Dispose();
+        linesBuffer?.Dispose();
         GC.SuppressFinalize(this);
         isDisposed = true;
     }
@@ -193,8 +192,8 @@ public class ColoredLines : IComponent
 
         public Line(Vector3 from, Vector3 to)
         {
-            this.From = from;
-            this.To = to;
+            From = from;
+            To = to;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -204,7 +203,7 @@ public class ColoredLines : IComponent
             get => from;
             set
             {
-                this.from = value;
+                from = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(From)));
             }
         }
@@ -214,7 +213,7 @@ public class ColoredLines : IComponent
             get => to;
             set
             {
-                this.to = value;
+                to = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(To)));
             }
         }
