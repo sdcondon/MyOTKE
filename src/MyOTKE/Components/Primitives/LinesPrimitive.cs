@@ -3,7 +3,7 @@ using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 
-namespace MyOTKE.Components.Reactive.Primitives;
+namespace MyOTKE.Components.Primitives;
 
 /// <summary>
 /// Container for lines primitive vertex data.
@@ -230,9 +230,6 @@ public sealed class LinesPrimitive
 
     private void SetBufferItem()
     {
-        if (bufferItem != null)
-        {
-            bufferItem.Set(vertices);
-        }
+        bufferItem?.Set(vertices);
     }
 }

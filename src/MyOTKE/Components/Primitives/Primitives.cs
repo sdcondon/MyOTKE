@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using MyOTKE.BufferManagement;
 
-namespace MyOTKE.Components.Reactive.Primitives;
+namespace MyOTKE.Components.Primitives;
 
 /// <summary>
 /// Implementation of <see cref="IComponent" /> that renders a set of primitive shapes from an observable sequence of source data.
