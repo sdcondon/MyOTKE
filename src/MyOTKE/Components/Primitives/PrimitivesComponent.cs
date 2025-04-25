@@ -55,13 +55,11 @@ public class PrimitivesComponent : IComponent
             }
         }
 
-        // Re-use a single vertex list for every primitive to reduce GC burden - NB not re-entrant
         coloredTriangleBufferBuilder = new ListBufferBuilder<PrimitiveVertex>(
             PrimitiveType.Triangles,
             capacity,
             [0, 1, 2]);
 
-        // Re-use a single vertex list for every primitive to reduce GC burden - NB not re-entrant
         coloredLineBufferBuilder = new ListBufferBuilder<PrimitiveVertex>(
             PrimitiveType.Lines,
             capacity,
@@ -168,7 +166,7 @@ public class PrimitivesComponent : IComponent
     {
         ObjectDisposedException.ThrowIf(isDisposed, this);
 
-        // thread-safety! meh..
+        // todo: thread-safety! meh..
         if (primitive is TrianglesPrimitive triangles)
         {
             if (coloredTriangleBuffer != null)

@@ -1,5 +1,6 @@
 ﻿using MyOTKE.BufferManagement;
 using OpenTK.Mathematics;
+using System;
 using System.Collections.Generic;
 
 namespace MyOTKE.Components.Primitives;
@@ -19,6 +20,11 @@ public abstract class Primitive
 
     internal void AddToBuffer(ListBuffer<PrimitiveVertex> buffer)
     {
+        if (bufferItem != null)
+        {
+            throw new InvalidOperationException("Primitive already attached to a buffer.");
+        }
+
         bufferItem = buffer.Add();
         SetBufferItem();
     }
@@ -35,16 +41,28 @@ public abstract class Primitive
         return true;
     }
 
+    /// <summary>
+    /// Adds a vertex to this primitive's vertex list.
+    /// </summary>
+    /// <param name="position">The position of the vertex to add.</param>
+    /// <param name="color">Tne color of the vertex to add.</param>
+    /// <param name="normal">The normal vector of the vertex to add.</param>
     protected void AddVertex(Vector3 position, Color color, Vector3 normal)
     {
         vertices.Add(new PrimitiveVertex(position, color, normal));
     }
 
+    /// <summary>
+    /// Clears this primitive's vertex list.
+    /// </summary>
     protected void ClearVertices()
     {
         vertices.Clear();
     }
 
+    /// <summary>
+    /// Pushes this primitive's vertices back to the buffer it is attached to. 
+    /// </summary>
     protected void SetBufferItem()
     {
         bufferItem?.Set(vertices);
