@@ -1,5 +1,5 @@
-﻿using MyOTKE.Components.Reactive.Gui;
-using MyOTKE.Components.Reactive.Gui.Elements;
+﻿using MyOTKE.Components.Gui;
+using MyOTKE.Components.Gui.Elements;
 using MyOTKE.ExampleApp.Components;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;

@@ -1,6 +1,6 @@
 ﻿using MyOTKE.Components;
-using MyOTKE.Components.Reactive.Gui;
-using MyOTKE.Components.Reactive.Gui.Elements;
+using MyOTKE.Components.Gui;
+using MyOTKE.Components.Gui.Elements;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using System.Text;

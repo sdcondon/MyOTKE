@@ -21,6 +21,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Components\Gui\Shaders\Gui.Fragment.glsl">
+      <LogicalName>Gui.Fragment.glsl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Gui\Shaders\Gui.Vertex.glsl">
+      <LogicalName>Gui.Vertex.glsl</LogicalName>
+    </EmbeddedResource>
     <EmbeddedResource Include="Components\Primitives\Shaders\Colored.Fragment.glsl">
       <LogicalName>Primitives.Colored.Fragment.glsl</LogicalName>
     </EmbeddedResource>
@@ -43,6 +49,8 @@
 
   <ItemGroup>
     <PackageReference Include="OpenTK" Version="4.9.4" />
+    <PackageReference Include="SharpFontStandard" Version="4.0.1" />
+    <PackageReference Include="SharpFontStandard.Runtimes.WindowsOnly" Version="2.6.0" />
   </ItemGroup>
 
   <ItemGroup>

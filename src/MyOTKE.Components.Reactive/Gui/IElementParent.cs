@@ -5,7 +5,7 @@ using System.ComponentModel;
 namespace MyOTKE.Components.Reactive.Gui;
 
 /// <summary>
-/// Interface for types that contain GUI elements. This includes parent elements and the root GUI object.
+/// Interface for types that contain GUI elements. This includes container elements and the root GUI object.
 /// </summary>
 public interface IElementParent : INotifyPropertyChanged
 {
