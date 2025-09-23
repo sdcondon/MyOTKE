@@ -56,6 +56,16 @@ public class OrbitCamera(
     public float FarPlaneDistance { get; set; } = farPlaneDistance;
 
     /// <summary>
+    /// The default distance of the camera from the origin
+    /// </summary>
+    public float ZoomDefaultDistance { get; init; } = 1.5f;
+
+    /// <summary>
+    /// For each mouse wheel click upwards, the distance between the camera and the minimum distance will be multiplied by this amount.
+    /// </summary>
+    public float ZoomBase { get; init; } = 0.99f;
+
+    /// <summary>
     /// Gets the current distance between the camera and the origin.
     /// </summary>
     public float Distance => (float)(ZoomMinDistance + ZoomDefaultDistance * Math.Pow(ZoomBase, zoomLevel));
@@ -70,17 +80,13 @@ public class OrbitCamera(
     /// </summary>
     public Vector3 Position => -forward * Distance;
 
+    public float ZoomMinDistance => 1f + NearPlaneDistance;
+
     /// <inheritdoc />
     public Matrix4 View { get; private set; }
 
     /// <inheritdoc />
     public Matrix4 Projection { get; private set; }
-
-    private float ZoomDefaultDistance { get; set; } = 1.5f;
-
-    private float ZoomBase { get; set; } = 0.999f;
-
-    private float ZoomMinDistance => 1f + NearPlaneDistance;
 
     /// <inheritdoc />
     public void Update(TimeSpan elapsed)
